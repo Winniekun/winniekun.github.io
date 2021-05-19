@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>PriorityQueue源码解读 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JDK源码,Queue">
+    <meta name="description" content="PriorityQueue源码解读">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PriorityQueue源码解读">
+<meta property="og:url" content="https://winniekun.github.io/PriorityQueue-analysis/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="PriorityQueue源码解读">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/08/21/QOjliBWZwrHo72m.png">
+<meta property="og:image" content="https://i.loli.net/2021/02/26/lrUPGcnu1EvSwy8.png">
+<meta property="article:published_time" content="2020-08-21T12:00:56.000Z">
+<meta property="article:modified_time" content="2021-02-27T06:27:56.924Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="JDK源码">
+<meta property="article:tag" content="Queue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/08/21/QOjliBWZwrHo72m.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">PriorityQueue源码解读</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">PriorityQueue源码解读</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-08-21T12:00:56.000Z" itemprop="datePublished" class="page-time">
+  2020-08-21
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%BA%90%E7%A0%81/">源码</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#PriorityQueue源码解读"><span class="post-toc-number">1.</span> <span class="post-toc-text">PriorityQueue源码解读</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#依赖"><span class="post-toc-number">2.</span> <span class="post-toc-text">依赖</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基础"><span class="post-toc-number">3.</span> <span class="post-toc-text">基础</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#属性"><span class="post-toc-number">4.</span> <span class="post-toc-text">属性</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#构造函数"><span class="post-toc-number">5.</span> <span class="post-toc-text">构造函数</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PriorityQueue"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">PriorityQueue()</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PriorityQueue-int-initialCapacity"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">PriorityQueue(int initialCapacity)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PriorityQueue-Comparator-lt-super-E-gt-comparator"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">PriorityQueue(Comparator&lt;? super E&gt; comparator)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PriorityQueue-int-initialCapacity-Comparator-lt-super-E-gt-comparator"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">PriorityQueue(int initialCapacity, Comparator&lt;? super E&gt; comparator)</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#增-入队"><span class="post-toc-number">6.</span> <span class="post-toc-text">增(入队)</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#offer"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">offer()</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#删-出队"><span class="post-toc-number">7.</span> <span class="post-toc-text">删(出队)</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#获取队头元素"><span class="post-toc-number">8.</span> <span class="post-toc-text">获取队头元素</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#siftUp原理"><span class="post-toc-number">9.</span> <span class="post-toc-text">siftUp原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#siftDown原理"><span class="post-toc-number">10.</span> <span class="post-toc-text">siftDown原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#扩容策略"><span class="post-toc-number">11.</span> <span class="post-toc-text">扩容策略</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-源码/JDK/queue/PriorityQueue-analysis"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">PriorityQueue源码解读</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-08-21 20:00:56" datetime="2020-08-21T12:00:56.000Z"  itemprop="datePublished">2020-08-21</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%BA%90%E7%A0%81/">源码</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="PriorityQueue源码解读"><a href="#PriorityQueue源码解读" class="headerlink" title="PriorityQueue源码解读"></a>PriorityQueue源码解读</h2><a id="more"></a>
+
+<p>优先队列, 顾名思义就是按照元素的优先级进行弹出等操作, 那么在JDK中使用何种数据结构来实现优先队列嘞, Let’s Go</p>
+<h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://i.loli.net/2020/08/21/QOjliBWZwrHo72m.png" alt="PriorityQueue" title="">
+                </div>
+                <div class="image-caption">PriorityQueue</div>
+            </figure>
+
+<p>emmm, 感觉从依赖上来看, 和其他的集合类一样, 实现其对应的接口(Marker Interface的作用?)</p>
+<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>在阅读基础的时候，我们需要先理解一下什么是堆，其数据结构是啥，有哪些存储方式。</p>
+<ol>
+<li>堆的底层数据结构为<strong>完全二叉树</strong></li>
+<li>存储方式（既然是二叉树，那么其存储方式主要分为如下两种）<ol>
+<li>顺序存储结构<ol>
+<li>根节点下标为0</li>
+<li>若节点p的下标为$i$，则左孩子$2\cdot i + 1$ 右孩子为$2\cdoti + 2$ </li>
+<li>若节点p的下标为$i$，则父节点的下标为$\lfloor i/2\rfloor$</li>
+</ol>
+</li>
+<li>链式存储结构</li>
+</ol>
+</li>
+</ol>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://i.loli.net/2021/02/26/lrUPGcnu1EvSwy8.png" alt="image-20210226230402719" title="">
+                </div>
+                <div class="image-caption">image-20210226230402719</div>
+            </figure>
+
+<p>由上述的顺序存储结构可知，堆是用<strong>物理上的线性表示逻辑上的非线性的数据结构</strong></p>
+<p>具体的关于堆的操作，如刚开始的建堆，以及插入元素，删除堆顶元素，迭代等操作，可自行百度。</p>
+<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 默认初始化容量</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">11</span>;</span><br><span class="line"><span class="comment">// 底层使用Object[]数组实现, 和ArrayList这些一样</span></span><br><span class="line"><span class="keyword">transient</span> Object[] queue; <span class="comment">// non-private to simplify nested class access</span></span><br><span class="line"><span class="comment">// 标记元素个数</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> size = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 比较器, 说明其实例均是可比较的</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Comparator&lt;? <span class="keyword">super</span> E&gt; comparator;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>因为底层使用的是数组，同时其本身是支持动态插入和删除的，所以同理，和<strong>ArrayList</strong>同理，扩容应该是其核心的地方。同时也要关注其是否生成新的数组对象。</p>
+<h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><h3 id="PriorityQueue"><a href="#PriorityQueue" class="headerlink" title="PriorityQueue()"></a>PriorityQueue()</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">this</span>(DEFAULT_INITIAL_CAPACITY, <span class="keyword">null</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="PriorityQueue-int-initialCapacity"><a href="#PriorityQueue-int-initialCapacity" class="headerlink" title="PriorityQueue(int initialCapacity)"></a>PriorityQueue(int initialCapacity)</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>{</span><br><span class="line">    <span class="keyword">this</span>(initialCapacity, <span class="keyword">null</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="PriorityQueue-Comparator-lt-super-E-gt-comparator"><a href="#PriorityQueue-Comparator-lt-super-E-gt-comparator" class="headerlink" title="PriorityQueue(Comparator<? super E> comparator)"></a>PriorityQueue(Comparator&lt;? super E&gt; comparator)</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">(Comparator&lt;? <span class="keyword">super</span> E&gt; comparator)</span> </span>{</span><br><span class="line">    <span class="keyword">this</span>(DEFAULT_INITIAL_CAPACITY, comparator);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="PriorityQueue-int-initialCapacity-Comparator-lt-super-E-gt-comparator"><a href="#PriorityQueue-int-initialCapacity-Comparator-lt-super-E-gt-comparator" class="headerlink" title="PriorityQueue(int initialCapacity, Comparator<? super E> comparator)"></a>PriorityQueue(int initialCapacity, Comparator&lt;? super E&gt; comparator)</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PriorityQueue</span><span class="params">(<span class="keyword">int</span> initialCapacity,</span></span></span><br><span class="line"><span class="function"><span class="params">                     Comparator&lt;? <span class="keyword">super</span> E&gt; comparator)</span> </span>{</span><br><span class="line">    <span class="comment">// Note: This restriction of at least one is not actually needed,</span></span><br><span class="line">    <span class="comment">// but continues for 1.5 compatibility</span></span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &lt; <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">    <span class="keyword">this</span>.queue = <span class="keyword">new</span> Object[initialCapacity];</span><br><span class="line">    <span class="keyword">this</span>.comparator = comparator;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p>还有几个构造函数主要是用于将原各种类型的数据放入<code>PriorityQueue</code>中</p>
+<h2 id="增-入队"><a href="#增-入队" class="headerlink" title="增(入队)"></a>增(入队)</h2><p>在阅读这些方法的时候, 想起来自己手撕算法的时候, 经常会记混<code>List</code>, <code>Stack</code>, <code>Queue</code>, <code>Map</code>这些的添加删除操作的API…</p>
+<p>下面罗列的是个人觉得不错的代表数据结构特性的添加/删除操作的API</p>
+<table>
+<thead>
+<tr>
+<th align="left">数据结构</th>
+<th>添加</th>
+<th>删除</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">List/Set</td>
+<td>add()</td>
+<td>remove()</td>
+</tr>
+<tr>
+<td align="left">Stack</td>
+<td>push()</td>
+<td>pop()</td>
+</tr>
+<tr>
+<td align="left">Queue</td>
+<td>offer()</td>
+<td>poll()</td>
+</tr>
+<tr>
+<td align="left">Map</td>
+<td>put()</td>
+<td>remove()</td>
+</tr>
+</tbody></table>
+<h3 id="offer"><a href="#offer" class="headerlink" title="offer()"></a>offer()</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (e == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="keyword">int</span> i = size;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= queue.length)</span><br><span class="line">        grow(i + <span class="number">1</span>);</span><br><span class="line">    size = i + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (i == <span class="number">0</span>)</span><br><span class="line">        queue[<span class="number">0</span>] = e;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        siftUp(i, e);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>宏观上来看, offer()方法会先检测是否需要扩容, 之后再插入元素, 最后进行调整</p>
+<h2 id="删-出队"><a href="#删-出队" class="headerlink" title="删(出队)"></a>删(出队)</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">poll</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (size == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">int</span> s = --size;</span><br><span class="line">    modCount++;</span><br><span class="line">    E result = (E) queue[<span class="number">0</span>];</span><br><span class="line">    E x = (E) queue[s];</span><br><span class="line">    queue[s] = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (s != <span class="number">0</span>)</span><br><span class="line">        siftDown(<span class="number">0</span>, x);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h2 id="获取队头元素"><a href="#获取队头元素" class="headerlink" title="获取队头元素"></a>获取队头元素</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">peek</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> (size == <span class="number">0</span>) ? <span class="keyword">null</span> : (E) queue[<span class="number">0</span>];</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h2 id="siftUp原理"><a href="#siftUp原理" class="headerlink" title="siftUp原理"></a>siftUp原理</h2><p>假设在数组queue的k位置插入元素key（小根堆）</p>
+<ul>
+<li>不断的比较key和k的父节点e （$queue\lfloor(k-1/2\rfloor)$）的关系<ol>
+<li>若$key  &lt;  e$ ，则$queue[k] = e$, 同时$k$回溯至$e$</li>
+<li>若$key \geq e$ 或者  $k$已经到达跟节点，则结束循环</li>
+</ol>
+</li>
+<li>$queue[k]==e$</li>
+</ul>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 按照大意写的代码</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">siftUp</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>{</span><br><span class="line">  Comparable&lt;? <span class="keyword">super</span> E&gt; key = (Comparable&lt;? <span class="keyword">super</span> E&gt;) x;</span><br><span class="line">  <span class="keyword">while</span> (k &gt; <span class="number">0</span>) {</span><br><span class="line">    <span class="keyword">int</span> parent = (k-<span class="number">1</span>) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    Object e = queue[parent];</span><br><span class="line">    <span class="comment">// 可使用compareTo</span></span><br><span class="line">    <span class="keyword">if</span> (key &gt; e) {</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    }</span><br><span class="line">    k = parent;</span><br><span class="line">    queue[k] = e;</span><br><span class="line">  }</span><br><span class="line">	queue[k] = key;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h2 id="siftDown原理"><a href="#siftDown原理" class="headerlink" title="siftDown原理"></a>siftDown原理</h2><p>自顶向下，选择小的节点，不断的比较、交换，直到：</p>
+<ol>
+<li>下标越界</li>
+<li>节点的值同时小于等于左孩子和右孩子</li>
+</ol>
+<p>假设数组queue最后一个元素的值为key（小根堆），下标k从0开始，当k存在左孩子时，执行以下循环：</p>
+<ul>
+<li> 若k有右孩子，则比较左右孩子的值，然后选出小的孩子child</li>
+<li>比较key和c=queue[child]的大小<ol>
+<li>若$key \leq c$ 结束循环</li>
+<li>若$key &gt; c$, 则$queue[k] = c, k = child$， 继续循环</li>
+</ol>
+</li>
+<li>$queue[k] = key$</li>
+</ul>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">siftDown</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>{</span><br><span class="line">  Comparable&lt;? <span class="keyword">super</span> E&gt; key = (Comparable&lt;? <span class="keyword">super</span> E&gt;) x;</span><br><span class="line">  <span class="comment">// 完全二叉树 注意是 </span></span><br><span class="line">  <span class="keyword">int</span> half = size &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span> (k &lt; half) {</span><br><span class="line">    <span class="keyword">int</span> left = (k &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">    Object c = queue[left];</span><br><span class="line">    <span class="keyword">int</span> right = left + <span class="number">1</span>;</span><br><span class="line">   	<span class="keyword">if</span> (right &lt; size &amp;&amp; c &gt; queue[right]) {</span><br><span class="line">      c = queue[child = right];</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span> (key &lt; c) {</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    }</span><br><span class="line">   	queue[k] = c;</span><br><span class="line">    k = child;</span><br><span class="line">  }</span><br><span class="line">  queue[k] = key;</span><br><span class="line">  </span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h2 id="扩容策略"><a href="#扩容策略" class="headerlink" title="扩容策略"></a>扩容策略</h2>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2021-02-27T06:27:56.924Z" itemprop="dateUpdated">2021-02-27 14:27:56</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JDK%E6%BA%90%E7%A0%81/" rel="tag">JDK源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Queue/" rel="tag">Queue</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/PriorityQueue-analysis/&title=《PriorityQueue源码解读》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/PriorityQueue-analysis/&title=《PriorityQueue源码解读》 — Wkkの笔记&source=PriorityQueue源码解读" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/PriorityQueue-analysis/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《PriorityQueue源码解读》 — Wkkの笔记&url=https://winniekun.github.io/PriorityQueue-analysis/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/PriorityQueue-analysis/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/before-internship/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">2020实习前的总结</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/stick-to-graph/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">死磕图</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/PriorityQueue-analysis/&title=《PriorityQueue源码解读》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/PriorityQueue-analysis/&title=《PriorityQueue源码解读》 — Wkkの笔记&source=PriorityQueue源码解读" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/PriorityQueue-analysis/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《PriorityQueue源码解读》 — Wkkの笔记&url=https://winniekun.github.io/PriorityQueue-analysis/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/PriorityQueue-analysis/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACMklEQVR42u3a226DQAxF0fz/T9PXSC3DPjZUwrN5igiBWVRyx5fPBx/H1/F95vc1689ndz57ys2HDBkyXss4lge5hvyKnEmfK0OGjN0YJBSuf3V25uLxpWAtQ4YMGeTW67CYXslfnwwZMmTcG3DXaTB/QTJkyJDB09FO1Yu/gsdzcRkyZLyQwRf3/58f6W/IkCHjVYxOuZ8Ex7uC9cWqZMiQMZrBH5MusZP0puuRIUPGDgyeOpLifgojY2FBaU+GDBnjGLVmZH/b10H+8SsZMmSMZnTK+usF8W/5SEewfZQhQ8Y4Bh/V6pTk+BLJFvM0F5chQ8Y4Ri288kGufgLcmhaRIUPGCEZn0KGzlHu3oTJkyJjN4A0Afus0r+QbwdPzMmTIGM3gN00Da1pKS1uh6B+DDBkyRjBqgw6dMlxtEiQIrDJkyBjKqA1V1IpofJMXnJEhQ8ZoxhMFtXRsol/blyFDxg6MuxoDfAiDF+CCICtDhozRjDSMkoIaD8fpE4O/iQwZMgYx0vDHk9JOuZ+PYsiQIWMfBi/0pw2GWhpcLKvJkCFjM0Z/oWk4TpPn1siFDBkyXsI4wmOduNaWWGujnu5tZciQMY7Rj9b81ny7ye9fbHPKkCHjhYxakH0uLKZtThkyZOzDSIcwUhgPrOlWUoYMGTJ4uS3dgZJmAHmKDBkyZNSajnxZtRGNi/6GDBkyhjL49q7WsKy1AXg4liFDxmwGD5d8OCNtdtZSXBkyZGzA+AHN/bwqH3kwYAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

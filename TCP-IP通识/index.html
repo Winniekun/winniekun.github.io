@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>TCP/IP通识 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="tcp,ip">
+    <meta name="description" content="OSI参考模型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP&#x2F;IP通识">
+<meta property="og:url" content="https://winniekun.github.io/TCP-IP%E9%80%9A%E8%AF%86/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="OSI参考模型">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-17T01:36:34.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.262Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="tcp">
+<meta property="article:tag" content="ip">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">TCP/IP通识</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">TCP/IP通识</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-04-17T01:36:34.000Z" itemprop="datePublished" class="page-time">
+  2020-04-17
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#OSI参考模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">OSI参考模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#TCP-IP的具体意义"><span class="post-toc-number">2.</span> <span class="post-toc-text">TCP&#x2F;IP的具体意义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#TCP-IP协议分层模型"><span class="post-toc-number">3.</span> <span class="post-toc-text">TCP&#x2F;IP协议分层模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#OSI模型和TCP-IP模型的区别"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">OSI模型和TCP&#x2F;IP模型的区别</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一些协议之间的区别"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">一些协议之间的区别</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#IP和ICMP"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">IP和ICMP</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#TCP和UDP"><span class="post-toc-number">3.2.2.</span> <span class="post-toc-text">TCP和UDP</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">4.</span> <span class="post-toc-text">References</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-网络/TCP-IP通识"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">TCP/IP通识</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-04-17 09:36:34" datetime="2020-04-17T01:36:34.000Z"  itemprop="datePublished">2020-04-17</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="OSI参考模型"><a href="#OSI参考模型" class="headerlink" title="OSI参考模型"></a>OSI参考模型</h2><a id="more"></a>
+
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>层</th>
+<th>常用协议</th>
+<th>应用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>7</td>
+<td>应用层</td>
+<td>HTTP、SMTP、SSH</td>
+<td>针对特定应用的协议</td>
+</tr>
+<tr>
+<td>6</td>
+<td>表示层</td>
+<td>同上</td>
+<td>设备固有数据格式和网路标准格式转化</td>
+</tr>
+<tr>
+<td>5</td>
+<td>会话层</td>
+<td>同上</td>
+<td>通信管理。负责建立和断开通信链接</td>
+</tr>
+<tr>
+<td>4</td>
+<td>传输层</td>
+<td>TCP、UDP、UDP-Lite、SCTP、DCCP</td>
+<td>管理两个节点之间的数据传输。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>网络层</td>
+<td>IP、ARP、IPv4、IPv6、ICMP</td>
+<td>地址管理和路由器选择</td>
+</tr>
+<tr>
+<td>2</td>
+<td>数据链路层</td>
+<td>以太网、无线LAN、PPP…</td>
+<td>互联设备之间传送和识别数据帧（将0 、1序列划分为具有意义的数据帧传送给终端）</td>
+</tr>
+<tr>
+<td>1</td>
+<td>物理层</td>
+<td>同上</td>
+<td>0 、1数字信号</td>
+</tr>
+</tbody></table>
+<h2 id="TCP-IP的具体意义"><a href="#TCP-IP的具体意义" class="headerlink" title="TCP/IP的具体意义"></a>TCP/IP的具体意义</h2><p>从字面意思上说，TCP/IP指的就是TCP、IP两个协议。虽然有些情况下就是这两个协议，其实不然。在大多数情况下，它是利用IP进行通信时所必须用到的协议群的统称。譬如：IP或ICMP、TCP或UDP、TELNET或FTP、以及 HTTP都属于TCP/IP协议。TCP/IP泛指这些协议。有时也统称TCP/IP为网际协议族。</p>
+<h2 id="TCP-IP协议分层模型"><a href="#TCP-IP协议分层模型" class="headerlink" title="TCP/IP协议分层模型"></a>TCP/IP协议分层模型</h2><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>层</th>
+<th>常用协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5</td>
+<td>应用层</td>
+<td>HTTP、SMTP、SSH</td>
+</tr>
+<tr>
+<td>4</td>
+<td>传输层</td>
+<td>TCP、UDP</td>
+</tr>
+<tr>
+<td>3</td>
+<td>网络层</td>
+<td>IP、ICMP、ARP</td>
+</tr>
+<tr>
+<td>2</td>
+<td>数据链路层</td>
+<td>PPP</td>
+</tr>
+<tr>
+<td>1</td>
+<td>物理层</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="OSI模型和TCP-IP模型的区别"><a href="#OSI模型和TCP-IP模型的区别" class="headerlink" title="OSI模型和TCP/IP模型的区别"></a>OSI模型和TCP/IP模型的区别</h3><p><strong>OSI:</strong> 注重通信协议必要的功能是什么</p>
+<p><strong>TCP/IP:</strong> 注重在计算机实上现协议应该开发哪种程序</p>
+<h3 id="一些协议之间的区别"><a href="#一些协议之间的区别" class="headerlink" title="一些协议之间的区别"></a>一些协议之间的区别</h3><h4 id="IP和ICMP"><a href="#IP和ICMP" class="headerlink" title="IP和ICMP"></a>IP和ICMP</h4><p><strong>IP协议</strong>: 能使得整个互联网都能收到数据的协议，使用IP地址作为主机的标识，将数据包发送给目标地址。但是其不具有重发机制，即使发送失败，也不会重发，所以是一种非可靠性传输协议。</p>
+<p><strong>ICMP:</strong> IP数据包发送途中出现异常而无法发送到目标地址，这时使用ICMP协议给发送者发送一个发送异常的通知</p>
+<h4 id="TCP和UDP"><a href="#TCP和UDP" class="headerlink" title="TCP和UDP"></a>TCP和UDP</h4><p><strong>TCP：</strong>面向连接的可靠性传输协议，其为了建立和断开链接，需要至少7次的发包收包（3次握手、4次分手）</p>
+<p><strong>UDP：</strong>面向无连接的不可靠性传输协议，其不会关注目标是否真的接收到了数据包（多媒体领域）</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li>图解TCP/IP协议</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.262Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ip/" rel="tag">ip</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp/" rel="tag">tcp</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/TCP-IP%E9%80%9A%E8%AF%86/&title=《TCP/IP通识》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/TCP-IP%E9%80%9A%E8%AF%86/&title=《TCP/IP通识》 — Wkkの笔记&source=OSI参考模型" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/TCP-IP%E9%80%9A%E8%AF%86/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《TCP/IP通识》 — Wkkの笔记&url=https://winniekun.github.io/TCP-IP%E9%80%9A%E8%AF%86/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/TCP-IP%E9%80%9A%E8%AF%86/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/Java%E7%BA%BF%E7%A8%8B%E4%B9%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Java线程之间通信方式</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/JVM-heap/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JVM之Java堆</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/TCP-IP%E9%80%9A%E8%AF%86/&title=《TCP/IP通识》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/TCP-IP%E9%80%9A%E8%AF%86/&title=《TCP/IP通识》 — Wkkの笔记&source=OSI参考模型" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/TCP-IP%E9%80%9A%E8%AF%86/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《TCP/IP通识》 — Wkkの笔记&url=https://winniekun.github.io/TCP-IP%E9%80%9A%E8%AF%86/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/TCP-IP%E9%80%9A%E8%AF%86/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACNElEQVR42u3azWrDQAxF4bz/SzvQVaB4OFeaBKw5syqt4/jzQtXf64XP9Xf+/+bzrK+/+9TnlXd323ZkyJDxWMa1PPyau3uuX8T6pQTfK0OGjAMY6yBLAisJuxzDn02GDBkyUlI/KZQhQ4aMXQxSS9ZejQwZMmR0iljSeuuQflSLy5Ah44GMdDDwy5+/ON+QIUPGQxhXeMgd+o2z+KlkyJAxmlErIPmooDNCiItkGTJkjGaQkpIXsaSg5Qli+rJkyJAxlZEuVaDAFyaI6+tRuStDhowDGHzxKw2s/FP8DjJkyDiNQYYBnVWMDY+Ci2EZMmTMY/Dw11+S4I02HmplyJBxDiNt1qfLXqTpxoP+bcCVIUPGaAZ/XNLETweQ/XAsQ4aM2Yza2sT64fiiWFoSB11DGTJkDGLwFn+nDZeuUJBBAtprkyFDxjhGLclL075O8y4oYmXIkDGIQYJvOpLcVdbWxgwyZMiYyug8OkkT+8hiu02GDBmDGHFsDgtdvpDBy90N/zdkyJDxEEZnoMj/SpLITsooQ4aMcxjpYCANlDw08wGGDBkyTmCgnDEcTNbWNfhKB7qzDBkyBjGu8MQbZ+0FMpSMypAhYzSjH+z4OKGWIMaDARkyZAxl9IMgad/X2mp8kCBDhowTGGntmy5MpEOItMyWIUOGjHSDgzfgaqVpK+DKkCHjAAa/dZzehYNMGTJknMZIi1jeSuMDA55QypAh4zRGrXRMSWm7LR0tyJAhYyjjDfyKhJpjpJ2CAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

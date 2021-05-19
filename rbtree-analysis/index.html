@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>红黑树 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JDK源码,Map">
+    <meta name="description" content="红黑树剖析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="红黑树">
+<meta property="og:url" content="https://winniekun.github.io/rbtree-analysis/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="红黑树剖析">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://winniekun.github.io/rbtree-analysis/%E7%BA%A2%E9%BB%91%E6%A0%91.assets/Screenshot">
+<meta property="og:image" content="https://winniekun.github.io/rbtree-analysis/%E7%BA%A2%E9%BB%91%E6%A0%91.assets/Screenshot">
+<meta property="article:published_time" content="2020-03-10T01:39:12.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.256Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="JDK源码">
+<meta property="article:tag" content="Map">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://winniekun.github.io/rbtree-analysis/%E7%BA%A2%E9%BB%91%E6%A0%91.assets/Screenshot">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">红黑树</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">红黑树</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-10T01:39:12.000Z" itemprop="datePublished" class="page-time">
+  2020-03-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%BA%90%E7%A0%81/">源码</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#红黑树剖析"><span class="post-toc-number">1.</span> <span class="post-toc-text">红黑树剖析</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#BST部分"><span class="post-toc-number">2.</span> <span class="post-toc-text">BST部分</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#二叉排序树、二叉搜索树"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">二叉排序树、二叉搜索树</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#性质："><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">性质：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#实现二插排序树："><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">实现二插排序树：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#节点定义、插入"><span class="post-toc-number">2.1.2.1.</span> <span class="post-toc-text">节点定义、插入</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#迭代器"><span class="post-toc-number">2.1.2.2.</span> <span class="post-toc-text">迭代器</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#查找"><span class="post-toc-number">2.1.2.3.</span> <span class="post-toc-text">查找</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#原理："><span class="post-toc-number">2.1.2.3.1.</span> <span class="post-toc-text">原理：</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#实现"><span class="post-toc-number">2.1.2.3.2.</span> <span class="post-toc-text">实现</span></a></li></ol></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#删除（重点）"><span class="post-toc-number">2.1.2.4.</span> <span class="post-toc-text">删除（重点）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#原理"><span class="post-toc-number">2.1.2.4.1.</span> <span class="post-toc-text">原理</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#实现-1"><span class="post-toc-number">2.1.2.4.2.</span> <span class="post-toc-text">实现</span></a></li></ol></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#BST的前驱和后继节点"><span class="post-toc-number">2.1.2.5.</span> <span class="post-toc-text">BST的前驱和后继节点</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#前驱节点（有父指针的情况）"><span class="post-toc-number">2.1.2.5.1.</span> <span class="post-toc-text">前驱节点（有父指针的情况）</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#后继节点（有父指针的情况）"><span class="post-toc-number">2.1.2.5.2.</span> <span class="post-toc-text">后继节点（有父指针的情况）</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#LIntCode-448-Inorder-Successor-in-BST"><span class="post-toc-number">2.1.2.5.3.</span> <span class="post-toc-text">LIntCode 448 Inorder Successor in BST</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#AVL"><span class="post-toc-number">3.</span> <span class="post-toc-text">AVL</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#定义"><span class="post-toc-number">3.0.1.</span> <span class="post-toc-text">定义</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#旋转与插入"><span class="post-toc-number">3.0.2.</span> <span class="post-toc-text">旋转与插入</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#旋转"><span class="post-toc-number">3.0.2.1.</span> <span class="post-toc-text">旋转</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#插入"><span class="post-toc-number">3.0.2.2.</span> <span class="post-toc-text">插入</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#代码实现"><span class="post-toc-number">3.0.2.3.</span> <span class="post-toc-text">代码实现</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#算法改进-amp-amp-时间复杂度分析"><span class="post-toc-number">3.0.2.4.</span> <span class="post-toc-text">算法改进&amp;&amp;时间复杂度分析</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#面试经典：排序数组转化为AVL和RBT"><span class="post-toc-number">3.0.3.</span> <span class="post-toc-text">面试经典：排序数组转化为AVL和RBT</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#删除"><span class="post-toc-number">3.0.4.</span> <span class="post-toc-text">删除</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#原理-1"><span class="post-toc-number">3.0.4.1.</span> <span class="post-toc-text">原理</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#实现-2"><span class="post-toc-number">3.0.4.2.</span> <span class="post-toc-text">实现</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#红黑树"><span class="post-toc-number">4.</span> <span class="post-toc-text">红黑树</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#红黑树定义"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">红黑树定义</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#由此衍生出的性质："><span class="post-toc-number">4.1.0.1.</span> <span class="post-toc-text">由此衍生出的性质：</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#插入操作"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">插入操作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#插入原则"><span class="post-toc-number">4.2.1.</span> <span class="post-toc-text">插入原则</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#插入正确性证明"><span class="post-toc-number">4.2.2.</span> <span class="post-toc-text">插入正确性证明</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#插入调整"><span class="post-toc-number">4.2.3.</span> <span class="post-toc-text">插入调整</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#case1"><span class="post-toc-number">4.2.3.1.</span> <span class="post-toc-text">case1</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#case2"><span class="post-toc-number">4.2.3.2.</span> <span class="post-toc-text">case2</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#case3"><span class="post-toc-number">4.2.3.3.</span> <span class="post-toc-text">case3</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#删除操作"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">删除操作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#删除原则"><span class="post-toc-number">4.3.1.</span> <span class="post-toc-text">删除原则</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#删除调整"><span class="post-toc-number">4.3.2.</span> <span class="post-toc-text">删除调整</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#删除正确性证明"><span class="post-toc-number">4.3.3.</span> <span class="post-toc-text">删除正确性证明</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#删除调整-1"><span class="post-toc-number">4.3.4.</span> <span class="post-toc-text">删除调整</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#删除左孩子X-四种情况"><span class="post-toc-number">4.3.4.1.</span> <span class="post-toc-text">删除左孩子X 四种情况</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#case1-1"><span class="post-toc-number">4.3.4.1.1.</span> <span class="post-toc-text">case1</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#case2-1"><span class="post-toc-number">4.3.4.1.2.</span> <span class="post-toc-text">case2</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#case3-1"><span class="post-toc-number">4.3.4.1.3.</span> <span class="post-toc-text">case3</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#case4"><span class="post-toc-number">4.3.4.1.4.</span> <span class="post-toc-text">case4</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Comparable和Comparator"><span class="post-toc-number">5.</span> <span class="post-toc-text">Comparable和Comparator</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Comparable"><span class="post-toc-number">5.0.1.</span> <span class="post-toc-text">Comparable</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Comparable简介"><span class="post-toc-number">5.0.1.1.</span> <span class="post-toc-text">Comparable简介</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Comparable-定义"><span class="post-toc-number">5.0.1.2.</span> <span class="post-toc-text">Comparable 定义</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Comparator"><span class="post-toc-number">5.0.2.</span> <span class="post-toc-text">Comparator</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Comparator简介"><span class="post-toc-number">5.0.2.1.</span> <span class="post-toc-text">Comparator简介</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Comparator定义"><span class="post-toc-number">5.0.2.2.</span> <span class="post-toc-text">Comparator定义</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#总结"><span class="post-toc-number">5.0.3.</span> <span class="post-toc-text">总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#相同"><span class="post-toc-number">5.0.3.1.</span> <span class="post-toc-text">相同</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#区别"><span class="post-toc-number">5.0.3.2.</span> <span class="post-toc-text">区别</span></a></li></ol></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-源码/JDK/map/rbtree-analysis"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">红黑树</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-10 09:39:12" datetime="2020-03-10T01:39:12.000Z"  itemprop="datePublished">2020-03-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%BA%90%E7%A0%81/">源码</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="红黑树剖析"><a href="#红黑树剖析" class="headerlink" title="红黑树剖析"></a>红黑树剖析</h2><a id="more"></a>
+
+<h2 id="BST部分"><a href="#BST部分" class="headerlink" title="BST部分"></a>BST部分</h2><h3 id="二叉排序树、二叉搜索树"><a href="#二叉排序树、二叉搜索树" class="headerlink" title="二叉排序树、二叉搜索树"></a>二叉排序树、二叉搜索树</h3><h4 id="性质："><a href="#性质：" class="headerlink" title="性质："></a>性质：</h4><ol>
+<li>定义的空树是BST</li>
+<li>左子树所有节点的值均小于根节点的值</li>
+<li>右子树所有节点的值均大于根节点的值</li>
+<li>中序遍历序列为升序</li>
+</ol>
+<h4 id="实现二插排序树："><a href="#实现二插排序树：" class="headerlink" title="实现二插排序树："></a>实现二插排序树：</h4><h5 id="节点定义、插入"><a href="#节点定义、插入" class="headerlink" title="节点定义、插入"></a>节点定义、插入</h5><ul>
+<li>节点： AVLEntry</li>
+<li>字典：AVLMap<ul>
+<li>int compara(K a, K b) 比较关键字a和b的大小</li>
+<li>boolean isEmpty() 判断map是否为空</li>
+<li>V put(K key, V value) 添加元素</li>
+</ul>
+</li>
+</ul>
+<h5 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h5><ul>
+<li>LeetCode173 binary search tree iterator</li>
+<li>要点： 利用中序遍历<ul>
+<li>方案1： 递归添加进入线性集合， 迭代线性集合</li>
+<li>方案2： 非递归， 使左路径节点压栈</li>
+</ul>
+</li>
+<li>AVL迭代器<ul>
+<li>属性stack ， 存储BST的节点</li>
+<li>hasNext, 是否还有下一个节点</li>
+<li>next 下一个节点的值</li>
+<li>remove 线程安全问题</li>
+</ul>
+</li>
+<li>AVLMap继承Iterable， 并重写Iterator方法， 返回AVL迭代器即可</li>
+</ul>
+<h5 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h5><h6 id="原理："><a href="#原理：" class="headerlink" title="原理："></a><strong>原理</strong>：</h6><ol>
+<li>若是根节点的值小于key， 递归从右子树查找</li>
+<li>若是根节点的值大于key， 递归从左子树查找</li>
+<li>如是根节点等于key， 成功</li>
+<li>若是子树为空， 失败</li>
+</ol>
+<h6 id="实现"><a href="#实现" class="headerlink" title="实现"></a><strong>实现</strong></h6><p>模拟TreeMap的代码结构， 实现以下方法</p>
+<ol>
+<li>AVLEntry getEntry(K key) 私有方法 主要查找逻辑</li>
+<li>boolean containsKey(K key) 是否能找到关键字</li>
+<li>V get(K key) 根据关键字返回对应的value</li>
+<li>boolean containsValue(V value) 能够找到value</li>
+</ol>
+<h5 id="删除（重点）"><a href="#删除（重点）" class="headerlink" title="删除（重点）"></a>删除（重点）</h5><h6 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h6><p>删除操作较为繁琐， 需要考虑断链的情况，以及删除之后， 还需满足BST的特性</p>
+<p>共分为三种情况， 假设删除的节点为p， 父节点为f</p>
+<ol>
+<li>p为叶子节点， 直接删除</li>
+<li>p的左子树（右子树）不为空，删除之后， 其左子树（右子树）填补p的空缺位置</li>
+<li>p既有左子树又有右子树， 找到右子树的最小值节点M（左子树的最大值）将该值替换p的值，之后按照1、2两种情况删除M即可</li>
+</ol>
+<h6 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h6><ol>
+<li><p>AVLEntry&lt;K, V&gt; deleteEntry()  递归函数（主逻辑）</p>
+</li>
+<li><p>V remote(K key) 删除关键字key 返回对应的value</p>
+</li>
+<li><p>void levelOrder 辅助函数 层次遍历</p>
+<p>用于输出观察</p>
+</li>
+</ol>
+<p><strong>面试经典：</strong></p>
+<p>寻找最大最小节点</p>
+<p>BST的前驱和</p>
+<h5 id="BST的前驱和后继节点"><a href="#BST的前驱和后继节点" class="headerlink" title="BST的前驱和后继节点"></a>BST的前驱和后继节点</h5><p>前驱结点：节点val值小于该节点val值并且值最大的节点 </p>
+<p>后继节点：节点val值大于该节点val值并且值最小的节点</p>
+<h6 id="前驱节点（有父指针的情况）"><a href="#前驱节点（有父指针的情况）" class="headerlink" title="前驱节点（有父指针的情况）"></a><strong>前驱节点</strong>（有父指针的情况）</h6><ol>
+<li>若一个节点有左子树，那么该节点的前驱节点是其左子树中val值最大的节点（也就是左子树中所谓的rightMostNode）</li>
+<li>若一个节点没有左子树，那么判断该节点和其父节点的关系<br>2.1 若该节点是其父节点的右边孩子，那么该节点的前驱结点即为其父节点。<br>2.2 若该节点是其父节点的左边孩子，那么需要沿着其父亲节点一直向树的顶端寻找，直到找到一个节点P，P节点是其父节点Q的右边孩子，那么Q就是该节点的后继节点</li>
+</ol>
+<h6 id="后继节点（有父指针的情况）"><a href="#后继节点（有父指针的情况）" class="headerlink" title="后继节点（有父指针的情况）"></a><strong>后继节点</strong>（有父指针的情况）</h6><ol>
+<li>若一个节点有右子树，那么该节点的后继节点是其右子树中val值最小的节点（也就是右子树中所谓的leftMostNode）</li>
+<li>若一个节点没有右子树，那么判断该节点和其父节点的关系<br>2.1 若该节点是其父节点的左边孩子，那么该节点的后继结点即为其父节点<br>2.2 若该节点是其父节点的右边孩子，那么需要沿着其父亲节点一直向树的顶端寻找，直到找到一个节点P，P节点是其父节点Q的左边孩子，那么Q就是该节点的后继节点</li>
+</ol>
+<h6 id="LIntCode-448-Inorder-Successor-in-BST"><a href="#LIntCode-448-Inorder-Successor-in-BST" class="headerlink" title="LIntCode 448 Inorder Successor in BST"></a>LIntCode 448 Inorder Successor in BST</h6><ol>
+<li><p>p为最大节点， 返回null</p>
+</li>
+<li><p>p有右子树</p>
+</li>
+<li><p>p没有右子树</p>
+<ol>
+<li>进行二叉查找， 并压栈， 之后弹栈</li>
+</ol>
+</li>
+</ol>
+<h2 id="AVL"><a href="#AVL" class="headerlink" title="AVL"></a>AVL</h2><h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>BST和TreeMap的效率对比</p>
+<table>
+<thead>
+<tr>
+<th align="center">情况</th>
+<th align="center">BST</th>
+<th align="center">TreeMap</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">升序序列（降序序列）</td>
+<td align="center">Slow</td>
+<td align="center">OK</td>
+</tr>
+<tr>
+<td align="center">随机序列</td>
+<td align="center">OK</td>
+<td align="center">OK</td>
+</tr>
+</tbody></table>
+<p>AVL是一种自平衡的二叉树</p>
+<ol>
+<li>BST</li>
+<li>左右子树的高度差绝对值&lt;1</li>
+<li>空树、左右子树都是AVL</li>
+</ol>
+<h4 id="旋转与插入"><a href="#旋转与插入" class="headerlink" title="旋转与插入"></a>旋转与插入</h4><h5 id="旋转"><a href="#旋转" class="headerlink" title="旋转"></a>旋转</h5><ol>
+<li><p>右旋</p>
+<ol>
+<li><p>右旋</p>
+<p>![右旋](<a href="https://raw.githubusercontent.com/KongWiki/lovelyJava/master/src/main/java/com/train/rb/README.assets/Screenshot" target="_blank" rel="noopener">https://raw.githubusercontent.com/KongWiki/lovelyJava/master/src/main/java/com/train/rb/README.assets/Screenshot</a> from 2020-02-26 21-16-40.png)</p>
+</li>
+<li><p>先左旋再右旋</p>
+<p>![image](红黑树.assets/Screenshot from 2020-02-26 21-16-46.png)</p>
+</li>
+</ol>
+</li>
+<li><p>左旋</p>
+<p>同理 </p>
+</li>
+<li><p>什么时候需要旋转</p>
+<p>插入关键字key后，节点p的平衡因子由原来的1或者-1，变成了2或者-2，则需要旋转；只考虑插入key到左子树left的情形，即<strong>平衡因子为2</strong></p>
+<ol>
+<li>情况1：key&lt;left.key, 即插入到left的左子树，需要进行单旋转，将节点p右旋</li>
+<li>情况2：key&gt;left.key, 即插入到left的右子树，需要进行双旋转，先将left左旋，再将p右旋<br>插入到右子树right</li>
+</ol>
+<p><strong>平衡因子为-2</strong>，完全对称</p>
+</li>
+</ol>
+<p>对于检测是否平衡并旋转的调整过程<strong>自顶向下OR自底向上</strong></p>
+<ol>
+<li>对于BST的插入， 是自顶向下的，AVL的插入和BST的插入是一样的也是自顶向下</li>
+<li>在检测节点p是否平衡之前，必须先保证左右子树已经平衡</li>
+<li>子问题成立 —&gt; 总问题成立 ： ==自底向上==</li>
+<li>有parent指针， 直接向上回溯</li>
+<li>无parent指针， 后续遍历、递归</li>
+<li>无parent指针， 栈实现非递归</li>
+</ol>
+<p><strong>LeetCode110. Balanced Binary Tree</strong></p>
+<h5 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h5><h5 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h5><ol>
+<li>AVLEnrty增加height属性，表示树的高度 ==&gt; 平衡因子可以实时计算</li>
+<li>单旋转：右旋rotateRight、左旋rotateLeft</li>
+<li>双旋转：先左后右firstLeftThenRight、先右后左firstRightThenLeft</li>
+<li>辅助栈stack，将插入时候所经过的路径压栈</li>
+<li>插入调整函数fixAfterInsertion</li>
+<li>辅助函数checkBalance，断言AVL树的平衡性，检测算法的正确性</li>
+</ol>
+<h5 id="算法改进-amp-amp-时间复杂度分析"><a href="#算法改进-amp-amp-时间复杂度分析" class="headerlink" title="算法改进&amp;&amp;时间复杂度分析"></a>算法改进&amp;&amp;时间复杂度分析</h5><p>弹栈的时候，一旦发现某个节点并未改变，则停止弹栈</p>
+<p>指针回溯次数：最坏为O(logN)最好为O(log1) , 平均为O(logN)</p>
+<p>旋转次数： 无需旋转、单旋转、双旋转、不会超过两次</p>
+<p>时间复杂度： BST插入O(logN)+指针回溯O(logN) + 旋转O(1) = O(logN)</p>
+<p>空间复杂度： 有parent指针为O(1) 无parent指针为O(logN) </p>
+<h4 id="面试经典：排序数组转化为AVL和RBT"><a href="#面试经典：排序数组转化为AVL和RBT" class="headerlink" title="面试经典：排序数组转化为AVL和RBT"></a>面试经典：排序数组转化为AVL和RBT</h4><p>treeMap中buildFromSorted实现功能类似</p>
+<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><h5 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h5><p>类似插入，假设删除了p右子树的某个节点，引起了p的平衡因子d[p]=2，分析p的左子树left，三种情况如下：</p>
+<ol>
+<li><p>left的平衡因子d[left]=1，将p右旋</p>
+<p>![image](红黑树.assets/Screenshot from 2020-02-27 12-05-49.png)</p>
+</li>
+<li><p>left的平衡因子d[left]=0，将p右旋</p>
+<p>![image](红黑树.assets/Screenshot from 2020-02-27 12-06-44.png)</p>
+</li>
+<li><p>left的平衡因子d[left]= -1，先左旋left，再右旋p</p>
+<p>![image](红黑树.assets/Screenshot from 2020-02-27 12-07-16.png)</p>
+</li>
+</ol>
+<p>删除左子树，即d[p]= -2的情形，与d[p]=2对称</p>
+<h5 id="实现-2"><a href="#实现-2" class="headerlink" title="实现"></a>实现</h5><ol>
+<li>fixAfterDeletion：调整某个节点p</li>
+<li>deleteEntry直接调用fixAfterDeletion</li>
+</ol>
+<h2 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h2><h3 id="红黑树定义"><a href="#红黑树定义" class="headerlink" title="红黑树定义"></a>红黑树定义</h3><ol>
+<li>任意节点要么是红色，要么是黑色</li>
+<li>根节点为黑色</li>
+<li>所有的叶子节点为黑色（叶子节点为空）</li>
+<li>如果一个节点为红色，那么它的两个子节点都为黑色</li>
+<li>任意节点从它出发， 到所有叶子节点的路径上包含相同数量的黑色节点<ol>
+<li>简称为黑高（BlackHeight、BH）</li>
+</ol>
+</li>
+</ol>
+<h5 id="由此衍生出的性质："><a href="#由此衍生出的性质：" class="headerlink" title="由此衍生出的性质："></a>由此衍生出的性质：</h5><ol>
+<li>任意一颗以黑色节点为根的子树也必定是一颗红黑树</li>
+<li>左（右）子树的高度最多是右（左）子树的两倍</li>
+<li>其必定是一个BST</li>
+</ol>
+<p>红黑树在JDK源码中的实现(TreeMap中的<strong>fixAfterInsertion</strong>和<strong>fixAfterDeletion</strong>)：</p>
+<h3 id="插入操作"><a href="#插入操作" class="headerlink" title="插入操作"></a>插入操作</h3><p>==自底向上==</p>
+<p>RBT中的插入调整： fixAfterInsersion: cast1、case2、case3</p>
+<p>RBT中的删除调整：fixAfterDeletion: case1、case2、case3、case4</p>
+<h4 id="插入原则"><a href="#插入原则" class="headerlink" title="插入原则"></a>插入原则</h4><ol>
+<li>若插入的为黑色的节点，违法性质5</li>
+<li>只能插入红色节点，可能违反性质4，继续调整</li>
+</ol>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="红黑树.assets/Screenshot" alt="image" title="from">
+                </div>
+                <div class="image-caption">from</div>
+            </figure>
+
+<h4 id="插入正确性证明"><a href="#插入正确性证明" class="headerlink" title="插入正确性证明"></a>插入正确性证明</h4><ol>
+<li>是否会引起左右子树的BH不一致</li>
+<li>有无继续破坏性质4的可能</li>
+</ol>
+<h4 id="插入调整"><a href="#插入调整" class="headerlink" title="插入调整"></a>插入调整</h4><p><strong>无需调整的情况为：</strong></p>
+<ol>
+<li><p>X为根节点，将X由红染黑，简称rootOver</p>
+</li>
+<li><p>父节点P为黑色，BlackParentOver，简称bpOver</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (x != <span class="keyword">null</span> &amp;&amp; x != root &amp;&amp; x.parent.color == RED)</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>需要调整的情况为：</strong></p>
+<p>仅仅需要考虑父节点P为红色的情形，由于性质4，爷爷节点G必定为黑色，分为三种情况：<br>case1: Y为红色，X可左可右；P、Y染黑，G染红，X回溯至G<br>case2: Y为黑色，X为右孩子；左旋P，X指向P，转化为case3<br>case3: Y为黑色，X为左孩子；P染黑，G染红，右旋G，结束<br>结论：RBT的插入调整最多旋转2次 </p>
+<h5 id="case1"><a href="#case1" class="headerlink" title="case1"></a>case1</h5><ol>
+<li>条件P为红色，为G的左孩子， Y为红色， X可左可右，</li>
+<li>处理方式： 将P、Y染黑， G然为红色，X回溯至G即可</li>
+<li>条件简称： 红左父、红叔、红左右子</li>
+<li>处理方式简称： 父叔变黑、爷变红，子变爷</li>
+</ol>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (parentOf(x) == leftOf(parentOf(parentOf(x)))) {</span><br><span class="line">	Entry&lt;K,V&gt; y = rightOf(parentOf(parentOf(x)));</span><br><span class="line">    <span class="keyword">if</span> (colorOf(y) == RED) {</span><br><span class="line">    	setColor(parentOf(x), BLACK);</span><br><span class="line">        setColor(y, BLACK);</span><br><span class="line">        setColor(parentOf(parentOf(x)), RED);</span><br><span class="line">        x = parentOf(parentOf(x));</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h5 id="case2"><a href="#case2" class="headerlink" title="case2"></a>case2</h5><ol>
+<li>条件： P为G的左孩子，Y为黑色，X为右孩子</li>
+<li>处理方式：左旋P，X指向P，转化为case3</li>
+<li>条件简称：红左父，黑叔，红右子</li>
+<li>处理方式简称：左旋父、子变父、变为case3 </li>
+</ol>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> {</span><br><span class="line">  <span class="keyword">if</span> (x == rightOf(parentOf(x))) { </span><br><span class="line">      x = parentOf(x); <span class="comment">// X指向P</span></span><br><span class="line">      rotateLeft(x); <span class="comment">// 左旋P</span></span><br><span class="line">  }</span><br></pre></td></tr></tbody></table></figure>
+
+<h5 id="case3"><a href="#case3" class="headerlink" title="case3"></a>case3</h5><ol>
+<li>条件：P为G的左孩子，Y为黑色，X为左孩子</li>
+<li>处理方式：P染黑，G染红，右旋G，结束</li>
+<li>条件简称：红左父，黑叔，红左子</li>
+<li>处理方式简称：父变黑、爷变红、右旋爷</li>
+</ol>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setColor(parentOf(x), BLACK); <span class="comment">// P染黑</span></span><br><span class="line">setColor(parentOf(parentOf(x)), RED); <span class="comment">// G 染红</span></span><br><span class="line">rotateRight(parentOf(parentOf(x))); <span class="comment">// 右旋G</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>当P为G的右孩子，同理</p>
+<p>rightCase1：Y为红，X可左可右；P、Y变黑，G变红，X变G<br>rightCase2：Y为黑，X为左孩子；右旋P，X变P，转case3<br>rightCase3：Y为黑，X为右孩子；G变红，P变黑，左旋G</p>
+<h3 id="删除操作"><a href="#删除操作" class="headerlink" title="删除操作"></a>删除操作</h3><p>二插排序树的删除： 三种情况</p>
+<p>AVL树的删除：两种情况</p>
+<p>红黑树的删除： 四种情况</p>
+<h4 id="删除原则"><a href="#删除原则" class="headerlink" title="删除原则"></a>删除原则</h4><ol>
+<li>删除的节点为红色，则直接删除，并不影响整体结果，需要注意防止断链</li>
+<li>删除的节点为黑色，所在的BH–，需要进行调整</li>
+</ol>
+<h4 id="删除调整"><a href="#删除调整" class="headerlink" title="删除调整"></a>删除调整</h4><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="红黑树.assets/Screenshot" alt="image" title="from">
+                </div>
+                <div class="image-caption">from</div>
+            </figure>
+
+<h4 id="删除正确性证明"><a href="#删除正确性证明" class="headerlink" title="删除正确性证明"></a>删除正确性证明</h4><ol>
+<li>是否违反性质五<ol>
+<li>X的BH只能保持或者不变，否者X要比S的BH要小</li>
+</ol>
+</li>
+<li>是否违反性质四<ol>
+<li>若谷违反了，继续染黑还是回溯</li>
+</ol>
+</li>
+</ol>
+<h4 id="删除调整-1"><a href="#删除调整-1" class="headerlink" title="删除调整"></a>删除调整</h4><p><strong>无需调整的情况</strong></p>
+<p>当前X为根节点，无论root为什么颜色，都将root染黑， rootOver</p>
+<p>当前X为红色， 将X染黑， redOver</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (x != root &amp;&amp; colorOf(x) == BLACK)</span><br></pre></td></tr></tbody></table></figure>
+
+<h5 id="删除左孩子X-四种情况"><a href="#删除左孩子X-四种情况" class="headerlink" title="删除左孩子X 四种情况"></a>删除左孩子X 四种情况</h5><h6 id="case1-1"><a href="#case1-1" class="headerlink" title="case1"></a>case1</h6><p><strong>条件</strong>：S为红色<br><strong>隐含条件</strong>：由于性质4，P、LN、RN必定都为黑色<br><strong>处理方式：</strong>S染黑，P染红，左旋P，LN成为新的sib</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (x == leftOf(parentOf(x))) {</span><br><span class="line">    Entry&lt;K,V&gt; sib = rightOf(parentOf(x));</span><br><span class="line">    <span class="keyword">if</span> (colorOf(sib) == RED) {</span><br><span class="line">        setColor(sib, BLACK);</span><br><span class="line">        setColor(parentOf(x), RED);</span><br><span class="line">        rotateLeft(parentOf(x));</span><br><span class="line">        sib = rightOf(parentOf(x));</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h6 id="case2-1"><a href="#case2-1" class="headerlink" title="case2"></a>case2</h6><p><strong>条件；</strong></p>
+<p>case2-1条件：S、LN、RN均为黑色，P为黑色</p>
+<p>case2-2条件：S、LN、RN均为黑色，P为红色</p>
+<p><strong>隐含条件</strong>：由于性质4，P、LN、RN必定都为黑色<br><strong>处理方式</strong>：S染黑，P染红，左旋P，LN成为新的sib<br><strong>处理方式相同</strong>：S染红，X回溯至P</p>
+<h6 id="case3-1"><a href="#case3-1" class="headerlink" title="case3"></a>case3</h6><p><strong>条件：</strong>S为黑色，LN为红色，RN为黑色<br><strong>处理方式：</strong>LN染黑、S染红，右旋S，S指向LN<br>转化为case4-1、case4-2</p>
+<h6 id="case4"><a href="#case4" class="headerlink" title="case4"></a>case4</h6><p>S为黑色，LN随意，红RN；S变P的颜色，P和S染黑，左旋P</p>
+<h2 id="Comparable和Comparator"><a href="#Comparable和Comparator" class="headerlink" title="Comparable和Comparator"></a>Comparable和Comparator</h2><h4 id="Comparable"><a href="#Comparable" class="headerlink" title="Comparable"></a>Comparable</h4><h5 id="Comparable简介"><a href="#Comparable简介" class="headerlink" title="Comparable简介"></a>Comparable简介</h5><p><strong>Comparable是排序接口。</strong></p>
+<p>若一个类实现了Comparable接口，就意味着“<strong>该类支持排序</strong>”。  即然实现Comparable接口的类支持排序，假设现在存在“实现Comparable接口的类的对象的List列表(或数组)”，则该List列表(或数组)可以通过 Collections.sort（或 Arrays.sort）进行排序。</p>
+<p>此外，“实现Comparable接口的类的对象”可以用作“有序映射(如TreeMap)”中的键或“有序集合(TreeSet)”中的元素，而不需要指定比较器。</p>
+<h5 id="Comparable-定义"><a href="#Comparable-定义" class="headerlink" title="Comparable 定义"></a>Comparable 定义</h5><p>Comparable 接口仅仅只包括一个函数，它的定义如下：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.lang;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Comparable</span>&lt;<span class="title">T</span>&gt; </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(T o)</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>假设我们通过 x.compareTo(y) 来“比较x和y的大小”。若返回“负数”，意味着“x比y小”；返回“零”，意味着“x等于y”；返回“正数”，意味着“x大于y”。</p>
+<h4 id="Comparator"><a href="#Comparator" class="headerlink" title="Comparator"></a>Comparator</h4><h5 id="Comparator简介"><a href="#Comparator简介" class="headerlink" title="Comparator简介"></a>Comparator简介</h5><p><strong>Comparator 是比较器接口。</strong></p>
+<p>我们若需要控制某个类的次序，而该类本身不支持排序(即没有实现Comparable接口)；那么，我们可以建立一个“该类的比较器”来进行排序。这个“比较器”只需要实现Comparator接口即可。</p>
+<p>也就是说，我们可以通过“<strong>实现Comparator类来新建一个比较器</strong>”，然后通过该比较器对类进行排序。</p>
+<h5 id="Comparator定义"><a href="#Comparator定义" class="headerlink" title="Comparator定义"></a>Comparator定义</h5><p>Comparator 接口仅仅只包括两个个函数，它的定义如下：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Comparator</span>&lt;<span class="title">T</span>&gt; </span>{</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">compare</span><span class="params">(T o1, T o2)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><h5 id="相同"><a href="#相同" class="headerlink" title="相同"></a>相同</h5><ul>
+<li>Comparable和Comparator都是用来实现对象的比较、排序</li>
+<li>要想对象比较、排序，都需要实现Comparable或Comparator接口</li>
+<li>Comparable和Comparator都是Java的接口</li>
+</ul>
+<h5 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h5><ul>
+<li>Comparator位于java.util包下，而Comparable位于java.lang包下</li>
+<li>Comparable接口的实现是在类的内部（如 String、Integer已经实现了Comparable接口，自己就可以完成比较大小操作），Comparator接口的实现是在类的外部（可以理解为一个是自已完成比较，一个是外部程序实现比较）</li>
+<li>实现Comparable接口要重写compareTo方法, 在compareTo方法里面实现比较</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.256Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JDK%E6%BA%90%E7%A0%81/" rel="tag">JDK源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Map/" rel="tag">Map</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/rbtree-analysis/&title=《红黑树》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/rbtree-analysis/&title=《红黑树》 — Wkkの笔记&source=红黑树剖析" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/rbtree-analysis/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《红黑树》 — Wkkの笔记&url=https://winniekun.github.io/rbtree-analysis/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/rbtree-analysis/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/springboot-%E9%85%8D%E7%BD%AE/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">springboot---配置</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/stick-to-backtrack/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">死磕回溯</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/rbtree-analysis/&title=《红黑树》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/rbtree-analysis/&title=《红黑树》 — Wkkの笔记&source=红黑树剖析" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/rbtree-analysis/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《红黑树》 — Wkkの笔记&url=https://winniekun.github.io/rbtree-analysis/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/rbtree-analysis/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACK0lEQVR42u3aS07EMBAFwLn/pUFihYQI77UDInZ5Fc2Ax5VFy/15veL19rG+Pn/+5OvfrH9+88LAwHgs4+1yfcdIjnKNvz5DfjYMDIxzGLMgmxylDeIJHgMDA+M6yCYhuF3568PAwMCYJa7XB5oFbgwMDIxZEptc+9pgmn9yWy6OgYHxQMZKY+C3n/+ov4GBgfGPGesJ50rpLb9u/nAeDAyMrRnfXcjy4Hu9Qzui0SbAr3w7DAyMhzNmxa+7hsDaEl706jEwMDZltKWxWfKZh9FhWQ0DA2M7xqyhuHI1nCWoP+yPgYFxACMficibmsWQxPpgBwYGxgGMNhFtg2NbOKtfKwYGxtaMWXjNB7zy0a489GNgYJzJyKetZqW09lqZv5rh0BgGBsbDGUngW7lQJgntDS8XAwNjU8bs2rdSemv/Nwq4GBgY2zFmZf2csX41jKYpMDAwtmYk17j1kYg2NW1bCBgYGHsz8oLarKk5C6xtCo2BgbE3ox1LnTUX8x3a/TEwMDDa5DY/XLJP+y0GBsYJjBmvPVB+ZczHODAwME5gtENXbaG/vuT9xrAFBgbGYxmzYll76LxU1xbdMDAwTmDkKz9u8mNtEwIDAwMjD4IrjcY2ZNeFOQwMjAMYbbk/H5toQ3nbwMDAwMBYeU7aALP2ww0BFwMDY1NG2zxIrpKzobGlgIuBgfFYRlusz9PLPBDXVUAMDIxjGG1jIPnJpIj2NyNlGBgYD2e8A1BrGQbk7VTUAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

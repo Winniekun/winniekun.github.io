@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>B树系列 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="B树">
+    <meta name="description" content="B树共分为两个部分， 首先是B的性质、B树的建立、插入和删除，之后是B+树性质、以及相比于B树，区别在哪儿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="B树系列">
+<meta property="og:url" content="https://winniekun.github.io/B%E6%A0%91%E7%B3%BB%E5%88%97/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="B树共分为两个部分， 首先是B的性质、B树的建立、插入和删除，之后是B+树性质、以及相比于B树，区别在哪儿">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/03/19/IqcESBNlWG3kfbs.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/19/Xxai38OMGWr1vgn.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/19/lGRqMd8EvHDQOaA.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/19/HYlaTkS6Dc7wMPN.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/19/9cvKTjui2gweZhJ.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/29/OP8kp1zbCexrJD3.png">
+<meta property="article:published_time" content="2019-05-17T11:25:36.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.254Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="B树">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/03/19/IqcESBNlWG3kfbs.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">B树系列</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">B树系列</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-05-17T11:25:36.000Z" itemprop="datePublished" class="page-time">
+  2019-05-17
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#B树"><span class="post-toc-number">1.</span> <span class="post-toc-text">B树</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#B树的性质"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">B树的性质</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#B树的高度"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">B树的高度</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#B树的查找"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">B树的查找</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#基本步骤"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">基本步骤</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#B树的插入、B树的删除"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">B树的插入、B树的删除</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#删除关键字k为非终端节点（终端节点-叶子节点）"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">删除关键字k为非终端节点（终端节点  !&#x3D; 叶子节点）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#删除关键字k为终端节点"><span class="post-toc-number">1.4.2.</span> <span class="post-toc-text">删除关键字k为终端节点</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#B-树"><span class="post-toc-number">2.</span> <span class="post-toc-text">B+树</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#B-树的性质"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">B+树的性质</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#B-树结构示意图"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">B+树结构示意图</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#B-树的性质II："><span class="post-toc-number">2.3.</span> <span class="post-toc-text">B+树的性质II：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#B-树结构示意图II"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">B+树结构示意图II</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#B和B-区别"><span class="post-toc-number">3.</span> <span class="post-toc-text">B和B+区别</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#查找、插入、删除"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">查找、插入、删除</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#reference"><span class="post-toc-number">4.</span> <span class="post-toc-text">reference</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-数据结构/B树系列"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">B树系列</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-05-17 19:25:36" datetime="2019-05-17T11:25:36.000Z"  itemprop="datePublished">2019-05-17</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="B树"><a href="#B树" class="headerlink" title="B树"></a>B树</h2><p>共分为两个部分， 首先是B的性质、B树的建立、插入和删除，之后是B+树性质、以及相比于B树，区别在哪儿</p>
+<a id="more"></a>
+
+<h3 id="B树的性质"><a href="#B树的性质" class="headerlink" title="B树的性质"></a>B树的性质</h3><p>B树又称为多路平衡查找树，B树中所有结点的孩子结点数的最大值称为B树的阶。通常使用m表示。</p>
+<p><strong>一颗m阶B树或为空，或为满足如下特性的m叉树。</strong></p>
+<ol>
+<li><p>树中每个节点至多有m颗子树（m-1关键字）</p>
+</li>
+<li><p>若是根节点不是终端节点，至少有两颗子树</p>
+</li>
+<li><p>除根以外的所有非叶子节点至少 $\lceil m/2 \rceil$ 颗子树（$\lceil m/2 \rceil $ -1 关键字）</p>
+</li>
+<li><p>所有的非叶子结点的结构如下：</p>
+<p><img src="https://i.loli.net/2020/03/19/IqcESBNlWG3kfbs.png" alt="b树节点信息.png"></p>
+</li>
+<li><p>所有叶子节点都出现在同一层次上，并且不带任何信息</p>
+</li>
+</ol>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://i.loli.net/2020/03/19/Xxai38OMGWr1vgn.png" alt="b树示例.png" title="">
+                </div>
+                <div class="image-caption">b树示例.png</div>
+            </figure>
+
+
+
+<h3 id="B树的高度"><a href="#B树的高度" class="headerlink" title="B树的高度"></a>B树的高度</h3><p>$ n$ : 关键字的个数</p>
+<p>$h \le log_\lceil m/2 \rceil ((n+1)/2) + 1  $</p>
+<p>具体的证明，百度。。。</p>
+<h3 id="B树的查找"><a href="#B树的查找" class="headerlink" title="B树的查找"></a>B树的查找</h3><p>因为其是有序的，其和二叉搜索树的查找类似，只不过不同的是每个节点其有多个关键字的有序表，然后根据该节点的子树做多路分支决定。</p>
+<h4 id="基本步骤"><a href="#基本步骤" class="headerlink" title="基本步骤"></a>基本步骤</h4><ol>
+<li>在B树中找到节点</li>
+<li>在节点内找到关键字</li>
+</ol>
+<p>由于B树通常是存储在磁盘上的， 所有第一次是在磁盘上进行， 之后第二次在内存中运行，即在找到目标节点之后，将其储存内存之后， 然后使用顺序查找或者折半查找，查找等于K的关键字。</p>
+<h3 id="B树的插入、B树的删除"><a href="#B树的插入、B树的删除" class="headerlink" title="B树的插入、B树的删除"></a>B树的插入、B树的删除</h3><p>可根据参考书和<a href="https://www.cs.usfca.edu/~galles/visualization/BTree.html" target="_blank" rel="noopener">可视化网站</a>进行理解</p>
+<p><strong>B树每个节点的关键字个数范围 $[\lceil m/2 \rceil -1 , m-1]$</strong></p>
+<p>其中删除的操作共分为两种情况，并且这两种情况又有细分</p>
+<h4 id="删除关键字k为非终端节点（终端节点-叶子节点）"><a href="#删除关键字k为非终端节点（终端节点-叶子节点）" class="headerlink" title="删除关键字k为非终端节点（终端节点  != 叶子节点）"></a>删除关键字k为非终端节点（终端节点  != 叶子节点）</h4><p>其实和AVL的删除是如出一辙的</p>
+<ol>
+<li>小于k的子树中关键字的个数 &gt; $\lceil m/2 \rceil -1$  则找出k的前驱k’替代k， 再递归的删除k‘</li>
+<li>大于k的子树中关键字的个数 &gt; $\lceil m/2 \rceil -1$  则找出k的后继k’替代k， 再递归的删除k’</li>
+<li>k的左右子树的关键字个数 均为 $\lceil m/2 \rceil-1$  则进行合并两个子树，然后删除k即可</li>
+</ol>
+<h4 id="删除关键字k为终端节点"><a href="#删除关键字k为终端节点" class="headerlink" title="删除关键字k为终端节点"></a>删除关键字k为终端节点</h4><ol>
+<li><p>如果k所在的节点关键字个数&gt; $\lceil m/2 \rceil -1$  直接删除</p>
+</li>
+<li><p>k所在的节点关键字个数=$\lceil m/2 \rceil -1$ </p>
+<ol>
+<li><p>兄弟够借</p>
+<p><img src="https://i.loli.net/2020/03/19/lGRqMd8EvHDQOaA.png" alt="b树-兄弟够借.png"></p>
+</li>
+<li><p>兄弟不够借</p>
+<p><img src="https://i.loli.net/2020/03/19/HYlaTkS6Dc7wMPN.png" alt="b树-兄弟不够借.png"></p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="B-树"><a href="#B-树" class="headerlink" title="B+树"></a>B+树</h2><h3 id="B-树的性质"><a href="#B-树的性质" class="headerlink" title="B+树的性质"></a>B+树的性质</h3><p>B+树是应数据库的所需， 所出现的一种B树的变形</p>
+<p>一颗m阶的B+树需满足下列条件</p>
+<ol>
+<li>每个分支节点最多有m颗子树</li>
+<li>非叶子的根节点至少有两颗子树，其他的分支节点至少有$\lceil m/2 \rceil $ 颗子树</li>
+<li>节点的子树个数和关键字个数相等</li>
+<li>所有叶子节点包含所有关键字及指向相应记录的指针，并且叶子节点将关键字按大小顺序排列，并且相邻叶节点按大小顺序相互链接起来</li>
+<li>所有分支节点中仅包含它的各个子节点中关键字的最大值和指向该子树的指针</li>
+</ol>
+<h3 id="B-树结构示意图"><a href="#B-树结构示意图" class="headerlink" title="B+树结构示意图"></a>B+树结构示意图</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://i.loli.net/2020/03/19/9cvKTjui2gweZhJ.png" alt="B_树结构示意图.png" title="">
+                </div>
+                <div class="image-caption">B_树结构示意图.png</div>
+            </figure>
+
+
+
+<h3 id="B-树的性质II："><a href="#B-树的性质II：" class="headerlink" title="B+树的性质II："></a>B+树的性质II：</h3><p>才发现，原来各种资料上关于<code>B+</code>树的性质，不经相同….. 以下为<code>维基百科</code>的定义</p>
+<p>和王道的定义区别不大，但是<strong>分支节点关键字个数比子树个数小1</strong>， 也就是和B的节点定义一样。</p>
+<blockquote>
+<p>1）B+树包含2种类型的结点：内部结点（也称索引结点）和叶子结点。根结点本身即可以是内部结点，也可以是叶子结点。根结点的关键字个数最少可以只有1个。</p>
+<p>2）B+树与B树最大的不同是内部结点不保存数据，只用于索引，所有数据（或者说记录）都保存在叶子结点中。</p>
+<p>3） m阶B+树表示了内部结点最多有m-1个关键字（或者说内部结点最多有m个子树），阶数m同时限制了叶子结点最多存储m-1个记录。</p>
+<p>4）内部结点中的key都按照从小到大的顺序排列，对于内部结点中的一个key，左树中的所有key都<strong>小于</strong>它，右子树中的key都<strong>大于等于</strong>它。叶子结点中的记录也按照key的大小排列。</p>
+<p>5）每个叶子结点都存有相邻叶子结点的指针，叶子结点本身依关键字的大小自小而大顺序链接。</p>
+</blockquote>
+<h3 id="B-树结构示意图II"><a href="#B-树结构示意图II" class="headerlink" title="B+树结构示意图II"></a>B+树结构示意图II</h3><p>下图为一个三阶B+树的示意图</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://i.loli.net/2020/03/29/OP8kp1zbCexrJD3.png" alt="B_树结构示意图.png" title="">
+                </div>
+                <div class="image-caption">B_树结构示意图.png</div>
+            </figure>
+
+
+
+<h2 id="B和B-区别"><a href="#B和B-区别" class="headerlink" title="B和B+区别"></a>B和B+区别</h2><blockquote>
+<p><em>B+ trees don’t store data pointer in interior nodes, they are ONLY stored in leaf nodes. This is not optional as in B-Tree. This means that interior nodes can fit more keys on block of memory and thus fan out better.</em></p>
+<p><em>The leaf nodes of B+ trees are linked, so doing a linear scan of all keys will requires just one pass through all the leaf nodes. A B tree, on the other hand, would require a traversal of every level in the tree. This property can be utilized for efficient search as well, since data is stored only in leafs.</em></p>
+</blockquote>
+<ol>
+<li><code>B+</code>内部节点不存储数据，只有叶子节点存储信息，<code>B</code>树没有，这也就意味着，<code>B+</code>树比<code>B</code>树的内部节点能存储更多的信息</li>
+<li><code>B+</code>树叶节点的数据是链接的，可做一次线性扫描获取所有的数据， 但是<code>B</code>树就需要遍历整个<code>B</code>树</li>
+</ol>
+<h3 id="查找、插入、删除"><a href="#查找、插入、删除" class="headerlink" title="查找、插入、删除"></a>查找、插入、删除</h3><p><code>B+</code>和<code>B</code>树相同，但是对于查找而言，如果非叶子节点上关键字值等于给定值时，并不终止，而是继续查找，直到找到叶子节点上的该关键字为止。所以，<code>B+</code>树的查找，无论成功与否，每次都是一条从根节点到叶子节点的路径。</p>
+<h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><ul>
+<li>王道数据结构</li>
+<li><a href="https://en.wikipedia.org/wiki/B+_tree" target="_blank" rel="noopener">B+ tree</a></li>
+<li><a href="https://www.cnblogs.com/nullzx/p/8729425.html" target="_blank" rel="noopener">B树和B+树的插入、删除图文详解</a></li>
+<li><a href="https://www.quora.com/q/loveforprogramming/Memory-locality-the-magic-of-B-Trees" target="_blank" rel="noopener">Memory locality &amp; the magic of B-Trees!</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.254Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/B%E6%A0%91/" rel="tag">B树</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/B%E6%A0%91%E7%B3%BB%E5%88%97/&title=《B树系列》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/B%E6%A0%91%E7%B3%BB%E5%88%97/&title=《B树系列》 — Wkkの笔记&source=B树共分为两个部分， 首先是B的性质、B树的建立、插入和删除，之后是B+树性质、以及相比于B树，区别在哪儿" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/B%E6%A0%91%E7%B3%BB%E5%88%97/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《B树系列》 — Wkkの笔记&url=https://winniekun.github.io/B%E6%A0%91%E7%B3%BB%E5%88%97/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/B%E6%A0%91%E7%B3%BB%E5%88%97/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">选择排序</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/%E5%A4%A7%E5%9B%9B%E4%B8%8A%E5%AD%A6%E6%9C%9F%E6%80%BB%E7%BB%93-%E6%85%A2%E7%85%A8%E6%85%A2%E7%82%96/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">大四上学期总结---慢煨慢炖</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/B%E6%A0%91%E7%B3%BB%E5%88%97/&title=《B树系列》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/B%E6%A0%91%E7%B3%BB%E5%88%97/&title=《B树系列》 — Wkkの笔记&source=B树共分为两个部分， 首先是B的性质、B树的建立、插入和删除，之后是B+树性质、以及相比于B树，区别在哪儿" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/B%E6%A0%91%E7%B3%BB%E5%88%97/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《B树系列》 — Wkkの笔记&url=https://winniekun.github.io/B%E6%A0%91%E7%B3%BB%E5%88%97/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/B%E6%A0%91%E7%B3%BB%E5%88%97/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJUlEQVR42u3a0Y7CQAgFUP//p7uvJka9QE229MzTRse2p5sQGHg84nW8rOfP3+15/vbzlV+v8PjFwsDAuCzj+LjyGyS/ened5L5fXhAGBsYNGEkozPckATq/zuf9GBgYGHkKmDx0L1nEwMDA6AXcXsmaXxkDAwOjV8RW2f+0FsfAwLggYxIif/33T/obGBgYl2IcxZW0AfIC+LSnwsDAWM2oHoFVD9p6xWr1eTAwMO7AqBaiedhNbpmXuBgYGBjJz5IDsiRYJ1c4oSGKgYGxglFtA/SO/nsth/wFYWBg7GbkAbT6Sa9H0WuUYmBg7GZUw2W1iD03KfxSeWNgYKxmVHlJeTkvYgtHdRgYGKsZvaRw8qCTlPFLCMbAwFjKyAH5Q+RpYq93Mfo/YGBgLGWc1TCoHrcVDvswMDBWM6rDDUl5mTcMJq2It68JAwNjKSNJwpIkrzc2kQTxwpgFBgbGOka1dKyORHxON/M90bAFBgbGUsakYZmE3clARjltxcDAuBkjzyt7pPl4RxRwMTAwVjN6JWu1hVCNlhgYGBiTNkA0fRbs7w2fYWBg7GYcxVUNoL1WaJmKgYGxmlEd2MpDajnqF5sQeeGNgYGxgzEPsnkLofrKyiMXGBgYqxmT9G4e13s7MTAwMKpBNi87ewMWzTeBgYFxS0bv2GsyHJaMmmFgYNyBUR1aTYLvWQXwycdtGBgYF2TM8678IZJX9sPQj4GBcT3GH2uUIuDJrIkBAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

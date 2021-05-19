@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Volatile关键字内涵 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="并发">
+    <meta name="description" content="内涵与表象">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Volatile关键字内涵">
+<meta property="og:url" content="https://winniekun.github.io/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="内涵与表象">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/04/24/sBE5dy3Dfh7ctLI.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/27/b6yp7RVDshJ9aFq.png">
+<meta property="article:published_time" content="2020-01-18T04:35:26.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.247Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="并发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/24/sBE5dy3Dfh7ctLI.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Volatile关键字内涵</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Volatile关键字内涵</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-01-18T04:35:26.000Z" itemprop="datePublished" class="page-time">
+  2020-01-18
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内涵与表象"><span class="post-toc-number">1.</span> <span class="post-toc-text">内涵与表象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#定义"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">**定义: **</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用"><span class="post-toc-number">2.</span> <span class="post-toc-text">使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#volatile的使用场景"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">volatile的使用场景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#状态标记量"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">状态标记量</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#单例模式的double-check"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">单例模式的double check</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#禁止重排序"><span class="post-toc-number">3.</span> <span class="post-toc-text">禁止重排序</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">4.</span> <span class="post-toc-text">References</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Java进阶/并发/Volatile关键字内涵"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Volatile关键字内涵</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-01-18 12:35:26" datetime="2020-01-18T04:35:26.000Z"  itemprop="datePublished">2020-01-18</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="内涵与表象"><a href="#内涵与表象" class="headerlink" title="内涵与表象"></a>内涵与表象</h2><a id="more"></a>
+
+<p>volatile主要有一下的功能：</p>
+<ol>
+<li><p>保证变量的内存可见性</p>
+<blockquote>
+<p>内存可见性：通俗来说就是，线程A对一个volatile变量的修改，对于其它线程来说是可见的，即线程每次获取volatile变量的值都是最新的</p>
+</blockquote>
+</li>
+<li><p>禁止volatile变量与普通变量<strong>重排序</strong></p>
+</li>
+</ol>
+<p><img src="https://i.loli.net/2020/04/24/sBE5dy3Dfh7ctLI.png" alt="volatile.png"></p>
+<h3 id="定义"><a href="#定义" class="headerlink" title="**定义: **"></a>**定义: **</h3><blockquote>
+<p>Java语言规范第3版中对volatile的定义如下:Java编程语言允许线程访问共享变量,为了确保共享变量能被准确和一致地更新,线程应该确保通过排他锁单独获得这个变量。Java语言提供了volatile,在某些情况下比锁要更加方便。如果一个字段被声明成volatile,Java线程内存模型确保所有线程看到这个变量的值是一致的</p>
+</blockquote>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="volatile的使用场景"><a href="#volatile的使用场景" class="headerlink" title="volatile的使用场景"></a>volatile的使用场景</h3><p>但是使用volatile必须<strong>满足两个条件</strong>：</p>
+<ol>
+<li><p>对变量的写操作不依赖当前值，如多线程下执行a++，是无法通过volatile保证结果准确性的</p>
+</li>
+<li><p>该变量没有包含在具有其它变量的不变式中(如下例子解释)</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NumberRange</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> lower = <span class="number">0</span>;</span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> upper = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getLower</span><span class="params">()</span> </span>{ <span class="keyword">return</span> lower; }</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getUpper</span><span class="params">()</span> </span>{ <span class="keyword">return</span> upper; }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLower</span><span class="params">(<span class="keyword">int</span> value)</span> </span>{ </span><br><span class="line">        <span class="keyword">if</span> (value &gt; upper) </span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(...);</span><br><span class="line">        lower = value;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUpper</span><span class="params">(<span class="keyword">int</span> value)</span> </span>{ </span><br><span class="line">        <span class="keyword">if</span> (value &lt; lower) </span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(...);</span><br><span class="line">        upper = value;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>若是有两个线程同时分别执行了<strong>setLower(8)<strong>和</strong>setUpper(5)</strong> 然后 均通过了判断, 则最后的范围从$[0, 10]$ 变为了 $[8, 5]$成为了一个无效的范围, 这样就出现了问题. 这种场景下就只能使用<strong>synchronized</strong>, 同一时间只允许getLower和getUpper方法中其中一个执行</p>
+</li>
+</ol>
+<h4 id="状态标记量"><a href="#状态标记量" class="headerlink" title="状态标记量"></a>状态标记量</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerHandler</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> isopen;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (isopen) {</span><br><span class="line">           <span class="comment">//促销逻辑</span></span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">          <span class="comment">//正常逻辑</span></span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setIsopen</span><span class="params">(<span class="keyword">boolean</span> isopen)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.isopen = isopen</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h4 id="单例模式的double-check"><a href="#单例模式的double-check" class="headerlink" title="单例模式的double check"></a>单例模式的double check</h4><p>单例模式的一种实现方式，但很多人会忽略volatile关键字，因为没有该关键字，程序也可以很好的运行，只不过代码的稳定性总不是100%，说不定在未来的某个时刻，隐藏的bug就出来了。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton instance;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>{</span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>){</span><br><span class="line">            sychronized(Singleton<span class="class">.<span class="keyword">class</span>)</span>{</span><br><span class="line">                <span class="keyword">if</span>(instance == <span class="keyword">null</span>){</span><br><span class="line">                    instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p>在JMM中, 有主内存和本地内存, 每个线程都有一个本地内存, 且共享主内存中的数据, <code>普通变量</code>和<code>volatile变量</code>的区别如下:</p>
+<ol>
+<li>普通变量进行读操作的时候, 首先会读取本地内存中的数据, 若是不存在, 则去主内存中拷贝一份在本地内存, 写操作只会写入到本地内存. 这样其他变量就不会读取变量的最新值</li>
+<li>voaltile遍历进行读操作的时候,  JMM会将本地内存的数据设置为无效, 要求线程从主内存读取数据, 写操作时, JMM会将工作内存中的数据刷新到主内存中. 这样其他遍历就能够读取变量的最新值</li>
+</ol>
+<h2 id="禁止重排序"><a href="#禁止重排序" class="headerlink" title="禁止重排序"></a>禁止重排序</h2><p>JVM通过<strong>内存屏障</strong>来实现限制处理器的重排序。</p>
+<p>什么是内存屏障？硬件层面，内存屏障分两种：读屏障（Load Barrier）和写屏障（Store Barrier）。内存屏障有两个作用：</p>
+<ol>
+<li>阻止屏障两侧的指令重排序；</li>
+<li>强制把写缓冲区/高速缓存中的脏数据等写回主内存，或者让缓存中相应的数据失效。</li>
+</ol>
+<p>编译器在<strong>生成字节码时</strong>，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序。编译器选择了一个<strong>比较保守的JMM内存屏障插入策略</strong>，这样可以保证在任何处理器平台，任何程序中都能得到正确的volatile内存语义。这个策略是：</p>
+<ul>
+<li>在每个volatile写操作前插入一个StoreStore屏障；</li>
+<li>在每个volatile写操作后插入一个StoreLoad屏障；</li>
+<li>在每个volatile读操作后插入一个LoadLoad屏障；</li>
+<li>在每个volatile读操作后再插入一个LoadStore屏障。</li>
+</ul>
+<p>大概示意图是这个样子：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://i.loli.net/2020/05/27/b6yp7RVDshJ9aFq.png" alt="内存屏障" title="">
+                </div>
+                <div class="image-caption">内存屏障</div>
+            </figure>
+
+<p>再介绍一下volatile与普通变量的重排序规则:</p>
+<ol>
+<li>如果第一个操作是volatile读，那无论第二个操作是什么，都不能重排序；</li>
+<li>如果第二个操作是volatile写，那无论第一个操作是什么，都不能重排序；</li>
+<li>如果第一个操作是volatile写，第二个操作是volatile读，那不能重排序。</li>
+</ol>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li>Java并发编程的艺术</li>
+<li>深入浅出Java多线程</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.247Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/&title=《Volatile关键字内涵》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/&title=《Volatile关键字内涵》 — Wkkの笔记&source=内涵与表象" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Volatile关键字内涵》 — Wkkの笔记&url=https://winniekun.github.io/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/arrayList-analysis/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">ArrayList源码解读</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/Synchronize%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Synchronize关键字内涵</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/&title=《Volatile关键字内涵》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/&title=《Volatile关键字内涵》 — Wkkの笔记&source=内涵与表象" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Volatile关键字内涵》 — Wkkの笔记&url=https://winniekun.github.io/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACw0lEQVR42u3aQW7cMAwF0Nz/0imQVYBU7icpzqTA8yqIbclPC5FD8eMjvj6/rp//+X7lb53u/hz5ebRrFx4eHl7r009XPvTzW8lyPD/5PNpxZDw8PLw13vO2/jxlcjcZv0f9hwUPDw/vrbwkSDwnxPPAg4eHh/d/8fKQUF2samkDDw8P7zfweslxvt3ni1VN1q/VWvDw8PBiXvUA7Df8vXi+h4eHhzc4VZ8cRM3nysPA8V08PDy8BV7SGpX//3mc5y2+V86IwgYeHh7eVV61HNBrn0rmmgSS41x4eHh4C7xJSbQaJKrI3rIeU2o8PDy8q7zJht47yko+t3cXDw8Pb5uXvJyXD3obfVIQGTUE4OHh4a3xqqXYamk1PzbrYQq/FfDw8PDGvF5pNUltJ8GpmrIfU2o8PDy8l/PywDD5uGoROcqc8fDw8BZ4eevV/DiqF0J6fWR4eHh427y8sSlvI+iNmR96FRJ3PDw8vKu86labb/TVkHC3FIKHh4e3zas2XeXhobr13zo2+0utBQ8PD2+BNymb5qWEaotVUjg+Po+Hh4e3zOsVUqvbdz5+nqwfvw0PDw9vjVctRuTBIw8V+dIU2g7w8PDwFnj5j/9eUbXXWJAfrUWLi4eHh3eVl2zN8038VsNWuXyMh4eH93JetRjx/GT1c/O5jkg8PDy8l/Bu9Sz1MJMFjVJqPDw8vDEvH6La8LSRQOfz4uHh4e3x8k/Jn0lKGPnd/MjtGPfw8PDw1nh5GJgXfCel5GTpC5ENDw8Pr8grb7VBYaJa4Jgz8PDw8F7Pq5YbkiS7+nx+xJUsRyH64eHh4Q14+aafJ9C9hoD88Cwqc+Dh4eG9lTcp9V7I6+N+qgsdEHh4eHgLvKSUkBz/9z69EHjw8PDw1njJVp63AuRNVAlj1HCAh4eHt8Dr5aW9E7bq8iWzX7jw8PDwUt4f14mSl9PF9u8AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

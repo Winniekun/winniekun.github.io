@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>注解和反射 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="java基础">
+    <meta name="description" content="注解这里主要涉及的是四个基础的元注解(meta-annotation) Java中的注解，有四个基本的元注解target Retention Documented  Inherited 这四个元注解Documented和Inherited使用不多，主要为target retention两个注解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="注解和反射">
+<meta property="og:url" content="https://winniekun.github.io/%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%8F%8D%E5%B0%84/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="注解这里主要涉及的是四个基础的元注解(meta-annotation) Java中的注解，有四个基本的元注解target Retention Documented  Inherited 这四个元注解Documented和Inherited使用不多，主要为target retention两个注解">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-12-10T10:51:29.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.244Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="java基础">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">注解和反射</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">注解和反射</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-12-10T10:51:29.000Z" itemprop="datePublished" class="page-time">
+  2019-12-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#注解"><span class="post-toc-number">1.</span> <span class="post-toc-text">注解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Target"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Target</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Retention"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Retention</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#反射"><span class="post-toc-number">2.</span> <span class="post-toc-text">反射</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#反射所提供的功能"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">反射所提供的功能</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#反射优点和缺点"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">反射优点和缺点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#获取Class类的实例"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">获取Class类的实例</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#类的加载过程"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">类的加载过程</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#获取Class对象之后可以做写什么"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">获取Class对象之后可以做写什么</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#注解和反射的实际应用"><span class="post-toc-number">3.</span> <span class="post-toc-text">注解和反射的实际应用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">4.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Java基础/注解和反射"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">注解和反射</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-12-10 18:51:29" datetime="2019-12-10T10:51:29.000Z"  itemprop="datePublished">2019-12-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><p>这里主要涉及的是四个基础的元注解(meta-annotation)</p>
+<p>Java中的注解，有四个基本的元注解<code>target</code> <code>Retention</code> <code>Documented</code>  <code>Inherited</code> 这四个元注解<code>Documented</code>和<code>Inherited</code>使用不多，主要为<code>target</code> <code>retention</code>两个注解</p>
+<a id="more"></a>
+
+<h3 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h3><p>描述注解的使用范围(即被修饰的注解可以用在什么地方).</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target {</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns an array of the kinds of elements an annotation type</span></span><br><span class="line"><span class="comment">     * can be applied to.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> an array of the kinds of elements an annotation type</span></span><br><span class="line"><span class="comment">     * can be applied to</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    ElementType[] value();</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用的范围也就是ElementType[]中的枚举类型数据</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> ElementType {</span><br><span class="line">    <span class="comment">/** Class, interface (including annotation type), or enum declaration */</span></span><br><span class="line">    TYPE, <span class="comment">// 类、接口、枚举</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Field declaration (includes enum constants) */</span></span><br><span class="line">    FIELD, <span class="comment">// 成员变量</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Method declaration */</span></span><br><span class="line">    METHOD, <span class="comment">// 成员方法</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Formal parameter declaration */</span></span><br><span class="line">    PARAMETER, <span class="comment">// 方法参数</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Constructor declaration */</span></span><br><span class="line">    CONSTRUCTOR, <span class="comment">// 构造方法</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Local variable declaration */</span></span><br><span class="line">    LOCAL_VARIABLE, <span class="comment">// 局部变量</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Annotation type declaration */</span></span><br><span class="line">    ANNOTATION_TYPE, <span class="comment">// 注解类</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Package declaration */</span></span><br><span class="line">    PACKAGE, <span class="comment">// 包</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Type parameter declaration</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 1.8</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    TYPE_PARAMETER,  <span class="comment">// 类型参数（泛型）</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Use of a type</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 1.8</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    TYPE_USE</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="Retention"><a href="#Retention" class="headerlink" title="Retention"></a>Retention</h3><p>描述注解保留的时间范围(即：被描述的注解在它所修饰的类中可以被保留到何时). </p>
+<p>Reteniton注解用来限定那些被它所注解的注解类在注解到其他类上以后，可被保留到何时，一共有三种策略</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> RetentionPolicy {</span><br><span class="line">	<span class="comment">// 源文件保留</span></span><br><span class="line">    SOURCE,</span><br><span class="line">	<span class="comment">// 编译期保留，默认值</span></span><br><span class="line">    CLASS,</span><br><span class="line">	<span class="comment">// 运行期保留，可通过反射去获取注解信息</span></span><br><span class="line">    RUNTIME</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><p><strong>正常方式</strong>:  <code>引入需要的包类名称</code> —&gt; <code>通过 new实例化</code> —&gt; <code>获取实例化对象</code></p>
+<p><strong>反射</strong>:  <code>实例化对象</code> —&gt; <code>getClass()方法</code> —&gt; <code>得到完整的包类名称</code></p>
+<p>通过反射， 使得Java具有类似动态语言的特性</p>
+<h3 id="反射所提供的功能"><a href="#反射所提供的功能" class="headerlink" title="反射所提供的功能"></a>反射所提供的功能</h3><ul>
+<li>在运行时判断任意一个对象所属的类</li>
+<li>在运行时构造任意一个类的对象</li>
+<li>在运行时判断任意一个类所具有的成员变量和方法</li>
+<li>在运行时调用任意一个对象的成员变量和方法</li>
+<li>在运行时获取泛型信息</li>
+<li>在运行时处理注解</li>
+<li>生成动态代理</li>
+<li>……</li>
+</ul>
+<h3 id="反射优点和缺点"><a href="#反射优点和缺点" class="headerlink" title="反射优点和缺点"></a>反射优点和缺点</h3><p><strong>优点</strong>: </p>
+<p>可以动态创建和编译，有很大的灵活性</p>
+<p><strong>缺点</strong>: </p>
+<p>慢于直接执行相同的操作</p>
+<h3 id="获取Class类的实例"><a href="#获取Class类的实例" class="headerlink" title="获取Class类的实例"></a>获取Class类的实例</h3><ol>
+<li><p>已知某个类的实例</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">User user = <span class="keyword">new</span> User();</span><br><span class="line">Class&lt;? extends User&gt; aClass1 = user.getClass();</span><br></pre></td></tr></tbody></table></figure></li>
+<li><p>已知具体的类</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;User&gt; aClass2 = User<span class="class">.<span class="keyword">class</span></span>;</span><br></pre></td></tr></tbody></table></figure></li>
+<li><p>已知类的全名称</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt; aClass3 = Class.forName(<span class="string">"com.xxx.xxx"</span>);</span><br></pre></td></tr></tbody></table></figure></li>
+</ol>
+<h3 id="类的加载过程"><a href="#类的加载过程" class="headerlink" title="类的加载过程"></a>类的加载过程</h3><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">|—————————|          |——————————|           |————————————|</span><br><span class="line">| 类的加载 | ------&gt;  | 类的链接   |  -------&gt; | 类的初始化  |</span><br><span class="line">|   Load  | -----&gt;   |   Link   |  -------&gt; | Initialize |</span><br><span class="line">|—————————|          |——————————|           |————————————|</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="获取Class对象之后可以做写什么"><a href="#获取Class对象之后可以做写什么" class="headerlink" title="获取Class对象之后可以做写什么"></a>获取Class对象之后可以做写什么</h3><ol>
+<li><p>创建类的对象</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aClass.newInstance(); <span class="comment">// 本质是调用了无参构造器</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>若是没有无参构造器，可以通过明确调用对应的构造器，然后将参数传递进去即可</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aClass.getDeclaredConstrutor(Class...parameterTypes)</span><br></pre></td></tr></tbody></table></figure></li>
+<li><p>可以调用类中的方法</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">User user = (User) aClass.newInstance();</span><br><span class="line">Method setName = aClass.getDeclaredMethod(<span class="string">"setName"</span>, String<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"><span class="comment">// invoke: 激活</span></span><br><span class="line"><span class="comment">// (对象, "方法的值")</span></span><br><span class="line">setName.invoke(user, <span class="string">"维坤坤"</span>);</span><br><span class="line">System.out.println(user.getName());</span><br></pre></td></tr></tbody></table></figure></li>
+<li><p>操作类中的属性</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//反射操作属性</span></span><br><span class="line">User user3 = (User) aClass.newInstance();</span><br><span class="line">Field name = aClass.getDeclaredField(<span class="string">"name"</span>);</span><br><span class="line"><span class="comment">// 不能操作私有属性 需要关闭安全检测</span></span><br><span class="line">name.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">name.set(user3, <span class="string">"孔维坤"</span>);</span><br><span class="line">System.out.println(user3.getName());</span><br></pre></td></tr></tbody></table></figure></li>
+</ol>
+<h2 id="注解和反射的实际应用"><a href="#注解和反射的实际应用" class="headerlink" title="注解和反射的实际应用"></a>注解和反射的实际应用</h2><p>编写一个注解，适用于成员方法，然后运行保留</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.METHOD)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> AAAA {</span><br><span class="line">    <span class="function">String <span class="title">value</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>通过反射获取注解中的内容</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReAno</span> </span>{</span><br><span class="line">    <span class="meta">@AAAA</span>(<span class="string">"我是方法注解"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">(<span class="keyword">int</span> a)</span></span>{</span><br><span class="line">        System.out.println(<span class="string">"wtf "</span> + a);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException </span>{</span><br><span class="line">    	<span class="comment">// 通过反射获取类</span></span><br><span class="line">        Class&lt;ReAno&gt; reAnoClass = ReAno<span class="class">.<span class="keyword">class</span></span>;</span><br><span class="line">        Method say = reAnoClass.getDeclaredMethod(<span class="string">"say"</span>, <span class="keyword">int</span><span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        AAAA annotation = say.getAnnotation(AAAA<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        System.out.println(annotation.value());</span><br><span class="line">    	<span class="comment">// 输出: 我是方法注解</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过反射获取注解的方式就是注解应用在什么范围， 就先通过反射获取对应的方法、或者成员变量，然后获取其注解即可。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.244Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%8F%8D%E5%B0%84/&title=《注解和反射》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%8F%8D%E5%B0%84/&title=《注解和反射》 — Wkkの笔记&source=注解这里主要涉及的是四个基础的元注解(meta-annotation)
+Java中的注解，有四个基本的元注解target Retention Docume..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%8F%8D%E5%B0%84/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《注解和反射》 — Wkkの笔记&url=https://winniekun.github.io/%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%8F%8D%E5%B0%84/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%8F%8D%E5%B0%84/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/Java%E5%B9%B6%E5%8F%91%E5%9F%BA%E7%A1%80/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Java并发基础</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/%E5%B9%B6%E5%8F%91%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">并发&amp;I/O基本概念</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%8F%8D%E5%B0%84/&title=《注解和反射》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%8F%8D%E5%B0%84/&title=《注解和反射》 — Wkkの笔记&source=注解这里主要涉及的是四个基础的元注解(meta-annotation)
+Java中的注解，有四个基本的元注解target Retention Docume..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%8F%8D%E5%B0%84/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《注解和反射》 — Wkkの笔记&url=https://winniekun.github.io/%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%8F%8D%E5%B0%84/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%8F%8D%E5%B0%84/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACuElEQVR42u3aQW7jMBAEQP//0w6Q0wKxlO4haWeB0smAbWlKBw7Rw8cjvp7f1/23//7meXG1d766/+YLDw8Pb1T6fUF5iUkpP79Nnpi8vhfPxcPDwzvG21v01e/34qM2g4eHh/dRXr7tvl/EZ0Xj4eHh/b+8pIj7xjCLGPDw8PD+Gi8JI5IS85eSfPvWrAUPDw8v5q0syp/6fHC+h4eHh7cwVZ81ifv750t82wxe3AEPDw/vAC8vYhaqJsOw+xpmXeDRvmM8PDy8+CmzkVVLOhFDRL/Hw8PDO8ZLFvo8xm1Ha7NU4R6Gh4eHd5qXbHzzQmelJwt925bw8PDwTvPy+OD+8UXAutB4otgCDw8P70O8tiXkG/SkAbQBx2WMi4eHh7eJ15LaiGG2Ld4VH+Ph4eGd480GVEUoUEYVw+gBDw8P7428GWnl6MAs+GhrwMPDwzvBa2PZNmZdfx2zSDc6GYGHh4c34q2EpO2ga6V35cHuMGvBw8PDi3nrRwTqtLgcpLWjtcu+h4eHh3eA16YXxWPKAwftUa3LZoOHh4d3gLfhDwuRxGzQ1Qa+eHh4eCd4M0C+1c5fVh46FNt0PDw8vK28WSybL+WzYCIPgn+pBw8PD+8Ab6WU/GqbwQy2oRQ8PDy8mNceh7pfiPPtddtahttuPDw8vK289nBAfvSq3bLnpQ/ne3h4eHjHeMminG95Z9vi9ZFYXRYeHh7eKFuYbZRXqHmzacPfF//Cw8PD28R7ltd6w2gPXSXsy/vg4eHhHeC1Q6yVQf7sNeWf8fDw8N7JywPWdgM9G4DlQXAUT+Dh4eEd4+XJZxva7moGswaGh4eH91nerAHsOlgwrBAPDw/vT/KiBboMdvPjX7/UiYeHh3eM14YRK2Ozlc16fhgLDw8P7xyvXehny3R7YKsdni1deHh4eCnvC1iGFttW5kChAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

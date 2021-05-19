@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>泛型 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="java基础">
+    <meta name="description" content="泛型容器没有指定存储数据类型，这种情况下，可以向 List 添加任意类型数据，编译器不会做类型检查，而是默默的将所有数据都转为 Object。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="泛型">
+<meta property="og:url" content="https://winniekun.github.io/%E6%B3%9B%E5%9E%8B/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="泛型容器没有指定存储数据类型，这种情况下，可以向 List 添加任意类型数据，编译器不会做类型检查，而是默默的将所有数据都转为 Object。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-03-10T23:53:55.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.243Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="java基础">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">泛型</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">泛型</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-10T23:53:55.000Z" itemprop="datePublished" class="page-time">
+  2019-03-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#泛型"><span class="post-toc-number">1.</span> <span class="post-toc-text">泛型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#优点"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">优点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#泛型类型"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">泛型类型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#泛型类"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">泛型类</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#单类型参数（T）"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">单类型参数（T）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#多类型参数（K，V）"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">多类型参数（K，V）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#泛型类的嵌套"><span class="post-toc-number">1.2.4.</span> <span class="post-toc-text">泛型类的嵌套</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#泛型接口"><span class="post-toc-number">1.2.5.</span> <span class="post-toc-text">泛型接口</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#实现接口的子类型声明具体的类型"><span class="post-toc-number">1.2.6.</span> <span class="post-toc-text">实现接口的子类型声明具体的类型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#实现接口的子类型不声明具体类型"><span class="post-toc-number">1.2.7.</span> <span class="post-toc-text">实现接口的子类型不声明具体类型</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#泛型方法"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">泛型方法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#类型擦除"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">类型擦除</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#泛型和继承"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">泛型和继承</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#类型边界"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">类型边界</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#类型通配符"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">类型通配符</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#上界通配符"><span class="post-toc-number">1.7.1.</span> <span class="post-toc-text">上界通配符</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#下界通配符"><span class="post-toc-number">1.7.2.</span> <span class="post-toc-text">下界通配符</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#无界通配符"><span class="post-toc-number">1.7.3.</span> <span class="post-toc-text">无界通配符</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#通配符和向上转型"><span class="post-toc-number">1.7.4.</span> <span class="post-toc-text">通配符和向上转型</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#泛型约束"><span class="post-toc-number">1.8.</span> <span class="post-toc-text">泛型约束</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#泛型实践"><span class="post-toc-number">1.9.</span> <span class="post-toc-text">泛型实践</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#泛型命名"><span class="post-toc-number">1.9.1.</span> <span class="post-toc-text">泛型命名</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Java基础/泛型"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">泛型</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-11 07:53:55" datetime="2019-03-10T23:53:55.000Z"  itemprop="datePublished">2019-03-11</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h2><p>容器没有指定存储数据类型，这种情况下，可以向 <code>List</code> 添加任意类型数据，编译器不会做类型检查，而是默默的将所有数据都转为 <code>Object</code>。</p>
+<a id="more"></a>
+
+<p>假设，最初我们希望向 <code>List</code> 存储的是整形数据，假设，某个家伙不小心存入了其他数据类型。当你试图从容器中取整形数据时，由于 <code>List</code> 当成 <code>Object</code> 类型来存储，你不得不使用类型强制转换。在运行时，才会发现==<code>List</code> 中数据不存储一致的问题==，这就为程序运行带来了很大的风险（无形伤害最为致命）。==而泛型的出现，解决了类型安全问题。==</p>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li><p>避免类型转换</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 未使用泛型</span></span><br><span class="line">List list = <span class="keyword">new</span> ArrayList();</span><br><span class="line">list.add(<span class="string">"hello"</span>);</span><br><span class="line">String s = (String) list.get(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 使用泛型</span></span><br><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">list.add(<span class="string">"hello"</span>);</span><br><span class="line">String s = list.get(<span class="number">0</span>);   <span class="comment">// 不需要进行类型转换</span></span><br></pre></td></tr></tbody></table></figure></li>
+<li><p>编译时强类型检测</p>
+<p>泛型要求在声明时指定实际数据类型，Java 编译器在编译时会对泛型代码做强类型检查，并在代码违反类型安全时发出告警。早发现，早治理，把隐患扼杀于摇篮，在编译时发现并修复错误所付出的代价远比在运行时小。</p>
+</li>
+<li><p>泛型编程可实现通用算法</p>
+<p>通过使用泛型，可以实现通用算法，这些算法可以处理不同类型的集合，可以自定义，并且类型安全且易于阅读。</p>
+</li>
+</ul>
+<h3 id="泛型类型"><a href="#泛型类型" class="headerlink" title="泛型类型"></a>泛型类型</h3><p><strong><code>泛型类型</code>是被参数化的类或接口</strong></p>
+<h4 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">name</span>&lt;<span class="title">T1</span>, <span class="title">T2</span>, ... <span class="title">Tn</span>&gt;</span>{}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一般将泛型中的类名称为<strong>原型</strong>，而将 <code>&lt;&gt;</code> 指定的参数称为<strong>类型参数</strong>。</p>
+<h4 id="单类型参数（T）"><a href="#单类型参数（T）" class="headerlink" title="单类型参数（T）"></a>单类型参数（T）</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleInfo</span>&lt;<span class="title">T</span>&gt; </span>{</span><br><span class="line">    <span class="keyword">private</span> T value;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getValue</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T value)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.value = value;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"SingleInfo{"</span> +</span><br><span class="line">                <span class="string">"value="</span> + value +</span><br><span class="line">                <span class="string">'}'</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="多类型参数（K，V）"><a href="#多类型参数（K，V）" class="headerlink" title="多类型参数（K，V）"></a>多类型参数（K，V）</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MultiInfo</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>{</span><br><span class="line">    <span class="keyword">private</span> K key;</span><br><span class="line">    <span class="keyword">private</span> V value;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MultiInfo</span><span class="params">(K key, V value)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.key = key;</span><br><span class="line">        <span class="keyword">this</span>.value = value;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"MultiInfo{"</span> +</span><br><span class="line">                <span class="string">"key="</span> + key +</span><br><span class="line">                <span class="string">", value="</span> + value +</span><br><span class="line">                <span class="string">'}'</span>;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="泛型类的嵌套"><a href="#泛型类的嵌套" class="headerlink" title="泛型类的嵌套"></a>泛型类的嵌套</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MultiInfo&lt;Integer, MultiInfo&lt;Integer, String&gt;&gt; multi = <span class="keyword">new</span> MultiInfo&lt;&gt;(<span class="number">1</span>, <span class="keyword">new</span> MultiInfo&lt;&gt;(<span class="number">1</span>,<span class="string">"32"</span>));</span><br><span class="line">System.out.println(multi);</span><br><span class="line"><span class="comment">// MultiInfo{key=1, value=MultiInfo{key=1, value=32}}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="泛型接口"><a href="#泛型接口" class="headerlink" title="泛型接口"></a>泛型接口</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Content</span>&lt;<span class="title">T</span>&gt; </span>{</span><br><span class="line">    <span class="function">T <span class="title">text</span><span class="params">()</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="实现接口的子类型声明具体的类型"><a href="#实现接口的子类型声明具体的类型" class="headerlink" title="实现接口的子类型声明具体的类型"></a>实现接口的子类型声明具体的类型</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ImplInterface</span> <span class="keyword">implements</span> <span class="title">MyInterface</span>&lt;<span class="title">Integer</span>&gt; </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> a = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ImplInterface</span><span class="params">(<span class="keyword">int</span> a)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.a = a;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getT</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> a;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="实现接口的子类型不声明具体类型"><a href="#实现接口的子类型不声明具体类型" class="headerlink" title="实现接口的子类型不声明具体类型"></a>实现接口的子类型不声明具体类型</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NoImplInterface</span>&lt;<span class="title">T</span>&gt; <span class="keyword">implements</span> <span class="title">MyInterface</span>&lt;<span class="title">T</span>&gt; </span>{</span><br><span class="line">    <span class="keyword">private</span> T text;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NoImplInterface</span><span class="params">(T text)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.text = text;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> text;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h3><p>泛型方法是引入其自己的类型参数的方法。泛型方法可以是普通方法、静态方法以及构造方法。</p>
+<p>泛型方法语法形式如下：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">func</span><span class="params">(T obj)</span> </span>{}</span><br><span class="line"><span class="comment">// 类型变量放在修饰符 (这里是 public static ) 的后面 , 返回类型的前面</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>是否拥有泛型方法，与其所在的类是否是泛型没有关系。</strong></p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsMethodDemo01</span> </span>{</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">printClass</span><span class="params">(T obj)</span> </span>{</span><br><span class="line">        System.out.println(obj.getClass().toString());</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        printClass(<span class="string">"abc"</span>);</span><br><span class="line">        printClass(<span class="number">10</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// class java.lang.String</span></span><br><span class="line"><span class="comment">// class java.lang.Integer</span></span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p>泛型方法中也可以使用可变参数列表</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericVarargsMethodDemo</span> </span>{</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">makeList</span><span class="params">(T... args)</span> </span>{</span><br><span class="line">        List&lt;T&gt; result = <span class="keyword">new</span> ArrayList&lt;T&gt;();</span><br><span class="line">        Collections.addAll(result, args);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        List&lt;String&gt; ls = makeList(<span class="string">"A"</span>);</span><br><span class="line">        System.out.println(ls);</span><br><span class="line">        ls = makeList(<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>);</span><br><span class="line">        System.out.println(ls);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// [A]</span></span><br><span class="line"><span class="comment">// [A, B, C]</span></span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h3><p>==<strong>Java中的泛型基本上都是在编译器这个层次来实现的。</strong>==</p>
+<p>Java 语言引入泛型是为了在编译时提供更严格的类型检查，并支持泛型编程。不同于 C++ 的模板机制，<strong>Java 泛型是使用类型擦除来实现的，使用泛型时，任何具体的类型信息都被擦除了</strong>。</p>
+<p>==Java编译器会在编译时尽可能的发现可能出错的地方，但是仍然无法避免在运行时刻出现类型转换异常的情况==</p>
+<p>类型擦除做了以下工作：</p>
+<ul>
+<li>把泛型中的所有类型参数替换为 Object，如果指定类型边界，则使用类型边界来替换。因此，生成的字节码仅包含普通的类，接口和方法。</li>
+<li>擦除出现的类型声明，即去掉 <code>&lt;&gt;</code> 的内容。比如 <code>T get()</code> 方法声明就变成了 <code>Object get()</code> ；<code>List</code> 就变成了 <code>List</code>。如有必要，插入类型转换以保持类型安全。</li>
+<li>生成桥接方法以保留扩展泛型类型中的多态性。类型擦除确保不为参数化类型创建新类；因此，泛型不会产生运行时开销。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsErasureTypeDemo</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        List&lt;Object&gt; list1 = <span class="keyword">new</span> ArrayList&lt;Object&gt;();</span><br><span class="line">        List&lt;String&gt; list2 = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        System.out.println(list1.getClass());</span><br><span class="line">        System.out.println(list2.getClass());</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// class java.util.ArrayList</span></span><br><span class="line"><span class="comment">// class java.util.ArrayList</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="泛型和继承"><a href="#泛型和继承" class="headerlink" title="泛型和继承"></a>泛型和继承</h3><p><strong>泛型不能用于显式地引用运行时类型的操作之中，例如：转型、instanceof 操作和 new 表达式。因为所有关于参数的类型信息都丢失了</strong>。</p>
+<p>泛型无法向上转型</p>
+<blockquote>
+<p>向上转型是指用子类实例去初始化父类，这是面向对象中多态的重要表现。</p>
+</blockquote>
+<p>这是因为，泛型类并没有自己独有的 <code>Class</code> 类对象。比如：并不存在 <code>List.class</code> 或是 <code>List.class</code>，Java 编译器会将二者都视为 <code>List.class</code>。</p>
+<h3 id="类型边界"><a href="#类型边界" class="headerlink" title="类型边界"></a>类型边界</h3><p>有时您可能希望限制可在参数化类型中用作类型参数的类型。**<code>类型边界</code>可以对泛型的类型参数设置限制条件**。例如，对数字进行操作的方法可能只想接受 <code>Number</code> 或其子类的实例。</p>
+<p>要声明有界类型参数，请列出类型参数的名称，然后是 <code>extends</code> 关键字，后跟其限制类或接口。</p>
+<p>类型边界的语法形式如下：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;T extends XXX&gt;</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="类型通配符"><a href="#类型通配符" class="headerlink" title="类型通配符"></a>类型通配符</h3><p><code>类型通配符</code>一般是使用 <code>?</code> 代替具体的类型参数。例如 <code>List</code> 在逻辑上是 <code>List</code> ，<code>List</code> 等所有 <code>List&lt;具体类型实参&gt;</code> 的父类</p>
+<h4 id="上界通配符"><a href="#上界通配符" class="headerlink" title="上界通配符"></a>上界通配符</h4><p>可以使用**<code>上界通配符</code>**来缩小类型参数的类型范围。</p>
+<p>它的语法形式为：<code>&lt;? extends Number&gt;</code></p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsUpperBoundedWildcardDemo</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">sumOfList</span><span class="params">(List&lt;? extends Number&gt; list)</span> </span>{</span><br><span class="line">        <span class="keyword">double</span> s = <span class="number">0.0</span>;</span><br><span class="line">        <span class="keyword">for</span> (Number n : list) {</span><br><span class="line">            s += n.doubleValue();</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> s;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        List&lt;Integer&gt; li = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">        System.out.println(<span class="string">"sum = "</span> + sumOfList(li));</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// sum = 6.0</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="下界通配符"><a href="#下界通配符" class="headerlink" title="下界通配符"></a>下界通配符</h4><p>**<code>下界通配符</code>**将未知类型限制为该类型的特定类型或超类类型。</p>
+<blockquote>
+<p>🔔 注意：<strong>上界通配符和下界通配符不能同时使用</strong>。</p>
+</blockquote>
+<p>它的语法形式为：<code>&lt;? super Number&gt;</code></p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsLowerBoundedWildcardDemo</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">addNumbers</span><span class="params">(List&lt;? <span class="keyword">super</span> Integer&gt; list)</span> </span>{</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++) {</span><br><span class="line">            list.add(i);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        addNumbers(list);</span><br><span class="line">        System.out.println(Arrays.deepToString(list.toArray()));</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// [1, 2, 3, 4, 5]</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="无界通配符"><a href="#无界通配符" class="headerlink" title="无界通配符"></a>无界通配符</h4><p>无界通配符有两种应用场景：</p>
+<ul>
+<li>可以使用 Object 类中提供的功能来实现的方法。</li>
+<li>使用不依赖于类型参数的泛型类中的方法。</li>
+</ul>
+<h4 id="通配符和向上转型"><a href="#通配符和向上转型" class="headerlink" title="通配符和向上转型"></a>通配符和向上转型</h4><p><strong>泛型不能向上转型。但是，我们可以通过使用通配符来向上转型</strong>。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsWildcardDemo</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        List&lt;Integer&gt; intList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        List&lt;Number&gt; numList = intList;  <span class="comment">// Error</span></span><br><span class="line"></span><br><span class="line">        List&lt;? extends Integer&gt; intList2 = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        List&lt;? extends Number&gt; numList2 = intList2;  <span class="comment">// OK</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="泛型约束"><a href="#泛型约束" class="headerlink" title="泛型约束"></a>泛型约束</h3><p><a href="https://docs.oracle.com/javase/tutorial/java/generics/restrictions.html#instantiate" target="_blank" rel="noopener">Restrictions on Generics</a></p>
+<h3 id="泛型实践"><a href="#泛型实践" class="headerlink" title="泛型实践"></a>泛型实践</h3><h4 id="泛型命名"><a href="#泛型命名" class="headerlink" title="泛型命名"></a>泛型命名</h4><p>泛型一些约定俗成的命名：</p>
+<ul>
+<li>E - Element</li>
+<li>K - Key</li>
+<li>N - Number</li>
+<li>T - Type</li>
+<li>V - Value</li>
+<li>S,U,V etc. - 2nd, 3rd, 4th types</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.243Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/%E6%B3%9B%E5%9E%8B/&title=《泛型》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/%E6%B3%9B%E5%9E%8B/&title=《泛型》 — Wkkの笔记&source=泛型容器没有指定存储数据类型，这种情况下，可以向 List 添加任意类型数据，编译器不会做类型检查，而是默默的将所有数据都转为 Object。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/%E6%B3%9B%E5%9E%8B/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《泛型》 — Wkkの笔记&url=https://winniekun.github.io/%E6%B3%9B%E5%9E%8B/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/%E6%B3%9B%E5%9E%8B/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">插入排序</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/Spring%E7%9A%84bean%E6%B3%A8%E5%85%A5%E6%96%B9%E5%BC%8F/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Spring的bean注入方式</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/%E6%B3%9B%E5%9E%8B/&title=《泛型》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/%E6%B3%9B%E5%9E%8B/&title=《泛型》 — Wkkの笔记&source=泛型容器没有指定存储数据类型，这种情况下，可以向 List 添加任意类型数据，编译器不会做类型检查，而是默默的将所有数据都转为 Object。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/%E6%B3%9B%E5%9E%8B/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《泛型》 — Wkkの笔记&url=https://winniekun.github.io/%E6%B3%9B%E5%9E%8B/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/%E6%B3%9B%E5%9E%8B/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKElEQVR42u3a22rDQAwFwP7/T6fQp0Lp9pyVU/B6/BQSXzQOiNVKHx/x8fo6fn7z/ZhcldztggMDA+O2jNfyWAe092v73PU5GBgYz2Gs0+X6cx5oktDzV4CBgYGxDrf9Nb8KAwMD46qEmwSxXt61rwADAwNjXkzm22Qt6eJaHAMD44aMtjHwn5/f2N/AwMC4CeN16ZE3CdrE+sdzMTAwjmYkm/uTvPfbr5Pzo8djYGAcythLl+vz8zZDfv9fn4WBgXEoIw+oHbBoa8zofa//BwwMjEMZbZLNg26Xg5NhDgwMjLMZbTMyWQi2G2p5M6DowWJgYBzK2EuXedD54q8dwsDAwDib0W5y5Ztre0Vy3hDFwMB4GqNNdpMCdbJYHHVlMTAwjmC0S7F3BDof6cDAwDiVMSlBJwFd3EbFwMA4lJGXrMmZeYmbhx59g4GB8UhGO8KVhJXcbbOZioGBcTRjPgq2F0q73CyWrRgYGEcz8nbmfCCjvaoYEcPAwDiUkafaHNxu2OWjG0WGxsDAOI6xV2pOloAJsmg5YGBgHM2YU5Oyc7McLZetGBgY5zH2Cs5JWswHzoqEjoGBcTSjTbh5+TpJtckdMDAwnsZol315iJNttc3GAAYGxtGMdtxhHXTO3iuki3eDgYHxYMZksThhR3NtGBgYD2a0QxXtVaPKGwMD4wGMfMxr/Zi8qZA85S1dVgwMjBsy2sbAJOjkpeQNg1F/AwMD4x6MT3EiYL4aBoiVAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

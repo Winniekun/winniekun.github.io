@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>插入排序 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="插入">
+    <meta name="description" content="插入排序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="插入排序">
+<meta property="og:url" content="https://winniekun.github.io/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="插入排序">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-03-11T09:35:45.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.261Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="插入">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">插入排序</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">插入排序</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-11T09:35:45.000Z" itemprop="datePublished" class="page-time">
+  2019-03-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8E%92%E5%BA%8F/">排序</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#插入排序"><span class="post-toc-number">1.</span> <span class="post-toc-text">插入排序</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#算法思想"><span class="post-toc-number">3.</span> <span class="post-toc-text">算法思想</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#插入"><span class="post-toc-number">4.</span> <span class="post-toc-text">插入</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基本插入算法"><span class="post-toc-number">5.</span> <span class="post-toc-text">基本插入算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优化一：-使用鶸二分查找"><span class="post-toc-number">6.</span> <span class="post-toc-text">优化一： 使用鶸二分查找</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优化二：-为了优化而优化的链表"><span class="post-toc-number">7.</span> <span class="post-toc-text">优化二： 为了优化而优化的链表</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优化三：-终极进化之二叉搜索树"><span class="post-toc-number">8.</span> <span class="post-toc-text">优化三： 终极进化之二叉搜索树</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">9.</span> <span class="post-toc-text">References</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-算法/排序/插入排序"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">插入排序</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-11 17:35:45" datetime="2019-03-11T09:35:45.000Z"  itemprop="datePublished">2019-03-11</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8E%92%E5%BA%8F/">排序</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>插入排序的思想很直观，其在性能上不如一些分治的排序策略，例如快速排序，归并排序。插入排序是一种基于比较的排序算法。</p>
+<h2 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h2><p>其类似于打牌的抓牌环节，抓到牌后都会按照点数插入到合适的位置，核心思想是保证一个已排序区间，剩下的未排序区间依次与前面的已排序区间进行比较，插入到对应的位置。</p>
+<h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><p>有关于插入，若是序列是使用数组进行存储，则可以从右向左扫描已排序数组，因为这样可以在性能上有所优化。因为对于数组的插入，其不像链表一样，只需要断链，然后链接，其需要移动大量的元素，才能够进行插入，若是从左向右，譬如数组的长度为<code>n</code>，在位置<code>i</code>插入，则需要扫描<code>i</code>次，然后移动<code>n-i+1</code>次，最后插入数据。若是从右向左，最多需要<code>i</code>次扫描，然后可以边扫描边右移动</p>
+<h2 id="基本插入算法"><a href="#基本插入算法" class="headerlink" title="基本插入算法"></a>基本插入算法</h2><ul>
+<li>复杂度:O(n^2)</li>
+<li>比较次数（查找）: O(n^2)</li>
+<li>移动次数（插入后导致的移动）: O(n^2)<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">insertSort</span><span class="params">(arraylist)</span>:</span></span><br><span class="line">    arrayLen = len(arraylist)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, arrayLen):</span><br><span class="line">        current = arraylist[i]</span><br><span class="line">        j = i - <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> j &gt; <span class="number">0</span> <span class="keyword">and</span> arraylist[j] &lt; current:</span><br><span class="line">            arraylist[j+<span class="number">1</span>] = arraylist[j]</span><br><span class="line">            j = j - <span class="number">1</span></span><br><span class="line">        arraylist[j+<span class="number">1</span>] = current</span><br><span class="line">    <span class="keyword">return</span> arraylist</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h2 id="优化一：-使用鶸二分查找"><a href="#优化一：-使用鶸二分查找" class="headerlink" title="优化一： 使用鶸二分查找"></a>优化一： 使用鶸二分查找</h2><p>因为已经确定了前面的排序区间是有序的，所以可以直接使用二分查找来确定插入的位置，这样查找的时间就得到了优化</p>
+<ul>
+<li>复杂度: O(n^2)</li>
+<li>比较次数: O(nlgn)</li>
+<li>移动次数: O(n^2)<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">binarySearch</span><span class="params">(arraylist, key)</span>:</span></span><br><span class="line">    low = <span class="number">0</span></span><br><span class="line">    high = len(arraylist)</span><br><span class="line">    <span class="keyword">while</span> low &lt; high:</span><br><span class="line">        mid = (log + hig)//<span class="number">2</span></span><br><span class="line">        <span class="keyword">if</span> arraylist[mid] == key:</span><br><span class="line">            <span class="keyword">return</span> mid</span><br><span class="line">        <span class="keyword">elif</span> arraylist[mid] &gt; key:</span><br><span class="line">            high = mid</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            low = mid + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> low</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">insertSort</span><span class="params">(arraylist)</span>:</span></span><br><span class="line">    arrayLen = len(arraylist)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, arrayLen):</span><br><span class="line">        current = arraylist[i]</span><br><span class="line">        position = binarySearch(arraylist[:i], key)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(i, position, <span class="number">-1</span>):</span><br><span class="line">            arraylist[i] = arraylist[i<span class="number">-1</span>]</span><br><span class="line">        arraylist[position] = current</span><br><span class="line">    <span class="keyword">return</span> arraylist</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h2 id="优化二：-为了优化而优化的链表"><a href="#优化二：-为了优化而优化的链表" class="headerlink" title="优化二： 为了优化而优化的链表"></a>优化二： 为了优化而优化的链表</h2><p>使用链表之后，改变其数据结构，可以优化插入的时间，由最初的O(n)优化到了O(1)</p>
+<ul>
+<li>复杂度: O(n^2)</li>
+<li>比较次数: O(n^2)</li>
+<li>移动次数: O(1)<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">insert</span><span class="params">(arrayList, next, i)</span>:</span></span><br><span class="line">    j = <span class="number">-1</span></span><br><span class="line">    <span class="comment"># print("当前j为{}, next[j]={}，arrayList[next[j]]={} arrayList[i]={}".format(j, next[j], arrayList[next[j]], arrayList[i]))</span></span><br><span class="line">    <span class="keyword">while</span> next[j] != <span class="number">-1</span> <span class="keyword">and</span> arrayList[next[j]] &lt; arrayList[i]:</span><br><span class="line">        j = next[j]</span><br><span class="line">        <span class="comment"># print("目前j={}".format(j))</span></span><br><span class="line">    next[j], next[i] = i, next[j]</span><br><span class="line">    <span class="comment"># print("交换后的next[j]={}, next[i]={} \n".format(next[j], next[i]))</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">reorder</span><span class="params">(arrayList, next)</span>:</span></span><br><span class="line">    i = <span class="number">-1</span></span><br><span class="line">    ys = []</span><br><span class="line">    <span class="keyword">while</span> next[i] != <span class="number">-1</span>:</span><br><span class="line">        ys.append(arrayList[next[i]])</span><br><span class="line">        i = next[i]</span><br><span class="line">    <span class="keyword">return</span> ys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">insertSortIII</span><span class="params">(arrayList)</span>:</span></span><br><span class="line">    arrayLen = len(arrayList)</span><br><span class="line">    next = [<span class="number">-1</span>]*(arrayLen+<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(arrayLen):</span><br><span class="line">        insert(arrayList, next, i)</span><br><span class="line">    <span class="keyword">return</span> reorder(arrayList, next)</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h2 id="优化三：-终极进化之二叉搜索树"><a href="#优化三：-终极进化之二叉搜索树" class="headerlink" title="优化三： 终极进化之二叉搜索树"></a>优化三： 终极进化之二叉搜索树</h2><p>对于以上的优化，只能在插入和查找之中二选一的进行优化。单独提高其中一个仍会使插入算法保持在O(n^2)中，使用二分查找能够将查找次数降到最低—O(lgN),对于插入，为了能实现常数时间的插入，必定需要改变其数据结构。<br>二叉搜索树刚好满足以上的所有的需求，但是对于这个，应该不算是严格意义的插入排序了，应是更宽泛的定位—基于比较的排序。</p>
+<ul>
+<li>第一，其本身定义就支持二分查找。</li>
+<li>同时查找到对应的值之后，即可插入，所以插入的时间为常数项O(1)。</li>
+<li>对于其频繁的插入删除导致的性能降低，目前的排序涉及不多</li>
+</ul>
+<p>总结</p>
+<ul>
+<li>复杂度: O(nlgn)</li>
+<li>移动次数: O(1)</li>
+<li>比较次数  O(lgn)</li>
+</ul>
+<p><strong>实现</strong><br>首先将数据构造为二叉搜索树，之后再进行中序遍历即可。</p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data)</span>:</span></span><br><span class="line">        self.data = data</span><br><span class="line">        self.leftChild = <span class="literal">None</span></span><br><span class="line">        self.rightChild = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">insert</span><span class="params">(self, newData)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        插入数据</span></span><br><span class="line"><span class="string">        # edage case: 若是value相同如何解决 Word天</span></span><br><span class="line"><span class="string">        :param newData:</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> newData == self.data:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">elif</span> newData &lt; self.data:</span><br><span class="line">            <span class="keyword">if</span> self.leftChild == <span class="literal">None</span>:</span><br><span class="line">                self.leftChild = TreeNode(newData)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self.leftChild.insert(newData)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> self.rightChild == <span class="literal">None</span>:</span><br><span class="line">                self.rightChild = TreeNode(newData)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self.rightChild.insert(newData)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 以下的前中后遍历均为递归的遍历</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">preOrder</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        前序遍历</span></span><br><span class="line"><span class="string">        根左右</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        print(self.data)</span><br><span class="line">        <span class="keyword">if</span> self.leftChild:</span><br><span class="line">            self.leftChild.preOrder()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.rightChild.preOrder()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">inOrder</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        中序遍历</span></span><br><span class="line"><span class="string">        左根右</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> self.leftChild:</span><br><span class="line">            self.leftChild.inOrder()</span><br><span class="line">        print(self.data)</span><br><span class="line">        <span class="keyword">if</span> self.rightChild:</span><br><span class="line">            self.rightChild.inOrder()</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li>算法新解</li>
+<li>算法第四版</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.261Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8F%92%E5%85%A5/" rel="tag">插入</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/&title=《插入排序》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/&title=《插入排序》 — Wkkの笔记&source=插入排序" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《插入排序》 — Wkkの笔记&url=https://winniekun.github.io/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/final%E3%80%81static%E3%80%81this%E3%80%81super%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">final、static、this、super关键字总结</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/%E6%B3%9B%E5%9E%8B/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">泛型</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/&title=《插入排序》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/&title=《插入排序》 — Wkkの笔记&source=插入排序" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《插入排序》 — Wkkの笔记&url=https://winniekun.github.io/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACsklEQVR42u3a0YpiMRAEUP//p2efl0Gt6k5EhnOfZLnGnAyks9V5POLn59fz7N+fvdN+fj3m4QcPDw9vPfWckYzzGvB6+X6PXy8BHh4e3jVeMlw+lWT819R8Pm9+Cw8PD+8LePk2vSfh4eHh/VXePnTIgw88PDy87+GdihKSArCf+pWsBQ8PD+9CF+l7Pl/p7+Hh4eGtu+rJJt6WgbyRNpvhf2Pi4eHhXeC1Eeqpo/a+8OQBMR4eHt4NXo7ZtPxn5actIdFC4OHh4S14+SY+Oxa3U9znDFHui4eHh7fg5a3915OYBQqnCtKbPw8eHh7eUV7SpM+HzgtMUhJmb9a3yfDw8PBK3qx91RaVNqhN4onhwRoPDw/vKK+NJNq2Ux5bzEKKYXnAw8PDK3mnQtj98bfe4vOUBQ8PD+8Cb18SNlNPFigPOPDw8PBu85JD7SyizRtj7XfzC1t4eHh4n+Hl4cJm4579YhLj1l/Dw8PDG/HabTc5r9Y/v3g/WiA8PDy8Q7x2k80PxG080Y4ThSZ4eHh413jJBan9YTdZyvZbb8bEw8PD+wivPUDn1wvyktBGIW+O1Hh4eHhHeZtotT0Q51FFfoAulgMPDw/vEK+9/NT+wKkxk0JSp7x4eHh4I147uX1hyI/gbSTxdEw8PDy8a7z9tarkOD7b3JMCFlU/PDw8vGu8JBqYFYzNMuWNNDw8PLzP8PIgNT8651t82+6qw1w8PDy8Q7yf8mnLRo5MvtteUMDDw8O7wZttu7PNfdYk23zGw8PDu8dri0EUngaBbL58bdnAw8PD+wxvc/DNS8KsVZYvWXF1AA8PD++DvNl23745Ix0oDHh4eHgXeO1WPmuwzS6q1muPh4eHt+DtrzfNmmFtRHsxa8HDw8M7k7tG/+FvJ5QvUF5IHpsHDw8PL+X9A/Fy5CmDt4/vAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

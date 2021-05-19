@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>匈牙利算法实现 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="图论">
+    <meta name="description" content="TODO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="匈牙利算法实现">
+<meta property="og:url" content="https://winniekun.github.io/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="TODO">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-22T02:07:40.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.260Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="图论">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">匈牙利算法实现</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">匈牙利算法实现</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-04-22T02:07:40.000Z" itemprop="datePublished" class="page-time">
+  2020-04-22
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简介-amp-思路"><span class="post-toc-number">2.</span> <span class="post-toc-text">简介&amp;思路</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#概念："><span class="post-toc-number">2.1.</span> <span class="post-toc-text">概念：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#匹配-amp-最大匹配-amp-完美匹配"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">匹配&amp;最大匹配&amp;完美匹配</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#交替路径-amp-增广路径"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">交替路径&amp;增广路径</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#思路-amp-实现"><span class="post-toc-number">3.</span> <span class="post-toc-text">思路&amp;实现</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#题目"><span class="post-toc-number">4.</span> <span class="post-toc-text">题目</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">5.</span> <span class="post-toc-text">References</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-算法/实现-图论/匈牙利算法实现"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">匈牙利算法实现</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-04-22 10:07:40" datetime="2020-04-22T02:07:40.000Z"  itemprop="datePublished">2020-04-22</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><del><strong>TODO</strong></del></p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>匈牙利算法记录，并且添加了几道实战题目</p>
+<h2 id="简介-amp-思路"><a href="#简介-amp-思路" class="headerlink" title="简介&amp;思路"></a>简介&amp;思路</h2><p><strong>匈牙利算法</strong>是一种在<a href="https://zh.wikipedia.org/wiki/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6" target="_blank" rel="noopener">多项式时间</a>内求解<a href="https://zh.wikipedia.org/wiki/%E4%BB%BB%E5%8A%A1%E5%88%86%E9%85%8D%E9%97%AE%E9%A2%98" target="_blank" rel="noopener">任务分配问题</a>的<a href="https://zh.wikipedia.org/wiki/%E7%BB%84%E5%90%88%E4%BC%98%E5%8C%96" target="_blank" rel="noopener">组合优化</a><a href="https://zh.wikipedia.org/wiki/%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">算法</a>，并推动了后来的<a href="https://zh.wikipedia.org/w/index.php?title=%E5%8E%9F%E5%A7%8B%E5%AF%B9%E5%81%B6%E6%96%B9%E6%B3%95&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">原始对偶方法</a>。美国数学家<a href="https://zh.wikipedia.org/w/index.php?title=%E5%93%88%E7%BD%97%E5%BE%B7%C2%B7%E5%BA%93%E6%81%A9&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">哈罗德·库恩</a>于1955年提出该算法。此算法之所以被称作匈牙利算法，是因为算法很大一部分是基于以前<a href="https://zh.wikipedia.org/wiki/%E5%8C%88%E7%89%99%E5%88%A9" target="_blank" rel="noopener">匈牙利</a>数学家Dénes Kőnig和Jenő Egerváry的工作之上创建起来的。匈牙利算法是基于Hall定理中充分性证明的思想，它是部图匹配最常见的算法，该算法的核心就是寻找<strong>增广路径</strong>(<em>是指从</em>M<em>中没有用到的<a href="https://zh.wikipedia.org/wiki/%E9%A1%B6%E7%82%B9_(%E5%9B%BE%E8%AE%BA)" target="_blank" rel="noopener">顶点</a>开始，并从</em>M<em>中没有用到的顶点结束的交替路径</em>)，它是一种用增广路径求二分图最大匹配的算法。</p>
+<h3 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h3><h4 id="匹配-amp-最大匹配-amp-完美匹配"><a href="#匹配-amp-最大匹配-amp-完美匹配" class="headerlink" title="匹配&amp;最大匹配&amp;完美匹配"></a>匹配&amp;最大匹配&amp;完美匹配</h4><ol>
+<li>匹配：<ol>
+<li>一种边的集合，其中任意两条边没有公共顶点</li>
+</ol>
+</li>
+<li>最大匹配:<ol>
+<li>一个图所有匹配中，所含匹配边数最多的匹配，称为这个图的最大匹配。</li>
+</ol>
+</li>
+<li>完美匹配：<ol>
+<li>如果一个图的某个匹配中，所有的顶点都是匹配点，那么它就是一个完美匹配。</li>
+</ol>
+</li>
+</ol>
+<h4 id="交替路径-amp-增广路径"><a href="#交替路径-amp-增广路径" class="headerlink" title="交替路径&amp;增广路径"></a>交替路径&amp;增广路径</h4><ol>
+<li>交替路：从一个未匹配点出发，依次经过非匹配边、匹配边、非匹配边…形成的路径叫交替路。</li>
+<li> 增广路：从一个未匹配点出发，走交替路，如果途径另一个未匹配点（出发的点不算），则这条交替路称为增广路。</li>
+</ol>
+<h2 id="思路-amp-实现"><a href="#思路-amp-实现" class="headerlink" title="思路&amp;实现"></a>思路&amp;实现</h2><p>该思路和主要为最佳匹配问题，</p>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">维基百科</a></li>
+<li><a href="http://www.hungarianalgorithm.com/examplehungarianalgorithm.php" target="_blank" rel="noopener">Hungarian Algorithm</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.260Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag">图论</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/&title=《匈牙利算法实现》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/&title=《匈牙利算法实现》 — Wkkの笔记&source=TODO" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《匈牙利算法实现》 — Wkkの笔记&url=https://winniekun.github.io/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/stick-to-bit-operation/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">死磕位运算</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Java实现生产者-消费者模型</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/&title=《匈牙利算法实现》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/&title=《匈牙利算法实现》 — Wkkの笔记&source=TODO" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《匈牙利算法实现》 — Wkkの笔记&url=https://winniekun.github.io/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADI0lEQVR42u3aSXLjQAwEQP//05qrHaOlqkFHWFD2iUFbZGfrAGH5+orX7dv6fuf/60efzT91C9ajXV28sLGxsd+E3b4gec3z5zy6zt/ePufOnrGxsbHXsa8KPMlWrjqas71hY2NjYyevTxKYNuxhY2NjY/9eAHt+p91ongLlx4qNjY39CexJkMhf1gbFs0bFxbU0bGxs7D/Pzruif//6V/rb2NjY2H+YfStXUgCapwrzNsMLBTY2NvYidh4AzgZ6zg4rOZQ2gGFjY2NvZeflpLbw1GYEyeFOUqYfd7CxsbHXsa8drzlrEs/TlaJJgI2Njb2IfTYok+DPglw+mpO0mSMLNjY29gp2u63J/XYwKAfXCQw2Njb2CvbzFKJNJJJ27yQVKcpGz6XY2NjYi9h5AMtLSGebu6qFnIdqbGxs7B3sSWG9Hbg5C0uTQtWLrgg2Njb2Cnb7T2dh7DfGgPKCVJSQYGNjY78t+xavs5e1wzfJ15DwXoRYbGxs7HXss7QhOYJ2HKdNb9qw+iOAYWNjYy9it8lAHkjaRmzeAMiLTXf2ho2Njb2IfZYwtIWnPJ3Iw9gFSRE2Njb2OnbCaIdj8nA1SXjysIeNjY29m33VtpLST8vLA2qxT2xsbOx17KTQ3yInbd08/TgMvdjY2NiL2JOf+Pm4TNsYztu67WgRNjY29j72WTpRN1aP1tlxRDpsbGzsFex5mSYfmsmHe9qAVKci2NjY2IvYk8L9JCXIS0ttQWrUHsDGxsZ+Q3Y77NIy5knIvCFxZ5/Y2NjYi9htWX9SxM/TmElrIR/0wcbGxt7EnjRcJ+2Es8ZA+7QXGRg2Njb2InZeJLq28NQWlbCxsbGxk/bAVWEsKVRNikrtE7CxsbH3sW/lmmw9J501A4qnYWNjYy9inwWDthGbl/VzwFmLtz4CbGxs7Ddht0HrqgAzCWBtOMTGxsb+BPYZ4+yveXs4GcRpEyFsbGxs7Hy7ZwdxNtZTl5ywsbGxP56dFH0mwzpXNYCxsbGxP4edDz5OEpI2vJ0Fy+jLw8bGxl7Ebn/0J+GhvX9VypEMJGFjY2MvYv8DY41y3vEgXM4AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

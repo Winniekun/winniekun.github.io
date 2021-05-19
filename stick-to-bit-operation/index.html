@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>死磕位运算 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="死磕系列,位运算">
+    <meta name="description" content="前言LeetCode死磕系列五： 位运算 位运算，在性能上是超过加减乘除的，只不过，费些脑细胞。基础的与&amp; 或| 异或^ 运算，以及左移动、右移。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="死磕位运算">
+<meta property="og:url" content="https://winniekun.github.io/stick-to-bit-operation/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="前言LeetCode死磕系列五： 位运算 位运算，在性能上是超过加减乘除的，只不过，费些脑细胞。基础的与&amp; 或| 异或^ 运算，以及左移动、右移。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-26T10:40:01.000Z">
+<meta property="article:modified_time" content="2021-05-09T09:37:40.497Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="死磕系列">
+<meta property="article:tag" content="位运算">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">死磕位运算</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">死磕位运算</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-04-26T10:40:01.000Z" itemprop="datePublished" class="page-time">
+  2020-04-26
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/LeetCode/">LeetCode</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#常用操作"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">常用操作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#amp-、-、-、-gt-gt-、-lt-lt-、-gt-gt-gt"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">&amp;、| 、^、&gt;&gt;、&lt;&lt;、&gt;&gt;&gt;</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#n-amp-n-1"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">n &amp; (n-1)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#s-1-lt-lt-k"><span class="post-toc-number">1.1.3.</span> <span class="post-toc-text">(s | 1&lt;&lt;k)</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#LeetCode-amp-剑指offer-位运算题目整理"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">LeetCode &amp; 剑指offer 位运算题目整理</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#LeetCode-位运算题目整理"><span class="post-toc-number">2.</span> <span class="post-toc-text">LeetCode 位运算题目整理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#面试题15：二进制中1的个数"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">面试题15：二进制中1的个数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#136-Single-Number"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">136 Single Number</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">3.</span> <span class="post-toc-text">References</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-LeetCode/stick-to-bit-operation"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">死磕位运算</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-04-26 18:40:01" datetime="2020-04-26T10:40:01.000Z"  itemprop="datePublished">2020-04-26</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/LeetCode/">LeetCode</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>LeetCode死磕系列五： 位运算</p>
+<p>位运算，在性能上是超过加减乘除的，只不过，费些脑细胞。基础的<code>与&amp;</code> <code>或|</code> <code>异或^</code> 运算，以及左移动、右移。</p>
+<a id="more"></a>
+
+
+
+<h3 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h3><h4 id="amp-、-、-、-gt-gt-、-lt-lt-、-gt-gt-gt"><a href="#amp-、-、-、-gt-gt-、-lt-lt-、-gt-gt-gt" class="headerlink" title="&amp;、| 、^、>>、<<、>>>"></a>&amp;、| 、^、&gt;&gt;、&lt;&lt;、&gt;&gt;&gt;</h4><p>假设整数变量 A 的值为 60 和变量 B 的值为 13：</p>
+<table>
+<thead>
+<tr>
+<th align="left">操作符</th>
+<th align="left">描述</th>
+<th align="left">例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">＆</td>
+<td align="left">如果相对应位都是1，则结果为1，否则为0</td>
+<td align="left">（A＆B），得到12，即0000 1100</td>
+</tr>
+<tr>
+<td align="left">|</td>
+<td align="left">如果相对应位都是 0，则结果为 0，否则为 1</td>
+<td align="left">（A | B）得到61，即 0011 1101</td>
+</tr>
+<tr>
+<td align="left">^</td>
+<td align="left">如果相对应位值相同，则结果为0，否则为1</td>
+<td align="left">（A ^ B）得到49，即 0011 0001</td>
+</tr>
+<tr>
+<td align="left">〜</td>
+<td align="left">按位取反运算符翻转操作数的每一位，即0变成1，1变成0。</td>
+<td align="left">（〜A）得到-61，即1100 0011</td>
+</tr>
+<tr>
+<td align="left">&lt;&lt;</td>
+<td align="left">按位左移运算符。左操作数按位左移右操作数指定的位数。</td>
+<td align="left">A &lt;&lt; 2得到240，即 1111 0000</td>
+</tr>
+<tr>
+<td align="left">&gt;&gt;</td>
+<td align="left">按位右移运算符。左操作数按位右移右操作数指定的位数。</td>
+<td align="left">A &gt;&gt; 2得到15即 1111</td>
+</tr>
+<tr>
+<td align="left">&gt;&gt;&gt;</td>
+<td align="left">按位右移补零操作符。左操作数的值按右操作数指定的位数右移，移动得到的空位以零填充。</td>
+<td align="left">A&gt;&gt;&gt;2得到15即0000 1111</td>
+</tr>
+</tbody></table>
+<ol>
+<li><p>异或</p>
+<p>2 ^ 2 = 0;</p>
+</li>
+<li><p>与</p>
+<p>0 &amp; 1 = 0；</p>
+<p>1 &amp; 1 = 0；</p>
+</li>
+</ol>
+<h4 id="n-amp-n-1"><a href="#n-amp-n-1" class="headerlink" title="n &amp; (n-1)"></a>n &amp; (n-1)</h4><p>10000000；</p>
+<p>01111111;</p>
+<figure class="highlight tex"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">     &lt;----- binary ----&gt;</span><br><span class="line"> n      n    n-1   n&amp;(n-1)</span><br><span class="line">--   ----   ----   -------</span><br><span class="line"> 0   0000   0111    0000 *</span><br><span class="line"> 1   0001   0000    0000 *</span><br><span class="line"> 2   0010   0001    0000 *</span><br><span class="line"> 3   0011   0010    0010</span><br><span class="line"> 4   0100   0011    0000 *</span><br><span class="line"> 5   0101   0100    0100</span><br><span class="line"> 6   0110   0101    0100</span><br><span class="line"> 7   0111   0110    0110</span><br><span class="line"> 8   1000   0111    0000 *</span><br><span class="line"> 9   1001   1000    1000</span><br><span class="line">10   1010   1001    1000</span><br><span class="line">11   1011   1010    1010</span><br><span class="line">12   1100   1011    1000</span><br><span class="line">13   1101   1100    1100</span><br><span class="line">14   1110   1101    1100</span><br><span class="line">15   1111   1110    1110</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<p>可以看到，其第一个方式是用于判断是否为2的幂次，<code>n&amp;(n-1)</code>的结果为0的话，则为2的幂次。</p>
+<p>从运算结果分析（以12为例）：</p>
+<p>12二进制表示为：<code>1100</code>，减去1之后，为<code>1011</code>，可以发现，减去1之后，是将该数字的二进制的最右边的1改为0，n&amp;(n-1)之后的结果为<code>1000</code>，比较<code>1100</code>和<code>1000</code>，这个操作可以总结为：将当前数字二进制最右边的<code>1</code>去除。最右边的<code>1</code>左边部分不变。所以，也可可以用于统计<strong>数字的二进制中1的个数问题</strong>。</p>
+<p><strong>补码：</strong></p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~x + 1 是 x的补码;</span><br><span class="line"></span><br><span class="line">   补码</span><br><span class="line">1 + 11111111111111111 = 000000000000000000;</span><br><span class="line">2 + 11111111111111110 = 000000000000000000</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h4 id="s-1-lt-lt-k"><a href="#s-1-lt-lt-k" class="headerlink" title="(s | 1<<k)"></a>(s | 1&lt;&lt;k)</h4><p><strong>s:</strong> 集合（二进制表示包含的元素）</p>
+<blockquote>
+<p>集合元素$s = {1,4,6}$ 则 $s = 1010010_{2} = 82_{10}$</p>
+</blockquote>
+<p><strong>k:</strong> 元素</p>
+<blockquote>
+<p>将元素<code>k</code>放入集合<code>s</code>中</p>
+</blockquote>
+<p><strong>举例说明</strong></p>
+<p>当前$s=82$, 此时$k=2$，将$k$放入集合$s$中</p>
+<ol>
+<li>$(1&lt;&lt;k) = 4 = 100_{2}$</li>
+<li>$(s | 1&lt;&lt; k) == 1010110_{2} == 86_{10}$</li>
+</ol>
+<p>神奇的操作，适用于压缩状态dp</p>
+<h3 id="LeetCode-amp-剑指offer-位运算题目整理"><a href="#LeetCode-amp-剑指offer-位运算题目整理" class="headerlink" title="LeetCode &amp; 剑指offer 位运算题目整理"></a>LeetCode &amp; 剑指offer 位运算题目整理</h3><ul>
+<li>面试题15：二进制中1的个数</li>
+<li>136 Single Number</li>
+</ul>
+<h2 id="LeetCode-位运算题目整理"><a href="#LeetCode-位运算题目整理" class="headerlink" title="LeetCode 位运算题目整理"></a>LeetCode 位运算题目整理</h2><h3 id="面试题15：二进制中1的个数"><a href="#面试题15：二进制中1的个数" class="headerlink" title="面试题15：二进制中1的个数"></a>面试题15：二进制中1的个数</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">numberOf</span><span class="params">(<span class="keyword">int</span> n)</span></span>{</span><br><span class="line">        <span class="comment">// n &amp; (n - 1) 会消除 n 中最后一位中的 1。</span></span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (n != <span class="number">0</span>){</span><br><span class="line">            res++;</span><br><span class="line">            n &amp;= (n-<span class="number">1</span>);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="136-Single-Number"><a href="#136-Single-Number" class="headerlink" title="136 Single Number"></a><a href="https://leetcode.com/problems/single-number/" target="_blank" rel="noopener">136 Single Number</a></h3><p>这题是去除数组中的重复元素（给的测试集是只有一个不重复的元素），用了异或运算，</p>
+<p>思路：</p>
+<p>相等的数相异或结果为0，0和任何数相异或结果为这个数本身。根据这个特点，可以先设置一个初始值为0，然后分别和数组中的每个元素相异或，最后保留的肯定为唯一一个不重复的值。</p>
+<blockquote>
+<p>相等的元素相异或的值为0，不是特指相等的元素必须相连，也可以不相连。</p>
+</blockquote>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>{</span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> i : nums){</span><br><span class="line">        res ^= i;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a href="https://stackoverflow.com/questions/4678333/n-n-1-what-does-this-expression-do" target="_blank" rel="noopener">n &amp; (n-1) what does this expression do? duplicate</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2021-05-09T09:37:40.497Z" itemprop="dateUpdated">2021-05-09 17:37:40</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" rel="tag">位运算</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%AD%BB%E7%A3%95%E7%B3%BB%E5%88%97/" rel="tag">死磕系列</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/stick-to-bit-operation/&title=《死磕位运算》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/stick-to-bit-operation/&title=《死磕位运算》 — Wkkの笔记&source=前言LeetCode死磕系列五： 位运算
+位运算，在性能上是超过加减乘除的，只不过，费些脑细胞。基础的与&amp; 或| 异或^ 运算，以及左移动、右移。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/stick-to-bit-operation/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《死磕位运算》 — Wkkの笔记&url=https://winniekun.github.io/stick-to-bit-operation/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/stick-to-bit-operation/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/clinit-init/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">&lt;clinit&gt;()和&lt;init&gt;()区别</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">匈牙利算法实现</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/stick-to-bit-operation/&title=《死磕位运算》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/stick-to-bit-operation/&title=《死磕位运算》 — Wkkの笔记&source=前言LeetCode死磕系列五： 位运算
+位运算，在性能上是超过加减乘除的，只不过，费些脑细胞。基础的与&amp; 或| 异或^ 运算，以及左移动、右移。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/stick-to-bit-operation/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《死磕位运算》 — Wkkの笔记&url=https://winniekun.github.io/stick-to-bit-operation/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/stick-to-bit-operation/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACH0lEQVR42u3a0W7DMAgF0P3/T3evmyZnF8gmlRw/VWka+6QSAuyPj3i8voyf1/PPpydfz3LbwMDAeFvG63Kc7rn+bbLQ3rxHKgYGxgMYSSicsK+R1WCNgYGBMWFcp3oTEgYGBkaV0StW88QRAwMDo1fE5kvMy9pekYyBgfE0Rt51///Pf7K/gYGB8VaMV3Ek6Vo1WPdW8m0WDAyM1YzeNNUjFMmVCRsDA2M3Iw+d1UUkjMlvo/8BAwNjESNJ6eZtr/lhiyMYAwNjNeOujcxkufm3yZ1RXxADA2MpI9+q7AXr6lzldWJgYKxj9JLCahPtrkMYRx4GBsZqRq/h1fu2SiqnsxgYGA9g5IAqaZII5oEYAwNjKyNpe03q42pZOypiMTAwljKScjFvk83Tvvz1YWBgPIdRPUKRFKLVEjd/38crGBgYD2Ak6d1d1L8I0xgYGLsZVeQ8BCehOX9NERUDA2MFI5kyb65VD0z0yubyyREMDIyljCTYTULqveUxBgbGcxj3JnDJQYrmPkYvS8XAwHhzRq+JPy9Eq32zX4pYDAyMdYxXcVRDdnVZyfXyYQsMDIw3Z9wVs3sFcJIO5ndiYGDsZuRNtF4xPI+KUdGLgYHxAMZdLbPexmS1JXfcwsTAwMCIi89kcb2W3PGZGBgYGPEGZy9xzA9VRPsbGBgYSxmTw169kNoDHJ+MgYGxmjEvSvOQWj2QUd1UwMDAWMf4BL8yA/HE4J9kAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

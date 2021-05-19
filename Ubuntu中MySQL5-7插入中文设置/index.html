@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Ubuntu中MySQL5.7插入中文设置 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="配置">
+    <meta name="description" content="前言其实关MySQL中插入中文,自己前年是设置过的,之后就一直没有管过,后来系统重装之后,重新安装配置各种环境之后,今天开始用MySQL的时候,才发现这个问题还没有解决,然后一时也想不起来怎么弄了,就重新网上搜索教程,最后想了下还是写一下配置过程吧,以后备用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu中MySQL5.7插入中文设置">
+<meta property="og:url" content="https://winniekun.github.io/Ubuntu%E4%B8%ADMySQL5-7%E6%8F%92%E5%85%A5%E4%B8%AD%E6%96%87%E8%AE%BE%E7%BD%AE/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="前言其实关MySQL中插入中文,自己前年是设置过的,之后就一直没有管过,后来系统重装之后,重新安装配置各种环境之后,今天开始用MySQL的时候,才发现这个问题还没有解决,然后一时也想不起来怎么弄了,就重新网上搜索教程,最后想了下还是写一下配置过程吧,以后备用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-11T09:44:55.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.263Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="配置">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Ubuntu中MySQL5.7插入中文设置</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Ubuntu中MySQL5.7插入中文设置</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-11T09:44:55.000Z" itemprop="datePublished" class="page-time">
+  2020-03-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/mysql/">mysql</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#第一步"><span class="post-toc-number">2.</span> <span class="post-toc-text">第一步</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#第二步"><span class="post-toc-number">3.</span> <span class="post-toc-text">第二步</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#第三步"><span class="post-toc-number">4.</span> <span class="post-toc-text">第三步</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最后"><span class="post-toc-number">5.</span> <span class="post-toc-text">最后</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#执行重启mysql命令："><span class="post-toc-number">5.1.</span> <span class="post-toc-text">执行重启mysql命令：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#查看修改结果"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">查看修改结果</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-配置/Ubuntu中MySQL5-7插入中文设置"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Ubuntu中MySQL5.7插入中文设置</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-11 17:44:55" datetime="2020-03-11T09:44:55.000Z"  itemprop="datePublished">2020-03-11</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/mysql/">mysql</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>其实关MySQL中插入中文,自己前年是设置过的,之后就一直没有管过,后来系统重装之后,重新安装配置各种环境之后,今天开始用MySQL的时候,才发现这个问题还没有解决,然后一时也想不起来怎么弄了,就重新网上搜索教程,最后想了下还是写一下配置过程吧,以后备用</p>
+<a id="more"></a>
+
+<h2 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h2><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/mysql/mysql.conf.d/mysqld.cnf  /etc/mysql/my.cnf</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h2><p>修改/etc/mysql/my.cnf文件，找到[client]标记后在下方添加一行代码：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">default-character-set=utf8</span><br></pre></td></tr></tbody></table></figure>
+<p>如果找不到[client]标记，就直接在文件末尾插入：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line">default-character-set=utf8</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h2><p>找到[mysqld]标记，在该标记下方添加两行</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">character-set-server=utf8</span><br><span class="line">collation-server=utf8_general_ci</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><h3 id="执行重启mysql命令："><a href="#执行重启mysql命令：" class="headerlink" title="执行重启mysql命令："></a>执行重启mysql命令：</h3><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service mysql restart</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="查看修改结果"><a href="#查看修改结果" class="headerlink" title="查看修改结果"></a>查看修改结果</h3><p>进入MySQL，之后输入如下命令</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show variables like 'character%';</span><br></pre></td></tr></tbody></table></figure>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.263Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%85%8D%E7%BD%AE/" rel="tag">配置</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/Ubuntu%E4%B8%ADMySQL5-7%E6%8F%92%E5%85%A5%E4%B8%AD%E6%96%87%E8%AE%BE%E7%BD%AE/&title=《Ubuntu中MySQL5.7插入中文设置》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/Ubuntu%E4%B8%ADMySQL5-7%E6%8F%92%E5%85%A5%E4%B8%AD%E6%96%87%E8%AE%BE%E7%BD%AE/&title=《Ubuntu中MySQL5.7插入中文设置》 — Wkkの笔记&source=前言其实关MySQL中插入中文,自己前年是设置过的,之后就一直没有管过,后来系统重装之后,重新安装配置各种环境之后,今天开始用MySQL的时候,才发现这个..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/Ubuntu%E4%B8%ADMySQL5-7%E6%8F%92%E5%85%A5%E4%B8%AD%E6%96%87%E8%AE%BE%E7%BD%AE/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Ubuntu中MySQL5.7插入中文设置》 — Wkkの笔记&url=https://winniekun.github.io/Ubuntu%E4%B8%ADMySQL5-7%E6%8F%92%E5%85%A5%E4%B8%AD%E6%96%87%E8%AE%BE%E7%BD%AE/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/Ubuntu%E4%B8%ADMySQL5-7%E6%8F%92%E5%85%A5%E4%B8%AD%E6%96%87%E8%AE%BE%E7%BD%AE/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/hashmap-analysis/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">HashMap源码解读</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E4%BA%8B%E4%BB%B6/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">个人博客事件</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/Ubuntu%E4%B8%ADMySQL5-7%E6%8F%92%E5%85%A5%E4%B8%AD%E6%96%87%E8%AE%BE%E7%BD%AE/&title=《Ubuntu中MySQL5.7插入中文设置》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/Ubuntu%E4%B8%ADMySQL5-7%E6%8F%92%E5%85%A5%E4%B8%AD%E6%96%87%E8%AE%BE%E7%BD%AE/&title=《Ubuntu中MySQL5.7插入中文设置》 — Wkkの笔记&source=前言其实关MySQL中插入中文,自己前年是设置过的,之后就一直没有管过,后来系统重装之后,重新安装配置各种环境之后,今天开始用MySQL的时候,才发现这个..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/Ubuntu%E4%B8%ADMySQL5-7%E6%8F%92%E5%85%A5%E4%B8%AD%E6%96%87%E8%AE%BE%E7%BD%AE/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Ubuntu中MySQL5.7插入中文设置》 — Wkkの笔记&url=https://winniekun.github.io/Ubuntu%E4%B8%ADMySQL5-7%E6%8F%92%E5%85%A5%E4%B8%AD%E6%96%87%E8%AE%BE%E7%BD%AE/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/Ubuntu%E4%B8%ADMySQL5-7%E6%8F%92%E5%85%A5%E4%B8%AD%E6%96%87%E8%AE%BE%E7%BD%AE/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADKklEQVR42u3ay27cQAwEwPz/T2+AnBIElrtJOVmNSydBXj1qfCCmyR8/4uP16/j7/KO//n5cP+2jK8nzk3tXBzY2NvZD2K/LI8Fc8/KFuCbl59F7sbGxsY9jz4pWXjzat7TI/C3Y2NjY35l9XcCS3+f35k/GxsbGxp6x29ioDY/aAAsbGxsbOy8MebSU3NVuNv5DloaNjY399uxNo/fdzv9RfxsbGxv7bdiv0dFuPNqi2IZT9fdjY2NjH8SetQFmUdRd1M0vV90PbGxs7Ddm78P3TTC0v35dMrGxsbHPZicRfw6ejd3sY6w6YMLGxsY+iD0rYLPQZ7+Zubd8YmNjY5/ETtoA7VjPrPi1gVTbycXGxsY+j71pweZlI1+mu+L+T7ZY2NjY2N+M3W5L2vIz25wkvKJiY2NjYz+c3Q7Q5C++N3jatJw/bPRiY2NjP5y9eeV1sbn5E+MmbhF4YWNjYx/HTmKjzYahbRvPluaGfRg2Njb2Y9k5bFZmNqVx9j3FdBI2Njb2Qex8WOd6+3HXVie/XswoYWNjYx/EboP+JNDZR/n7sOmTgSFsbGzsQ9ntqE27NF8xpjMbLcLGxsY+id2+uP3c2b13LWXR38bGxsZ+LDsfgklC+X0YtFm4IlrCxsbGPoidU9vGcD6a0w7u3DyCiY2NjX0Qe/ZZbdu13bTMytjwP4yNjY39cHYbFbVxfNs23jeGhw/FxsbGfhQ7H6lsi1a+Cdkscduc/mNkBxsbG/sIdlIY2iZBHi3dhcn/VUU9xMbGxn4IO795thz79sB+bKieUcLGxsZ+FPveQKctOUl7eHN+V4yFjY2N/c7sNk7aj/jMFmuz4fkkS8PGxsZ+OLvtgba1oL2Sb2/aortq/WJjY2O/MftVHvnEy77MzH4flS5sbGzsg9izOKkNcWZFLn9a2zDAxsbGPo/dFq1285C0eL8ueBpWb2xsbOwHsvPNw2wrko/dtO3hYRnGxsbG/vbsTfHYh1ZJcV1NnmJjY2Mfyt4XpDzlmg3uFGETNjY29nHsWah01y+Tz83Z0cYJGxsb+yB2G8e0YX3LSK7fVfawsbGxH87+CUDUyV3zp8HUAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

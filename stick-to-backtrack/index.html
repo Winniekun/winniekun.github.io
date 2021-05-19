@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>死磕回溯 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="死磕系列,回溯">
+    <meta name="description" content="前言LeetCode死磕系列四： 回溯">
+<meta property="og:type" content="article">
+<meta property="og:title" content="死磕回溯">
+<meta property="og:url" content="https://winniekun.github.io/stick-to-backtrack/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="前言LeetCode死磕系列四： 回溯">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-25T14:18:18.000Z">
+<meta property="article:modified_time" content="2021-02-16T09:33:45.356Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="死磕系列">
+<meta property="article:tag" content="回溯">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">死磕回溯</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">死磕回溯</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-02-25T14:18:18.000Z" itemprop="datePublished" class="page-time">
+  2020-02-25
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/LeetCode/">LeetCode</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#LeetCode-回溯题目整理"><span class="post-toc-number">2.</span> <span class="post-toc-text">LeetCode 回溯题目整理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#题解"><span class="post-toc-number">3.</span> <span class="post-toc-text">题解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#77-Combine"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">77 Combine</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#78-Subsets"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">78 Subsets</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#46-Permutations"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">46 Permutations</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#47-PermutationsII"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">47 PermutationsII</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#36-Combination-Sum"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">36 Combination Sum</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#40-Combination-Sum-II"><span class="post-toc-number">3.6.</span> <span class="post-toc-text">40 Combination Sum II</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#216-Combination-Sum-III"><span class="post-toc-number">3.7.</span> <span class="post-toc-text">216 Combination Sum III</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#90-Subsets-II"><span class="post-toc-number">3.8.</span> <span class="post-toc-text">90 Subsets II</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#79-Word-Search"><span class="post-toc-number">3.9.</span> <span class="post-toc-text">79 Word Search</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-LeetCode/stick-to-backtrack"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">死磕回溯</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-02-25 22:18:18" datetime="2020-02-25T14:18:18.000Z"  itemprop="datePublished">2020-02-25</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/LeetCode/">LeetCode</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>LeetCode死磕系列四： 回溯</p>
+<a id="more"></a>
+
+<ol>
+<li>组合、排列</li>
+<li>切割问题</li>
+<li>子集问题</li>
+<li>棋盘问题</li>
+</ol>
+<p>回溯可抽象为树形结构（n叉树）</p>
+<p>for循环嵌套递归</p>
+<p>优化： 剪枝操作</p>
+<p>需要注意题目中一次的结果中元素能否重复，所有结果中，顺序不同，是否会造成一个新的结果。</p>
+<h2 id="LeetCode-回溯题目整理"><a href="#LeetCode-回溯题目整理" class="headerlink" title="LeetCode 回溯题目整理"></a>LeetCode 回溯题目整理</h2><p>排列组合区分：</p>
+<p>排列有序，相同元素不同顺序，则不同</p>
+<p>组合无序，相同元素不同顺序，则相同(需要添加start索引)</p>
+<ul>
+<li><p>77 combine</p>
+<ul>
+<li>组合问题</li>
+</ul>
+</li>
+<li><p>78 <a href="https://leetcode.com/problems/subsets/description/" target="_blank" rel="noopener">Subsets</a></p>
+<ul>
+<li>组合问题</li>
+</ul>
+</li>
+<li><p>46 Permutations</p>
+<ul>
+<li>排列问题</li>
+</ul>
+</li>
+<li><p>47 PermutationsII</p>
+<ul>
+<li>排列问题</li>
+</ul>
+</li>
+<li><p>36 Combination Sum</p>
+<ul>
+<li>组合问题</li>
+</ul>
+</li>
+<li><p>40 Combination Sum II</p>
+<ul>
+<li>组合问题</li>
+</ul>
+</li>
+<li><p>216 Combination Sum III</p>
+<ul>
+<li>组合问题</li>
+</ul>
+</li>
+<li><p>90 Subsets II</p>
+<ul>
+<li>组合问题</li>
+</ul>
+</li>
+<li><p>60 Permutation Sequence</p>
+<ul>
+<li>和Permutations是一样的，只需要返回results中第k个值即可</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>二维问题</p>
+<ul>
+<li>79 Word Search<ul>
+<li>经典的二维问题的回溯</li>
+</ul>
+</li>
+<li>剑指offer第12题</li>
+</ul>
+<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><h3 id="77-Combine"><a href="#77-Combine" class="headerlink" title="77 Combine"></a>77 <a href="https://leetcode-cn.com/problems/combinations/" target="_blank" rel="noopener">Combine</a></h3><h3 id="78-Subsets"><a href="#78-Subsets" class="headerlink" title="78 Subsets"></a>78 <a href="https://leetcode.com/problems/subsets/" target="_blank" rel="noopener">Subsets</a></h3><p>组合问题</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;List&lt;Integer&gt;&gt; subsets(<span class="keyword">int</span>[] nums) {</span><br><span class="line">    List&lt;List&lt;Integer&gt;&gt; results = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    List&lt;Integer&gt; out = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    backtrack(nums, results, out, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">backtrack</span><span class="params">(<span class="keyword">int</span>[] nums, List&lt;List&lt;Integer&gt;&gt; results, List&lt;Integer&gt; track, <span class="keyword">int</span> start)</span> </span>{</span><br><span class="line">    results.add(<span class="keyword">new</span> LinkedList&lt;&gt;(track));</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt; nums.length; i++) {</span><br><span class="line">        track.add(nums[i]);</span><br><span class="line">        backtrack(nums, results, track, i+<span class="number">1</span>);</span><br><span class="line">        track.remove(track.size()-<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="46-Permutations"><a href="#46-Permutations" class="headerlink" title="46 Permutations"></a>46 <a href="https://leetcode.com/problems/permutations/" target="_blank" rel="noopener">Permutations</a></h3><p>排列问题</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> List&lt;List&lt;Integer&gt;&gt; results = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; permute(<span class="keyword">int</span>[] nums) {</span><br><span class="line">    <span class="keyword">int</span> k = <span class="number">3</span>;</span><br><span class="line">    List&lt;Integer&gt; out = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    backtrack(nums, out, k);</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">backtrack</span><span class="params">(<span class="keyword">int</span>[] nums, List&lt;Integer&gt; track, <span class="keyword">int</span> k)</span></span></span><br><span class="line"><span class="function">    <span class="title">if</span><span class="params">(track.size()</span> </span>== k){</span><br><span class="line">        results.add(<span class="keyword">new</span> LinkedList&lt;&gt;(track));</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) {</span><br><span class="line">         <span class="comment">// 剔除重复值</span></span><br><span class="line">         <span class="keyword">if</span>(track.contains(nums[i])){</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">          }</span><br><span class="line">          track.add(nums[i]);</span><br><span class="line">          backtrack(nums, track, k);</span><br><span class="line">          track.remove(track.size()-<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="47-PermutationsII"><a href="#47-PermutationsII" class="headerlink" title="47 PermutationsII"></a>47 <a href="https://leetcode.com/problems/permutations-ii/" target="_blank" rel="noopener">PermutationsII</a></h3><p>排列问题</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> List&lt;List&lt;Integer&gt;&gt; results = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;List&lt;Integer&gt;&gt; permuteUnique(<span class="keyword">int</span>[] nums) {</span><br><span class="line">    Arrays.sort(nums);</span><br><span class="line">    List&lt;Integer&gt; out = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    backtrack(nums, out, <span class="keyword">new</span> <span class="keyword">boolean</span>[nums.length]);</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">backtrack</span><span class="params">(<span class="keyword">int</span>[] nums, List&lt;Integer&gt; out, <span class="keyword">boolean</span>[] visit</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">if</span> (out.size()</span> </span>== nums.length) {</span><br><span class="line">        results.add(<span class="keyword">new</span> ArrayList&lt;&gt;(out));</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) {</span><br><span class="line">        <span class="comment">//重复元素只按顺序选择，若当前元素未被选择且前一元素与当前元素值相等也未被选择则跳过，</span></span><br><span class="line">        <span class="comment">// 这一可能情况与先选小序号后选大序号的相同元素相同</span></span><br><span class="line">        <span class="keyword">if</span> (i &gt; <span class="number">0</span> &amp;&amp; nums[i] == nums[i - <span class="number">1</span>] &amp;&amp; visited[i-<span class="number">1</span>] &amp;&amp;!visited[i] ||</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        }</span><br><span class="line">        out.add(nums[i]);</span><br><span class="line">        visited[i] = <span class="keyword">true</span>;</span><br><span class="line">        backtrack(nums, out, visited);</span><br><span class="line">        out.remove(out.size() - <span class="number">1</span>);</span><br><span class="line">        visited[i] = <span class="keyword">false</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="36-Combination-Sum"><a href="#36-Combination-Sum" class="headerlink" title="36 Combination Sum"></a>36 <a href="https://leetcode.com/problems/combination-sum/" target="_blank" rel="noopener">Combination Sum</a></h3><p>组合问题</p>
+<p><strong>元素无重复项</strong></p>
+<p><strong>可重复使用</strong></p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> List&lt;List&lt;Integer&gt;&gt; results = <span class="keyword">new</span> ArrayList&lt;List&lt;Integer&gt;&gt;();</span><br><span class="line"><span class="keyword">private</span> List&lt;Integer&gt; curren = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; combinationSum(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target){</span><br><span class="line">    Arrays.sort(candidates);</span><br><span class="line">    <span class="keyword">if</span>(candidates == <span class="keyword">null</span>){</span><br><span class="line">        <span class="keyword">return</span> results;</span><br><span class="line">    }</span><br><span class="line">    backtrack(<span class="number">0</span>, candidates, target, curren);</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">backtrack</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target, List&lt;Integer&gt; out)</span></span>{</span><br><span class="line">    <span class="keyword">if</span>(target &lt; <span class="number">0</span>){</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span>(target == <span class="number">0</span>){</span><br><span class="line">        results.add(<span class="keyword">new</span> ArrayList&lt;&gt;(out));</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt; candidates.length; i++) {</span><br><span class="line">        out.add(candidates[i]);</span><br><span class="line">        backtrack(i, candidates, target-candidates[i], curren);</span><br><span class="line">        out.remove(out.size()-<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="40-Combination-Sum-II"><a href="#40-Combination-Sum-II" class="headerlink" title="40 Combination Sum II"></a>40 <a href="https://leetcode.com/problems/combination-sum-ii/" target="_blank" rel="noopener">Combination Sum II</a></h3><p>组合问题</p>
+<p><strong>元素有重复项</strong></p>
+<p><strong>不能重复选</strong></p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 有重复项</span></span><br><span class="line"><span class="keyword">private</span> List&lt;List&lt;Integer&gt;&gt; results = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; combinationSum2(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target) {</span><br><span class="line">    <span class="keyword">if</span> (candidates == <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">return</span> results;</span><br><span class="line">    }</span><br><span class="line">    Arrays.sort(candidates);</span><br><span class="line">    List&lt;Integer&gt; out = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    backtrack(<span class="number">0</span>, out, candidates, target);</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">backtrack</span><span class="params">(<span class="keyword">int</span> start, List&lt;Integer&gt; out, <span class="keyword">int</span>[] candidates, <span class="keyword">int</span> targe</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">if</span>(target &lt; <span class="number">0</span>)</span></span>{</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span>(target == <span class="number">0</span>){</span><br><span class="line">        results.add(<span class="keyword">new</span> ArrayList&lt;&gt;(out));</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt; candidates.length; i++) {</span><br><span class="line">        <span class="keyword">if</span>(candidates[i] == candidates[i-<span class="number">1</span>] &amp;&amp; i&gt; start){</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        }</span><br><span class="line">        out.add(candidates[i]);</span><br><span class="line">        backtrack(i+<span class="number">1</span>, out, candidates, target-candidates[i]);</span><br><span class="line">        out.remove(out.size()-<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="216-Combination-Sum-III"><a href="#216-Combination-Sum-III" class="headerlink" title="216 Combination Sum III"></a>216 <a href="https://leetcode.com/problems/combination-sum-iii/" target="_blank" rel="noopener">Combination Sum III</a></h3><p>组合问题</p>
+<p><strong>元素无重复项，但是候选集改变</strong></p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> List&lt;List&lt;Integer&gt;&gt; results = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; combinationSum3(<span class="keyword">int</span> k, <span class="keyword">int</span> n){</span><br><span class="line">    List&lt;Integer&gt; out = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    backtrack(<span class="number">1</span>, out, n, k);</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">backtrack</span><span class="params">(<span class="keyword">int</span> start, List&lt;Integer&gt; out, <span class="keyword">int</span> n, <span class="keyword">int</span> k)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span>(out.size() == k &amp;&amp; n==<span class="number">0</span>){</span><br><span class="line">        results.add(<span class="keyword">new</span> ArrayList&lt;&gt;(out));</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt;= n; i++) {</span><br><span class="line">        <span class="keyword">if</span>(i&gt;=<span class="number">10</span>){</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        }</span><br><span class="line">        out.add(i);</span><br><span class="line">        backtrack(i+<span class="number">1</span>, out, n-i, k);</span><br><span class="line">        out.remove(out.size()-<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="90-Subsets-II"><a href="#90-Subsets-II" class="headerlink" title="90 Subsets II"></a>90 <a href="https://leetcode.com/problems/subsets-ii/" target="_blank" rel="noopener">Subsets II</a></h3><p>组合问题</p>
+<p><strong>元素有重复项</strong></p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> List&lt;List&lt;Integer&gt;&gt; results = <span class="keyword">new</span> ArrayList&lt;&gt;()</span><br><span class="line"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; subsetsWithDup(<span class="keyword">int</span>[] nums) {</span><br><span class="line">    <span class="keyword">if</span>(nums == <span class="keyword">null</span>){</span><br><span class="line">        <span class="keyword">return</span> results;</span><br><span class="line">    }</span><br><span class="line">    Arrays.sort(nums);</span><br><span class="line">    List&lt;Integer&gt; out = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    backtrack(nums, out, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">backtrack</span><span class="params">(<span class="keyword">int</span>[] nums, List&lt;Integer&gt; out, i</span></span></span><br><span class="line"><span class="function"><span class="params">    results.add(new ArrayList&lt;&gt;(out)</span>)</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt; nums.length; i++) {</span><br><span class="line">        <span class="keyword">if</span>(i&gt;start &amp;&amp; nums[i] == nums[i-<span class="number">1</span>]){</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        }</span><br><span class="line">        out.add(nums[i]);</span><br><span class="line">        backtrack(nums, out, i+<span class="number">1</span>);</span><br><span class="line">        out.remove(out.size()-<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<hr>
+<h3 id="79-Word-Search"><a href="#79-Word-Search" class="headerlink" title="79 Word Search"></a><a href="https://leetcode.com/problems/word-search/" target="_blank" rel="noopener">79 Word Search</a></h3><p>二维平面内判断是否包含有字符串，最基础的二维回溯问题. 和一维回溯问题不同的是，回溯函数去除了for循环，而是判断其相邻的四个格子： <code>(row+1, col)</code>  <code>(row-1, col)</code>  <code>(row, col+1)</code>  <code>(row, col-1)</code></p>
+<p>调用回溯的方法使用了for循环，因为二维的每个位置都需要进行深度遍历。</p>
+<p>回溯部分：</p>
+<ol>
+<li>需要判断是否越界，越界的地方不走</li>
+<li>终止条件： 当前的第i步，对应的字符刚好是<code>word</code>的第i个字符</li>
+</ol>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">exist</span><span class="params">(<span class="keyword">char</span>[][] board, String word)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (board.length == <span class="number">0</span> || board[<span class="number">0</span>].length == <span class="number">0</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">int</span> m = board.length;</span><br><span class="line">    <span class="keyword">int</span> n = board[<span class="number">0</span>].length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) {</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) {</span><br><span class="line">            <span class="keyword">if</span> (search(board, word, <span class="number">0</span>, i, j)) {</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">search</span><span class="params">(<span class="keyword">char</span>[][] board, String word, <span class="keyword">int</span> start, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (start == word.length()) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">int</span> m = board.length;</span><br><span class="line">    <span class="keyword">int</span> n = board[<span class="number">0</span>].length;</span><br><span class="line">    <span class="keyword">if</span> (i &lt; <span class="number">0</span> || j &lt; <span class="number">0</span> || i &gt;= m || j &gt;= n || board[i][j] != word.charAt(start)) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">char</span> c = board[i][j];</span><br><span class="line">    board[i][j] = <span class="string">'#'</span>;</span><br><span class="line">    <span class="keyword">boolean</span> res = search(board, word, start + <span class="number">1</span>, i + <span class="number">1</span>, j) ||</span><br><span class="line">            search(board, word, start + <span class="number">1</span>, i - <span class="number">1</span>, j) ||</span><br><span class="line">            search(board, word, start + <span class="number">1</span>, i, j + <span class="number">1</span>) ||</span><br><span class="line">            search(board, word, start + <span class="number">1</span>, i, j - <span class="number">1</span>);</span><br><span class="line">    board[i][j] = c;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2021-02-16T09:33:45.356Z" itemprop="dateUpdated">2021-02-16 17:33:45</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9B%9E%E6%BA%AF/" rel="tag">回溯</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%AD%BB%E7%A3%95%E7%B3%BB%E5%88%97/" rel="tag">死磕系列</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/stick-to-backtrack/&title=《死磕回溯》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/stick-to-backtrack/&title=《死磕回溯》 — Wkkの笔记&source=前言LeetCode死磕系列四： 回溯" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/stick-to-backtrack/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《死磕回溯》 — Wkkの笔记&url=https://winniekun.github.io/stick-to-backtrack/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/stick-to-backtrack/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/rbtree-analysis/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">红黑树</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/stick-to-DFS/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">死磕DFS</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/stick-to-backtrack/&title=《死磕回溯》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/stick-to-backtrack/&title=《死磕回溯》 — Wkkの笔记&source=前言LeetCode死磕系列四： 回溯" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/stick-to-backtrack/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《死磕回溯》 — Wkkの笔记&url=https://winniekun.github.io/stick-to-backtrack/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/stick-to-backtrack/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACG0lEQVR42u3aQY7DIBAEwPz/015p77G6h2S1huJkJch2+TBiaF6veFy/4/735Dq5w/38pYGBgfFYxnU73r3K/Zxk/v3M/N0wMDDOYayUwrykrn++t79jYGBgBKR3L3FfQPPnYmBgYOQF9x6QLBnb+RgYGBj5rYuWMr7/OhsDA+MERhsM/OX1F/MNDAyMhzCucsxizlkbXLwVBgbG1owkRMxjyDaezBvgqBxjYGBszWjXXfnvOWD9c2BgYOzNaDfOWsbKv3nRx8DAOIGRH3dINu7z4xp5IcbAwDiZkfzdFsF2cy1/IgYGxmmM9ohDG3POMHVzi4GBsTUjL5rtwnH2CVoSBgYGRvKAvHS2sDZUwMDA2JuxEky2ZTEPHvL+FAMDY29GG1u2YUAeA8xiiWwjEQMD49mMpfNiZQDQXi8dDsPAwNiU0R6teC2M9ZYYAwPjNEZSBBPYrMVNQoLoQAYGBsYxjFkYMIsW1o9o1N02BgbGAxnrS73vbbTlT8HAwDiBMSu+M8Ys5iwyWAwMjO0YeeOaLxxX2tp2kw4DA+MExlWOuj8OXnpW4t8eC8PAwNiO8dlDFW1UkC8E24KOgYGxHyMvsu2qMzkau1JSMTAwTmN841DFsKueFX0MDAyMDx25yMt3uxmHgYGBkW+u5UU2L+jRTAwMjAMYszBgFnC2Mz8QZGJgYDycMWsgk5ebreKSJenH8g0MDIz/zvgBhOp0cuJIDEEAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

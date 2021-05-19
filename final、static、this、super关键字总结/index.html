@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>final、static、this、super关键字总结 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="java基础">
+    <meta name="description" content="final  static this super关键字总结final 关键字主要用于三个地方：类、方法、变量  类：用final修饰一个类时，表明这个类不能被继承。final类中的所有成员方法都会被隐式地指定为final方法。 方法： 方法锁定： 防止任何继承了类修改该方法 效率   变量： 对于一个final变量，如果是基本数据类型的变量，则其数值一旦在初始化之后便不能更改；如果是引用类型的变量">
+<meta property="og:type" content="article">
+<meta property="og:title" content="final、static、this、super关键字总结">
+<meta property="og:url" content="https://winniekun.github.io/final%E3%80%81static%E3%80%81this%E3%80%81super%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="final  static this super关键字总结final 关键字主要用于三个地方：类、方法、变量  类：用final修饰一个类时，表明这个类不能被继承。final类中的所有成员方法都会被隐式地指定为final方法。 方法： 方法锁定： 防止任何继承了类修改该方法 效率   变量： 对于一个final变量，如果是基本数据类型的变量，则其数值一旦在初始化之后便不能更改；如果是引用类型的变量">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-04-10T01:47:33.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.243Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="java基础">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">final、static、this、super关键字总结</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">final、static、this、super关键字总结</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-04-10T01:47:33.000Z" itemprop="datePublished" class="page-time">
+  2019-04-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#final-static-this-super关键字总结"><span class="post-toc-number">1.</span> <span class="post-toc-text">final  static this super关键字总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#final-关键字"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">final 关键字</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#static-关键字"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">static 关键字</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#this-关键字"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">this 关键字</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#super-关键字"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">super 关键字</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Java基础/final、static、this、super关键字总结"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">final、static、this、super关键字总结</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-04-10 09:47:33" datetime="2019-04-10T01:47:33.000Z"  itemprop="datePublished">2019-04-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="final-static-this-super关键字总结"><a href="#final-static-this-super关键字总结" class="headerlink" title="final  static this super关键字总结"></a>final  static this super关键字总结</h2><h3 id="final-关键字"><a href="#final-关键字" class="headerlink" title="final 关键字"></a>final 关键字</h3><p>主要用于三个地方：类、方法、变量</p>
+<ol>
+<li>类：<strong>用final修饰一个类时，表明这个类不能被继承。final类中的所有成员方法都会被隐式地指定为final方法。</strong></li>
+<li>方法：<ol>
+<li>方法锁定： 防止任何继承了类修改该方法</li>
+<li><del>效率</del></li>
+</ol>
+</li>
+<li>变量： <strong>对于一个final变量，如果是基本数据类型的变量，则其数值一旦在初始化之后便不能更改；如果是引用类型的变量，则在对其初始化之后便不能再让其指向另一个对象。</strong></li>
+</ol>
+<a id="more"></a>
+
+<h3 id="static-关键字"><a href="#static-关键字" class="headerlink" title="static 关键字"></a>static 关键字</h3><p>主要为四个地方放： 修饰成员变量和成员方法， 静态代码块、静态内部类、静态导包</p>
+<ol>
+<li><p>修饰静态成员变量和成员方法</p>
+<p>被 static 修饰的成员属于类，不属于单个这个类的某个对象，被类中所有对象共享，可以并且建议通过类名调用。被static 声明的成员变量属于静态成员变量，静态变量 存放在 Java 内存区域的方法区。调用格式：<code>类名.静态变量名</code> <code>类名.静态方法名()</code></p>
+</li>
+<li><p>静态代码块</p>
+<p>静态代码块定义在类中方法外, ==静态代码块在非静态代码块之前执行(静态代码块—&gt;非静态代码块—&gt;构造方法)。 该类不管创建多少对象，静态代码块只执行一次.==</p>
+</li>
+<li><p>静态内部类</p>
+<p>静态内部类与非静态内部类之间存在一个最大的区别: 非静态内部类在编译完成之后会隐含地保存着一个引用，该引用是指向创建它的外围类，但是静态内部类却没有。没有这个引用就意味着：</p>
+<ol>
+<li>它的创建是不需要依赖外围类的创建。</li>
+<li>它不能使用任何外围类的非static成员变量和方法。</li>
+</ol>
+</li>
+<li><p>静态导包</p>
+<p><code>mport static</code> 这两个关键字连用可以指定导入某个类中的指定静态资源，并且不需要使用类名调用类中静态成员，可以直接使用类中静态成员变量和成员方法。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> com.train.keywords.Test.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FinalForKnow</span> </span>{</span><br><span class="line">    <span class="comment">// final 用于 类 方法 变量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String a = <span class="string">"1123"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        System.out.println(a);</span><br><span class="line">        System.out.println(name);</span><br><span class="line">        System.out.println(age);</span><br><span class="line">        <span class="comment">// 1123</span></span><br><span class="line">        <span class="comment">// 维坤坤</span></span><br><span class="line">        <span class="comment">// 0</span></span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>{</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span>  <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String name = <span class="string">"维坤坤"</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+</ol>
+<h3 id="this-关键字"><a href="#this-关键字" class="headerlink" title="this 关键字"></a>this 关键字</h3><p>引用类的当前实例</p>
+<h3 id="super-关键字"><a href="#super-关键字" class="headerlink" title="super 关键字"></a>super 关键字</h3><p>从子类访问父类的方法和变量</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Super</span> </span>{</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> number;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">showNumber</span><span class="params">()</span> </span>{</span><br><span class="line">        System.out.println(<span class="string">"number = "</span> + number);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Sub</span> <span class="keyword">extends</span> <span class="title">Super</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">super</span>.number = <span class="number">10</span>;</span><br><span class="line">        <span class="keyword">super</span>.showNumber();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<ul>
+<li>在构造器中使用 <code>super（）</code> 调用父类中的其他构造方法时，该语句必须处于构造器的首行，否则编译器会报错。另外，this 调用本类中的其他构造方法时，也要放在首行。</li>
+<li>this、super不能用在static方法中。</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.243Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/final%E3%80%81static%E3%80%81this%E3%80%81super%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/&title=《final、static、this、super关键字总结》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/final%E3%80%81static%E3%80%81this%E3%80%81super%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/&title=《final、static、this、super关键字总结》 — Wkkの笔记&source=final  static this super关键字总结final 关键字主要用于三个地方：类、方法、变量
+
+类：用final修饰一个类时，表明这个类不..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/final%E3%80%81static%E3%80%81this%E3%80%81super%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《final、static、this、super关键字总结》 — Wkkの笔记&url=https://winniekun.github.io/final%E3%80%81static%E3%80%81this%E3%80%81super%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/final%E3%80%81static%E3%80%81this%E3%80%81super%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/%E5%A4%A7%E5%9B%9B%E4%B8%8A%E5%AD%A6%E6%9C%9F%E6%80%BB%E7%BB%93-%E6%85%A2%E7%85%A8%E6%85%A2%E7%82%96/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">大四上学期总结---慢煨慢炖</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">插入排序</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/final%E3%80%81static%E3%80%81this%E3%80%81super%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/&title=《final、static、this、super关键字总结》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/final%E3%80%81static%E3%80%81this%E3%80%81super%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/&title=《final、static、this、super关键字总结》 — Wkkの笔记&source=final  static this super关键字总结final 关键字主要用于三个地方：类、方法、变量
+
+类：用final修饰一个类时，表明这个类不..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/final%E3%80%81static%E3%80%81this%E3%80%81super%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《final、static、this、super关键字总结》 — Wkkの笔记&url=https://winniekun.github.io/final%E3%80%81static%E3%80%81this%E3%80%81super%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/final%E3%80%81static%E3%80%81this%E3%80%81super%E5%85%B3%E9%94%AE%E5%AD%97%E6%80%BB%E7%BB%93/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD4UlEQVR42u3bS24bQQwFQN//0s42gCH5PZLjOEDNSpClnu6aBcWPPz7i6/PF9fdfk2/l62/29n5XBxcOHDhw4Bgd9evSX2+QbCVZ/9VdZojv3/mGHgcOHDhwHHG8ulm+0SRYJiskn0wQ858COHDgwIHjd3K8XzN/JwmTG1wcOHDgwPF/ceSHuaVsgzoOHDhw4HiaI28sJUW9TWmvXbktbp7VSnHgwIEDx2RaoCjb/ebXj8x34MCBAweOINS1VztY0A5DvN9nnkxGZ8GBAwcOHGuOdlihHU3YRP48bWtbUzhw4MCB42mOfQicAeUlvKRQuPlWndrhwIEDB44X789GDfaf3MPlAxnvz4gDBw4cOJ7gmCVOCc3VZ9qi4ewx4MCBAweOK452xC0JikkIbFOsWYAvUj4cOHDgwLHmmIWx2bGvRhzygNqOX+DAgQMHjiuOtkQ4Kwsm3Ekrq2101WEeBw4cOHAccbQp0H7IICnwtcnkZoc4cODAgeOKo23/zNKzq9Jhe5fhOjhw4MCBY8TRDpMlxbi2CNgmY8m9DgYacODAgQPHiGP25dmoQZKwtYefpYX1LwgcOHDgwBFz5EW9PHHKt94G9U2bKnoAOHDgwIHjiKMNmW3pbROSZ/SzIQwcOHDgwLHnmB1p30xK1m+D/T7M48CBAweOJzja4mDbsmpTr6Q9dvUaBw4cOHBccSShaxY+Z+vnyVv+AIpCJA4cOHDgWHBcFdfyUDorPj5x4cCBAweO5zhmKVNbEHzudV64jH5x4MCBAweOBcdsgCBv/GyKgHmyl5cL64EGHDhw4MBRcvzMVt5vLmli5cF1NtaAAwcOHDhuOdqy4PtQukkOZ62ss9Vw4MCBA8fNavU/WLalwDbo5mnkLKB+8/hx4MCBA8cDHJvBgjZJS1LHNqCu6HHgwIEDx4Ij31CbpLXtq8/R1aZzw1E5HDhw4MCx4NgkabMxhdnrdlhh2HbCgQMHDhyTCYSPPFzl7+TJVZ6w7ZO9os2GAwcOHDgW0WRTHGyHFfJvrVpHceESBw4cOHA8wZFg5WMKs+GDK8RVqREHDhw4cNx0baLi3SzgbUJjTtOWC79ZHwcOHDhwLNYfhqIgDLcFwVkYng03RCEWBw4cOHAcNZ/aMuKspHg1xNA+kmHREAcOHDhwlBz7Q26CYh7wklRzFmhx4MCBA8cTHHmbJwmBq6i+IJgNN+DAgQMHjn/FkTeE2iJjztoWGfMWGg4cOHDg+HmOWaumbV8ld2/3VuwZBw4cOHAcccxumW9iNhiRwOUnOq6V4sCBAweOxYRYHsD2YW+T7O0LhThw4MCBY8HxBwwHIIIHKaE8AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

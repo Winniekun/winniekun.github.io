@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>接口和抽象类的区别 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="java基础,面试36讲">
+    <meta name="description" content="接口">
+<meta property="og:type" content="article">
+<meta property="og:title" content="接口和抽象类的区别">
+<meta property="og:url" content="https://winniekun.github.io/interface-Abstarct-diff/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="接口">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-13T13:03:31.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.244Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="java基础">
+<meta property="article:tag" content="面试36讲">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">接口和抽象类的区别</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">接口和抽象类的区别</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-05-13T13:03:31.000Z" itemprop="datePublished" class="page-time">
+  2020-05-13
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#接口"><span class="post-toc-number">1.</span> <span class="post-toc-text">接口</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#疑问1：为什么常量成员默认修饰为public-static-final"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">疑问1：为什么常量成员默认修饰为public static final</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#疑问2：为什么方法要么是抽象方法，要么是静态方法"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">疑问2：为什么方法要么是抽象方法，要么是静态方法</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#抽象类"><span class="post-toc-number">2.</span> <span class="post-toc-text">抽象类</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">3.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">4.</span> <span class="post-toc-text">References</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Java基础/面试36讲/interface-Abstarct-diff"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">接口和抽象类的区别</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-05-13 21:03:31" datetime="2020-05-13T13:03:31.000Z"  itemprop="datePublished">2020-05-13</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><a id="more"></a>
+
+<p>接口是不是类，是对类的一组需求的描述，这些类要遵从接口描述的同一格式进行定义（其是对行为的抽象，是抽象方法的集合）。有两个方面的职责：</p>
+<ol>
+<li>抽象方法的集合（<strong>主要</strong>）</li>
+<li>声明某些东西（Mark Interface）</li>
+</ol>
+<p>通过接口，可以达到API和实现的分离，譬如MVC中的<code>dao</code>层或<code>service</code>层，但是<strong>不能实例化</strong>，同时也不能包含任何<strong>非常量成员</strong>，所以，也隐含表明，任何的field都具有<code>public static final</code>的意义。同时对于方法来说，接口中要么是抽象方法，要么是静态方法。如<code>Collection</code>框架中root interface <code>java.util.Collection</code></p>
+<h3 id="疑问1：为什么常量成员默认修饰为public-static-final"><a href="#疑问1：为什么常量成员默认修饰为public-static-final" class="headerlink" title="疑问1：为什么常量成员默认修饰为public static final"></a>疑问1：为什么常量成员默认修饰为public static final</h3><blockquote>
+<ol>
+<li><p>接口必须要具体类实现才有意义，所以必须是public。</p>
+</li>
+<li><p>接口中的属性对所有实现类只有一份，所以是static。</p>
+</li>
+<li><p>要使实现类为了向上转型成功，所以必须是final的。</p>
+</li>
+</ol>
+</blockquote>
+<h3 id="疑问2：为什么方法要么是抽象方法，要么是静态方法"><a href="#疑问2：为什么方法要么是抽象方法，要么是静态方法" class="headerlink" title="疑问2：为什么方法要么是抽象方法，要么是静态方法"></a>疑问2：为什么方法要么是抽象方法，要么是静态方法</h3><blockquote>
+<p>抽象方法和接口定义的方法，你可以理解为是一种协议或者规范。比如我们是行业的达人，需要定义车的规范，它能启动、跑起来、刹车和停止，这4项功能就是抽象方法。至于用什么引擎启动、跑地多快、怎么刹车，我们就不想管了，你爱怎么实现是你的事，但你必须实现我们定义好的抽象方法，否则你生产的就不是车子了。   </p>
+<p>以最常用的java.util.List为例，它的继承树及其庞大。但这些实现类和继承类，都有共同的方法，也就是List定义的方法，比如get/add/remove/size。这样就保证了后续子孙都是一个模样的，但有个性。   </p>
+<p>List list = new 实现类();<br>list.add(obj);list.get(0);int size = list.size();// 这行代码不需要修改<br>实现类可以是ArrayList，也可以是LinkedList，或者是线程安全的CopyOnWriteArrayList。爱换那个换那个，但第二行的代码不需要修改，因为它们都使用了List的规范。</p>
+</blockquote>
+<p>1、接口是一种约束和规范，是一种更加更高级的抽象类，抽象类的方法必须是公开的，因为要给人继承和使用啊，不用public，别人怎么看得到，所以在接口实现时，定义的方法修饰符必须是public；因此子类在实现接口重写方法时的修饰符必须是public。<br>2、另外再扩展一下，接口中没有变量（既然是约束和规范，怎么能够定义一个大家都可以改的东西呢？），只能是常量，接口中定义常量默认的修饰符为public static final。</p>
+<h2 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h2><p>类似于模板，但又不同，目的是提高代码的复用，其抽取了相关的Java类的共用方法，或共用的成员变量，通过继承的方法达到代码复用目的。譬如<code>Collection</code>框架中的各种<code>AbstractXXX</code>类。抽象类除了<strong>不能实例化</strong>，形式上和Java类没有太大区别。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>接口：</p>
+<ol>
+<li>只有常量</li>
+<li>方法要么是抽象方法、要么是静态方法</li>
+<li>不能被实例化</li>
+<li>一个类可以实现多个接口</li>
+</ol>
+<p>抽象类：</p>
+<ol>
+<li>除了不能实例化，其他和普通类没太大区别</li>
+<li>一个类只能继承一个抽象类（<strong>Java 不支持多继承</strong>）</li>
+</ol>
+<p>核心区别</p>
+<ol>
+<li><p>行为规范: 接口</p>
+</li>
+<li><p>通用功能: 抽象</p>
+</li>
+</ol>
+<blockquote>
+<p>在一些情况下存在特定场景,需要抽象出与具体实现、实例化无关的通用逻辑,或者纯调用关系的逻辑，这样的话，因为Java不支持多继承，就无法使用抽象类进行实现，常用的方法是实现由静态方法构成的工具类，比如<code>java.util.Collections</code></p>
+</blockquote>
+<blockquote>
+<p>接口的职责也不仅仅限于抽象方法的集合,其实有各种不同的实践。有一类没有任何方法的接口,通常叫作 Marker Interface,顾名思义,它的目的就是为了声明某些东西,比如我们熟知的 Cloneable、Serializable 等。这种用法,也存在于业界其他的 Java 产品代码中。</p>
+</blockquote>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li>Java核心卷I</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.244Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java%E5%9F%BA%E7%A1%80/" rel="tag">java基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%9536%E8%AE%B2/" rel="tag">面试36讲</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/interface-Abstarct-diff/&title=《接口和抽象类的区别》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/interface-Abstarct-diff/&title=《接口和抽象类的区别》 — Wkkの笔记&source=接口" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/interface-Abstarct-diff/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《接口和抽象类的区别》 — Wkkの笔记&url=https://winniekun.github.io/interface-Abstarct-diff/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/interface-Abstarct-diff/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/copy-methods-of-java/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Java的几种文件拷贝方式</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/jdk-source-analysis/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JDK源码分析计划</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/interface-Abstarct-diff/&title=《接口和抽象类的区别》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/interface-Abstarct-diff/&title=《接口和抽象类的区别》 — Wkkの笔记&source=接口" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/interface-Abstarct-diff/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《接口和抽象类的区别》 — Wkkの笔记&url=https://winniekun.github.io/interface-Abstarct-diff/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/interface-Abstarct-diff/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIElEQVR42u3aQY7DIAwF0N7/0p1tpTbo24SRAi+rqiWEl4VrbF6v+Hp/XJ/fJCOTmXv3li8MDIzHMt7D62rMvU/Jn3u5BgwMjAMYSShMgu84KPeeNR6PgYGBkZPyMePAjYGBgTHPyDe3VwG3NxsGBgZGspmsInsBdPleHAMD44GMXvn+fz4v6W9gYGA8itEr1udpXy84lleFgYGxNSMPcL0UrZdcVteDgYFxAmM89TjgVpsH+ROT4F7IZDEwMB7L6G0d87L+TLmtUPLDwMDYmpGHzrsC7oowjYGBsTcj34L2CmHJK+i1DX5UDTEwMDZlrO4PJg2DcZCdOlqBgYGxBSPPH6vp47rQ/GMNGBgYBzDy1K26xDxoFvbc33NiYGAcwMi3lzPj86JbvoUuD8XAwNiIUQ15SSqZJ6B52MXAwDiNkRfOqke4lh8Ow8DAOIzRK7HlTYK8CVE4oIaBgXEAo7eIPCnsPSUPzRgYGHszeknbvQE0mT8pz2FgYJzAyEnzrcqpNsDVXRgYGAcwqsuaKZzNJJqX32NgYBzAWBEWq4czqlQMDIwTGO/i1XtPvXsLc2JgYGzN6BXOemncfAEuP9iBgYGxHyMJsr3DpuWSWfEuDAyM0xgzzcUkQJdbktWWJwYGBsb0ZjJPJZtUDAwMjJsWMX4d1W3wDf8bGBgYj2LkR756v/YwS/biGBgYD2Tcm9hVMdVjFlONTAwMjOcx/gA6Z0upi/beFAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

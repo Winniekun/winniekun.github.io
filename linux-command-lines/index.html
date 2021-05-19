@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>程序员的魔法---命令行 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="命令行">
+    <meta name="description" content="前言不知不觉已经使用Ubuntu四年了，算是一只老白了。命令行，感觉对于程序员来说，简直和魔法一样，输入一行命令，然后就能得到你想要的结果，极其的amazing。当然，也和魔法一样难以使用，因为要记住很多很多的内容。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序员的魔法---命令行">
+<meta property="og:url" content="https://winniekun.github.io/linux-command-lines/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="前言不知不觉已经使用Ubuntu四年了，算是一只老白了。命令行，感觉对于程序员来说，简直和魔法一样，输入一行命令，然后就能得到你想要的结果，极其的amazing。当然，也和魔法一样难以使用，因为要记住很多很多的内容。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-10T01:13:07.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.253Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="命令行">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">程序员的魔法---命令行</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">程序员的魔法---命令行</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-04-10T01:13:07.000Z" itemprop="datePublished" class="page-time">
+  2020-04-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux/">Linux</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#常用操作"><span class="post-toc-number">2.</span> <span class="post-toc-text">常用操作</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#文件内容"><span class="post-toc-number">3.</span> <span class="post-toc-text">文件内容</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#管道和重定向"><span class="post-toc-number">4.</span> <span class="post-toc-text">管道和重定向</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#文件权限-chmod"><span class="post-toc-number">5.</span> <span class="post-toc-text">文件权限(chmod)</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#文件基本操作"><span class="post-toc-number">6.</span> <span class="post-toc-text">文件基本操作</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#进程管理"><span class="post-toc-number">7.</span> <span class="post-toc-text">进程管理</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-操作系统/linux/linux-command-lines"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">程序员的魔法---命令行</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-04-10 09:13:07" datetime="2020-04-10T01:13:07.000Z"  itemprop="datePublished">2020-04-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux/">Linux</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>不知不觉已经使用<code>Ubuntu</code>四年了，算是一只老白了。命令行，感觉对于程序员来说，简直和魔法一样，输入一行命令，然后就能得到你想要的结果，极其的amazing。当然，也和魔法一样难以使用，因为要记住很多很多的内容。</p>
+<a id="more"></a>
+
+<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><p>自言自语 echo</p>
+<p>在哪儿 pwd(Print Working Directory)</p>
+<p>换个地方 cd (change directory)</p>
+<p>瞅瞅 ls</p>
+<ul>
+<li>ls</li>
+<li>ls -l<ul>
+<li>显示当前目录下文件信息</li>
+</ul>
+</li>
+<li>ls -la<ul>
+<li>列出所有文件，包括以.开头的隐藏文件</li>
+</ul>
+</li>
+<li>ls -lh<ul>
+<li>做单位换算，将byte换算成K，M，G等.</li>
+</ul>
+</li>
+</ul>
+<p>寻求帮助 man（manual）、 xxx -h  xxx –help</p>
+<h2 id="文件内容"><a href="#文件内容" class="headerlink" title="文件内容"></a>文件内容</h2><ul>
+<li>打印文件内容 cat(concatenate and print files)<ul>
+<li>cat a.txt</li>
+</ul>
+</li>
+<li>头和尾 head、tail<ul>
+<li>head a.txt</li>
+<li>tail a.txt</li>
+</ul>
+</li>
+<li>交互浏览 less<ul>
+<li>less a.txt</li>
+</ul>
+</li>
+<li>内容查找 / 、grep<ul>
+<li> less  | grep xxx (grep -n 显示行数)</li>
+</ul>
+</li>
+<li>单词统计<ul>
+<li>wc</li>
+</ul>
+</li>
+</ul>
+<h2 id="管道和重定向"><a href="#管道和重定向" class="headerlink" title="管道和重定向"></a>管道和重定向</h2><ul>
+<li><strong>重定向</strong>: 改变输入输出设备<ul>
+<li>标准输入/ 输出: 控制台/键盘  / 屏幕</li>
+<li>echo hello &gt; hello.txt<ul>
+<li>hello 输入到hello.txt</li>
+</ul>
+</li>
+<li>echo world &gt;&gt; hello.txt<ul>
+<li>world 追加输入到hello.txt的下一行</li>
+<li>再追加输入下一行仍然使用&gt;&gt;</li>
+</ul>
+</li>
+<li>cat &lt; hello.txt<ul>
+<li>将hello.txt文件输出到控制台</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>管道</strong>: 建一个命令的标准输出作为下一个命令的标准输出<ul>
+<li>man less | grep sim <ul>
+<li>查看less的用户手册, 然后匹配出包含sim的行</li>
+</ul>
+</li>
+<li>man less | grep sim - n | grep That &gt; that.txt<ul>
+<li>查看less的用户手册, 然后匹配出包含sim的行, 之后将又包含that的行存入that.txt</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="文件权限-chmod"><a href="#文件权限-chmod" class="headerlink" title="文件权限(chmod)"></a>文件权限(chmod)</h2><p><code>Change Mode</code>改变文件权限,  Owner - Group - Others</p>
+<ul>
+<li>chmod +x foo<ul>
+<li>增加可执行权限/ +w +r</li>
+</ul>
+</li>
+<li>chmod  -x foo<ul>
+<li>移除可执行权限/ -w -r</li>
+</ul>
+</li>
+<li>chmod 740 foo<ul>
+<li>把foo的权限设置成740<ul>
+<li>Owner: 7 = 1 + 2 + 4 = 可执行 + 可写 +可读</li>
+<li>Group: 4  = 4 = 可读</li>
+<li>Others: 0 = 没有任何权限</li>
+</ul>
+</li>
+<li>常见:<ul>
+<li>-rw-r–r–r <ul>
+<li>默认(644)</li>
+</ul>
+</li>
+<li>-rwxr-xr-x<ul>
+<li>755</li>
+</ul>
+</li>
+<li>-rwxrwxrwx<ul>
+<li>777</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="文件基本操作"><a href="#文件基本操作" class="headerlink" title="文件基本操作"></a>文件基本操作</h2><ul>
+<li>mv(移动文件  重命名 剪切+粘贴)<ul>
+<li>mv 需要移动文件 /指定目录  (移动文件)</li>
+<li>mv  hwllo.txt hello.txt (重命名)</li>
+</ul>
+</li>
+<li>cp(复制文件 复制文件夹)<ul>
+<li>cp a.txt  a_copy.txt</li>
+<li>cp -r dir1  dir2</li>
+</ul>
+</li>
+<li>rm(删除文件 删除文件夹)<ul>
+<li>rm a.txt (删除一个文件)</li>
+<li>rm a.txt b.txt c.txt(删除多个文件 也可使用 rm *.txt)</li>
+<li>rm -r dir (删除文件夹)</li>
+</ul>
+</li>
+</ul>
+<p><strong>yes</strong>: 不停输出</p>
+<h2 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h2><ol>
+<li>top: 显示或者更新排序过的进程信息<ul>
+<li>默认按照CPU占用率排序(导致风扇很响的那个玩意儿)</li>
+</ul>
+</li>
+<li>ps: 显示进程状态(Process Status)<ul>
+<li>默认显示当前用户<strong>有控制终端</strong>的进程</li>
+<li>ps  aux : 显示所有进程, 包括其他用户</li>
+<li>ps aux | grep idea | wc -l : 查看idea起了多少进程</li>
+</ul>
+</li>
+<li>kill/killall: 杀进程<ul>
+<li>kill: 终止或者给进程信号<ul>
+<li>kill -singal_number/-singal_name PID</li>
+<li>kill PID</li>
+<li>kill -9/-KILL PID </li>
+</ul>
+</li>
+<li>killall: 按照名字终止进程</li>
+</ul>
+</li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.253Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%91%BD%E4%BB%A4%E8%A1%8C/" rel="tag">命令行</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/linux-command-lines/&title=《程序员的魔法---命令行》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/linux-command-lines/&title=《程序员的魔法---命令行》 — Wkkの笔记&source=前言不知不觉已经使用Ubuntu四年了，算是一只老白了。命令行，感觉对于程序员来说，简直和魔法一样，输入一行命令，然后就能得到你想要的结果，极其的amaz..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/linux-command-lines/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《程序员的魔法---命令行》 — Wkkの笔记&url=https://winniekun.github.io/linux-command-lines/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/linux-command-lines/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/%E7%9F%A9%E9%98%B5%E6%A0%91%E7%9A%84%E5%AE%9E%E7%8E%B0/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">矩阵树的定理</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/java-bio/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JavaIO的前世-BIO阻塞模型</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/linux-command-lines/&title=《程序员的魔法---命令行》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/linux-command-lines/&title=《程序员的魔法---命令行》 — Wkkの笔记&source=前言不知不觉已经使用Ubuntu四年了，算是一只老白了。命令行，感觉对于程序员来说，简直和魔法一样，输入一行命令，然后就能得到你想要的结果，极其的amaz..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/linux-command-lines/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《程序员的魔法---命令行》 — Wkkの笔记&url=https://winniekun.github.io/linux-command-lines/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/linux-command-lines/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJ0lEQVR42u3aMXKEMAwFUO5/adKmCOyXxGYG+7nKJOzaj0KRLB1HvM5f6/73V08m35l/trkwMDBeyzhv19Uzycb331D9/qtnMDAw9mEkh6h+Kvnr1dHLu2BgYGAEh7s/yv0z1X0xMDAwqoxqmE7AGBgYGL0itlqaVgPoP9XiGBgYL2RMwui3f/5KfwMDA+NVjLO48oSv2qTMg+wfp8LAwFiakQe4Z1uYk9bC5b4YGBhLM/JQWB2nmFOrDVQMDIz1GN9oK06u2/KW52WGi4GBsTRjXr5Omgd58MXAwNiT0WsAVC/IohI0HgH5UIVjYGAsxKh+bFLo9hoMefKKgYGxKiM/UG8UrDrsVQ2vUWqIgYGxBCNP8npX+XkiWH2tGBgYezLyMa/8cm0CS3bHwMBYm1G9dJtcySUrSUyPqhsDA2MJRm/j6pZJGjp53RgYGGsznroOqx7r4WiJgYGxKCO/5JpcwCXtgV5Ax8DA2IFRPXRe3PaGJ6qv4Oi9ewwMjNcykgmyp1qVkxL3Q8DFwMBYmtFrDPTCa7VpGpW7GBgYmzF6ow95+jhpcH6YHMHAwFiOcRZXtXzNg2azcE3eKAYGxssZTzUX78NodcAiKll7MAwMjNcyqkE2T+96iWCVioGBsQ+jMNYwGMvotROi/xUYGBgYD415TZ7HwMDAmAfcXnL5WBmMgYGxASM5RK9V0Ct0y+EYAwNjaUa1dMyReXLZC8cYGBgbMH4ARxUi4OZ3h7sAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

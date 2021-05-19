@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>LinkedList源码解读 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JDK源码,List">
+    <meta name="description" content="LinkedList源码解读概述LinkedList底层数据结构是链表，是实现了List接口和Deque接口的双端链表，其能够高效的实现插入删除操作, 而且也拥有了队列所拥有的特性。和ArrayList相比，因为其没有实现RandomAccess，是以下标进行访问元素， 所以对于元素访问不及ArrayList，随机访问元素慢。同时需要注意的是, LinkedList不是线程安全的，需要使用的别的方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LinkedList源码解读">
+<meta property="og:url" content="https://winniekun.github.io/linkedlist-analysis/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="LinkedList源码解读概述LinkedList底层数据结构是链表，是实现了List接口和Deque接口的双端链表，其能够高效的实现插入删除操作, 而且也拥有了队列所拥有的特性。和ArrayList相比，因为其没有实现RandomAccess，是以下标进行访问元素， 所以对于元素访问不及ArrayList，随机访问元素慢。同时需要注意的是, LinkedList不是线程安全的，需要使用的别的方">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/KongWiki/cloudImg/master/LInkedList%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/KongWiki/cloudImg/master/linkedlistNode.jpeg">
+<meta property="og:image" content="https://raw.githubusercontent.com/KongWiki/cloudImg/master/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8-%E6%8F%92%E5%85%A5%E6%93%8D%E4%BD%9C.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/KongWiki/cloudImg/master/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8%E7%9A%84%E5%88%A0%E9%99%A4.png">
+<meta property="article:published_time" content="2020-02-11T01:17:29.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.255Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="JDK源码">
+<meta property="article:tag" content="List">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/KongWiki/cloudImg/master/LInkedList%E7%BB%93%E6%9E%84.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">LinkedList源码解读</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">LinkedList源码解读</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-02-11T01:17:29.000Z" itemprop="datePublished" class="page-time">
+  2020-02-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%BA%90%E7%A0%81/">源码</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#LinkedList源码解读"><span class="post-toc-number">1.</span> <span class="post-toc-text">LinkedList源码解读</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#概述"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">概述</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#依赖"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">依赖</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#阅读套路"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">阅读套路</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#从节点数据结构开始"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">从节点数据结构开始</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#构造函数"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">构造函数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#增：add相关的方法"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">增：add相关的方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#addAll"><span class="post-toc-number">1.6.1.</span> <span class="post-toc-text">addAll()</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#判断越界方法"><span class="post-toc-number">1.6.2.</span> <span class="post-toc-text">判断越界方法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#add-E-e"><span class="post-toc-number">1.6.3.</span> <span class="post-toc-text">add(E e)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#add-int-index-E-element"><span class="post-toc-number">1.6.4.</span> <span class="post-toc-text">add(int index, E element)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#小结"><span class="post-toc-number">1.6.5.</span> <span class="post-toc-text">小结</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#删：-remove相关的方法"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">删： remove相关的方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#remove"><span class="post-toc-number">1.7.1.</span> <span class="post-toc-text">remove()</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#remove-int-index"><span class="post-toc-number">1.7.2.</span> <span class="post-toc-text">remove(int index)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#判断越界方法-1"><span class="post-toc-number">1.7.3.</span> <span class="post-toc-text">判断越界方法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#remove-Object-o"><span class="post-toc-number">1.7.4.</span> <span class="post-toc-text">remove(Object o)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#小结-1"><span class="post-toc-number">1.7.5.</span> <span class="post-toc-text">小结</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#改：set-相关的方法"><span class="post-toc-number">1.8.</span> <span class="post-toc-text">改：set()相关的方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#set-int-index-E-element"><span class="post-toc-number">1.8.1.</span> <span class="post-toc-text">set(int index, E element)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#小结-2"><span class="post-toc-number">1.8.2.</span> <span class="post-toc-text">小结</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#查：-get相关方法"><span class="post-toc-number">1.9.</span> <span class="post-toc-text">查： get相关方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#get-int-index"><span class="post-toc-number">1.9.1.</span> <span class="post-toc-text">get(int index)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#判断越界方法-2"><span class="post-toc-number">1.9.2.</span> <span class="post-toc-text">判断越界方法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#小结-3"><span class="post-toc-number">1.9.3.</span> <span class="post-toc-text">小结</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">2.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#reference"><span class="post-toc-number">3.</span> <span class="post-toc-text">reference</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-源码/JDK/list/linkedlist-analysis"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">LinkedList源码解读</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-02-11 09:17:29" datetime="2020-02-11T01:17:29.000Z"  itemprop="datePublished">2020-02-11</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%BA%90%E7%A0%81/">源码</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="LinkedList源码解读"><a href="#LinkedList源码解读" class="headerlink" title="LinkedList源码解读"></a>LinkedList源码解读</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>LinkedList底层数据结构是链表，是实现了List接口和Deque接口的双端链表，其能够高效的实现插入删除操作, 而且也拥有了队列所拥有的特性。和ArrayList相比，因为其没有实现RandomAccess，是以下标进行访问元素， 所以对于元素访问不及ArrayList，随机访问元素慢。同时需要注意的是, <strong>LinkedList不是线程安全的</strong>，需要使用的别的方式实现线程安全。</p>
+<a id="more"></a>
+
+<h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://raw.githubusercontent.com/KongWiki/cloudImg/master/LInkedList%E7%BB%93%E6%9E%84.png" alt="image" title="">
+                </div>
+                <div class="image-caption">image</div>
+            </figure>
+
+<h3 id="阅读套路"><a href="#阅读套路" class="headerlink" title="阅读套路"></a>阅读套路</h3><p>按照正常的逻辑，首先了解其构造方法， 之后了解常用的API(CRUD)操作即可。</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> addAll();</li>
+<li><input checked="" disabled="" type="checkbox"> add();</li>
+<li><input checked="" disabled="" type="checkbox"> remove();</li>
+<li><input checked="" disabled="" type="checkbox"> get();</li>
+</ul>
+<h3 id="从节点数据结构开始"><a href="#从节点数据结构开始" class="headerlink" title="从节点数据结构开始"></a>从节点数据结构开始</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://raw.githubusercontent.com/KongWiki/cloudImg/master/linkedlistNode.jpeg" alt="image" title="">
+                </div>
+                <div class="image-caption">image</div>
+            </figure>
+
+<p>按照正常的逻辑， 首先基础的数据构造, 然后了解其构造方法， 之后了解常用的API(CRUD)操作即可。</p>
+<p>其实一个很明显的双向链表的数据结构。</p>
+<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><ol>
+<li><p>空的构造方法</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedList</span><span class="params">()</span> </span>{</span><br><span class="line">   }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>用于构造一个空的链表。然后自行处理</p>
+</li>
+<li><p>含有参数的构造方法(用已有的集合创建链表)</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedList</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>{</span><br><span class="line">       <span class="keyword">this</span>();</span><br><span class="line">       addAll(c);</span><br><span class="line">   }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>将已有的linkedlist添加到一个新的linkedlist中(尾插法，下文有提及)。其类似于copy()</p>
+</li>
+</ol>
+<h3 id="增：add相关的方法"><a href="#增：add相关的方法" class="headerlink" title="增：add相关的方法"></a>增：add相关的方法</h3><p>可以看到， 初始化之后，使用无参的构造方法，返回的为一个空的链表，若是为含有参数的构造方法，会调用addAll()方法将一个链表的所有元素都拷贝到一个新的元素。</p>
+<p>这个部分涉及了大量的双向链表的插入删除，可先理解了双向链表的操作（3、 4步骤的操作顺序在于采用的是哪个节点作为基础节点：也就是选择待插入位置的节点还是该节点的前驱节点，或者是两个都使用，若是两个都是用则3、 4无顺序先后）。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://raw.githubusercontent.com/KongWiki/cloudImg/master/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8-%E6%8F%92%E5%85%A5%E6%93%8D%E4%BD%9C.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h4 id="addAll"><a href="#addAll" class="headerlink" title="addAll()"></a>addAll()</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>{</span><br><span class="line">    	<span class="comment">// 以size为插入下标，插入集合c中所有元素</span></span><br><span class="line">       <span class="keyword">return</span> addAll(size, c);</span><br><span class="line">   }</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(<span class="keyword">int</span> index, Collection&lt;? extends E&gt; c)</span> </span>{</span><br><span class="line">		<span class="comment">// 判断当前的索引是否越界， 若是越界，</span></span><br><span class="line">       checkPositionIndex(index);</span><br><span class="line"></span><br><span class="line">       Object[] a = c.toArray();</span><br><span class="line">       <span class="keyword">int</span> numNew = a.length;</span><br><span class="line">       <span class="keyword">if</span> (numNew == <span class="number">0</span>)</span><br><span class="line">           <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	<span class="comment">// pred: 插入位置对应的节点的前驱节点</span></span><br><span class="line">    	<span class="comment">// succ: 插入位置对应的节点</span></span><br><span class="line">    	<span class="comment">// 以下为双向链表的插入操作需要的预备工作</span></span><br><span class="line">       Node&lt;E&gt; pred, succ;</span><br><span class="line">       <span class="keyword">if</span> (index == size) {</span><br><span class="line">           <span class="comment">// 在链表的尾部插入节点需要的预备工作</span></span><br><span class="line">           succ = <span class="keyword">null</span>;</span><br><span class="line">           pred = last;</span><br><span class="line">       } <span class="keyword">else</span> {</span><br><span class="line">           <span class="comment">// 在链表中间插入节点需要的预备工作</span></span><br><span class="line">           <span class="comment">// 1. 确定插入位置的节点</span></span><br><span class="line">           <span class="comment">// 2. 确定插入位置的节点的前驱节点</span></span><br><span class="line">           succ = node(index);</span><br><span class="line">           pred = succ.prev;</span><br><span class="line">       }</span><br><span class="line">	<span class="comment">// 插入节点 可画图理解</span></span><br><span class="line">       <span class="keyword">for</span> (Object o : a) {</span><br><span class="line">           <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>) E e = (E) o;</span><br><span class="line">           Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(pred, e, <span class="keyword">null</span>);</span><br><span class="line">           <span class="keyword">if</span> (pred == <span class="keyword">null</span>)</span><br><span class="line">               first = newNode;</span><br><span class="line">           <span class="keyword">else</span></span><br><span class="line">               pred.next = newNode;</span><br><span class="line">           pred = newNode;</span><br><span class="line">       }</span><br><span class="line">	</span><br><span class="line">       <span class="keyword">if</span> (succ == <span class="keyword">null</span>) {</span><br><span class="line">           last = pred;</span><br><span class="line">       } <span class="keyword">else</span> {</span><br><span class="line">           pred.next = succ;</span><br><span class="line">           succ.prev = pred;</span><br><span class="line">       }</span><br><span class="line"></span><br><span class="line">       size += numNew;</span><br><span class="line">       modCount++;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">   }</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>addAll()</code>主要为就是依次的遍历已有集合的所有元素，然后依次进行插入(尾插法，保证插入的顺序不会和最后的顺序不变)</p>
+<h4 id="判断越界方法"><a href="#判断越界方法" class="headerlink" title="判断越界方法"></a>判断越界方法</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkPositionIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (!isPositionIndex(index))</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(outOfBoundsMsg(index));</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isPositionIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> index &gt;= <span class="number">0</span> &amp;&amp; index &lt;= size;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>直接在<code>if</code>后跑出异常，可直接跑出异常信息，并且可以根据自己定义信息跑出异常。</p>
+<h4 id="add-E-e"><a href="#add-E-e" class="headerlink" title="add(E e)"></a>add(E e)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>{</span><br><span class="line">        linkLast(e);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">linkLast</span><span class="params">(E e)</span> </span>{</span><br><span class="line">    <span class="comment">// 在链表尾部插入元素</span></span><br><span class="line">        <span class="keyword">final</span> Node&lt;E&gt; l = last; <span class="comment">// 定义一个新的节点l, 指向尾节点，方便后续插入</span></span><br><span class="line">        <span class="keyword">final</span> Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(l, e, <span class="keyword">null</span>);<span class="comment">// 创建插入元素的节点</span></span><br><span class="line">    	<span class="comment">// 以下为插入操作，可画图理解</span></span><br><span class="line">        last = newNode;</span><br><span class="line">        <span class="keyword">if</span> (l == <span class="keyword">null</span>) <span class="comment">// 说明原链表为空，更新头节点</span></span><br><span class="line">            first = newNode;</span><br><span class="line">        <span class="keyword">else</span> <span class="comment">// 原链表不为空， 在尾部进行插入操作</span></span><br><span class="line">            l.next = newNode;</span><br><span class="line">        size++;</span><br><span class="line">        modCount++;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="add-int-index-E-element"><a href="#add-int-index-E-element" class="headerlink" title="add(int index, E element)"></a>add(int index, E element)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span> </span>{</span><br><span class="line">        checkPositionIndex(index);</span><br><span class="line">    	<span class="comment">// 链表尾部插入元素</span></span><br><span class="line">        <span class="keyword">if</span> (index == size)</span><br><span class="line">            linkLast(element);</span><br><span class="line">   		<span class="comment">// 在链表的中间部分插入元素</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            linkBefore(element, node(index));</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">linkLast</span><span class="params">(E e)</span> </span>{</span><br><span class="line">    <span class="comment">// 在链表尾部插入元素</span></span><br><span class="line">        <span class="keyword">final</span> Node&lt;E&gt; l = last; <span class="comment">// 定义一个新的节点l, 指向尾节点，方便后续插入</span></span><br><span class="line">        <span class="keyword">final</span> Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(l, e, <span class="keyword">null</span>);<span class="comment">// 创建插入元素的节点</span></span><br><span class="line">    	<span class="comment">// 以下为插入操作，可画图理解</span></span><br><span class="line">        last = newNode;</span><br><span class="line">        <span class="keyword">if</span> (l == <span class="keyword">null</span>) <span class="comment">// 说明原链表为空，更新头节点</span></span><br><span class="line">            first = newNode;</span><br><span class="line">        <span class="keyword">else</span> <span class="comment">// 原链表不为空， 在尾部进行插入操作</span></span><br><span class="line">            l.next = newNode;</span><br><span class="line">        size++;</span><br><span class="line">        modCount++;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">linkBefore</span><span class="params">(E e, Node&lt;E&gt; succ)</span> </span>{</span><br><span class="line">        <span class="comment">// assert succ != null;</span></span><br><span class="line">        <span class="keyword">final</span> Node&lt;E&gt; pred = succ.prev;</span><br><span class="line">        <span class="keyword">final</span> Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(pred, e, succ);</span><br><span class="line">    	<span class="comment">// 一下为双端链表的插入操作</span></span><br><span class="line">        succ.prev = newNode;</span><br><span class="line">    	<span class="comment">// 若是在第一个节点前插入， 则插入节点为第一个节点</span></span><br><span class="line">        <span class="keyword">if</span> (pred == <span class="keyword">null</span>)</span><br><span class="line">            first = newNode;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            pred.next = newNode;</span><br><span class="line">        size++;</span><br><span class="line">        modCount++;</span><br><span class="line">}</span><br><span class="line"><span class="function">Node&lt;E&gt; <span class="title">node</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">        <span class="comment">// assert isElementIndex(index);</span></span><br><span class="line">		<span class="comment">// 根据索引创建节点</span></span><br><span class="line">    	<span class="comment">// 此处会有判断，判断是在链表的前半段还是后半段</span></span><br><span class="line">    	<span class="comment">// 加快查找效率</span></span><br><span class="line">        <span class="keyword">if</span> (index &lt; (size &gt;&gt; <span class="number">1</span>)) {</span><br><span class="line">            Node&lt;E&gt; x = first;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; i++)</span><br><span class="line">                x = x.next;</span><br><span class="line">            <span class="keyword">return</span> x;</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            Node&lt;E&gt; x = last;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = size - <span class="number">1</span>; i &gt; index; i--)</span><br><span class="line">                x = x.prev;</span><br><span class="line">            <span class="keyword">return</span> x;</span><br><span class="line">        }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><ul>
+<li>链表批量增加，是<strong>靠for循环遍历原数组，依次执行插入节点操作</strong>。对比ArrayList是通过System.arraycopy完成批量增加的</li>
+<li>通过下标获取某个node 的时候，（add select），<strong>会根据index处于前半段还是后半段 进行一个折半</strong>，以<strong>提升查询效率</strong></li>
+</ul>
+<h3 id="删：-remove相关的方法"><a href="#删：-remove相关的方法" class="headerlink" title="删： remove相关的方法"></a>删： remove相关的方法</h3><h4 id="remove"><a href="#remove" class="headerlink" title="remove()"></a>remove()</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">public</span> E <span class="title">remove</span><span class="params">()</span> </span>{</span><br><span class="line">     <span class="comment">// 默认是从链表的头部开始删除元素	</span></span><br><span class="line">        <span class="keyword">return</span> removeFirst();</span><br><span class="line"> }</span><br><span class="line"> <span class="function"><span class="keyword">public</span> E <span class="title">removeFirst</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">final</span> Node&lt;E&gt; f = first;</span><br><span class="line">        <span class="keyword">if</span> (f == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">        <span class="keyword">return</span> unlinkFirst(f);</span><br><span class="line"> }</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> E <span class="title">unlinkFirst</span><span class="params">(Node&lt;E&gt; f)</span> </span>{</span><br><span class="line">        <span class="comment">// assert f == first &amp;&amp; f != null;</span></span><br><span class="line">    	<span class="comment">// 删除第一个节点</span></span><br><span class="line">        <span class="keyword">final</span> E element = f.item;</span><br><span class="line">        <span class="keyword">final</span> Node&lt;E&gt; next = f.next; <span class="comment">// 防止删除时导致的断链</span></span><br><span class="line">        f.item = <span class="keyword">null</span>;</span><br><span class="line">        f.next = <span class="keyword">null</span>; <span class="comment">// help GC</span></span><br><span class="line">        first = next;</span><br><span class="line">        <span class="keyword">if</span> (next == <span class="keyword">null</span>)</span><br><span class="line">            last = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            next.prev = <span class="keyword">null</span>;</span><br><span class="line">        size--;</span><br><span class="line">        modCount++;</span><br><span class="line">        <span class="keyword">return</span> element;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="remove-int-index"><a href="#remove-int-index" class="headerlink" title="remove(int index)"></a>remove(int index)</h4><p>下图为双向链表的删除操作，仅做参考，具体的写法依据个人采用基础节点。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://raw.githubusercontent.com/KongWiki/cloudImg/master/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8%E7%9A%84%E5%88%A0%E9%99%A4.png" alt="mage" title="">
+                </div>
+                <div class="image-caption">mage</div>
+            </figure>
+
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">    	<span class="comment">// 判断是否越界</span></span><br><span class="line">       checkElementIndex(index);</span><br><span class="line">       <span class="keyword">return</span> unlink(node(index));</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkElementIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">       <span class="keyword">if</span> (!isElementIndex(index))</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(outOfBoundsMsg(index));</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isElementIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">       <span class="keyword">return</span> index &gt;= <span class="number">0</span> &amp;&amp; index &lt; size;</span><br><span class="line">}</span><br><span class="line"><span class="function">E <span class="title">unlink</span><span class="params">(Node&lt;E&gt; x)</span> </span>{</span><br><span class="line">       <span class="comment">// assert x != null;</span></span><br><span class="line">       <span class="keyword">final</span> E element = x.item;</span><br><span class="line">       <span class="keyword">final</span> Node&lt;E&gt; next = x.next; <span class="comment">// 后继节点</span></span><br><span class="line">       <span class="keyword">final</span> Node&lt;E&gt; prev = x.prev; <span class="comment">// 前驱节点</span></span><br><span class="line">	<span class="comment">// 删除的为第一个节点</span></span><br><span class="line">       <span class="keyword">if</span> (prev == <span class="keyword">null</span>) {</span><br><span class="line">           first = next;</span><br><span class="line">       } <span class="keyword">else</span> {</span><br><span class="line">           prev.next = next;</span><br><span class="line">           x.prev = <span class="keyword">null</span>;</span><br><span class="line">       }</span><br><span class="line">	<span class="comment">// 删除的为最后一个节点</span></span><br><span class="line">       <span class="keyword">if</span> (next == <span class="keyword">null</span>) {</span><br><span class="line">           last = prev;</span><br><span class="line">       } <span class="keyword">else</span> {</span><br><span class="line">           next.prev = prev;</span><br><span class="line">           x.next = <span class="keyword">null</span>;</span><br><span class="line">       }</span><br><span class="line"></span><br><span class="line">       x.item = <span class="keyword">null</span>;</span><br><span class="line">       size--;</span><br><span class="line">       modCount++;</span><br><span class="line">       <span class="keyword">return</span> element;</span><br><span class="line">   }</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="判断越界方法-1"><a href="#判断越界方法-1" class="headerlink" title="判断越界方法"></a>判断越界方法</h4><p>其实是和增里面的判断是一样的</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkElementIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">       <span class="keyword">if</span> (!isElementIndex(index))</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(outOfBoundsMsg(index));</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isElementIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">       <span class="keyword">return</span> index &gt;= <span class="number">0</span> &amp;&amp; index &lt; size;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="remove-Object-o"><a href="#remove-Object-o" class="headerlink" title="remove(Object o)"></a>remove(Object o)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (o == <span class="keyword">null</span>) {</span><br><span class="line">            <span class="keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="keyword">null</span>; x = x.next) {</span><br><span class="line">                <span class="keyword">if</span> (x.item == <span class="keyword">null</span>) {</span><br><span class="line">                    unlink(x);</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            <span class="keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="keyword">null</span>; x = x.next) {</span><br><span class="line">                <span class="keyword">if</span> (o.equals(x.item)) {</span><br><span class="line">                    unlink(x);</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    }</span><br><span class="line"><span class="function">E <span class="title">unlink</span><span class="params">(Node&lt;E&gt; x)</span> </span>{</span><br><span class="line">        <span class="comment">// assert x != null;</span></span><br><span class="line">        <span class="keyword">final</span> E element = x.item;</span><br><span class="line">        <span class="keyword">final</span> Node&lt;E&gt; next = x.next; <span class="comment">// 后继节点</span></span><br><span class="line">        <span class="keyword">final</span> Node&lt;E&gt; prev = x.prev; <span class="comment">// 前驱节点</span></span><br><span class="line">		<span class="comment">// 删除的为第一个节点</span></span><br><span class="line">        <span class="keyword">if</span> (prev == <span class="keyword">null</span>) {</span><br><span class="line">            first = next;</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            prev.next = next;</span><br><span class="line">            x.prev = <span class="keyword">null</span>;</span><br><span class="line">        }</span><br><span class="line">		<span class="comment">// 删除的为最后一个节点</span></span><br><span class="line">        <span class="keyword">if</span> (next == <span class="keyword">null</span>) {</span><br><span class="line">            last = prev;</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            next.prev = prev;</span><br><span class="line">            x.next = <span class="keyword">null</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        x.item = <span class="keyword">null</span>;</span><br><span class="line">        size--;</span><br><span class="line">        modCount++;</span><br><span class="line">        <span class="keyword">return</span> element;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h4><p><strong>删也一定会修改modCount。 按下标删，也是先根据index找到Node，然后去链表上unlink掉这个Node。 按元素删，会先去遍历链表寻找是否有该Node，考虑到允许null值，所以会遍历两遍，然后再去unlink它。</strong></p>
+<h3 id="改：set-相关的方法"><a href="#改：set-相关的方法" class="headerlink" title="改：set()相关的方法"></a>改：set()相关的方法</h3><h4 id="set-int-index-E-element"><a href="#set-int-index-E-element" class="headerlink" title="set(int index, E element)"></a>set(int index, E element)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">public</span> E <span class="title">set</span><span class="params">(<span class="keyword">int</span> index, E element)</span> </span>{</span><br><span class="line">        checkElementIndex(index);</span><br><span class="line">        Node&lt;E&gt; x = node(index);</span><br><span class="line">        E oldVal = x.item;</span><br><span class="line">        x.item = element;</span><br><span class="line">        <span class="keyword">return</span> oldVal; <span class="comment">//返回原先的值</span></span><br><span class="line">    }</span><br><span class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkElementIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (!isElementIndex(index))</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(outOfBoundsMsg(index));</span><br><span class="line"> }</span><br><span class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isElementIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> index &gt;= <span class="number">0</span> &amp;&amp; index &lt; size;</span><br><span class="line"> }</span><br><span class="line"><span class="function">Node&lt;E&gt; <span class="title">node</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">        <span class="comment">// assert isElementIndex(index);</span></span><br><span class="line">		<span class="comment">// 根据索引创建节点</span></span><br><span class="line">    	<span class="comment">// 此处会有判断，判断是在链表的前半段还是后半段</span></span><br><span class="line">    	<span class="comment">// 加快查找效率</span></span><br><span class="line">        <span class="keyword">if</span> (index &lt; (size &gt;&gt; <span class="number">1</span>)) {</span><br><span class="line">            Node&lt;E&gt; x = first;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; i++)</span><br><span class="line">                x = x.next;</span><br><span class="line">            <span class="keyword">return</span> x;</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            Node&lt;E&gt; x = last;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = size - <span class="number">1</span>; i &gt; index; i--)</span><br><span class="line">                x = x.prev;</span><br><span class="line">            <span class="keyword">return</span> x;</span><br><span class="line">        }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h4><p>set()也是根据索引去寻找对应Node()，之后替换，但是不会修改modCount</p>
+<h3 id="查：-get相关方法"><a href="#查：-get相关方法" class="headerlink" title="查： get相关方法"></a>查： get相关方法</h3><h4 id="get-int-index"><a href="#get-int-index" class="headerlink" title="get(int index)"></a>get(int index)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">        checkElementIndex(index);</span><br><span class="line">        <span class="keyword">return</span> node(index).item;</span><br><span class="line">    }</span><br><span class="line"><span class="function">Node&lt;E&gt; <span class="title">node</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">        <span class="comment">// assert isElementIndex(index);</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (index &lt; (size &gt;&gt; <span class="number">1</span>)) {</span><br><span class="line">            Node&lt;E&gt; x = first;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; i++)</span><br><span class="line">                x = x.next;</span><br><span class="line">            <span class="keyword">return</span> x;</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            Node&lt;E&gt; x = last;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = size - <span class="number">1</span>; i &gt; index; i--)</span><br><span class="line">                x = x.prev;</span><br><span class="line">            <span class="keyword">return</span> x;</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="判断越界方法-2"><a href="#判断越界方法-2" class="headerlink" title="判断越界方法"></a>判断越界方法</h4><p>其实是和增里面的判断是一样的</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkElementIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">       <span class="keyword">if</span> (!isElementIndex(index))</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(outOfBoundsMsg(index));</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isElementIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">       <span class="keyword">return</span> index &gt;= <span class="number">0</span> &amp;&amp; index &lt; size;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h4><p>按照索引查找对应的节点，之前的增、删、改都用到了</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>LinkedList是双向链表</p>
+<ul>
+<li>链表的批量添加(addAll())是转化为数组之后使用for-each进行添加，默认在链表尾部添加， 会修改modCount</li>
+<li>根据index获取节点时，会根据index处于后半段还是前半段进行查找，提升查找速率</li>
+<li>所有的CRUD中都有涉及根据index去寻找节点</li>
+</ul>
+<p><strong>LinkedList</strong>中还有很多的API没有写，只是简单的写了基础的CRUD</p>
+<h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><ul>
+<li><a href="https://github.com/Snailclimb/JavaGuide/blob/master/docs/java/collection/LinkedList.md" target="_blank" rel="noopener">JavaGuid—LinkedList</a></li>
+<li><a href="https://blog.csdn.net/zxt0601/article/details/77341098" target="_blank" rel="noopener">面试必备：LinkedList源码解读(JDK8)</a></li>
+<li>王道考研数据结构—链表一章<ul>
+<li>考研的时候看的，各种花式插入删除整合骚操作。</li>
+</ul>
+</li>
+<li>大话数据结构</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.255Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JDK%E6%BA%90%E7%A0%81/" rel="tag">JDK源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/List/" rel="tag">List</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/linkedlist-analysis/&title=《LinkedList源码解读》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/linkedlist-analysis/&title=《LinkedList源码解读》 — Wkkの笔记&source=LinkedList源码解读概述LinkedList底层数据结构是链表，是实现了List接口和Deque接口的双端链表，其能够高效的实现插入删除操作, 而..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/linkedlist-analysis/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《LinkedList源码解读》 — Wkkの笔记&url=https://winniekun.github.io/linkedlist-analysis/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/linkedlist-analysis/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/stick-to-binary-tree/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">死磕二叉树</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/arrayList-analysis/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">ArrayList源码解读</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/linkedlist-analysis/&title=《LinkedList源码解读》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/linkedlist-analysis/&title=《LinkedList源码解读》 — Wkkの笔记&source=LinkedList源码解读概述LinkedList底层数据结构是链表，是实现了List接口和Deque接口的双端链表，其能够高效的实现插入删除操作, 而..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/linkedlist-analysis/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《LinkedList源码解读》 — Wkkの笔记&url=https://winniekun.github.io/linkedlist-analysis/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/linkedlist-analysis/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACMUlEQVR42u3a227CMBBFUf7/p1OpT5VKyD4zTtWMt58QgsQrSGZurxdex/c6e/1zkeucfYtfp7hkyJDxWMbxcX2+wQHWb3wNdvHIZMiQsQGDHLKERzZB7sL3JkOGDBnpcUkOaPJdGTJkyOgwPgeIPB1Nj28ZMmTI6Keg/LAmyeqNubgMGTIeyOg3Bu57/af9DRkyZPxLxhGuVYFgWp672JUMGTJGM/gNVs059P8ZgghXhgwZ4xhp+Z5vqMYjKeubA1eGDBkbMGqv07CPpMp8mEOGDBn7MGpjW+kn07GMoF0hQ4aMoYzaMFYtuSWhJPn8aaFNhgwZQxm1wQhexO8Me5G/AfSbyJAhYwSjE9iRgl1tmCwd+5AhQ8ZsRnrgXgw9hEEkL8ChYQsZMmSMY5CAL71BrVRHjlRUbpMhQ8ZoBk9WeVBYuxo50GXIkLEPgw9vkWGvtNDPkUEDQ4YMGUMZ6VbSglr/+ujhypAhY2MG2fodx26xMSBDhoyhDJ5Apu+s4i2IcGXIkPFYRlpK463NtNnJk2QZMmTszEjTS8LolNKCxFiGDBmjGbU0de1YGAHE15QhQ8YgxhGuzghFJ6C8KMzJkCFjNIOvYDALtyFrwSIPJWXIkDGJ0WkJ9J9QeuAWA0QZMmSMYKRjDaualLV09823ZMiQIQNsl79TS00vynwyZMiQ0Si6dcpzMmTIkFFLYmvtxrjCl7ZOZciQMZpRawyQLZLgsjZGVnsoMmTIeCDjC+8krWM3XKdbAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

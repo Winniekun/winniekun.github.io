@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>CopyOnWriteArrayList源码解读 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JDK源码,List,JUC">
+    <meta name="description" content="CopyOnWriteArrayList源码解读">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CopyOnWriteArrayList源码解读">
+<meta property="og:url" content="https://winniekun.github.io/copy-on-write-arraylist/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="CopyOnWriteArrayList源码解读">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/06/19/TXhnMmIkzA2Horu.png">
+<meta property="article:published_time" content="2020-06-19T11:18:54.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.255Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="JDK源码">
+<meta property="article:tag" content="List">
+<meta property="article:tag" content="JUC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/19/TXhnMmIkzA2Horu.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">CopyOnWriteArrayList源码解读</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">CopyOnWriteArrayList源码解读</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-06-19T11:18:54.000Z" itemprop="datePublished" class="page-time">
+  2020-06-19
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%BA%90%E7%A0%81/">源码</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CopyOnWriteArrayList源码解读"><span class="post-toc-number">1.</span> <span class="post-toc-text">CopyOnWriteArrayList源码解读</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#依赖"><span class="post-toc-number">2.</span> <span class="post-toc-text">依赖</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#字段-amp-属性"><span class="post-toc-number">3.</span> <span class="post-toc-text">字段&amp;属性</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#构造方法"><span class="post-toc-number">4.</span> <span class="post-toc-text">构造方法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#增"><span class="post-toc-number">5.</span> <span class="post-toc-text">增</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#add-E-e"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">add(E e)</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#总结"><span class="post-toc-number">5.1.1.</span> <span class="post-toc-text">总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#add-int-index-E-element"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">add(int index, E element)</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#总结-1"><span class="post-toc-number">5.2.1.</span> <span class="post-toc-text">总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#addAll-Collection-lt-extends-E-gt-c"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">addAll(Collection&lt;? extends E&gt; c)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#addAll-int-index-Collection-lt-extends-E-gt-c"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">addAll(int index, Collection&lt;? extends E&gt; c)</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#查"><span class="post-toc-number">6.</span> <span class="post-toc-text">查</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#get"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">get()</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#删"><span class="post-toc-number">7.</span> <span class="post-toc-text">删</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#remove-int-index"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">remove(int index)</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#总结-2"><span class="post-toc-number">7.1.1.</span> <span class="post-toc-text">总结</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数组长度"><span class="post-toc-number">8.</span> <span class="post-toc-text">数组长度</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结-3"><span class="post-toc-number">9.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#面试相关问题"><span class="post-toc-number">10.</span> <span class="post-toc-text">面试相关问题</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-源码/JDK/list/copy-on-write-arraylist"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">CopyOnWriteArrayList源码解读</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-06-19 19:18:54" datetime="2020-06-19T11:18:54.000Z"  itemprop="datePublished">2020-06-19</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%BA%90%E7%A0%81/">源码</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="CopyOnWriteArrayList源码解读"><a href="#CopyOnWriteArrayList源码解读" class="headerlink" title="CopyOnWriteArrayList源码解读"></a>CopyOnWriteArrayList源码解读</h2><a id="more"></a>
+
+<h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://i.loli.net/2020/06/19/TXhnMmIkzA2Horu.png" alt="CopyOnWriteArrayList依赖" title="">
+                </div>
+                <div class="image-caption">CopyOnWriteArrayList依赖</div>
+            </figure>
+
+<h2 id="字段-amp-属性"><a href="#字段-amp-属性" class="headerlink" title="字段&amp;属性"></a>字段&amp;属性</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用于修改数组的时候加锁</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">transient</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line"><span class="comment">// 真正存储元素的地方  只能通过get set访问 </span></span><br><span class="line"><span class="comment">// 使用volatile修饰 保证可见性(一个线程的修改 对其他线程可见)</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Object[] array;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> Object[] getArray() {</span><br><span class="line">    <span class="keyword">return</span> array;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">setArray</span><span class="params">(Object[] a)</span> </span>{</span><br><span class="line">    array = a;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建空数组</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">CopyOnWriteArrayList</span><span class="params">()</span> </span>{</span><br><span class="line">    setArray(<span class="keyword">new</span> Object[<span class="number">0</span>]);</span><br><span class="line">}</span><br><span class="line"><span class="comment">// </span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">CopyOnWriteArrayList</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>{</span><br><span class="line">    Object[] elements;</span><br><span class="line">    <span class="comment">// 如果c也是CopyOnWriteArrayList类型</span></span><br><span class="line">    <span class="comment">// 则直接将其的array拿来用, 属于浅拷贝</span></span><br><span class="line">    <span class="comment">// c和新的CopyOnWriteArrayList共享同一个数组</span></span><br><span class="line">    <span class="keyword">if</span> (c.getClass() == CopyOnWriteArrayList<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">        <span class="title">elements</span> </span>= ((CopyOnWriteArrayList&lt;?&gt;)c).getArray();</span><br><span class="line">    <span class="keyword">else</span> {</span><br><span class="line">        elements = c.toArray();</span><br><span class="line">        <span class="comment">// c.toArray might (incorrectly) not return Object[] (see 6260652)</span></span><br><span class="line">        <span class="keyword">if</span> (elements.getClass() != Object[]<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">            <span class="title">elements</span> </span>= Arrays.copyOf(elements, elements.length, Object[]<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    }</span><br><span class="line">    setArray(elements);</span><br><span class="line">}</span><br><span class="line"><span class="comment">// 把toCopyIn的元素拷贝给当前list的数组。</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">CopyOnWriteArrayList</span><span class="params">(E[] toCopyIn)</span> </span>{</span><br><span class="line">    setArray(Arrays.copyOf(toCopyIn, toCopyIn.length, Object[]<span class="class">.<span class="keyword">class</span>))</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h2 id="增"><a href="#增" class="headerlink" title="增"></a>增</h2><h3 id="add-E-e"><a href="#add-E-e" class="headerlink" title="add(E e)"></a>add(E e)</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 添加一个元素在末尾</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>{</span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    <span class="comment">// 修改数组之前加锁</span></span><br><span class="line">    lock.lock();</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        Object[] elements = getArray();</span><br><span class="line">        <span class="keyword">int</span> len = elements.length;</span><br><span class="line">        <span class="comment">// 将数组拷贝到新数组中, 新数组长度比旧数组长度多1</span></span><br><span class="line">        Object[] newElements = Arrays.copyOf(elements, len + <span class="number">1</span>);</span><br><span class="line">        newElements[len] = e;</span><br><span class="line">        <span class="comment">// array指向新的数组</span></span><br><span class="line">        setArray(newElements);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    } <span class="keyword">finally</span> {</span><br><span class="line">        <span class="comment">// 释放锁</span></span><br><span class="line">        lock.unlock();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>在尾部添加一个元素步骤:</p>
+<ol>
+<li>先加锁</li>
+<li>获取元素数组</li>
+<li>创建一个新的数组, 长度比原数组长度多1, 并把原数组的内容拷贝到新数组</li>
+<li>在新数组末尾添加元素</li>
+<li>把新数组赋值给当前对象的array属性，覆盖原数组</li>
+<li>解锁</li>
+</ol>
+<h3 id="add-int-index-E-element"><a href="#add-int-index-E-element" class="headerlink" title="add(int index, E element)"></a>add(int index, E element)</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 指定位置添加元素</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span> </span>{</span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    lock.lock();</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        Object[] elements = getArray();</span><br><span class="line">        <span class="keyword">int</span> len = elements.length;</span><br><span class="line">        <span class="comment">// 判断添加位置是否合法</span></span><br><span class="line">        <span class="keyword">if</span> (index &gt; len || index &lt; <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(<span class="string">"Index: "</span>+index+</span><br><span class="line">                                                <span class="string">", Size: "</span>+len);</span><br><span class="line">        Object[] newElements;</span><br><span class="line">        <span class="comment">// 需要移动元素的个数</span></span><br><span class="line">        <span class="keyword">int</span> numMoved = len - index;</span><br><span class="line">        <span class="keyword">if</span> (numMoved == <span class="number">0</span>)</span><br><span class="line">            newElements = Arrays.copyOf(elements, len + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">else</span> {</span><br><span class="line">            <span class="comment">// 新数组的长度为元素组的长度+1</span></span><br><span class="line">            newElements = <span class="keyword">new</span> Object[len + <span class="number">1</span>];</span><br><span class="line">            <span class="comment">// 先将原数组index之前的元素复制到新数组</span></span><br><span class="line">            System.arraycopy(elements, <span class="number">0</span>, newElements, <span class="number">0</span>, index);</span><br><span class="line">            <span class="comment">// 再将原数组index之后的元素复制到新数组</span></span><br><span class="line">            System.arraycopy(elements, index, newElements, index + <span class="number">1</span>,</span><br><span class="line">                             numMoved);</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 新数组中index的位置赋值element</span></span><br><span class="line">        newElements[index] = element;</span><br><span class="line">        <span class="comment">// array指向新的数组</span></span><br><span class="line">        setArray(newElements);</span><br><span class="line">    } <span class="keyword">finally</span> {</span><br><span class="line">        <span class="comment">// 解锁</span></span><br><span class="line">        lock.unlock();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><ol>
+<li><p>执行步骤:</p>
+<ol>
+<li>先加锁</li>
+<li>判断位置是否合法</li>
+<li>计算移动的位置,<ol>
+<li>若为0, 等同于在末尾添加元素</li>
+<li>若是不为0, 则分步骤添加原数组元素到新数组, 先是index之前, 再是index之后, 最后是index</li>
+</ol>
+</li>
+<li>把新数组赋值给当前对象的array属性，覆盖原数组</li>
+<li>解锁</li>
+</ol>
+</li>
+<li><p>为什么这里使用<code>System.arraycopy()</code>, 而不是<code>copyOf()</code></p>
+<ol>
+<li>因为新数组已经被初始化了, 直接将原数组中的元素复制过来即可, 若是使用<code>copyOf()</code>实现起来麻烦,而且需要创建两次新的数组, 还有局部temp数组,  总之, 怎么实现起来方便怎么来, 如前一个<code>add(E e)</code>方法, 直接使用<code>copyOf()</code>方法就能实现, 使用<code>System.arraycopy()</code>需要先初始化, 然后再复制, 反而麻烦了</li>
+</ol>
+</li>
+</ol>
+<h3 id="addAll-Collection-lt-extends-E-gt-c"><a href="#addAll-Collection-lt-extends-E-gt-c" class="headerlink" title="addAll(Collection<? extends E> c)"></a>addAll(Collection&lt;? extends E&gt; c)</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>{</span><br><span class="line">    Object[] cs = (c.getClass() == CopyOnWriteArrayList<span class="class">.<span class="keyword">class</span>) ?</span></span><br><span class="line">        ((CopyOnWriteArrayList&lt;?&gt;)c).getArray() : c.toArray();</span><br><span class="line">    <span class="keyword">if</span> (cs.length == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    lock.lock();</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        Object[] elements = getArray();</span><br><span class="line">        <span class="keyword">int</span> len = elements.length;</span><br><span class="line">        <span class="comment">// 原数组长度为0</span></span><br><span class="line">        <span class="keyword">if</span> (len == <span class="number">0</span> &amp;&amp; cs.getClass() == Object[]<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">            <span class="title">setArray</span>(<span class="title">cs</span>)</span>;</span><br><span class="line">        <span class="keyword">else</span> {</span><br><span class="line">            <span class="comment">// 创建新数组, 长度为原数组长度 + c的元素个数</span></span><br><span class="line">            <span class="comment">// 并将元素组的元素拷贝进去</span></span><br><span class="line">            Object[] newElements = Arrays.copyOf(elements, len + cs.length);</span><br><span class="line">            <span class="comment">// 将c的元素拷贝到新数组中, 从len位置开始</span></span><br><span class="line">            System.arraycopy(cs, <span class="number">0</span>, newElements, len, cs.length);</span><br><span class="line">            setArray(newElements);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    } <span class="keyword">finally</span> {</span><br><span class="line">        lock.unlock();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="addAll-int-index-Collection-lt-extends-E-gt-c"><a href="#addAll-int-index-Collection-lt-extends-E-gt-c" class="headerlink" title="addAll(int index, Collection<? extends E> c)"></a>addAll(int index, Collection&lt;? extends E&gt; c)</h3><p>同理</p>
+<h2 id="查"><a href="#查" class="headerlink" title="查"></a>查</h2><h3 id="get"><a href="#get" class="headerlink" title="get()"></a>get()</h3><p>就是简单的根据索引获取数组元素</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> get(getArray(), index);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> E <span class="title">get</span><span class="params">(Object[] a, <span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> (E) a[index];</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+
+<h2 id="删"><a href="#删" class="headerlink" title="删"></a>删</h2><h3 id="remove-int-index"><a href="#remove-int-index" class="headerlink" title="remove(int index)"></a>remove(int index)</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    <span class="comment">// 加锁</span></span><br><span class="line">    lock.lock();</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        Object[] elements = getArray();</span><br><span class="line">        <span class="keyword">int</span> len = elements.length;</span><br><span class="line">        <span class="comment">// 获取旧值</span></span><br><span class="line">        E oldValue = get(elements, index);</span><br><span class="line">        <span class="comment">// 移动元素个数</span></span><br><span class="line">        <span class="keyword">int</span> numMoved = len - index - <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 如果删除的是最后一个元素, 直接拷贝出一个新的len-1的数组即可</span></span><br><span class="line">        <span class="keyword">if</span> (numMoved == <span class="number">0</span>)</span><br><span class="line">            setArray(Arrays.copyOf(elements, len - <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">else</span> {</span><br><span class="line">            Object[] newElements = <span class="keyword">new</span> Object[len - <span class="number">1</span>];</span><br><span class="line">            System.arraycopy(elements, <span class="number">0</span>, newElements, <span class="number">0</span>, index);</span><br><span class="line">            System.arraycopy(elements, index + <span class="number">1</span>, newElements, index,</span><br><span class="line">                             numMoved);</span><br><span class="line">            setArray(newElements);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> oldValue;</span><br><span class="line">    } <span class="keyword">finally</span> {</span><br><span class="line">        lock.unlock();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h4><ol>
+<li>步骤:<ol>
+<li>加锁</li>
+<li>获取原数组及长度</li>
+<li>获取旧值</li>
+<li>计算需要移动元素的个数<ol>
+<li>若是移动次数=0, 即删除末尾元素, 直接复制一个长度为原数组长度-1的数组, 将原数组len-1的元素放入即可</li>
+<li>若是移动次数&gt;0, 则现将index前的元素复制到新数组(新数组确定长度为原长度-1), 然后复制index之后的元素</li>
+</ol>
+</li>
+<li>返回旧值</li>
+<li>解锁</li>
+</ol>
+</li>
+<li>为什么移动元素个数的计算和add`方法不一样<ol>
+<li>因为添加元素到指定位置时, 原数组的对应位置上的元素<code>a</code>不删除, 移动的时候<code>a</code>也需要移动</li>
+<li>删除的时候, 直接原数组对应位置的上的元素直接删除, 所以不需要移动 </li>
+</ol>
+</li>
+</ol>
+<h2 id="数组长度"><a href="#数组长度" class="headerlink" title="数组长度"></a>数组长度</h2><p>在之前的<code>ArrayList</code>, <code>LinkedList</code> 中 size都是成员变量, 在对数组做修改的时候, size执行++ 或–即可, 但是这里却不是</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> getArray().length;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们发现, 每次修改都是拷贝一份正好可以<strong>存储目标个数元素的数组</strong>，所以不需要size属性了，数组的长度就是集合的大小，而不像ArrayList数组的长度实际是要大于集合的大小的。</p>
+<h2 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>使用可重入锁和volatile保证线程安全</li>
+<li>写操作都需要加锁, 然后在此期间创建新的数组, 并在新数组中做修改, 之后再用新数组替原数组, 空间复杂度为$O(n)$</li>
+<li>读操作不需要加锁, 支持随机访问, 空间复杂度为$O(1)$</li>
+<li>采用读写分离思想(读写者问题), 但是写操作占用大量的内存空间, 适用于读多, 写少的情景</li>
+<li>只能保证最终一致性, 不能保证实时一致性</li>
+</ol>
+<h2 id="面试相关问题"><a href="#面试相关问题" class="headerlink" title="面试相关问题"></a>面试相关问题</h2><ol>
+<li>CopyOnWriteArrayList是怎么保证并发安全的？</li>
+<li>CopyOnWriteArrayList的实现采用了什么思想？</li>
+<li>CopyOnWriteArrayList是不是强一致性的？</li>
+<li>CopyOnWriteArrayList适用于什么样的场景？</li>
+<li>CopyOnWriteArrayList插入、删除、查询元素的时间复杂度各是多少？</li>
+<li>CopyOnWriteArrayList为什么没有size属性？</li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.255Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JDK%E6%BA%90%E7%A0%81/" rel="tag">JDK源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JUC/" rel="tag">JUC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/List/" rel="tag">List</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/copy-on-write-arraylist/&title=《CopyOnWriteArrayList源码解读》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/copy-on-write-arraylist/&title=《CopyOnWriteArrayList源码解读》 — Wkkの笔记&source=CopyOnWriteArrayList源码解读" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/copy-on-write-arraylist/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《CopyOnWriteArrayList源码解读》 — Wkkの笔记&url=https://winniekun.github.io/copy-on-write-arraylist/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/copy-on-write-arraylist/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/linkedhashmap-analysis/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">LinkedHashMap源码解读</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/classloader/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">类加载器</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/copy-on-write-arraylist/&title=《CopyOnWriteArrayList源码解读》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/copy-on-write-arraylist/&title=《CopyOnWriteArrayList源码解读》 — Wkkの笔记&source=CopyOnWriteArrayList源码解读" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/copy-on-write-arraylist/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《CopyOnWriteArrayList源码解读》 — Wkkの笔记&url=https://winniekun.github.io/copy-on-write-arraylist/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/copy-on-write-arraylist/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJklEQVR42u3aS27DMAwFwN7/0i7QVYEgziNpF7U0WgVB6miyYPn7+orP8XNeX/9+5/X9d895PdXnNA8GBsZjGcfpefeZ5Dnvfoge7MMdMDAwNmAkQbYaUvOf4Pxvz++GgYGBUQ2X50/OgzsGBgbGhJFcehJeMTAwMCZFbMJIrpIH2VtqcQwMjAcyJoOBu1//0XwDAwPjHzOO4qkG1slgoHArDAyMpRmTa107BO19V9T5w8DAWIiRrD7MS9ZeqRw13TAwMJZmzNO4vIl27agAAwNjN0Y12PXWyJKL9sYVGBgYqzKufWgeQCef/9A1xMDAWI6RtLEmxWo1fF9Q3GJgYCzHyIvMPOD2mnS9YQAGBsY+jKS9lSd51VFlL3EsZ7gYGBhLMKpBMA+v1aWxfLSAgYGxD2O+6NArdCcJKAYGxj6MfAA5CZf3hV0MDIwdGL0iNlmAqAbNUSGNgYGxNKOaCJYTtXHYLRTGGBgYSzOqqw/J46rhuJoaYmBg7MPojRvz3yZfzhiFeAwMjO0ZSeicjDOraWK0bIGBgbEQI1+eSFLDnNQ7haUQDAyMhRhH8eSMCTgvcd/+38DAwFiIUQ12veZa3oDLv6vQNcTAwFiCUV2hqKaVvZ+pOlTAwMDYgTFvkE1acjn+Q4sNAwNje0YPk6eP+ahgFHAxMDA2YEwuOgm+l6WGGBgYj2VctVqRl6DVgSUGBsbOjF7pmONz9u1rHBgYGM9jfAOjOTMIP8fbRAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

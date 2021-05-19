@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Java实现生产者-消费者模型 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="并发">
+    <meta name="description" content="前言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java实现生产者-消费者模型">
+<meta property="og:url" content="https://winniekun.github.io/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="前言">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-21T13:27:00.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.246Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="并发">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Java实现生产者-消费者模型</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Java实现生产者-消费者模型</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-04-21T13:27:00.000Z" itemprop="datePublished" class="page-time">
+  2020-04-21
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#准备"><span class="post-toc-number">2.</span> <span class="post-toc-text">准备</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#生产者消费者接口"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">生产者消费者接口</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#生产者接口"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">生产者接口</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#消费者接口"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">消费者接口</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#生产者消费者抽象类"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">生产者消费者抽象类</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#生产者抽象类"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">生产者抽象类</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#消费者抽象类"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">消费者抽象类</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Model接口"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Model接口</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Task"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">Task</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现一：BlockingQueue"><span class="post-toc-number">3.</span> <span class="post-toc-text">实现一：BlockingQueue</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现二：wait-amp-notify"><span class="post-toc-number">4.</span> <span class="post-toc-text">实现二：wait&amp;notify</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现三：lock-amp-amp-condition"><span class="post-toc-number">5.</span> <span class="post-toc-text">实现三：lock &amp;&amp; condition</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Java进阶/并发/Java实现生产者-消费者模型"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Java实现生产者-消费者模型</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-04-21 21:27:00" datetime="2020-04-21T13:27:00.000Z"  itemprop="datePublished">2020-04-21</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><a id="more"></a>
+
+<p>最近在看线程池的实现原理，后面又看了源码，发现其内部是一个<code>生产者-消费者</code>模型，用户是提交的任务（task）是生产者，线程池中的线程（worker）是消费者。</p>
+<p>然后感觉对<code>生产者-消费者</code>模型的实现，磕磕绊绊的，所以记录一下。下面会涉及多种生产者-消费者模型的实现，可以先抽象出关键的接口，并实现一些抽象类：</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="生产者消费者接口"><a href="#生产者消费者接口" class="headerlink" title="生产者消费者接口"></a>生产者消费者接口</h3><h4 id="生产者接口"><a href="#生产者接口" class="headerlink" title="生产者接口"></a><strong>生产者接口</strong></h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Producer</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">produce</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="消费者接口"><a href="#消费者接口" class="headerlink" title="消费者接口"></a><strong>消费者接口</strong></h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Consumer</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">consume</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="生产者消费者抽象类"><a href="#生产者消费者抽象类" class="headerlink" title="生产者消费者抽象类"></a>生产者消费者抽象类</h3><h4 id="生产者抽象类"><a href="#生产者抽象类" class="headerlink" title="生产者抽象类"></a><strong>生产者抽象类</strong></h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractProducer</span> <span class="keyword">implements</span> <span class="title">Runnable</span>, <span class="title">Producer</span> </span>{</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>){</span><br><span class="line">            <span class="keyword">try</span>{</span><br><span class="line">                produce();</span><br><span class="line">            }<span class="keyword">catch</span> (Exception e){</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="消费者抽象类"><a href="#消费者抽象类" class="headerlink" title="消费者抽象类"></a><strong>消费者抽象类</strong></h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractConsumer</span> <span class="keyword">implements</span> <span class="title">Consumer</span>, <span class="title">Runnable</span> </span>{</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>){</span><br><span class="line">            <span class="keyword">try</span>{</span><br><span class="line">                consume();</span><br><span class="line">            }<span class="keyword">catch</span> (Exception e){</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Model接口"><a href="#Model接口" class="headerlink" title="Model接口"></a>Model接口</h3><p>对应的实现<code>生产者-消费者</code>模型，不同的<code>生产者-消费者</code>实现模型都实现该接口，</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Model</span> </span>{</span><br><span class="line">    <span class="function">Runnable <span class="title">newRunnableConsumer</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">Runnable <span class="title">newRunnableProducer</span><span class="params">()</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h3><p>将Task作为生产和消费的基本单位</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Task</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> no;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Task</span><span class="params">(<span class="keyword">int</span> no)</span></span>{</span><br><span class="line">        <span class="keyword">this</span>.no = no;</span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getNo</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> no;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNo</span><span class="params">(<span class="keyword">int</span> no)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.no = no;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h2 id="实现一：BlockingQueue"><a href="#实现一：BlockingQueue" class="headerlink" title="实现一：BlockingQueue"></a>实现一：BlockingQueue</h2><p>BlockingQueue的写法最简单。核心思想是，<strong>把并发和容量控制封装在缓冲区中</strong>。而BlockingQueue的性质天生满足这个要求。</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.train.concurrent.procon;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.BlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.LinkedBlockingDeque;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicInteger;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Time</span>: 2020/4/21下午8:54</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: kongwiki</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Email</span>: kongwiki@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BlockingQueueModel</span> <span class="keyword">implements</span> <span class="title">Model</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> BlockingQueue&lt;Task&gt; queue;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> AtomicInteger increTaskNo = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BlockingQueueModel</span><span class="params">(<span class="keyword">int</span> cap)</span></span>{</span><br><span class="line">        <span class="keyword">this</span>.queue = <span class="keyword">new</span> LinkedBlockingDeque&lt;&gt;(cap);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Runnable <span class="title">newRunnableConsumer</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConsumerImpl();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Runnable <span class="title">newRunnableProducer</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ProducerImpl();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsumerImpl</span> <span class="keyword">extends</span> <span class="title">AbstractConsumer</span> <span class="keyword">implements</span> <span class="title">Runnable</span>, <span class="title">Consumer</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">consume</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">            Task task = queue.take();</span><br><span class="line">            Thread.sleep(<span class="number">500</span> + (<span class="keyword">long</span>) (Math.random() * <span class="number">500</span>));</span><br><span class="line">            System.out.println(<span class="string">"consume: "</span> + task.getNo());</span><br><span class="line"></span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ProducerImpl</span> <span class="keyword">extends</span> <span class="title">AbstractProducer</span> <span class="keyword">implements</span> <span class="title">Runnable</span>, <span class="title">Producer</span></span>{</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">produce</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">            Thread.sleep((<span class="keyword">long</span>) (<span class="number">500</span> + (Math.random()) * <span class="number">1000</span>));</span><br><span class="line">            Task task = <span class="keyword">new</span> Task(increTaskNo.getAndIncrement());</span><br><span class="line">            System.out.println(<span class="string">"produce: "</span> + task.getNo());</span><br><span class="line">            queue.put(task);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        Model model = <span class="keyword">new</span> BlockingQueueModel(<span class="number">3</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++) {</span><br><span class="line">            <span class="keyword">new</span> Thread(model.newRunnableConsumer()).start();</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) {</span><br><span class="line">            <span class="keyword">new</span> Thread(model.newRunnableProducer()).start();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h2 id="实现二：wait-amp-notify"><a href="#实现二：wait-amp-notify" class="headerlink" title="实现二：wait&amp;notify"></a>实现二：wait&amp;notify</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.train.concurrent.procon;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.LinkedList;</span><br><span class="line"><span class="keyword">import</span> java.util.Queue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicInteger;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Time</span>: 2020/4/22上午7:40</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: kongwiki</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Email</span>: kongwiki@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WaitNotifyModel</span> <span class="keyword">implements</span> <span class="title">Model</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> integer;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object buffer_lock = <span class="keyword">new</span> Object();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Queue&lt;Task&gt; buffer = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> cap;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WaitNotifyModel</span><span class="params">(<span class="keyword">int</span> cap)</span></span>{</span><br><span class="line">        <span class="keyword">this</span>.cap = cap;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Runnable <span class="title">newRunnableConsumer</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConsumerImpl();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Runnable <span class="title">newRunnableProducer</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ProducerImpl();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProducerImpl</span> <span class="keyword">extends</span> <span class="title">AbstractProducer</span> <span class="keyword">implements</span> <span class="title">Runnable</span>, <span class="title">Producer</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">produce</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">            Thread.sleep((<span class="keyword">long</span>) (<span class="number">500</span> + (Math.random() * <span class="number">1000</span>)));</span><br><span class="line">            <span class="keyword">synchronized</span> (buffer_lock){</span><br><span class="line">                <span class="keyword">while</span> (buffer.size() == cap){</span><br><span class="line">                    buffer_lock.wait();</span><br><span class="line">                }</span><br><span class="line">                Task task = <span class="keyword">new</span> Task(integer++);</span><br><span class="line">                buffer.add(task);</span><br><span class="line">                System.out.println(<span class="string">"produce: "</span> + task.getNo());</span><br><span class="line">                buffer_lock.notifyAll();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsumerImpl</span> <span class="keyword">extends</span> <span class="title">AbstractConsumer</span> <span class="keyword">implements</span> <span class="title">Runnable</span>, <span class="title">Consumer</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">consume</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">            <span class="keyword">synchronized</span> (buffer_lock){</span><br><span class="line">                <span class="keyword">while</span> (buffer.size() == <span class="number">0</span>){</span><br><span class="line">                    buffer_lock.wait();</span><br><span class="line">                }</span><br><span class="line">                Task task = buffer.poll();</span><br><span class="line">                <span class="keyword">assert</span> task != <span class="keyword">null</span>;</span><br><span class="line">                Thread.sleep((<span class="keyword">long</span>) (<span class="number">500</span> + (Math.random() * <span class="number">1000</span>)));</span><br><span class="line">                System.out.println(<span class="string">"consume: "</span> + task.getNo());</span><br><span class="line">                buffer_lock.notifyAll();</span><br><span class="line"></span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        Model model = <span class="keyword">new</span> WaitNotifyModel(<span class="number">3</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) {</span><br><span class="line">            <span class="keyword">new</span> Thread(model.newRunnableConsumer()).start();</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) {</span><br><span class="line">            <span class="keyword">new</span> Thread(model.newRunnableProducer()).start();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"> }</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h2 id="实现三：lock-amp-amp-condition"><a href="#实现三：lock-amp-amp-condition" class="headerlink" title="实现三：lock &amp;&amp; condition"></a>实现三：lock &amp;&amp; condition</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.train.concurrent.procon;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.LinkedList;</span><br><span class="line"><span class="keyword">import</span> java.util.Queue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.Condition;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.Lock;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.ReentrantLock;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Time</span>: 2020/4/22上午8:01</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: kongwiki</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Email</span>: kongwiki@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LockConditionModel</span> <span class="keyword">implements</span> <span class="title">Model</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock BUFFER_LOCK = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Condition BUFFER_COND = BUFFER_LOCK.newCondition();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> integer;</span><br><span class="line">    <span class="keyword">private</span> Queue&lt;Task&gt; buffer = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> cap;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LockConditionModel</span><span class="params">(<span class="keyword">int</span> cap)</span></span>{</span><br><span class="line">        <span class="keyword">this</span>.cap = cap;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Runnable <span class="title">newRunnableConsumer</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConsumerImpl();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Runnable <span class="title">newRunnableProducer</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ProducerImpl();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProducerImpl</span> <span class="keyword">extends</span> <span class="title">AbstractProducer</span> <span class="keyword">implements</span> <span class="title">Producer</span>, <span class="title">Runnable</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">produce</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">            Thread.sleep((<span class="keyword">long</span>) (<span class="number">500</span> + (Math.random() * <span class="number">1000</span>)));</span><br><span class="line">            BUFFER_LOCK.lockInterruptibly();</span><br><span class="line">            <span class="keyword">try</span>{</span><br><span class="line">                <span class="keyword">while</span> (buffer.size() == cap){</span><br><span class="line">                    BUFFER_COND.await();</span><br><span class="line">                }</span><br><span class="line">                Task task = <span class="keyword">new</span> Task(integer++);</span><br><span class="line">                buffer.offer(task);</span><br><span class="line">                System.out.println(<span class="string">"produce: "</span>+ task.getNo());</span><br><span class="line">                BUFFER_COND.signalAll();</span><br><span class="line">            }<span class="keyword">catch</span> (Exception e){</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            }<span class="keyword">finally</span> {</span><br><span class="line">                BUFFER_LOCK.unlock();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsumerImpl</span> <span class="keyword">extends</span> <span class="title">AbstractConsumer</span> <span class="keyword">implements</span> <span class="title">Consumer</span>, <span class="title">Runnable</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">consume</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">            BUFFER_LOCK.lockInterruptibly();</span><br><span class="line">            <span class="keyword">try</span>{</span><br><span class="line">                <span class="keyword">while</span> (buffer.size() == <span class="number">0</span>){</span><br><span class="line">                    BUFFER_COND.await();</span><br><span class="line">                }</span><br><span class="line">                Task task = buffer.poll();</span><br><span class="line">                <span class="keyword">assert</span> task != <span class="keyword">null</span>;</span><br><span class="line">                System.out.println(<span class="string">"consume: "</span> + task.getNo());</span><br><span class="line">                BUFFER_COND.signalAll();</span><br><span class="line">            }<span class="keyword">catch</span> (Exception e){</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            }<span class="keyword">finally</span> {</span><br><span class="line">                BUFFER_LOCK.unlock();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        Model model = <span class="keyword">new</span> LockConditionModel(<span class="number">3</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) {</span><br><span class="line">            <span class="keyword">new</span> Thread(model.newRunnableConsumer()).start();</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) {</span><br><span class="line">            <span class="keyword">new</span> Thread(model.newRunnableProducer()).start();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.246Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/&title=《Java实现生产者-消费者模型》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/&title=《Java实现生产者-消费者模型》 — Wkkの笔记&source=前言" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Java实现生产者-消费者模型》 — Wkkの笔记&url=https://winniekun.github.io/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">匈牙利算法实现</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%90%86%E8%A7%A3/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">线程池理解</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/&title=《Java实现生产者-消费者模型》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/&title=《Java实现生产者-消费者模型》 — Wkkの笔记&source=前言" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Java实现生产者-消费者模型》 — Wkkの笔记&url=https://winniekun.github.io/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASYAAAEmCAAAAADqr2IGAAAEiElEQVR42u3aS47bQAwFwLn/pZ1tgET2I9keiHZpFRiaFlUK0M3Pz098Pf66knuu7v/39+f3JKvl61zdeezChAkTJky3ZErCykN//hpX988JknieR/ViHUyYMGHCtJwpWe75Rpusdgq6+mnzD3D5OyZMmDBh+jKmZIXn6W4VK09u80MJJkyYMGHC1EtiE5p5cTlnqhZ8MWHChAnT5zFVl6uWg5OSbpK+5o3J5CO9pRaOCRMmTJhuxpRvzJ/377fMN2HChAkTptswPYpXvqnn5d1eYpwfQapDP/9ZBxMmTJgwrWXKN8jq6+Ws1eNINWXNy9MvisuYMGHChGk507zA2ivm9lqVCUfOFH1sTJgwYcK0kCkJMX/wKeJktVMjRNHHw4QJEyZMa5l6QSSJbrUQPBnKyaF7Rw1MmDBhwrSXqZciThqQ81Q2LxPnhekX8WPChAkTpuVMVaxqYplv6pPYTiXkl0VeTJgwYcK0kKnXmMyDmw/NvKMcnI8fFbJtTJgwYcJ0S6Z8gCbZqhOCKn3vY+SF7OhOTJgwYcK0lqmXavaajvkKZ48U+bEjehYmTJgwYVrF1Cvgnk1Q84Ghs73FnAwTJkyYMO1lysdiqhv5pIxbHd/J0+P88xe6r5gwYcKE6fZMyWaZJ6W936tl4uqBoJoMY8KECROmT2Lqjb/0wjr7Sz5gND+aYMKECROm7UynCrLVwnFenK1GXoZ4/lxMmDBhwvRBTNVNtJrc9sJNVugNGEWgmDBhwoRpIdO8pJts23nKWk2Yc6xJSRoTJkyYMG1n+p2Cae9Zc47835dxYsKECROmtUzNDbI1UpNv8NW/6rU8E1ZMmDBhwvR5TPPCa7W12aOvHlZ6bzQKGhMmTJgw3YAp2Sx7CXB+IOht5PP2agEdEyZMmDAtZ8oLr82kcZDETsrQCUF0NMGECRMmTGuZkg21N6BTzr+fvticqdcWfVELx4QJEyZMy5nyDTsP+tTmXU3Cew3On6o6JkyYMGG6JVPeOOylwTnHbx4IqqVkTJgwYcK0kakX7tnks9di7CXqzdYsJkyYMGFazlQeZAkeUy0cn03I88NEFCcmTJgwYVrLVE1Qq0M5yeNPFXxzyt49mDBhwoRpI1P+2pPUtFBjDtDztmXvjS7/H2HChAkTpoVM1UZjPpRTBcrbnPNkOEmPoyknTJgwYcJ0e6ZempoXRntt0Zw++Qz5keLyKZgwYcKE6UOZ5slwdZSn14Csps3llTFhwoQJ00cwTfLmyQDN2aJtFT06NGDChAkTprVMvUfmDdG8cDyPpxrb6MKECRMmTEuYHsWrelzIQz+7qffWfJH6YsKECROmhUynDgqTZDhJRKtPz5PbvC2KCRMmTJj2MuWHgGr6miDOC8GT4SFMmDBhwvQ9TNVNfV4Rra6WH1Mmpd7L+zFhwoQJ05cxJcH1fklKur1IJs1XTJgwYcL0PUx5c7H6V3njM0+AJw3a0YEAEyZMmDDdjKlXKp0kzMkQzzsanL3PiQkTJkyY9jLlpc/J4eAUVt7szJ97YLIJEyZMmDDdkekPLk2/UG+hrikAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>ArrayList源码解读 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JDK源码,List">
+    <meta name="description" content="ArrayList 源码解读">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ArrayList源码解读">
+<meta property="og:url" content="https://winniekun.github.io/arrayList-analysis/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="ArrayList 源码解读">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/24/fKLA9sY3tM4Ur1V.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/24/8qwE9WoJ4MUyvNx.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/24/risyWCVd6ED1JYF.png">
+<meta property="article:published_time" content="2020-02-10T01:49:19.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.254Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="JDK源码">
+<meta property="article:tag" content="List">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/24/fKLA9sY3tM4Ur1V.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">ArrayList源码解读</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">ArrayList源码解读</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-02-10T01:49:19.000Z" itemprop="datePublished" class="page-time">
+  2020-02-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%BA%90%E7%A0%81/">源码</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ArrayList-源码解读"><span class="post-toc-number">1.</span> <span class="post-toc-text">ArrayList 源码解读</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#依赖"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">依赖</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#字段"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">字段</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#构造函数"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">构造函数</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ArrayList"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">ArrayList()</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ArrayList-int-initialCapacity"><span class="post-toc-number">1.3.2.</span> <span class="post-toc-text">ArrayList(int initialCapacity)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ArrayList-Collection-lt-extends-E-gt-c"><span class="post-toc-number">1.3.3.</span> <span class="post-toc-text">ArrayList(Collection&lt;? extends E&gt; c)</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#增"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">增</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#add-E-e"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">add(E e)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#add-int-index-E-element"><span class="post-toc-number">1.4.2.</span> <span class="post-toc-text">add(int index, E element)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#addAll-Collection-lt-extends-E-gt-c"><span class="post-toc-number">1.4.3.</span> <span class="post-toc-text">addAll(Collection&lt;? extends E&gt; c)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#addAll-int-index-Collection-lt-extends-E-gt-c"><span class="post-toc-number">1.4.4.</span> <span class="post-toc-text">addAll(int index, Collection&lt;? extends E&gt; c)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#总结"><span class="post-toc-number">1.4.5.</span> <span class="post-toc-text">总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#删"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">删</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#remove-Object-o"><span class="post-toc-number">1.5.1.</span> <span class="post-toc-text">remove(Object o)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#remove-int-index"><span class="post-toc-number">1.5.2.</span> <span class="post-toc-text">remove(int index)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#总结-1"><span class="post-toc-number">1.5.3.</span> <span class="post-toc-text">总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#查"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">查</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#附加"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">附加</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#hugeCapacity-方法"><span class="post-toc-number">1.7.1.</span> <span class="post-toc-text">hugeCapacity 方法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ensureCapacity用法"><span class="post-toc-number">1.7.2.</span> <span class="post-toc-text">ensureCapacity用法</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结-2"><span class="post-toc-number">2.</span> <span class="post-toc-text">总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#System-arraycopy-src-srcPos-dest-destPos-length-与-Arrays-copyOf-original-newLength-区别"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">System.arraycopy(src, srcPos, dest, destPos, length) 与 Arrays.copyOf(original, newLength)区别</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">3.</span> <span class="post-toc-text">References</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-源码/JDK/list/arrayList-analysis"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">ArrayList源码解读</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-02-10 09:49:19" datetime="2020-02-10T01:49:19.000Z"  itemprop="datePublished">2020-02-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%BA%90%E7%A0%81/">源码</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="ArrayList-源码解读"><a href="#ArrayList-源码解读" class="headerlink" title="ArrayList 源码解读"></a>ArrayList 源码解读</h2><a id="more"></a>
+
+<h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://i.loli.net/2020/05/24/fKLA9sY3tM4Ur1V.png" alt="ArrayList依赖" title="">
+                </div>
+                <div class="image-caption">ArrayList依赖</div>
+            </figure>
+
+<p>关于为什么<strong>ArrayList</strong>已经继承了<strong>AbstractList</strong>还要实现<strong>List</strong>接口, 可参考 <a href="https://stackoverflow.com/questions/2165204/why-does-linkedhashsete-extend-hashsete-and-implement-sete" target="_blank" rel="noopener">Why does LinkedHashSet extend HashSet and implement Set</a></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://i.loli.net/2020/05/24/8qwE9WoJ4MUyvNx.png" alt="StackOverflow解释" title="">
+                </div>
+                <div class="image-caption">StackOverflow解释</div>
+            </figure>
+
+<p>可能这样增加可读性吧, 接口的<a href="https://kongwiki.me/2020/05/13/interface-Abstarct-diff/" target="_blank" rel="noopener">第二个功能一样</a></p>
+<h3 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * Default initial capacity.</span></span><br><span class="line"><span class="comment">    * 默认初始化容量</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_CAPACITY = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * Shared empty array instance used for empty instances</span></span><br><span class="line"><span class="comment">    * 空实例的共享数组实例</span></span><br><span class="line"><span class="comment">    * 若是无参构造方法 使用 DEFAULTCAPACITY_EMPTY_ELEMENTDATA;</span></span><br><span class="line"><span class="comment">    * 若是含参构造方法 使用 EMPTY_ELEMENTDATA </span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object[] EMPTY_ELEMENTDATA = {};</span><br><span class="line"></span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * Shared empty array instance used for default sized empty instances. We</span></span><br><span class="line"><span class="comment">    * distinguish this from EMPTY_ELEMENTDATA to know how much to inflate when</span></span><br><span class="line"><span class="comment">    * first element is added.</span></span><br><span class="line"><span class="comment">    * </span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};</span><br><span class="line"></span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * The array buffer into which the elements of the ArrayList are stored.</span></span><br><span class="line"><span class="comment">    * The capacity of the ArrayList is the length of this array buffer. Any</span></span><br><span class="line"><span class="comment">    * empty ArrayList with elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA</span></span><br><span class="line"><span class="comment">    * will be expanded to DEFAULT_CAPACITY when the first element is added.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">transient</span> Object[] elementData; <span class="comment">// non-private to simplify nested class access</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * The size of the ArrayList (the number of elements it contains).</span></span><br><span class="line"><span class="comment">    *</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@serial</span></span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> size;</span><br><span class="line">    </span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * The maximum size of array to allocate.</span></span><br><span class="line"><span class="comment">    * Some VMs reserve some header words in an array.</span></span><br><span class="line"><span class="comment">    * Attempts to allocate larger arrays may result in</span></span><br><span class="line"><span class="comment">    * OutOfMemoryError: Requested array size exceeds VM limit</span></span><br><span class="line"><span class="comment">    * 某些 VM 保留数组头部用于存储一些 header words</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_ARRAY_SIZE = Integer.MAX_VALUE - <span class="number">8</span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>可以发现, <strong>elementData</strong> 和 <strong>size</strong> 两个变量在ArrayList的运行中会有很大的变动, 可以使用<strong>反射</strong>进行观察</p>
+<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><h4 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList()"></a>ArrayList()</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 构造函数1: 默认构造函数, </span></span><br><span class="line"><span class="comment">* DEFAULTCAPACITY_EMPTY_ELEMENTDATA = 0,</span></span><br><span class="line"><span class="comment">* 初始是一个空数组, 当添加一个元素的时候, 扩充为10(如何扩充为10, 详见下述)</span></span><br><span class="line"><span class="comment">* 原因详见 transient Object[] elementData上的注释</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">this</span>.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>也就是在创建对象的时候，并没有立刻初始化容器的大小，直到第一次调用 <code>add()</code>方法的时候，才进行确定</strong>。</p>
+<h4 id="ArrayList-int-initialCapacity"><a href="#ArrayList-int-initialCapacity" class="headerlink" title="ArrayList(int initialCapacity)"></a>ArrayList(int initialCapacity)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 构造函数2 带初始容量参数的构造函数, (用户自己定义容量)</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &gt; <span class="number">0</span>) {</span><br><span class="line">        <span class="keyword">this</span>.elementData = <span class="keyword">new</span> Object[initialCapacity];</span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (initialCapacity == <span class="number">0</span>) {</span><br><span class="line">        <span class="keyword">this</span>.elementData = EMPTY_ELEMENTDATA;</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal Capacity: "</span>+</span><br><span class="line">                                           initialCapacity);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>初始化容量大小为<code>initialCapactiy</code></strong></p>
+<h4 id="ArrayList-Collection-lt-extends-E-gt-c"><a href="#ArrayList-Collection-lt-extends-E-gt-c" class="headerlink" title="ArrayList(Collection<? extends E> c)"></a>ArrayList(Collection&lt;? extends E&gt; c)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Constructs a list containing the elements of the specified</span></span><br><span class="line"><span class="comment">* collection, in the order they are returned by the collection's</span></span><br><span class="line"><span class="comment">* iterator.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> c the collection whose elements are to be placed into this list</span></span><br><span class="line"><span class="comment">* <span class="doctag">@throws</span> NullPointerException if the specified collection is null</span></span><br><span class="line"><span class="comment">* 构造包含指定collection元素的列表 这些元素利用该集合的迭代按顺序返回</span></span><br><span class="line"><span class="comment">* 如果指定的集合为null, 抛出 NullPointerException</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>{</span><br><span class="line">    elementData = c.toArray();</span><br><span class="line">    <span class="keyword">if</span> ((size = elementData.length) != <span class="number">0</span>) {</span><br><span class="line">        <span class="comment">// c.toArray might (incorrectly) not return Object[] (see 6260652)</span></span><br><span class="line">        <span class="keyword">if</span> (elementData.getClass() != Object[]<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">            <span class="title">elementData</span> </span>= Arrays.copyOf(elementData, size, Object[]<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="comment">// replace with empty array.</span></span><br><span class="line">        <span class="keyword">this</span>.elementData = EMPTY_ELEMENTDATA;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>总结</strong></p>
+<ol>
+<li><strong>常量EMPTY_ELEMENTDATA和DEFAULTCAPACITY_EMPTY_ELEMENTDATA是为了初始化elementData的。如果为无参构造函数，使用DEFAULTCAPACITY_EMPTY_ELEMENTDATA；如果为含参构造函数，使用EMPTY_ELEMENTDATA</strong></li>
+<li>以无参构造方法创建arraylist时, 实际上初始化的值是一个空数组. 添加第一个元素时 扩容为10</li>
+<li>如果使用<code>Collection</code>实例初始化, <strong>不为空</strong>将调用<code>toArray()</code>方法初始化<code>elementData</code>, <strong>为空</strong>时初始化为空数组<code>EMPTY_ELEMENTDATA</code> </li>
+</ol>
+<h3 id="增"><a href="#增" class="headerlink" title="增"></a>增</h3><h4 id="add-E-e"><a href="#add-E-e" class="headerlink" title="add(E e)"></a>add(E e)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>{</span><br><span class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></span><br><span class="line">    elementData[size++] = e;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在调用 <code>add()</code>方法的时候，首先调用 <code>ensureCapacityInternal()</code>方法来<strong>确定是否还有容量来容纳新的值</strong>。<code>size</code>是表示数组的初始大小，默认为 0 。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://i.loli.net/2020/05/24/risyWCVd6ED1JYF.png" alt="ArrayList-add执行步骤" title="">
+                </div>
+                <div class="image-caption">ArrayList-add执行步骤</div>
+            </figure>
+
+<p><strong>按照流程走一遍:</strong></p>
+<ol>
+<li>第一次调用的时候:<ol>
+<li>第一步, 因为还为添加成功元素, <code>size = 0</code> , <code>size + 1 = 1</code></li>
+<li>第二步, 首先执行第三步, 传入两个参数<code>elementData</code>和<code>minCapacity</code></li>
+<li>第三步,  此时的<code>elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATAT</code>, 然后 <code>minCapaciy==1</code>, 返回<code>DEFAULT_CAPACITY</code></li>
+<li>第四步,  此时的<code>minCapacity==10</code> , <code>elementData.length = 0</code> 所以执行<code>if</code>分支</li>
+<li>第五步, <code>oldCapacity==0</code>  经计算<code>newCapacity==0</code>  然后<code>newCapacity-minCapacity&lt;0</code>, 所以<code>newCapacity==10</code> 之后进行数据的复制，这时，<code>elementData</code>的长度是 10.，第一个元素成功的添加到数组中。</li>
+</ol>
+</li>
+<li>第二次调用<ol>
+<li>第一步, 因为已经添加成功了一个元素, <code>size = 1</code> , <code>size + 1 = 2</code></li>
+<li>第二步, 首先执行第三步, 传入两个参数<code>elementData</code>和<code>minCapacity</code></li>
+<li>第三步,  此时的<code>elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATAT</code>, 然后 <code>minCapaciy==2</code>, 不执行<code>if</code>分支, 返回 <code>2</code></li>
+<li>第四步,  此时的<code>minCapacity==2</code> , <code>elementData.length = 10</code> 所以不执行执行<code>if</code>分支, 也就是无需扩容</li>
+</ol>
+</li>
+<li>反复添加直到添加第11个元素的时候, 再次出发<strong>第四步</strong>的<strong>grow</strong>, 进行扩容, 扩为原先的1.5倍.</li>
+</ol>
+<h4 id="add-int-index-E-element"><a href="#add-int-index-E-element" class="headerlink" title="add(int index, E element)"></a>add(int index, E element)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span> </span>{</span><br><span class="line">    rangeCheckForAdd(index);</span><br><span class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></span><br><span class="line">    System.arraycopy(elementData, index, elementData, index + <span class="number">1</span>,</span><br><span class="line">                     size - index);</span><br><span class="line">    elementData[index] = element;</span><br><span class="line">    size++;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用<strong>arraycopy</strong>方法, 可以看做将指定坐标位置以及右侧所有元素向后移动一位，腾出空间存放新元素。</p>
+<h4 id="addAll-Collection-lt-extends-E-gt-c"><a href="#addAll-Collection-lt-extends-E-gt-c" class="headerlink" title="addAll(Collection<? extends E> c)"></a>addAll(Collection&lt;? extends E&gt; c)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>{</span><br><span class="line">    Object[] a = c.toArray();</span><br><span class="line">    <span class="keyword">int</span> numNew = a.length;</span><br><span class="line">    ensureCapacityInternal(size + numNew);  <span class="comment">// Increments modCount</span></span><br><span class="line">    System.arraycopy(a, <span class="number">0</span>, elementData, size, numNew);</span><br><span class="line">    size += numNew;</span><br><span class="line">    <span class="keyword">return</span> numNew != <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="addAll-int-index-Collection-lt-extends-E-gt-c"><a href="#addAll-int-index-Collection-lt-extends-E-gt-c" class="headerlink" title="addAll(int index, Collection<? extends E> c)"></a>addAll(int index, Collection&lt;? extends E&gt; c)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(<span class="keyword">int</span> index, Collection&lt;? extends E&gt; c)</span> </span>{</span><br><span class="line">    rangeCheckForAdd(index);</span><br><span class="line">    Object[] a = c.toArray();</span><br><span class="line">    <span class="keyword">int</span> numNew = a.length;</span><br><span class="line">    ensureCapacityInternal(size + numNew);  <span class="comment">// Increments modCount</span></span><br><span class="line">    <span class="keyword">int</span> numMoved = size - index;</span><br><span class="line">    <span class="keyword">if</span> (numMoved &gt; <span class="number">0</span>)</span><br><span class="line">        System.arraycopy(elementData, index, elementData, index + numNew,</span><br><span class="line">                         numMoved);</span><br><span class="line">    System.arraycopy(a, <span class="number">0</span>, elementData, index, numNew);</span><br><span class="line">    size += numNew;</span><br><span class="line">    <span class="keyword">return</span> numNew != <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ol>
+<li>共实现四中添加方法:<ol>
+<li>添加单个元素(默认在尾部添加)</li>
+<li>在指定位置添加单个元素</li>
+<li>添加一个集合(默认在末尾)</li>
+<li>在指定位置添加一个集合</li>
+</ol>
+</li>
+<li>每次执行add操作时都会首先调用 <code>ensureCapacityInternal()</code>方法来<strong>确定是否还有容量来容纳新的值</strong>, 若是没有则进行扩容, 有则直接添加</li>
+</ol>
+<h3 id="删"><a href="#删" class="headerlink" title="删"></a>删</h3><p><code>remove()</code>方法用来从集合中删除一个元素，可以删除指定索引出的元素，也可以指定元素。</p>
+<h4 id="remove-Object-o"><a href="#remove-Object-o" class="headerlink" title="remove(Object o)"></a>remove(Object o)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; size; index++)</span><br><span class="line">            <span class="keyword">if</span> (elementData[index] == <span class="keyword">null</span>) {</span><br><span class="line">                fastRemove(index);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            }</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; size; index++)</span><br><span class="line">            <span class="keyword">if</span> (o.equals(elementData[index])) {</span><br><span class="line">                fastRemove(index);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">}</span><br><span class="line"><span class="comment">// 将index位置后的所有元素前移一位, 之后size-1 </span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">fastRemove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="keyword">int</span> numMoved = size - index - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (numMoved &gt; <span class="number">0</span>)</span><br><span class="line">        System.arraycopy(elementData, index+<span class="number">1</span>, elementData, index,</span><br><span class="line">                         numMoved);</span><br><span class="line">    elementData[--size] = <span class="keyword">null</span>; <span class="comment">// clear to let GC do its work</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>流程走一遍</strong></p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;String&gt; arrayList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">arrayList.add(<span class="string">"a"</span>);</span><br><span class="line">arrayList.add(<span class="string">"b"</span>);</span><br><span class="line">arrayList.add(<span class="string">"c"</span>);</span><br><span class="line">arrayList.remove(<span class="string">"a"</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<ol>
+<li><p>要删除<code>a</code>这个元素，把 <code>a</code>传入到 <code>remove()</code>这个方法，首先进行判断是否为<code>null</code>，因为 <code>ArrayList</code>可以存放 <code>null</code>，如果为 <code>null</code> 则用<code>==</code>判断元素是否相等，否则用 <code>equals()</code>方法进行判断。</p>
+</li>
+<li><p>然后循环遍历 <code>elementData</code>这个数组，<code>size</code>为数组元素个数，找到和 <code>a</code>相等的元素的索引，例子中 index = 0， 然后把 0 传入到 <code>fastRemove()</code>方法中，之后计算要移动的元素的个数：</p>
+<figure class="highlight tex"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int numMoved = size - index -1;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>例子中  <code>numMoved = 3 - 0 -1 = 2</code>，也就是一共要移动两个元素，然后把 <code>a</code>之后的两个元素往前移动，然后进行 <code>size-1</code>，把最后一个元素位置的值设置为 null。</p>
+<p>这样即可在<code>ArrayList</code>中删除一个元素。</p>
+</li>
+</ol>
+<h4 id="remove-int-index"><a href="#remove-int-index" class="headerlink" title="remove(int index)"></a>remove(int index)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">    rangeCheck(index);</span><br><span class="line">    modCount++;</span><br><span class="line">    E oldValue = elementData(index);</span><br><span class="line">    <span class="keyword">int</span> numMoved = size - index - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (numMoved &gt; <span class="number">0</span>)</span><br><span class="line">        System.arraycopy(elementData, index+<span class="number">1</span>, elementData, index,</span><br><span class="line">                         numMoved);</span><br><span class="line">    elementData[--size] = <span class="keyword">null</span>; <span class="comment">// clear to let GC do its work</span></span><br><span class="line">    <span class="keyword">return</span> oldValue;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p>没啥好总结的</p>
+<h3 id="查"><a href="#查" class="headerlink" title="查"></a>查</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">    <span class="comment">// 判断查询的位置是否符合要求</span></span><br><span class="line">    rangeCheck(index);</span><br><span class="line">    <span class="keyword">return</span> elementData(index);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">rangeCheck</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= size)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(outOfBoundsMsg(index));</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function">E <span class="title">elementData</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> (E) elementData[index];</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>没啥好说的, 就是正常数据的使用</p>
+<h3 id="附加"><a href="#附加" class="headerlink" title="附加"></a>附加</h3><h4 id="hugeCapacity-方法"><a href="#hugeCapacity-方法" class="headerlink" title="hugeCapacity 方法"></a>hugeCapacity 方法</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">hugeCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>{</span><br><span class="line">     <span class="keyword">if</span> (minCapacity &lt; <span class="number">0</span>) <span class="comment">// overflow</span></span><br><span class="line">         <span class="keyword">throw</span> <span class="keyword">new</span> OutOfMemoryError();</span><br><span class="line">     <span class="keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE) ?</span><br><span class="line">         Integer.MAX_VALUE :</span><br><span class="line">         MAX_ARRAY_SIZE;</span><br><span class="line"> }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>只有<code>newCapacity</code> &gt;<code>MAX_ARRAY_SIZE</code> 才回调用该方法, 方法中使用三元运算, 意思是若果<code>minCapacity</code>&gt; <code>MAX_ARRAY_SIZE</code>   则<code>newCapacity</code>的容量大小为<code>Integer.MAX_VALUE</code>也就是2**31次方, 若是<code>minCapacity</code>&lt; <code>MAX_ARRAY_SIZE</code>   则<code>newCapacity</code>的容量大小为<code>Integer.MAX_VALUE-8</code></p>
+<h4 id="ensureCapacity用法"><a href="#ensureCapacity用法" class="headerlink" title="ensureCapacity用法"></a>ensureCapacity用法</h4><p>Arraylist源码中有一个ensureCapacity方法</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/***</span></span><br><span class="line"><span class="comment">* 如有必要，增加此 ArrayList 实例的容量，</span></span><br><span class="line"><span class="comment">* 以确保它至少可以容纳由minimum capacity参数指定的元素数。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ensureCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>{</span><br><span class="line">        <span class="keyword">int</span> minExpand = (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA)</span><br><span class="line">            <span class="comment">// any size if not default element table</span></span><br><span class="line">            ? <span class="number">0</span></span><br><span class="line">            <span class="comment">// larger than default for default empty table. It's already</span></span><br><span class="line">            <span class="comment">// supposed to be at default size.</span></span><br><span class="line">            : DEFAULT_CAPACITY;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (minCapacity &gt; minExpand) {</span><br><span class="line">            ensureExplicitCapacity(minCapacity);</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>该方法适用于添加大量的元素, 以减少上文的增量重新分配的次数</strong></p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;Object&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">       <span class="keyword">final</span> <span class="keyword">int</span> N = <span class="number">10000000</span>;</span><br><span class="line">       <span class="keyword">long</span> startTime = System.currentTimeMillis();</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) {</span><br><span class="line">           list.add(i);</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">long</span> endTime = System.currentTimeMillis();</span><br><span class="line">       System.out.println(<span class="string">"使用ensureCapaticy方法之前: "</span>+ (endTime - startTime));</span><br><span class="line"></span><br><span class="line">       list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">       list.ensureCapacity(N);</span><br><span class="line">       startTime = System.currentTimeMillis();</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) {</span><br><span class="line">           list.add(i);</span><br><span class="line"></span><br><span class="line">       }</span><br><span class="line"></span><br><span class="line">       endTime = System.currentTimeMillis();</span><br><span class="line">       System.out.println(<span class="string">"使用ensureCapaticy方法之后: "</span>+ (endTime -startTime));</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">使用ensureCapaticy方法之前: 3345</span><br><span class="line">使用ensureCapaticy方法之后: 257</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h2><p><code>ArrayList</code>集合底层是用一个 Object 数组来存放元素的，其可以存放 null 值，因为是使用数组来存放元素，所以在知道索引的情况下，进行元素的查找是很快的，但是也有缺点，如果数组的容量不能够存放新元素的时候，会进行数组的扩容，也就是把数组元素复制到一个容量更大的数组中，所以如果在经常进行元素添加和删除操作的情况下效率会比较低。还有一点，<code>ArrayList</code>不是线程安全的，要保证线程安全，可以使用 <code>Vector</code>代替。</p>
+<h3 id="System-arraycopy-src-srcPos-dest-destPos-length-与-Arrays-copyOf-original-newLength-区别"><a href="#System-arraycopy-src-srcPos-dest-destPos-length-与-Arrays-copyOf-original-newLength-区别" class="headerlink" title="System.arraycopy(src, srcPos, dest, destPos, length) 与 Arrays.copyOf(original, newLength)区别"></a>System.arraycopy(src, srcPos, dest, destPos, length) 与 Arrays.copyOf(original, newLength)区别</h3><p>arraycopy()的参数</p>
+<ol>
+<li>src:源数组;</li>
+<li>srcPos:源数组要复制的起始位置;</li>
+<li>dest:目的数组;</li>
+<li>destPos:目的数组放置的起始位置;</li>
+<li>length:复制的长度.</li>
+</ol>
+<p>两者的区别在于，Arrays.copyOf()不仅仅只是拷贝数组中的元素，在拷贝元素时，会创建一个新的数组对象。而System.arrayCopy只拷贝已经存在数组元素, <strong>是否创建新的数据对象,根据写法而定</strong></p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//System.arraycopy,只拷贝已存在的数组元素</span><br><span class="line">int[] src = {0, 1, 2};</span><br><span class="line">int[] dest = new int[3];</span><br><span class="line">System.arraycopy(src, 0, dest, 0, src.length);</span><br><span class="line">System.out.println(Arrays.toString(dest));      //[0, 1, 2]</span><br><span class="line">//Arrays.copyOf,会创建一个新的数组对象</span><br><span class="line">int[] src = {0, 1, 2};</span><br><span class="line">int[] dest = Arrays.copyOf(src, src.length);</span><br><span class="line">System.out.println(Arrays.toString(dest));    //[0, 1, 2]</span><br></pre></td></tr></tbody></table></figure>
+
+<p>实际上Arrays.copyOf方法的内部实现也是通过System.arraycopy方法实现，在Arrays类中有多个copyOf的重载方法，现以拷贝int[]为例：</p>
+<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1 public static int[] copyOf(int[] original, int newLength) {</span><br><span class="line">2     int[] copy = new int[newLength];</span><br><span class="line">3     System.arraycopy(original, 0, copy, 0, Math.min(original.length, newLength));</span><br><span class="line">4     return copy;</span><br><span class="line">5 }</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+
+
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a href="https://diguage.github.io/jdk-source-analysis/#_arraylist" target="_blank" rel="noopener">ArrayList源码</a></li>
+<li><a href="https://my.oschina.net/mengyuankan/blog/885590/print" target="_blank" rel="noopener">ArrayList源码分析</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.254Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JDK%E6%BA%90%E7%A0%81/" rel="tag">JDK源码</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/List/" rel="tag">List</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/arrayList-analysis/&title=《ArrayList源码解读》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/arrayList-analysis/&title=《ArrayList源码解读》 — Wkkの笔记&source=ArrayList 源码解读" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/arrayList-analysis/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《ArrayList源码解读》 — Wkkの笔记&url=https://winniekun.github.io/arrayList-analysis/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/arrayList-analysis/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/linkedlist-analysis/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">LinkedList源码解读</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Volatile关键字内涵</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/arrayList-analysis/&title=《ArrayList源码解读》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/arrayList-analysis/&title=《ArrayList源码解读》 — Wkkの笔记&source=ArrayList 源码解读" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/arrayList-analysis/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《ArrayList源码解读》 — Wkkの笔记&url=https://winniekun.github.io/arrayList-analysis/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/arrayList-analysis/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLElEQVR42u3aS27DMAxF0ex/0y7QUYHUyn2kMjB1NQqaOtLxgBA/rxde1++6+8v757/r/an3b9dPbVsyZMh4LONarjsGZ989y/dd/48MGTLOYXSOwiMh+ba4rwwZMmSASxs5yvqKKUOGDBm7Au4FFrkC8uRWhgwZMvrJZJrukl2+mIvLkCHjgYxO+ezbn7/Y35AhQ8ZDGNfWxV8BL8ChfWXIkDGawUtppEBGymq1sQwUiGXIkHEAgzcDeBK795eDqqEMGTIGMUjBK73k8cOtMUFCK0OGjNEMPpjVCbL9BgMBy5AhYyojTSzTNiQBpAntP1QZMmQcwODjpLU0NW0bxL8sQ4aM0YxaWZ9c/ngY5Snxh8uiDBkyRjPWhS0Sgmutyk7R7fYMMmTIGMrgJf603Vgr0qXTqjJkyDiN0R8nDZqO7bAbTLfJkCHj4YxdGL4xD9PFG64MGTIGMXj5rL8lv0qmA2oyZMiYzegU5WttzlogRieRIUPGaEatMZCOf+0qz31ImGXIkDGUQS5knUOkBbg0wZYhQ8ZpjNrYRK2UX2uaypAh40xGp6GYth7Tl5IGfRkyZMxj9Ecogh5puxVxu5cMGTJGM9I0kmzTD7XpL8iQIeMEBgmytXGKWjrKA70MGTJOY6SFM85Oy3BFngwZMmSU2pzps+lLlCFDhoz06DxE9i+gcSdWhgwZIxjkqrc+Sm0sY9sAmQwZMkYz0sYAb0+m4bsTxGXIkDGU8QPmkn+t5fc6egAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

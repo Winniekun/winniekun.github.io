@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Synchronize关键字内涵 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="并发">
+    <meta name="description" content="内涵与表象">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Synchronize关键字内涵">
+<meta property="og:url" content="https://winniekun.github.io/Synchronize%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="内涵与表象">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-01-18T04:35:12.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:50:22.246Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="并发">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Synchronize关键字内涵</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Synchronize关键字内涵</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-01-18T04:35:12.000Z" itemprop="datePublished" class="page-time">
+  2020-01-18
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内涵与表象"><span class="post-toc-number">1.</span> <span class="post-toc-text">内涵与表象</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用"><span class="post-toc-number">2.</span> <span class="post-toc-text">使用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#原子性"><span class="post-toc-number">3.</span> <span class="post-toc-text">原子性</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#可见性"><span class="post-toc-number">4.</span> <span class="post-toc-text">可见性</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#synchronized和volatile的区别"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">synchronized和volatile的区别</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内置锁"><span class="post-toc-number">5.</span> <span class="post-toc-text">内置锁</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#偏向锁"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">偏向锁</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#轻量锁"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">轻量锁</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#重量锁"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">重量锁</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#可重入："><span class="post-toc-number">6.</span> <span class="post-toc-text">可重入：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#可重入的定义："><span class="post-toc-number">6.1.</span> <span class="post-toc-text">可重入的定义：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">7.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">8.</span> <span class="post-toc-text">References</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Java进阶/并发/Synchronize关键字内涵"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Synchronize关键字内涵</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-01-18 12:35:12" datetime="2020-01-18T04:35:12.000Z"  itemprop="datePublished">2020-01-18</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/java/">java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="内涵与表象"><a href="#内涵与表象" class="headerlink" title="内涵与表象"></a>内涵与表象</h2><a id="more"></a>
+
+<p>synchronized关键字的解释如下：</p>
+<blockquote>
+<p>Java语言的关键字，当它用来修饰一个方法或者一个代码块的时候，能够保证在同一时刻最多只有一个线程执行该段代码。</p>
+</blockquote>
+<p>根据定义，会考虑两个方面的问题：</p>
+<ol>
+<li>synchronized是如何<strong>保证在同一时刻最多只有一个线程执行该段代码</strong></li>
+<li><strong>保证在同一时刻最多只有一个线程执行该段代码</strong>，这又带来什么意义</li>
+</ol>
+<p>老司机级别的解释：</p>
+<blockquote>
+<p>Java中的synchronize，通过使用<strong>内置锁</strong>，来实现对变量的同步操作，进而实现了对<strong>变量</strong>操作的<strong>原子性</strong>和<strong>其他线程</strong>对变量的<strong>可见性</strong>，从而确保了并发情况下的线程安全。</p>
+</blockquote>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p><a href="http://concurrent.redspider.group/article/02/9.html" target="_blank" rel="noopener">Synchronized关键字</a></p>
+<h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><p>synchronized关键字的一个作用就是<strong>确保了原子性</strong>。</p>
+<p>譬如使用<code>count++</code>而言，原先其执行需要三个步骤：</p>
+<ol>
+<li>读取count值</li>
+<li>count+1</li>
+<li>写入count 值</li>
+</ol>
+<p>其包含了三个步骤，且每次的步骤都依赖于上一次的结果。所以不是原子性的</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span>(<span class="keyword">this</span>){</span><br><span class="line">    count++;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用如上的方式，就确保了原子性。因为原子操作是线程安全的，这其实也是我们经常使用synchronize来实现线程安全的原因。</p>
+<h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p>synchronize的确保原子性，其实是从<strong>使用synchronize的线程</strong>的角度来讲的，而如果我们从<strong>其他线程</strong>的角度来看，那么synchronize则是实现了<strong>可见性</strong>。可见性的意思就是：<strong>变量的修改，可以被其他的线程看到</strong>。其类似于MySQL中隔离性的读提交隔离级别。</p>
+<p>如count++， 抢不到锁的线程，等拥有锁的线程执行完之后，才能拥有锁，然后去执行count++，这个时候，新拥有的锁的线程在更改count的时候，使用的count的初始值是上一个线程更新之后的结果。</p>
+<h3 id="synchronized和volatile的区别"><a href="#synchronized和volatile的区别" class="headerlink" title="synchronized和volatile的区别"></a>synchronized和volatile的区别</h3><p>其实两者的本质区别就是synchronized关键字既能确保<strong>原子性</strong>，又能确保<strong>可见性</strong>，而volatile关键字只确保了<strong>可见性</strong>，其是一种更轻量级的同步机制。</p>
+<h2 id="内置锁"><a href="#内置锁" class="headerlink" title="内置锁"></a>内置锁</h2><p>关于synchronize，我们经常使用的隐喻就是锁，首先进入的线程，拿到了锁的唯一一把钥匙，至于其他线程，就只能阻塞（Blocked）；等到线程走出synchronize之后，会把锁释放掉，也就是把钥匙扔出去，下一个拿到钥匙的线程，就可以结束阻塞状态，继续运行。<br>但是锁从哪来呢？随随便便抓起一个东西就可以作为锁么？<br>还真是这样，<strong>Java中每一个对象都有一个与之关联的锁</strong>，称为<strong>内置锁</strong></p>
+<blockquote>
+<p>Every object has an intrinsic lock associated with it. —— <a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/locksync.html" target="_blank" rel="noopener">The Java™ Tutorials</a></p>
+</blockquote>
+<ol>
+<li>当我们使用synchronize修饰非静态方法时，用的是调用该方法的实例的内置锁，也就是<strong>this</strong>;</li>
+<li>当我们使用synchronize修饰静态方法时，用的是调用该方法的所在的<strong>Class对象</strong>的内置锁;</li>
+<li>当我们使用的是synchronize代码块，我们经常用的是synchronize(this)，也就是把对象实例作为锁。</li>
+</ol>
+<p>Java SE 1.6为了减少获得锁和释放锁带来的性能消耗,引入了<code>偏向锁</code>和<code>轻量级锁</code>,在Java SE 1.6中,锁一共有4种状态,级别从低到高依次是:<code>无锁状态</code>、<code>偏向锁状态</code>、<code>轻量级锁状态</code>和<code>重量级锁状态</code>,这几个状态会随着竞争情况逐渐升级.</p>
+<h3 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h3><h3 id="轻量锁"><a href="#轻量锁" class="headerlink" title="轻量锁"></a>轻量锁</h3><h3 id="重量锁"><a href="#重量锁" class="headerlink" title="重量锁"></a>重量锁</h3><h2 id="可重入："><a href="#可重入：" class="headerlink" title="可重入："></a>可重入：</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Widget</span></span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>{</span><br><span class="line">        ...</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoggingWidget</span> <span class="keyword">extends</span> <span class="title">Widget</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>{</span><br><span class="line">        sout(<span class="string">"..."</span>);</span><br><span class="line">        <span class="keyword">super</span>.doSomething();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>如果没有可重入性，那么该代码会产生死锁。</p>
+<h3 id="可重入的定义："><a href="#可重入的定义：" class="headerlink" title="可重入的定义："></a>可重入的定义：</h3><blockquote>
+<p>若一个程序或子程序可以“在任意时刻被中断然后操作系统调度执行另外一段代码，这段代码又调用了该子程序不会出错”，则称其为可重入（reentrant或re-entrant）的。即当该子程序正在运行时，执行线程可以再次进入并执行它，仍然获得符合设计时预期的结果。与多线程并发执行的线程安全不同，可重入强调对单个线程执行时重新进入同一个子程序仍然是安全的。 — <a href="https://zh.wikipedia.org/wiki/%E5%8F%AF%E9%87%8D%E5%85%A5" target="_blank" rel="noopener">维基百科</a></p>
+</blockquote>
+<p>从设计上讲，当一个线程请求一个由其他线程持有的对象锁时，该线程会阻塞。当线程请求自己持有的对象锁时，如果该线程是重入锁，请求就会成功，否则阻塞。</p>
+<p>synchronized拥有强制原子性的内部锁机制，是一个可重入锁。因此，在一个线程使用synchronized方法时调用该对象另一个synchronized方法或调用父类的synchronized方法，即一个线程得到一个对象锁后再次请求该对象锁，是<strong>永远可以拿到锁的</strong>。</p>
+<p>在Java内部，同一个线程调用自己类中其他synchronized方法/块时不会阻碍该线程的执行，同一个线程对同一个对象锁是可重入的，同一个线程可以获取同一把锁多次，也就是可以多次重入。<strong>原因是Java中线程获得对象锁的操作是以线程为单位的，而不是以调用为单位的。</strong></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>Java中每个对象都有一个<strong>内置锁</strong>。</li>
+<li>synchronized使用对象自带的内置锁来进行加锁，从而保证在同一时刻最多只有一个线程执行代码。</li>
+<li>所有的加锁行为，都可以带来两个保障——<strong>原子性</strong>和<strong>可见性</strong>。其中，原子性是相对锁所在的线程的角度而言，而可见性则是相对其他线程而言。</li>
+<li><strong>锁的持有者是<code>线程</code><strong>，而不是<code>调用</code>，这也是锁的为什么是</strong>可重入</strong>的原因。</li>
+</ol>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li>Java并发编程实战</li>
+<li><a href="http://concurrent.redspider.group/RedSpider.html" target="_blank" rel="noopener">深入浅出Java多线程</a></li>
+<li><a href="https://www.cnblogs.com/cielosun/p/6684775.html" target="_blank" rel="noopener">Java多线程：synchronized的可重入性</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-08-30T04:50:22.246Z" itemprop="dateUpdated">2020-08-30 12:50:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag">并发</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/Synchronize%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/&title=《Synchronize关键字内涵》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/Synchronize%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/&title=《Synchronize关键字内涵》 — Wkkの笔记&source=内涵与表象" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/Synchronize%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Synchronize关键字内涵》 — Wkkの笔记&url=https://winniekun.github.io/Synchronize%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/Synchronize%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/Volatile%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Volatile关键字内涵</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/%E5%9C%A8IDEA%E4%B8%AD%E6%90%AD%E5%BB%BAJDK1-8%E9%98%85%E8%AF%BB%E7%8E%AF%E5%A2%83/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">在IDEA中搭建JDK1.8阅读环境</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/Synchronize%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/&title=《Synchronize关键字内涵》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/Synchronize%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/&title=《Synchronize关键字内涵》 — Wkkの笔记&source=内涵与表象" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/Synchronize%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Synchronize关键字内涵》 — Wkkの笔记&url=https://winniekun.github.io/Synchronize%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/Synchronize%E5%85%B3%E9%94%AE%E5%AD%97%E5%86%85%E6%B6%B5/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADMElEQVR42u3aQW7jQAwEwPz/01lgT1lkLTdJCbCo0imQEmtqfGCGza+v+Pr+e/38+eed49/5fSWf/+rp7/uvnp5wYWNjY9+EnSzxmJ0sNNmUV0+PP7O53djY2Njr2HlRSbYgLy05+Ph+bsHGxsZ+Mrt3wJgUyHzrsbGxsbGrBSx52aRp1WtvYWNjYz+ZnTd6qkvP20+9JtHlvTRsbGzsj2dPCsyn/Xx5vo2NjY39YezvwVX9zDyg7RWzwsqxsbGxF7EnI4yTiDc/WiTvbba6sLGxsVew85GaaiM+D4Dz+9Uv7E3dxsbGxl7Ezg8PeVv/+K/mJao61vPPHWxsbOxF7MngTvVQMQ9xq0ejqKBiY2Njr2BXx3GSXczL4RUjOOVJJWxsbOx17Ly05G2pXkgw31xsbGzsJ7B76Wc1Xq3er7aTqmEzNjY29ib2JBhIljVvM+URRTkYwMbGxr45u9qIzw8kyYLyVlGvkfTyE7CxsbEXsZsVL24VVWOGsyLnQtCLjY2NvYLdi2aTZeXBQLWplBTdQi8NGxsb++bspLlzbkxbPczksMLhChsbG3sdOz8eVIPeScupFzNHXyE2Njb2CvYlsz/B4WQyspkX0TepCDY2NvYidr7opMUzH8S5YkOxsbGxt7KrB4/qUnoRQn7U6Y2KYmNjYz+H3WsG5QFt8vRNEWrFBtjY2Nhb2fN/8Y+vamup97QZ9GJjY2Pflp0XlSR8zQtPr7VUaBhVSxc2Njb2zdmTEca8+OXDPZPgIYmEsbGxsZ/Gro7L9MZo8oGhE5pf2NjY2IvYk3/0z2ruT6hJDIyNjY39NHb1aNE7nOQHm2pxqr4RGxsbexM7f/1ZJWcSReQhR+GIhY2NjX1zdv4Hk8PJZGu+ihc2Njb2E9hXtPh7AUPOqMbAb4JebGxs7Juze8WgEKO2Gvr5xvXWgI2Njb2PnR8VqqXr3KdJDFDon2FjY2OvY0+KVq/d3wt6J9d/Chg2Njb249nVLKJ32MgLWC7CxsbGfiY7J/UY1VBh8mVgY2Nj72NXR2qSotUbAzrrLW82BRsbG3sRuxemJqM885LTGx6aFEhsbGzsW7H/ADZ/B0rRA6NiAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
