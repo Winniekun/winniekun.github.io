@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>https总结 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="应用层">
+    <meta name="description" content="序引入一个新的概念的时候，必然先阐述其相关方面已有的实现有哪些缺点，新的概念解决了哪些缺点。所以～让我们看看HTTP有哪些却缺点 缺点：  明文传输，传输信息容易被窃听 — 窃听风险 不验证通信方的身份，因此可能会遭遇伪装 — 冒充风险 无法验证报问的完整性，所以通信的信息可能已遭篡改 — 篡改风险 譬如强行植入的广告信息    而HTTPS的出现就正好解决了上述的三个问题。对于窃听风险使用加密措">
+<meta property="og:type" content="article">
+<meta property="og:title" content="https总结">
+<meta property="og:url" content="https://winniekun.github.io/https-conclution/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="序引入一个新的概念的时候，必然先阐述其相关方面已有的实现有哪些缺点，新的概念解决了哪些缺点。所以～让我们看看HTTP有哪些却缺点 缺点：  明文传输，传输信息容易被窃听 — 窃听风险 不验证通信方的身份，因此可能会遭遇伪装 — 冒充风险 无法验证报问的完整性，所以通信的信息可能已遭篡改 — 篡改风险 譬如强行植入的广告信息    而HTTPS的出现就正好解决了上述的三个问题。对于窃听风险使用加密措">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521144232642.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521144940926.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521215733187.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521174931648.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521181226105.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521182242937.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521182508161.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521185850059.png">
+<meta property="og:image" content="https://winniekun.github.io/Users/weikunkun/Library/Application">
+<meta property="article:published_time" content="2021-05-21T14:32:09.000Z">
+<meta property="article:modified_time" content="2021-05-21T14:34:02.237Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="应用层">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521144232642.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">https总结</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">https总结</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-05-21T14:32:09.000Z" itemprop="datePublished" class="page-time">
+  2021-05-21
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#序"><span class="post-toc-number">1.</span> <span class="post-toc-text">序</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#HTTPS概述"><span class="post-toc-number">2.</span> <span class="post-toc-text">HTTPS概述</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#HTTPS的加密—混合加密"><span class="post-toc-number">3.</span> <span class="post-toc-text">HTTPS的加密—混合加密</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用wireshark实战证明"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">使用wireshark实战证明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#HTTPS的认证—数字证书"><span class="post-toc-number">4.</span> <span class="post-toc-text">HTTPS的认证—数字证书</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#证书伪造"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">证书伪造</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#证书篡改"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">证书篡改</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#HTTPS的完整性保护—摘要算法"><span class="post-toc-number">5.</span> <span class="post-toc-text">HTTPS的完整性保护—摘要算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">6.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#references"><span class="post-toc-number">7.</span> <span class="post-toc-text">references</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-网络/https-conclution"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">https总结</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-05-21 22:32:09" datetime="2021-05-21T14:32:09.000Z"  itemprop="datePublished">2021-05-21</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p>引入一个新的概念的时候，必然先阐述其相关方面已有的实现有哪些缺点，新的概念解决了哪些缺点。所以～让我们看看HTTP有哪些却缺点</p>
+<p><strong>缺点：</strong></p>
+<ol>
+<li>明文传输，传输信息容易被窃听 — <strong>窃听风险</strong></li>
+<li>不验证通信方的身份，因此可能会遭遇伪装 — <strong>冒充风险</strong></li>
+<li>无法验证报问的完整性，所以通信的信息可能已遭篡改 — <strong>篡改风险</strong><ol>
+<li>譬如强行植入的广告信息</li>
+</ol>
+</li>
+</ol>
+<p>而HTTPS的出现就正好解决了上述的三个问题。对于窃听风险使用加密措施解决，对于冒充风险使用证书认证解决，对于篡改风险使用完整性保护解决（信息摘要算法）</p>
+<h2 id="HTTPS概述"><a href="#HTTPS概述" class="headerlink" title="HTTPS概述"></a>HTTPS概述</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521144232642.png" alt="https" title="">
+                </div>
+                <div class="image-caption">https</div>
+            </figure>
+
+<p>HTTPS其实就是<strong>http secure</strong>的意思。HTTP是应用层协议，位于HTTP协议之下是传输协议TCP。TCP负责传输，HTTP则定义了数据如何进行包装。所以HTTP传输给TCP什么样的数据包，其都会原样的发送个通讯方（仅仅将数据包分为了多个报报问段）。</p>
+<blockquote>
+<p>HTTP –&gt; TCP （明文传输）</p>
+</blockquote>
+<p>而HTTPS相对于HTTP有哪些不同呢？其实就是在HTTP和TCP中间加多了一层加密层<strong>TLS/SSL</strong>。</p>
+<blockquote>
+<p>通俗的讲，TLS、SSL其实是类似的东西，SSL是个加密套件，负责对HTTP的数据进行加密。TLS是SSL的升级版。现在提到HTTPS，加密套件基本指的是TLS。</p>
+</blockquote>
+<p>原先是应用层将数据直接给到TCP进行传输，现在改成应用层将数据给到TLS/SSL，将数据加密后，再给到TCP进行传输。如下图所示</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521144940926.png" alt="https和http传输过程" title="">
+                </div>
+                <div class="image-caption">https和http传输过程</div>
+            </figure>
+
+<p>所以HTTPS本身并不是应用层的一个新的协议，只是HTTP在和TCP进行交接的中间，又新增了一层SSL/TLS协议。所以HTTPS可以理解为披着SSL/TLS协议外壳的HTTP而已。</p>
+<h2 id="HTTPS的加密—混合加密"><a href="#HTTPS的加密—混合加密" class="headerlink" title="HTTPS的加密—混合加密"></a>HTTPS的加密—混合加密</h2><p>首先需要了解<code>对称加密</code>、<code>非对称加密</code>的区别。我们知道实际对通信加密的是SSL/TLS层。SSL/TLS采用是混合加密的机制，也就是对称加密和非对称加密的混合。使用非对称加密传输安全传输对称加密的密钥，之后使用对称加密的密钥进行通信从而提高整体的通讯效率。</p>
+<p>接下来结合WireShark抓包详细阐述TLS的加密流程，TLS 是建立在 TCP 基础上的，因此必定需要先三次 TCP 握手建立 TCP 连接，然后再是建立 TLS。</p>
+<ol>
+<li><strong>Client Hello</strong><ol>
+<li><strong>Client Hello</strong> 报文：客户端对加密算法的支持度不同，因此需要向服务端发送客户端支持的 <strong>加密套件（Cipher Suite）</strong> ，同时还要生成一个 <strong>随机数</strong> 同时保存在客户端和发送给服务</li>
+</ol>
+</li>
+<li><strong>Server Hello</strong><ol>
+<li><strong>ServerCertificate</strong> 报文：服务端收到 Client Hello 之后，向客户端发送 <strong>CA 认证的数字证书</strong>，用来鉴别服务端身份信息，同时还要生成一个 <strong>随机数</strong> 同时保存在服务端和发送给客户端</li>
+<li><strong>Server Hello Done</strong> 报文：表示服务端宣告第一阶段的客户端服务端握手协商结束</li>
+<li>可选：<strong>Certificate Request</strong> 报文：必要情况下，要求客户端发送证书验证身份</li>
+<li>可选：<strong>Server Key Exchange</strong> 报文：如果 CA 认证的数字证书提供的信息不够，服务端还可发送提供补充信息</li>
+</ol>
+</li>
+<li><strong>Client Finish</strong><ol>
+<li><strong>Client Key Exchange</strong> 报文：客户端收到 CA 数字证书并通过验证，然后通过 CA 公钥解密获取到 <strong>服务端公钥</strong>。Client Key Exchange 报文包括有一个随机数，这个随机数被称为 <strong>Pre-master key/secret</strong>；一个表示随后的信息使用双方协商好的加密方法和密钥发送的 <strong>通知</strong> ；还有一个通过协商好的 HASH 算法对前面所有信息内容的 <strong>HASH 计算值</strong>，用来提供服务端校验。这些信息都通过服务端公钥加密传送给服务端</li>
+<li><strong>ClientCipherSpec</strong> 报文：该报文通知服务端，此后的通信都将使用协商好的加密算法计算对称密钥进行加密通信（也就是使用两个随机数以及第三个 Pre-master key/secret 随机数一起算出一个对称密钥 <strong>session key/secret</strong>）</li>
+<li><strong>Finished</strong> 报文：该报文包括连接至此的所有报文的校验值，使用已经生成的对称加密密钥加密</li>
+<li>可选：<strong>ClientCertificate</strong> 报文：如果服务端请求，客户端需要发送 CA 数字证书</li>
+<li>可选：<strong>CertificateVerify</strong> 报文：服务端如果要求 CA 数字证书，那么需要通过 HASH 算法计算一个服务端发送来的信息摘要</li>
+</ol>
+</li>
+<li><strong>Server Finish</strong><ol>
+<li>服务端先私钥得出<strong>Pre-master key</strong>， 同样使用这三个随机数得出对称加密密钥。服务端最后对客户端发送过来的 <strong>Finished</strong> 报文使用服务端对称密钥进行解密校验。</li>
+<li><strong>ClientCipherSpec</strong> 报文：报文通知服务端，此后的通信都将使用协商好的加密算法计算对称密钥 session key/secret 进行加密通信</li>
+<li><strong>Finished</strong> 报文：标志 TLS 连接建立成功</li>
+</ol>
+</li>
+<li>TLS 握手成功此后通过对称密钥 session key/secret 加密通信</li>
+</ol>
+<blockquote>
+<ol>
+<li>握手：证书下发，密钥协商（这个阶段都是明文的）</li>
+<li>数据传输：这个阶段才是加密的，用的就是握手阶段协商出来的对称密钥</li>
+</ol>
+</blockquote>
+<p>进行整理，如下图所示</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521215733187.png" alt="image-20210521215733187" title="">
+                </div>
+                <div class="image-caption">image-20210521215733187</div>
+            </figure>
+
+<h3 id="使用wireshark实战证明"><a href="#使用wireshark实战证明" class="headerlink" title="使用wireshark实战证明"></a>使用wireshark实战证明</h3><p>本地地址和LeetCode-CN的交互</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521174931648.png" alt="wireshark抓包展示" title="">
+                </div>
+                <div class="image-caption">wireshark抓包展示</div>
+            </figure>
+
+<ol>
+<li><p>客户端想服务端发送https请求链接，同时将自身支持的密码套件（非对称加密算法、对称加密算法、摘要算法）发送个服务端</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521181226105.png" alt="客户端say hello阶段"></p>
+</li>
+<li><p>服务端根据客户端获发送的数据，选择一套密码套件，以及自身的证书发送给客户端</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521182242937.png" alt="服务端选择的密码套件--服务端say hello阶段"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521182508161.png" alt="服务端将自身的证书发送给客户端--- 服务端Say hello 阶段"></p>
+</li>
+<li><p>客户端进行验证，验证正常自后，随机生成一串数组作为后续通信的对称加密密钥，然后使用服务端证书的公钥进行加密，同时使用摘要算法对本次的会话信息进行加密，然后一并发送给服务端。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521185850059.png" alt="image-20210521185850059"></p>
+</li>
+<li><p>服务端验证，正常之后，剩下的忘截图了，后面补上</p>
+</li>
+</ol>
+<h2 id="HTTPS的认证—数字证书"><a href="#HTTPS的认证—数字证书" class="headerlink" title="HTTPS的认证—数字证书"></a>HTTPS的认证—数字证书</h2><p>了解了HTTPS加密通信的流程后，对于数据裸奔的疑虑应该基本打消了。然而，还有一个问题：如何确保证书时可信的？</p>
+<p>证书不可信可能有两种情况：</p>
+<ol>
+<li>证书是伪造的：压根不是CA颁发的</li>
+<li>证书被篡改过：比如将XX网站的公钥给替换了</li>
+</ol>
+<p>数字证书是由权威的CA（Certificate Authority）机构给服务端进行颁发，CA机构通过服务端提供的相关信息生成证书，证书内容包含了<code>持有人的相关信息</code>，<code>服务器的公钥</code>，<code>签署者签名信息（数字签名）</code>等，最重要的是<strong>公钥在数字证书中</strong>。</p>
+<blockquote>
+<p>数字签名和摘要算法的关系</p>
+<p>明文 –&gt; hash运算 –&gt; 摘要 –&gt; 私钥加密 –&gt; 数字签名</p>
+</blockquote>
+<p>数字证书是如何保证公钥来自请求的服务器？</p>
+<ul>
+<li>数字证书上由持有人的相关信息，通过这点可以确定其不是一个中间人</li>
+</ul>
+<p><strong>证书包含的内容：</strong></p>
+<ul>
+<li>一个证书中含有三个部分:<code>证书内容</code>，<code>散列算法</code>，<code>加密密文</code>，证书内容会被散列算法hash计算出摘要，然后使用CA机构提供的私钥进行RSA加密得到数组签名（加密密文）。</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/Users/weikunkun/Library/Application" alt="证书内容" title="Support/typora-user-images/image-20210521221149447.png">
+                </div>
+                <div class="image-caption">Support/typora-user-images/image-20210521221149447.png</div>
+            </figure>
+
+<h3 id="证书伪造"><a href="#证书伪造" class="headerlink" title="证书伪造"></a>证书伪造</h3><p>浏览器内置的CA的根证书包含了<strong>CA的公钥</strong></p>
+<ol>
+<li>证书颁发的机构是伪造的：浏览器不认识，直接认为是危险证书</li>
+<li>证书颁发的机构是确实存在的，于是根据CA名，找到对应内置的CA根证书、CA的公钥。</li>
+<li>用CA的公钥，对伪造的证书的摘要进行解密，发现解不了。认为是危险证书</li>
+</ol>
+<h3 id="证书篡改"><a href="#证书篡改" class="headerlink" title="证书篡改"></a>证书篡改</h3><ol>
+<li>根据证书的加密密文（数字签名）使用CA的公钥得到证书摘要A</li>
+<li>根据证书内容使用摘要算法得到证书摘要B</li>
+<li>对比摘要A和摘要B是否相同</li>
+</ol>
+<h2 id="HTTPS的完整性保护—摘要算法"><a href="#HTTPS的完整性保护—摘要算法" class="headerlink" title="HTTPS的完整性保护—摘要算法"></a>HTTPS的完整性保护—摘要算法</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ul>
+<li>图解HTTP</li>
+<li>趣谈协议—极客时间</li>
+<li><a href="https://security.stackexchange.com/questions/89383/why-does-the-ssl-tls-handshake-have-a-client-and-server-random" target="_blank" rel="noopener">Why does the SSL/TLS handshake have a client and server random</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2021-05-21T14:34:02.237Z" itemprop="dateUpdated">2021-05-21 22:34:02</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BA%94%E7%94%A8%E5%B1%82/" rel="tag">应用层</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/https-conclution/&title=《https总结》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/https-conclution/&title=《https总结》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/https-conclution/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《https总结》 — Wkkの笔记&url=https://winniekun.github.io/https-conclution/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/https-conclution/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/spring-ioc-analysis/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Spring IoC解读</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/https-conclution/&title=《https总结》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/https-conclution/&title=《https总结》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/https-conclution/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《https总结》 — Wkkの笔记&url=https://winniekun.github.io/https-conclution/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/https-conclution/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIElEQVR42u3aSW7DMBAEQP//08o1gCGnpykHkFg8GYwjsXwYzMLXK17HyXr/6++d989nzzzbuXhhYGDclnF8XJ9f0PFW9k+pGBgYGzDOIlgSQDtk967TfQwMDIxhGO2SSAwMDIyrGPlOHpQxMDAwEkYSKJN+1+eidHr0r9TiGBgYN2TkXff///yV+QYGBsatGMdw5eG1O9ZRLQwMjGczpmlffrhpWy0vhk9LYgwMjEczVgaTSSqZP78rejEwMPZhdEfpKs1uAJCAMTAwnsfIH5SXqcn1r+l11bIXiIGB8TjGyiFWYPnZToejGBgYGzC6K6cdYDpCiNp8GBgYmzHyRti00d8lglFTDwMDYwNGEuyuAiSp57hKxcDA2IbRNffz0eO0lZb/rBgYGDswkpd135w22sqLYhgYGI9mDFpacbs/CbvTYB3tYGBgPJQxvWzRHSsPu8l5LrgWhoGBcSvGSsrYfb8L7lEpi4GBsRlj+riyTbbQYps2CjEwMO7OmF56yL9fjiSHhTQGBsZujKuC4DTGdyMBDAyM3RjdQ7vh5bgETf4LAwPjoYzuwsRVR8yvcfwRfDEwMB7N6ILdepDNk9FkXIqBgbEDIw+y09+guzBRJpcYGBgbMAYt+IVUrwMPBgMYGBgYC+PGLkEcDEcxMDAwltPBJN3srnpgYGDsw7hqGJCE5nwM8JVaHAMD44aM9cZZF1Lz5O+yoSYGBsb9GD+GmHRy/XXgqgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
