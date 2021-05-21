@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Spring IoC解读 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="ioc">
+    <meta name="description" content="序IoCIoC控制反转，意思就是将创建对象的控制权从我们自己硬编码来new一个对象反转到了第三方身上。IoC的主要实现方式是依赖注入，Spring中的依赖注入方式有：构造方法注入、settter注入、接口注入。  控制反转是一种思想 依赖注入是一种设计模式   IoC是一种可以帮助我们解耦各业务对象间依赖关系的对象绑定方式  IoC Service Provider虽然业务对象可以通过IoC方式声">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring IoC解读">
+<meta property="og:url" content="https://winniekun.github.io/spring-ioc-analysis/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="序IoCIoC控制反转，意思就是将创建对象的控制权从我们自己硬编码来new一个对象反转到了第三方身上。IoC的主要实现方式是依赖注入，Spring中的依赖注入方式有：构造方法注入、settter注入、接口注入。  控制反转是一种思想 依赖注入是一种设计模式   IoC是一种可以帮助我们解耦各业务对象间依赖关系的对象绑定方式  IoC Service Provider虽然业务对象可以通过IoC方式声">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520140010820.png">
+<meta property="og:image" content="https://i.loli.net/2021/05/02/iUgIOGvfmPo1ws5.png">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520110056368.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520105808650.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520110900263.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520150106541.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/iShot2021-05-21%2000.08.58.png">
+<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/1f611.png?v8">
+<meta property="article:published_time" content="2021-05-21T01:24:20.000Z">
+<meta property="article:modified_time" content="2021-05-21T01:27:09.998Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="ioc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520140010820.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Spring IoC解读</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Spring IoC解读</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-05-21T01:24:20.000Z" itemprop="datePublished" class="page-time">
+  2021-05-21
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/spring/">spring</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#序"><span class="post-toc-number">1.</span> <span class="post-toc-text">序</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#IoC"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">IoC</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#IoC-Service-Provider"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">IoC Service Provider</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#职责"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">职责</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Spring-IoC容器"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Spring IoC容器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#简单的式例"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">简单的式例</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Spring-IoC容器的一些特性简介"><span class="post-toc-number">1.3.2.</span> <span class="post-toc-text">Spring IoC容器的一些特性简介</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#autowire"><span class="post-toc-number">1.3.2.1.</span> <span class="post-toc-text">autowire</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#FactoryBean"><span class="post-toc-number">1.3.2.2.</span> <span class="post-toc-text">FactoryBean</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#depends-on"><span class="post-toc-number">1.3.2.3.</span> <span class="post-toc-text">depends-on</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#BeanPostProcessor"><span class="post-toc-number">1.3.2.4.</span> <span class="post-toc-text">BeanPostProcessor</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#示例"><span class="post-toc-number">1.3.2.4.1.</span> <span class="post-toc-text">示例</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#配置如下"><span class="post-toc-number">1.3.2.4.2.</span> <span class="post-toc-text">配置如下</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#测试如下"><span class="post-toc-number">1.3.2.4.3.</span> <span class="post-toc-text">测试如下</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#核心接口"><span class="post-toc-number">1.3.3.</span> <span class="post-toc-text">核心接口</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Resource"><span class="post-toc-number">1.3.3.1.</span> <span class="post-toc-text">Resource</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#BeanDefinition"><span class="post-toc-number">1.3.3.2.</span> <span class="post-toc-text">BeanDefinition</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#BeanFactory-question"><span class="post-toc-number">1.3.3.3.</span> <span class="post-toc-text">BeanFactory ❓</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ApplicationContext"><span class="post-toc-number">1.3.3.4.</span> <span class="post-toc-text">ApplicationContext</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#战略观望"><span class="post-toc-number">2.</span> <span class="post-toc-text">战略观望</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#容器启动阶段"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">容器启动阶段</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Bean实例化阶段"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Bean实例化阶段</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#详细阐述"><span class="post-toc-number">3.</span> <span class="post-toc-text">详细阐述</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最简单的IoC容器"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">最简单的IoC容器</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#BeanFactoryPostProcess和BeanPostProcessor"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">BeanFactoryPostProcess和BeanPostProcessor</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#整体流程图"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">整体流程图</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#结束"><span class="post-toc-number">4.</span> <span class="post-toc-text">结束</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#references"><span class="post-toc-number">5.</span> <span class="post-toc-text">references</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-spring/spring-ioc-analysis"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Spring IoC解读</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-05-21 09:24:20" datetime="2021-05-21T01:24:20.000Z"  itemprop="datePublished">2021-05-21</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/spring/">spring</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><h2 id="IoC"><a href="#IoC" class="headerlink" title="IoC"></a>IoC</h2><p>IoC控制反转，意思就是将创建对象的控制权从我们自己硬编码来new一个对象反转到了第三方身上。IoC的主要实现方式是依赖注入，Spring中的依赖注入方式有：<code>构造方法注入</code>、<code>settter注入</code>、<code>接口注入</code>。</p>
+<ul>
+<li><strong>控制反转</strong>是一种思想</li>
+<li><strong>依赖注入</strong>是一种设计模式</li>
+</ul>
+<blockquote>
+<p>IoC是一种可以帮助我们解耦各业务对象间依赖关系的对象绑定方式</p>
+</blockquote>
+<h2 id="IoC-Service-Provider"><a href="#IoC-Service-Provider" class="headerlink" title="IoC Service Provider"></a>IoC Service Provider</h2><p>虽然业务对象可以通过IoC方式声明相应的依赖，但是最终仍然需要通过某个角色或者服务将这些依赖的对象绑定到一起。而IoC Service Provider就对应IoC场景中的这一角色。IoC Service Provider在这里是一个抽象出来的概念，它可以指代任何将IoC场景中的业务对象绑定到一起的实现方式。它可以是一段代码，也可以是一组相关的类，甚至可以是比较通用的IoC框架或 者IoC容器实现。</p>
+<h3 id="职责"><a href="#职责" class="headerlink" title="职责"></a>职责</h3><ol>
+<li><p>业务对象的构建管理</p>
+<p>IoC中，业务对象无需关心所依赖注入的对象<strong>如何构建如何取得</strong>，但是这部分的工作还是需要有人来做的。所以<code>IoC Service Provider</code>需要将对象的构建逻辑从<em>客户端</em>对象那里抽离出来，一面这部分逻辑污染业务对象的实现。</p>
+<blockquote>
+<p><strong>客户端</strong>：代使用某个对象或者某种服务的对象。如果对象A需要引用对象B，那么A就是B的客户端对象，而不管A 处于Service层还是数据访问层。</p>
+</blockquote>
+</li>
+<li><p>业务对象之间的依赖绑定</p>
+<p>最艰巨也是最重要的，这 是它的最终使命之所在。如果不能完成这个职责，那么，无论业务对象如何的“呼喊”，也不 会得到依赖对象的任何响应(最常见的倒是会收到一个NullPointerException)。<code>IoC Service Provider</code>通过结合之前构建和管理的所有业务对象，以及各个业务对象间可以识别的依赖关系，将这些对象所依赖的对象注入绑定，从而保证每个业务对象在使用的时候，可以处于就绪状 态。</p>
+</li>
+</ol>
+<h2 id="Spring-IoC容器"><a href="#Spring-IoC容器" class="headerlink" title="Spring IoC容器"></a>Spring IoC容器</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520140010820.png" alt="image-20210520140010820" title="">
+                </div>
+                <div class="image-caption">image-20210520140010820</div>
+            </figure>
+
+<p>Spring的IoC容器就是一个IoC Provider，但是其相比于IoC Provider的功能更加的丰富，除了业务对象的构建、依赖关系的绑定这种IoC Provider的基本功能，还新增了业务对象声明周期的管理，AOP支持等。同时Spring提供了两种容器类型:BeanFactory和ApplicationContext。</p>
+<ul>
+<li><p>BeanFactory</p>
+<p>基础类型IoC容器，提供完整的IoC服务支持。如果没有特殊指定，==默认采用延迟初始化策略(lazy-load)==。只有当客户端对象需要访问容器中的某个受管对象的时候，才对该受管对象进行初始化以及依赖注入操作。所以，相对来说，容器启动初期速度较快，所需要的资源有限。对于资源有限，并且功能要求不是很严格的场景，BeanFactory是比较合适的 IoC容器选择。</p>
+</li>
+<li><p>ApplicationContext</p>
+<p>在BeanFactory的基础上构建，是相对比较高 级的容器实现，除了拥有BeanFactory的所有支持，ApplicationContext还提供了其他高级特性，比如事件发布、国际化信息支持等。ApplicationContext所管理 的对象，在该类型容器启动之后，==默认全部初始化并绑定完成==。所以，相对于BeanFactory来 说，ApplicationContext要求更多的系统资源，同时，因为在启动时就完成所有初始化，容器启动时间较之BeanFactory也会长一些。在那些系统资源充足，并且要求更多功能的场景中， ApplicationContext类型的容器是比较合适的选择。</p>
+</li>
+</ul>
+<h3 id="简单的式例"><a href="#简单的式例" class="headerlink" title="简单的式例"></a>简单的式例</h3><h3 id="Spring-IoC容器的一些特性简介"><a href="#Spring-IoC容器的一些特性简介" class="headerlink" title="Spring IoC容器的一些特性简介"></a>Spring IoC容器的一些特性简介</h3><h4 id="autowire"><a href="#autowire" class="headerlink" title="autowire"></a>autowire</h4><p>自动注入，通过autowire，我们可以略去很多人工显示的配置bean的操作，被依赖的发现和注入都交给了Spring，同时其有几个类型可选择，比如byName、byType等。</p>
+<h4 id="FactoryBean"><a href="#FactoryBean" class="headerlink" title="FactoryBean"></a>FactoryBean</h4><p>BeanFactory和FactoryBean傻傻分不清？虽然两者类似，但是功能不同。FactoryBean是一种工厂Bean，和普通的Bean不一样，FactoryBean是可以生产Bean的Bean。</p>
+<h4 id="depends-on"><a href="#depends-on" class="headerlink" title="depends-on"></a>depends-on</h4><p>当一个 bean 直接依赖另一个 bean，可以使用 <code>&lt;ref/&gt;</code> 标签进行配置。不过如某个 bean 并不直接依赖于其他 bean，但又需要其他 bean 先实例化好，这个时候就需要使用 depends-on 特性了。depends-on 特性比较简单，就不演示了。仅贴一下配置文件的内容，如下：</p>
+<p>这里有两个简单的类，其中 Hello 需要 World 在其之前完成实例化。相关配置如下：</p>
+<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"xyz.coolblog.depnedson.Hello"</span> <span class="attr">depends-on</span>=<span class="string">"world"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"world"</span> <span class="attr">class</span>=<span class="string">"xyz.coolblog.depnedson.World"</span> /&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h4 id="BeanPostProcessor"><a href="#BeanPostProcessor" class="headerlink" title="BeanPostProcessor"></a>BeanPostProcessor</h4><p>BeanPostProcessor 是 bean 实例化时的后置处理器，包含两个方法，其源码如下：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BeanPostProcessor</span> </span>{</span><br><span class="line">    <span class="comment">// bean 初始化前的回调方法</span></span><br><span class="line">    <span class="function">Object <span class="title">postProcessBeforeInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// bean 初始化后的回调方法    </span></span><br><span class="line">    <span class="function">Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException</span>;</span><br><span class="line"></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>BeanPostProcessor是Spring框架的一个扩展点，可以通过BeanPostProcessor接口，我们能够插手Bean的实例化过程，比如AOP就是在bean实例将切面逻辑织入bean实例中，AOP也是正是通过BeanPostProcessor和IoC容器建立了联系</p>
+<h5 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h5><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoggerBeanPostProcessor</span> <span class="keyword">implements</span> <span class="title">BeanPostProcessor</span> </span>{</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">postProcessBeforeInitialization</span><span class="params">(Object bean, String beanName)</span> </span>{</span><br><span class="line">        log.info(<span class="string">"Before  "</span> + beanName + <span class="string">" Initialization"</span>);</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> </span>{</span><br><span class="line">        log.info(<span class="string">"After  "</span> + beanName + <span class="string">" Initialization"</span>);</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h5 id="配置如下"><a href="#配置如下" class="headerlink" title="配置如下"></a><strong>配置如下</strong></h5><figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"com.titizz.simulation.toyspring.learninng.LoggerBeanPostProcessor"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"car"</span> <span class="attr">class</span>=<span class="string">"com.titizz.simulation.toyspring.Car"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h5 id="测试如下"><a href="#测试如下" class="headerlink" title="测试如下"></a><strong>测试如下</strong></h5><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testBeanPostProcessor</span><span class="params">()</span> </span>{</span><br><span class="line">    String xmlPath = <span class="string">"test-spring.xml"</span>;</span><br><span class="line">    ApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(xmlPath);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://i.loli.net/2021/05/02/iUgIOGvfmPo1ws5.png" alt="image-20210502181644978" title="">
+                </div>
+                <div class="image-caption">image-20210502181644978</div>
+            </figure>
+
+<h3 id="核心接口"><a href="#核心接口" class="headerlink" title="核心接口"></a>核心接口</h3><h4 id="Resource"><a href="#Resource" class="headerlink" title="Resource"></a>Resource</h4><p>以 <code>Resource</code> 接口为核心发散出的几个类，都是用于解决 IoC 容器中的内容从哪里来的问题，也就是 <strong>配置文件从哪里读取、配置文件如何读取</strong> 的问题。</p>
+<table>
+<thead>
+<tr>
+<th align="left">类名</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>Resource</code></td>
+<td align="left">接口，标识一个外部资源。通过 <code>getInputStream()</code> 方法 <strong>获取资源的输入流</strong> 。</td>
+</tr>
+<tr>
+<td align="left"><code>UrlResource</code></td>
+<td align="left">实现 <code>Resource</code> 接口的资源类，通过 URL 获取资源。</td>
+</tr>
+<tr>
+<td align="left"><code>ResourceLoader</code></td>
+<td align="left">资源加载类。通过 <code>getResource(String)</code> 方法获取一个 <code>Resouce</code> 对象，是 <strong>获取 <code>Resouce</code> 的主要途径</strong> 。</td>
+</tr>
+</tbody></table>
+<h4 id="BeanDefinition"><a href="#BeanDefinition" class="headerlink" title="BeanDefinition"></a>BeanDefinition</h4><p><strong>功能：</strong>用于解决Bean的定义问题，包括Bean的名字，类型以及它的属性赋予了什么值或者引用。说白了也就是<strong>解决了在IoC容器中定义一个Bean，使得IoC容器可以根据这个定义来生成实例。</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">类名</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>BeanDefinition</code></td>
+<td align="left">该类保存了 <code>Bean</code> 定义。包括 <code>Bean</code> 的 <strong>名字</strong> <code>String beanClassName</code>、<strong>类型</strong> <code>Class beanClass</code>、<strong>属性</strong> <code>PropertyValues propertyValues</code>。根据其 <strong>类型</strong> 可以生成一个类实例，然后可以把 <strong>属性</strong> 注入进去。<code>propertyValues</code> 里面包含了一个个 <code>PropertyValue</code> 条目，每个条目都是键值对 <code>String</code> - <code>Object</code>，分别对应要生成实例的属性的名字与类型。在 Spring 的 XML 中的 <code>property</code> 中，键是 <code>key</code> ，值是 <code>value</code> 或者 <code>ref</code>。对于 <code>value</code> 只要直接注入属性就行了，但是 <code>ref</code> 要先进行解析。<code>Object</code> 如果是 <code>BeanReference</code> 类型，则说明其是一个引用，其中保存了引用的名字，需要用先进行解析，转化为对应的实际 <code>Object</code>。</td>
+</tr>
+<tr>
+<td align="left"><code>BeanDefinitionReader</code></td>
+<td align="left">解析 <code>BeanDefinition</code> 的接口。通过 <code>loadBeanDefinitions(String)</code> 来从一个地址加载类定义。</td>
+</tr>
+<tr>
+<td align="left"><code>AbstractBeanDefinitionReader</code></td>
+<td align="left">实现 <code>BeanDefinitionReader</code> 接口的抽象类（未具体实现 <code>loadBeanDefinitions</code>，而是规范了 <code>BeanDefinitionReader</code> 的基本结构）。内置一个 <code>HashMap rigistry</code>，用于保存 <code>String</code> - <code>beanDefinition</code> 的键值对。内置一个 <code>ResourceLoader resourceLoader</code>，用于保存类加载器。用意在于，使用时，只需要向其 <code>loadBeanDefinitions()</code> 传入一个资源地址，就可以自动调用其类加载器，并把解析到的 <code>BeanDefinition</code> 保存到 <code>registry</code> 中去。</td>
+</tr>
+<tr>
+<td align="left"><code>XmlBeanDefinitionReader</code></td>
+<td align="left">具体实现了 <code>loadBeanDefinitions()</code> 方法，从 XML 文件中读取类定义。</td>
+</tr>
+</tbody></table>
+<h4 id="BeanFactory-question"><a href="#BeanFactory-question" class="headerlink" title="BeanFactory :question:"></a>BeanFactory <span class="github-emoji"><span>❓</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></h4><p>以 <code>BeanFactory</code> 接口为核心发散出的几个类，都是用于解决 IoC 容器在 <strong>已经获取 <code>Bean</code> 的定义的情况下，如何装配、获取 <code>Bean</code> 实例</strong> </p>
+<p>的问题。</p>
+<table>
+<thead>
+<tr>
+<th align="left">类名</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>BeanFactory</code></td>
+<td align="left">接口，标识一个 IoC 容器。通过 <code>getBean(String)</code> 方法来 <strong>获取一个对象</strong></td>
+</tr>
+<tr>
+<td align="left"><code>AbstractBeanFactory</code></td>
+<td align="left"><code>BeanFactory</code> 的一种抽象类实现，规范了 IoC 容器的基本结构，但是把生成 <code>Bean</code> 的具体实现方式留给子类实现。IoC 容器的结构：<code>AbstractBeanFactory</code> 维护一个 <code>beanDefinitionMap</code> 哈希表用于保存类的定义信息（<code>BeanDefinition</code>）。获取 <code>Bean</code> 时，如果 <code>Bean</code> 已经存在于容器中，则返回之，否则则调用 <code>doCreateBean</code> 方法装配一个 <code>Bean</code>。（所谓存在于容器中，是指容器可以通过 <code>beanDefinitionMap</code> 获取 <code>BeanDefinition</code> 进而通过其 <code>getBean()</code> 方法获取 <code>Bean</code>。）</td>
+</tr>
+<tr>
+<td align="left"><code>AutowireCapableBeanFactory</code></td>
+<td align="left">可以实现自动装配的 <code>BeanFactory</code>。在这个工厂中，实现了 <code>doCreateBean</code> 方法，该方法分三步：1，通过 <code>BeanDefinition</code> 中保存的类信息实例化一个对象；2，把对象保存在 <code>BeanDefinition</code> 中，以备下次获取；3，为其装配属性。装配属性时，通过 <code>BeanDefinition</code> 中维护的 <code>PropertyValues</code> 集合类，把 <code>String</code> - <code>Value</code> 键值对注入到 <code>Bean</code> 的属性中去。如果 <code>Value</code> 的类型是 <code>BeanReference</code> 则说明其是一个引用（对应于 XML 中的 <code>ref</code>），通过 <code>getBean</code> 对其进行获取，然后注入到属性中。</td>
+</tr>
+</tbody></table>
+<h4 id="ApplicationContext"><a href="#ApplicationContext" class="headerlink" title="ApplicationContext"></a>ApplicationContext</h4><p>以 <code>ApplicationContext</code> 接口为核心发散出的几个类，主要是对前面 <code>Resouce</code> 、 <code>BeanFactory</code>、<code>BeanDefinition</code> 进行了功能的封装，解决 <strong>根据地址获取 IoC 容器并使用</strong> 的问题。</p>
+<table>
+<thead>
+<tr>
+<th align="left">类名</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>ApplicationContext</code></td>
+<td align="left">标记接口，继承了 <code>BeanFactory</code>。通常，要实现一个 IoC 容器时，需要先通过 <code>ResourceLoader</code> 获取一个 <code>Resource</code>，其中包括了容器的配置、<code>Bean</code> 的定义信息。接着，使用 <code>BeanDefinitionReader</code> 读取该 <code>Resource</code> 中的 <code>BeanDefinition</code> 信息。最后，把 <code>BeanDefinition</code> 保存在 <code>BeanFactory</code> 中，容器配置完毕可以使用。注意到 <code>BeanFactory</code> 只实现了 <code>Bean</code> 的 <strong>装配、获取</strong>，并未说明 <code>Bean</code> 的 <strong>来源</strong> 也就是 <code>BeanDefinition</code> 是如何 <strong>加载</strong> 的。该接口把 <code>BeanFactory</code> 和 <code>BeanDefinitionReader</code> 结合在了一起。</td>
+</tr>
+<tr>
+<td align="left"><code>AbstractApplicationContext</code></td>
+<td align="left"><code>ApplicationContext</code> 的抽象实现，内部包含一个 <code>BeanFactory</code> 类。主要方法有 <code>getBean()</code> 和 <code>refresh()</code> 方法。<code>getBean()</code> 直接调用了内置 <code>BeanFactory</code> 的 <code>getBean()</code> 方法，<code>refresh()</code> 则用于实现 <code>BeanFactory</code> 的刷新，也就是告诉 <code>BeanFactory</code> 该使用哪个资源（<code>Resource</code>）加载类定义（<code>BeanDefinition</code>）信息，该方法留给子类实现，用以实现 <strong>从不同来源的不同类型的资源加载类定义</strong> 的效果。</td>
+</tr>
+<tr>
+<td align="left">ClassPathXmlApplicationContext</td>
+<td align="left">从类路径加载资源的具体实现类。内部通过 <code>XmlBeanDefinitionReader</code> 解析 <code>UrlResourceLoader</code> 读取到的 <code>Resource</code>，获取 <code>BeanDefinition</code> 信息，然后将其保存到内置的 <code>BeanFactory</code> 中。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>对 <code>ApplicatinoContext</code> 的分层更为细致。<code>AbstractApplicationContext</code> 中为了实现 <strong>不同来源</strong> 的 <strong>不同类型</strong> 的资源加载类定义，把这两步分层实现。以“从类路径读取 XML 定义”为例，首先使用 <code>AbstractXmlApplicationContext</code> 来实现 <strong>不同类型</strong> 的资源解析，接着，通过 <code>ClassPathXmlApplicationContext</code> 来实现 <strong>不同来源</strong> 的资源解析。</p>
+</blockquote>
+<h1 id="战略观望"><a href="#战略观望" class="headerlink" title="战略观望"></a>战略观望</h1><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520110056368.png" alt="官网示例" style="zoom:50%;">
+
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520105808650.png" alt="Spring容器功能实现的各个阶段"></p>
+<h2 id="容器启动阶段"><a href="#容器启动阶段" class="headerlink" title="容器启动阶段"></a>容器启动阶段</h2><p>使用Resource相关接口标识我们配置文件从哪里获取，然后使用BeanDefinitionReader对标识的文件进行解析，将分析后的信息编组为相应的BeanDefinition。最后将保存了每个Bean定义信息的BeanDefinition，注册到相应的BeanDefinitionRegistry，这样容器的启动就完成了。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520110900263.png" alt="启动阶段任务" title="">
+                </div>
+                <div class="image-caption">启动阶段任务</div>
+            </figure>
+
+<h2 id="Bean实例化阶段"><a href="#Bean实例化阶段" class="headerlink" title="Bean实例化阶段"></a>Bean实例化阶段</h2><p>通过容器的启动阶段，现在所有的Bean定义的信息，都通过BeanDefiniton的方式注册到了BeanDefinitionRegistry中，当某个请求方通过容器的getBean方法明确的调用某个对象的时候，或者因为依赖关系容器需要隐式的调用getBean方法，就会出发第二阶段的活动。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520150106541.png" alt="bean的实例化过程" title="">
+                </div>
+                <div class="image-caption">bean的实例化过程</div>
+            </figure>
+
+<p>Spring容器将对其所管理的对象全部给予统一的生命周期管理，这些被管理的对象完全摆脱了原 来那种“new完后被使用，脱离作用域后即被回收”的命运</p>
+<h1 id="详细阐述"><a href="#详细阐述" class="headerlink" title="详细阐述"></a>详细阐述</h1><h2 id="最简单的IoC容器"><a href="#最简单的IoC容器" class="headerlink" title="最简单的IoC容器"></a>最简单的IoC容器</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BeanFactory</span> </span>{</span><br><span class="line">  <span class="comment">// 说白了就是一个map</span></span><br><span class="line">	<span class="keyword">private</span> Map&lt;String, Object&gt; beanMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerBean</span><span class="params">(String name, Object bean)</span> </span>{</span><br><span class="line">		beanMap.put(name, bean);</span><br><span class="line">	}</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Object <span class="title">getBean</span><span class="params">(String name)</span> </span>{</span><br><span class="line">		<span class="keyword">return</span> beanMap.get(name);</span><br><span class="line">	}</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleBeanContainerTest</span> </span>{</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testGetBean</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>{</span><br><span class="line">    <span class="comment">// 需要我们去手动new依赖对象，然后放入</span></span><br><span class="line">		BeanFactory beanFactory = <span class="keyword">new</span> BeanFactory();</span><br><span class="line">		beanFactory.registerBean(<span class="string">"helloService"</span>, <span class="keyword">new</span> HelloService());</span><br><span class="line">		HelloService helloService = (HelloService) beanFactory.getBean(<span class="string">"helloService"</span>);</span><br><span class="line">		assertThat(helloService).isNotNull();</span><br><span class="line">		assertThat(helloService.sayHello()).isEqualTo(<span class="string">"hello"</span>);</span><br><span class="line">	}</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">HelloService</span> </span>{</span><br><span class="line">		<span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">()</span> </span>{</span><br><span class="line">			System.out.println(<span class="string">"hello"</span>);</span><br><span class="line">			<span class="keyword">return</span> <span class="string">"hello"</span>;</span><br><span class="line">		}</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="BeanFactoryPostProcess和BeanPostProcessor"><a href="#BeanFactoryPostProcess和BeanPostProcessor" class="headerlink" title="BeanFactoryPostProcess和BeanPostProcessor"></a>BeanFactoryPostProcess和BeanPostProcessor</h2><p>BeanFactoryPostProcess和BeanPostProcessor是spring框架中具有重量级地位的两个接口，理解了这两个接口的作用，基本就理解spring的核心原理了</p>
+<ol>
+<li>BeanFactoryPostProcessor是spring提供的容器拓展机制，允许我们在<strong>bean实例化之前修改bean的定义信息（BeanDedinition）</strong>，其重要的实现类PropertyPlaceholderConfigurer和CustomEditorConfigurer<ul>
+<li>PropertyPlaceholderConfigurer的作用是用properties文件的配置值替换xml文件中的占位符</li>
+<li>CustomEditorConfigurer的作用是实现类型转换。</li>
+</ul>
+</li>
+<li>BeanPostProcessor也是spring提供的容器拓展机制，不同于BeanFactoryPostProcessor，BeanPostProcesssor在<strong>Bean实例化之后修改Bean或替换Bean</strong>。也是实现AOP的关键。</li>
+</ol>
+<p>等等等。。。</p>
+<h2 id="整体流程图"><a href="#整体流程图" class="headerlink" title="整体流程图"></a>整体流程图</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/iShot2021-05-21%2000.08.58.png" alt="整体流程图" title="">
+                </div>
+                <div class="image-caption">整体流程图</div>
+            </figure>
+
+<ol>
+<li>BeanDefinitionReader读取Bean的相关配置信息，并将读取到的信息使用BeanDefinition表示，同时注册到BeanDefinitionRegistry中。</li>
+<li>通过实现了BeanFactoryPostProcessor的类，自定义修改BeanDefinition中的信息</li>
+<li>Bean的实例化<ol>
+<li>采用策略模式，策略化Bean的实例，共包含两种方式：cglib、反射</li>
+<li>获取Bean的实例之后，根据BeanDefinition中的信息，填充Bean的属性、依赖</li>
+</ol>
+</li>
+<li>检测各种检测各种Aware接口，并放入Bean中</li>
+<li>调用BeanPostProcessor接口的前置处理方法，处理符合要求的Bean实例</li>
+<li>如果实现了InitializingBean接口，则处理对应的afterPropertiesSet()方法</li>
+<li>如果定义init-method方法，处理对应的初始化方法</li>
+<li>调用BeanPostProcessor接口的后置处理方法，处理符合要求的Bean实例</li>
+<li>使用</li>
+<li>判断Bean的Scope，如果是prototype，不再管理</li>
+<li>如果是单例，如果实现了DisposableBean接口，则执行对应的destroy方法</li>
+<li>如果定义了destory-method，则执行自定义的销毁方法</li>
+</ol>
+<h1 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h1><p>整理的还是很乱，虽然看的时候是都看了。。。</p>
+<p>后面慢慢优化吧（涉及到以后==永远不会）<span class="github-emoji"><span>😑</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f611.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></p>
+<h1 id="references"><a href="#references" class="headerlink" title="references"></a>references</h1><ul>
+<li>spring揭秘</li>
+<li><a href="https://github.com/code4craft/tiny-spring" target="_blank" rel="noopener">tiny-spring</a></li>
+<li><a href="https://github.com/DerekYRC/mini-spring/blob/main/changelog.md#Bean%E5%AE%9E%E4%BE%8B%E5%8C%96%E7%AD%96%E7%95%A5InstantiationStrategy" target="_blank" rel="noopener">mini-spring</a></li>
+<li><a href="https://www.zybuluo.com/dugu9sword/note/382745#beanfactory" target="_blank" rel="noopener">tiny-spring分析</a></li>
+<li><a href="https://javadoop.com/post/spring-ioc" target="_blank" rel="noopener">Spring IoC容器分析</a></li>
+<li><a href="http://www.tianxiaobo.com/2018/05/30/Spring-IOC-%E5%AE%B9%E5%99%A8%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E7%B3%BB%E5%88%97%E6%96%87%E7%AB%A0%E5%AF%BC%E8%AF%BB/#451-%E5%AE%9E%E7%8E%B0-applicationcontextaware-%E6%8E%A5%E5%8F%A3" target="_blank" rel="noopener">Spring IOC 容器源码分析系列</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2021-05-21T01:27:09.998Z" itemprop="dateUpdated">2021-05-21 09:27:09</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ioc/" rel="tag">ioc</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/spring-ioc-analysis/&title=《Spring IoC解读》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/spring-ioc-analysis/&title=《Spring IoC解读》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/spring-ioc-analysis/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Spring IoC解读》 — Wkkの笔记&url=https://winniekun.github.io/spring-ioc-analysis/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/spring-ioc-analysis/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">归并排序</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/spring-ioc-analysis/&title=《Spring IoC解读》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/spring-ioc-analysis/&title=《Spring IoC解读》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/spring-ioc-analysis/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Spring IoC解读》 — Wkkの笔记&url=https://winniekun.github.io/spring-ioc-analysis/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/spring-ioc-analysis/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKUlEQVR42u3aSW7DMBAEwPz/087VQGKmm+MYkFg6CTJMsXQYcJavr/h6PF0/nzw/f/41X/nVW958YWBgXJbxWF4JY/6W5L3rD4eBgXECIwmF6/tJIM7Xf/kcAwMDY3m/Dr7rYJocQDEwMDD2GPnxMd8oBgYGxpqRJJN7xbJ8nQ/l4hgYGBdk7JXvP3P/L/0NDAyMSzEmxfr1Cm07IQ+yv7wLAwPj1ow8wBXLleMaUYIarIaBgXECo20DTIpok3AcldswMDBuxJiPebUDFgmm/S8GBsbJjAQ2T3TbNkMdcDEwMC7OaEe7EnCy6Xmzs/iiGBgYt2C0JbYiP46DcpvEYmBgnMNoS/xtEa0d9krC6y8fAgMD49aMzXSxDMdtMpy3PzEwMM5hFCX4QdtyD9Ym2xgYGHdlJEe3HLDXEG1LbBgYGBh54b5tOiYfazQchoGBcTvGfGDrvR2JpIWJgYFxGmMy1pAPWLSBNS/zbZ4rMTAwLshYB7tJgppsvT1uYmBgnMloD2F7pbQ2jNbNAwwMjCMZ7yqH7f23PiBiYGAcw0gKXnmozQcm2oMmBgbGOYxHeeXFr/xztOW5P3qwGBgYt2O0yedeISwfONsr/GFgYJzAyNuQOTLfdDvG8XI/GBgYBzDawJeMhe0Nwm4iMTAwMMZb2RsL25wWwcDAwBgMTyRb3GuOYmBgnMBIktgcvJcAt0MYGBgY5zDasYnJQXAeXkeNTAwMjOsxvgG1Gyy6Vzq56wAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
