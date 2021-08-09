@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521185850059.png">
 <meta property="og:image" content="https://winniekun.github.io/Users/weikunkun/Library/Application">
 <meta property="article:published_time" content="2021-05-21T14:32:09.000Z">
-<meta property="article:modified_time" content="2021-05-21T14:34:02.237Z">
+<meta property="article:modified_time" content="2021-06-21T16:37:07.607Z">
 <meta property="article:author" content="weikunkun">
 <meta property="article:tag" content="应用层">
 <meta name="twitter:card" content="summary">
@@ -259,8 +259,8 @@
 </ol>
 </li>
 <li><strong>Client Finish</strong><ol>
-<li><strong>Client Key Exchange</strong> 报文：客户端收到 CA 数字证书并通过验证，然后通过 CA 公钥解密获取到 <strong>服务端公钥</strong>。Client Key Exchange 报文包括有一个随机数，这个随机数被称为 <strong>Pre-master key/secret</strong>；一个表示随后的信息使用双方协商好的加密方法和密钥发送的 <strong>通知</strong> ；还有一个通过协商好的 HASH 算法对前面所有信息内容的 <strong>HASH 计算值</strong>，用来提供服务端校验。这些信息都通过服务端公钥加密传送给服务端</li>
-<li><strong>ClientCipherSpec</strong> 报文：该报文通知服务端，此后的通信都将使用协商好的加密算法计算对称密钥进行加密通信（也就是使用两个随机数以及第三个 Pre-master key/secret 随机数一起算出一个对称密钥 <strong>session key/secret</strong>）</li>
+<li><strong>Client Key Exchange</strong> 报文：客户端收到 CA 数字证书并通过验证，然后通过 CA 公钥解密获取到 <strong>服务端公钥</strong>。Client Key Exchange 报文包括有一个随机数，这个随机数被称为 <strong>Pre-master key/secret</strong>；一个表示随后的信息使用双方协商好的加密方法和密钥发送的 <strong>通知</strong> ；还有一个通过协商好的 HASH 算法对前面所有信息内容的 <strong>HASH 计算值</strong>，用来提供服务端校验。<strong>这些信息都通过服务端公钥加密传送给服务端</strong></li>
+<li><strong>ExchangeCipherSpec</strong> 报文：该报文通知服务端，此后的通信都将使用协商好的加密算法计算对称密钥进行加密通信（也就是使用两个随机数以及第三个 Pre-master key/secret 随机数一起算出一个对称密钥 <strong>session key/secret</strong>）</li>
 <li><strong>Finished</strong> 报文：该报文包括连接至此的所有报文的校验值，使用已经生成的对称加密密钥加密</li>
 <li>可选：<strong>ClientCertificate</strong> 报文：如果服务端请求，客户端需要发送 CA 数字证书</li>
 <li>可选：<strong>CertificateVerify</strong> 报文：服务端如果要求 CA 数字证书，那么需要通过 HASH 算法计算一个服务端发送来的信息摘要</li>
@@ -363,7 +363,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2021-05-21T14:34:02.237Z" itemprop="dateUpdated">2021-05-21 22:34:02</time>
+    最后更新时间：<time datetime="2021-06-21T16:37:07.607Z" itemprop="dateUpdated">2021-06-22 00:37:07</time>
 </span><br>
 
 

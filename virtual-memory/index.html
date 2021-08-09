@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>虚拟内存概览 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="内存管理">
+    <meta name="description" content="序 “Any problem in computer science can be solved by another layer of indirection.  ——程序员的自我修养  物理寻址早期，CPU在处理某个进程的时候，处理的流程如下。   对于物理寻址而言，我们需要直接将程序全部装入到物理内存中，接下来运行期间，CPU在处理时，直接进行物理寻址。然后执行相关的读写命令。 对于物理内存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚拟内存概览">
+<meta property="og:url" content="https://winniekun.github.io/virtual-memory/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="序 “Any problem in computer science can be solved by another layer of indirection.  ——程序员的自我修养  物理寻址早期，CPU在处理某个进程的时候，处理的流程如下。   对于物理寻址而言，我们需要直接将程序全部装入到物理内存中，接下来运行期间，CPU在处理时，直接进行物理寻址。然后执行相关的读写命令。 对于物理内存">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726165551742.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726164801304.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726225636676.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210727001028167.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210727002025494.png">
+<meta property="article:published_time" content="2021-07-27T06:57:30.000Z">
+<meta property="article:modified_time" content="2021-08-09T10:11:43.891Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="内存管理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726165551742.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">虚拟内存概览</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">虚拟内存概览</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-07-27T06:57:30.000Z" itemprop="datePublished" class="page-time">
+  2021-07-27
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#序"><span class="post-toc-number">1.</span> <span class="post-toc-text">序</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#物理寻址"><span class="post-toc-number">2.</span> <span class="post-toc-text">物理寻址</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#虚拟内存概念"><span class="post-toc-number">3.</span> <span class="post-toc-text">虚拟内存概念</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#能力一：高速缓存"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">能力一：高速缓存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#能力二：内存管理"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">能力二：内存管理</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#能力三：内存保护"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">能力三：内存保护</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#应用程序如何如何使用和管理虚拟内存"><span class="post-toc-number">4.</span> <span class="post-toc-text">应用程序如何如何使用和管理虚拟内存</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">5.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#references"><span class="post-toc-number">6.</span> <span class="post-toc-text">references</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-操作系统/virtual-memory"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">虚拟内存概览</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-07-27 14:57:30" datetime="2021-07-27T06:57:30.000Z"  itemprop="datePublished">2021-07-27</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><blockquote>
+<p><strong>“Any problem in computer science can be solved by another layer of indirection.</strong> </p>
+<p>——<a href="https://book.douban.com/subject/3652388/" target="_blank" rel="noopener">程序员的自我修养</a></p>
+</blockquote>
+<h2 id="物理寻址"><a href="#物理寻址" class="headerlink" title="物理寻址"></a>物理寻址</h2><p>早期，CPU在处理某个进程的时候，处理的流程如下。</p>
+<img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726165551742.png" alt="物理寻址方式" style="zoom:50%;">
+
+<p>对于物理寻址而言，我们需要直接将程序全部装入到物理内存中，接下来运行期间，CPU在处理时，直接进行物理寻址。然后执行相关的读写命令。</p>
+<p>对于物理内存而言，是不做任何访问限制的，所以直接操作进行物理寻址会导致一个问题是：</p>
+<ol>
+<li><p>读写内存的安全性问题</p>
+<ol>
+<li>不同的进程被分配到不同的物理内存中，运行期间导致进程A错误修改了进程B占用的物理内存，导致进程B出现问题</li>
+<li>危害操作系统自身的安全。恶意的进程直接修改操作系统所占用的物理空间，导致系统崩溃</li>
+</ol>
+</li>
+<li><p>内存的利用率不高</p>
+<ol>
+<li>一个系统中，不同的进程是共享CPU和物理内存资源的，如果有很多的进程需要很大的内存，那么就会导致这些进程所需的内存大小 &gt; 实际的物理内存，这样就会导致有些有些进程无法被执行。</li>
+</ol>
+</li>
+</ol>
+<p>所以，为了更加有效的管理内存并且少出错，现代的操作系统提供了一种对主存的抽象概念—<strong>虚拟内存</strong>。<strong>虚拟内存是硬件异常、硬件地址翻译、主存、磁盘和内核软件的完美交互</strong></p>
+<h2 id="虚拟内存概念"><a href="#虚拟内存概念" class="headerlink" title="虚拟内存概念"></a>虚拟内存概念</h2><blockquote>
+<p>虚拟内存是计算机系统内存管理的一种技术。它使得应用程序认为它拥有连续可用的内存（一个连续完整的地址空间），而实际上，它通常是被分隔成多个物理内存碎片，还有部分暂时存储在外部磁盘存储器上，在需要时进行数据交换。<br>现代所有用于一般应用的操作系统都对普通的应用程序使用虚拟内存技术，老一些的操作系统，如DOS和1980年代的Windows，或者那些1960年代的大型机，一般都没有虚拟内存的功能<br>——维基百科</p>
+</blockquote>
+<img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726164801304.png" alt="image-20210726164801304" style="zoom: 50%;">
+
+<p>引入序中所引用的话<strong>Any problem in computer science can be solved by another layer of indirection.</strong> 同理虚拟内存为<code>进程&lt;---&gt;物理内存</code>的中间层，它为进程隐藏了物理内存的概念，同时为其提供了更加简洁易用的接口，供其调用。同时还提供了一些更加复杂的功能。</p>
+<h3 id="能力一：高速缓存"><a href="#能力一：高速缓存" class="headerlink" title="能力一：高速缓存"></a>能力一：高速缓存</h3><p>我们可以将虚拟内存看作是磁盘上的一片空间，当这片空间中的一部分访问比较频繁时，<strong>该部分数据会以页为单位被缓存到主存中</strong>以加速 CPU 访问数据的性能，虚拟内存利用空间较大的磁盘存储作为『内存』并使用主存储缓存进行加速，<strong>让进程认为操作系统的内存很大而且很快，然而区域很大的磁盘并不快，而很快的内存也并不大</strong>。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726225636676.png" alt="虚拟内存作为缓存" title="">
+                </div>
+                <div class="image-caption">虚拟内存作为缓存</div>
+            </figure>
+
+<p>在虚拟内存中的虚拟页共分为三种类型：</p>
+<ol>
+<li>未分配<ol>
+<li>没有被进程申请使用的，也就是空闲的虚拟内存， 不占用虚拟内存磁盘的任何空间</li>
+</ol>
+</li>
+<li>未缓存<ol>
+<li>仅仅加载到磁盘中的页</li>
+</ol>
+</li>
+<li>已缓存<ol>
+<li>已经加载到内存中的内存页（页框）</li>
+</ol>
+</li>
+</ol>
+<h3 id="能力二：内存管理"><a href="#能力二：内存管理" class="headerlink" title="能力二：内存管理"></a>能力二：内存管理</h3><ul>
+<li><p>简化链接和加载</p>
+</li>
+<li><p>简化内存共享</p>
+<p>将不同的进程中的页表中某些页表项映射到相同的物理地址，即可实现内存的共享。</p>
+</li>
+<li><p>简化内存分配</p>
+<p>独立的虚拟内存空间也会简化内存的分配过程，当用户程序向操作系统申请堆内存时，操作系统可以分配几个连续的虚拟页，但是这些虚拟页可以对应到物理内存中不连续的页中。</p>
+</li>
+</ul>
+<h3 id="能力三：内存保护"><a href="#能力三：内存保护" class="headerlink" title="能力三：内存保护"></a>能力三：内存保护</h3><p>现代操作系统中，用户进程不应该被允许修改它的只读代码段，而且也不应该允许它读取或修改任何内核中的代码和数据结构，并且也不允许其读取或者修改其他进程的私有内存，以及修改和其他进程共享的虚拟页面。如果不对进程的内存访问进行限制，攻击者就能够访问和修改其他进程的私有内存，进而导致整个系统崩溃。</p>
+<p>通过虚拟内存，我们为进程提供了独立的地址空间，同时这也让我们能够快速的区分不同进程的私有内存。同时我们通过虚拟内存到实际的物理内存的转化需要使用地址翻译机制，整体流程如下所示：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210727001028167.png" alt="虚拟寻址方式" title="">
+                </div>
+                <div class="image-caption">虚拟寻址方式</div>
+            </figure>
+
+<p>通过MMU，每次都会读取页表中的一个页表条目(PTE)，通过在这些页表条目(PTE)中添加一些标志位，就能够实现对一个虚拟页的访问控制权限。譬如：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210727002025494.png" alt="带标志位的页表" title="">
+                </div>
+                <div class="image-caption">带标志位的页表</div>
+            </figure>
+
+<h2 id="应用程序如何如何使用和管理虚拟内存"><a href="#应用程序如何如何使用和管理虚拟内存" class="headerlink" title="应用程序如何如何使用和管理虚拟内存"></a>应用程序如何如何使用和管理虚拟内存</h2><ul>
+<li><input disabled="" type="checkbox"> TODO </li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虚拟内存的思想，整体来看就是：通过结合磁盘和内存各自的优势，<strong>利用中间层对资源进行更合理地调度，充分提高资源的利用率。并提供和谐以及统一的抽象</strong>。个人目前接触到的最直观的体现就是 JDK中集合类的设计与实现。其也可以算是数据和数据结构之间的中间层，结合其他的技术譬如泛型，为上层的数据提供了接口的同时，隐藏了内部数据结构的实现以及维护。</p>
+<p>最后再总结下为什么需要虚拟内存：</p>
+<ul>
+<li>虚拟内存可以结合磁盘和物理内存的优势为进程提供看起来速度足够快并且容量足够大的存储；</li>
+<li>虚拟内存可以为进程提供独立的内存空间并引入多层的页表结构将虚拟内存翻译成物理内存，进程之间可以共享物理内存减少开销，也能简化程序的链接、装载以及内存分配过程；</li>
+<li>虚拟内存可以控制进程对物理内存的访问，隔离不同进程的访问权限，提高系统的安全性；</li>
+</ul>
+<h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ul>
+<li>csapp 第九章</li>
+<li>操作系统导论 内存虚拟化部分</li>
+<li><a href="https://draveness.me/whys-the-design-os-virtual-memory/" target="_blank" rel="noopener">为什么Linux需要虚拟内存</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/96098896" target="_blank" rel="noopener">如何理解虚拟内存</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2021-08-09T10:11:43.891Z" itemprop="dateUpdated">2021-08-09 18:11:43</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/virtual-memory/&title=《虚拟内存概览》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/virtual-memory/&title=《虚拟内存概览》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/virtual-memory/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《虚拟内存概览》 — Wkkの笔记&url=https://winniekun.github.io/virtual-memory/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/virtual-memory/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/concurrenthashmap-analysis/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">ConcurrentHashMap源码分析</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/virtual-memory/&title=《虚拟内存概览》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/virtual-memory/&title=《虚拟内存概览》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/virtual-memory/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《虚拟内存概览》 — Wkkの笔记&url=https://winniekun.github.io/virtual-memory/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/virtual-memory/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACNUlEQVR42u3ay47DIAwF0P7/T2e2I2WSXhsyUuCwqto8OCxcbPz5xOM4jftff19zvv587/k5nycGBgbGaxnH7egxrqaVPDn59Q8qBgbGBowkFCYR7z6MVt+VXI+BgYGRXDMecHvvxcDAwEgCaDUc58uBgYGB0Utie5Wu+5CaF+Cm5eIYGBgvZORV9////Mj5BgYGxqsYR3Hcp53j0zpaAwMDY21GLwVNtnq9b4ZSYgwMjEUZ4wE3n0oepstLgIGBsQEjL9yPt2KMLMflHDAwMJZm5Nu+aggeac5InoOBgbEPo3fbXFi00vchGAMDY2lGr8SWl96Se/MlGGqwwMDAeC2jmpr2Grby5UhKcl+2hhgYGBsw8jCXF8uS6eaHB5dHmBgYGIsyeoGvd/SYYxLSH/diYGBsw+iV1UamO6tRDAMDY1VG3vpQDabVxDhv14iOMDEwMBZi9I4qe60YvYnmfxIYGBirMqqFsCSk5ocBve3gZc8IBgbGooxqYpk3SVSPGXoJdrlzBAMD47WMod6x1polqWy+McXAwNiHUc16R0psj2wEMTAwtmHMKtDnKXEvrF9uDTEwMJZjHMWRHAlUlyPZFH55JgYGxtKM8TR1JFxWt4PlZgsMDIyFGHnDRDVzfCI9vnwyBgbGBoxe4MvLbQlpQiqLgYGBEb8mKcP1SnJR1RADA2N7Rq/j7H67OdIgi4GBsQ8jSWLza6rfTAjHGBgYSzNmbfiSu8ptqXMPNTEwMN7H+AFUF3RyKJI8uwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
