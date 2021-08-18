@@ -2205,6 +2205,9 @@
 .icon-meetup:before {
   content: "\f2e0";
 }
+.icon-friend:before {
+  content: "\f181";
+}
 *,
 *::before,
 *::after {
@@ -2828,7 +2831,7 @@ hr,
   min-height: calc(100vh - 340px);
 }
 .container {
-  width: 960px;
+  width: 90%;
   margin: 0 auto;
 }
 .container:after {
