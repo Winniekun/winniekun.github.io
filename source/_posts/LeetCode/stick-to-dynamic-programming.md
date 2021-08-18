@@ -151,7 +151,7 @@ LeetCode死磕系列七： DP
 10. [487. 最大连续1的个数 II](https://leetcode-cn.com/problems/max-consecutive-ones-ii/):white_check_mark:
 11. [1186. 删除一次得到子数组最大和](https://leetcode-cn.com/problems/maximum-subarray-sum-with-one-deletion/):white_check_mark:
 12. [714. 买卖股票的最佳时机含手续费](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
-13. [剑指 Offer 63. 股票的最大利润](https://leetcode-cn.com/problems/gu-piao-de-zui-da-li-run-lcof/
+13. [剑指 Offer 63. 股票的最大利润](https://leetcode-cn.com/problems/gu-piao-de-zui-da-li-run-lcof/)
 
 ### 时间序列模型加强版(子序列问题):white_check_mark:
 
@@ -159,6 +159,13 @@ LeetCode死磕系列七： DP
 2. [368. 最大整除子集](https://leetcode-cn.com/problems/largest-divisible-subset/):white_check_mark:
 
 ### 双序列模型:white_check_mark:
+
+**备注：**设置dp空间是，看有效位从0还是1开始。
+
+- 从1开始，是为了让dp转移方程更加具有适用性，能从最开始的字符串就能计算
+- 从0开始，需要额外考虑初始化过程。行、列
+
+**题目：**
 
 1. [72. 编辑距离](https://leetcode-cn.com/problems/edit-distance/) 
 2. [32. 最长有效括号](https://leetcode-cn.com/problems/longest-valid-parentheses/)
@@ -433,7 +440,7 @@ class Solution {
 }
 ```
 
-
+附加一题[剑指 Offer 63. 股票的最大利润](https://leetcode-cn.com/problems/gu-piao-de-zui-da-li-run-lcof/)，一摸一样。
 
 #### [122. 买卖股票的最佳时机 II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/) :white_check_mark:
 
@@ -464,9 +471,27 @@ class Solution {
 }
 ```
 
+#### [714. 买卖股票的最佳时机含手续费](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/):white_check_mark:
 
+和上述同理，需要添加手续费
 
-
+```java
+class Solution {
+    public int maxProfit(int[] prices, int fee) {
+        int len = prices.length;
+        // 0 : 持股（买入）
+        // 1 : 不持股（售出）
+        // dp 定义第i天持股/不持股 所得最多现金
+        int[][] dp = new int[len][2];
+        dp[0][0] = -prices[0];
+        for (int i = 1; i < len; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] - prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][0] + prices[i] - fee, dp[i - 1][1]);
+        }
+        return Math.max(dp[len - 1][0], dp[len - 1][1]);
+    }
+}
+```
 
 #### [123. 买卖股票的最佳时机 III](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/):white_check_mark:
 
@@ -540,7 +565,7 @@ class Solution {
                 }
             }
         }
-        
+        // return Arrays.stream(dp[n -1]).max().getAsInt();
         int res = 0;
         for (int i = 0; i < 2 * k; i++) {
             res = Math.max(dp[len-1][i], res);
@@ -552,11 +577,47 @@ class Solution {
 
 
 
-#### [309. 最佳买卖股票时机含冷冻期](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
+#### [309. 最佳买卖股票时机含冷冻期](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/):white_check_mark:
 
-![image-20210503103205778](https://i.loli.net/2021/05/03/OsbzdDyApxWIJNo.png)
+![image-20210625160741945](https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210625160741945.png)
 
-$ dp[i][j]=\left\{ \begin{array}{rcl} dp[i][0] = Max(dp[i-1][2]-val[i]) && {第i天，刚持有股票的最大利益}\\ dp[i][1]=Max(dp[i-1][1], dp[i-1][0]) && {这一轮已经持有股票一天以上的最大收益} \\dp[i][2] = Max(dp[i-1][2], dp[i-1][1] + val[i] && {这一轮已经清空股票的最大收益} \end{array} \right. $
+
+
+$ dp[i][j]=\left\{ \begin{array}{rcl} dp[i][0] = Max(dp[i-1][0], dp[i - 1][1] - priece[i]]) && {第i天，刚持有股票的最大利益}\\ dp[i][1]=Max(dp[i-1][1], dp[i-1][2]) && {冷冻的最大收益} \\dp[i][2] = Max(dp[i-1][2], dp[i-1][0] + val[i] && {这一轮已经清空股票的最大收益} \end{array} \right. $
+
+
+
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        if (n < 2) {
+            return 0;
+        }
+        //定义 前i天 不同状态的最大利润
+        int[][] dp = new int[n][3];
+        // 初始化   
+        // 0 : 买入
+        // 1 : 冷冻
+        // 2 : 清空
+        dp[0][0] = -prices[0];
+        dp[0][1] = 0;
+        dp[0][2] = 0;
+        for (int i = 1; i < n; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] - prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][2]);
+            dp[i][2] = Math.max(dp[i - 1][2], dp[i - 1][0] + prices[i]);
+        }
+        return Arrays.stream(dp[n - 1]).max().getAsInt();
+    }
+}
+```
+
+#### [276. 栅栏涂色](https://leetcode-cn.com/problems/paint-fence/)
+
+#### [256. 粉刷房子](https://leetcode-cn.com/problems/paint-house/)
+
+#### [265. 粉刷房子 II](https://leetcode-cn.com/problems/paint-house-ii/)
 
 #### [487. 最大连续1的个数 II](https://leetcode-cn.com/problems/max-consecutive-ones-ii/):white_check_mark:
 
@@ -618,9 +679,7 @@ class Solution {
 
 
 
-#### [714. 买卖股票的最佳时机含手续费](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
 
-#### [剑指 Offer 63. 股票的最大利润](https://leetcode-cn.com/problems/gu-piao-de-zui-da-li-run-lcof/)
 
 ### 时间序列模型加强版（子序列模型）:white_check_mark:
 

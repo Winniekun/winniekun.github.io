@@ -501,7 +501,45 @@ public ListNode deleteDuplicates(ListNode head) {
 
 ### 109. [Convert Sorted List to Binary Search Tree](https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree) 
 
-### 138. [ Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer)  
+### [138. 复制带随机指针的链表](https://leetcode-cn.com/problems/copy-list-with-random-pointer/) 
+
+```java
+class Solution {
+    public Node copyRandomList(Node head) {
+        if (head == null) {
+            return head;
+        }
+        // key 旧。value  新
+        Map<Node, Node> map = new HashMap<>();
+        Node newHead = new Node(head.val);
+        Node oddHead = head;
+        map.put(oddHead, newHead);
+        Node nCur = newHead;
+        Node oCur = head.next;
+        while (oCur != null) {
+            nCur.next = new Node(oCur.val);
+            nCur = nCur.next;
+            map.put(oCur, nCur);
+            oCur = oCur.next;
+        }
+        
+        oCur = head;
+        nCur = newHead;
+        while (oCur != null) {
+            if (oCur.random != null) {
+                // random ！！！！
+                Node ran = map.get(oCur.random);
+                nCur.random = ran;
+            }
+            oCur = oCur.next;
+            nCur = nCur.next;
+        }
+        return newHead;
+    }
+}
+```
+
+
 
 ### 141. [Linked List Cycle](https://leetcode.com/problems/linked-list-cycle)  
 
@@ -519,13 +557,103 @@ public ListNode deleteDuplicates(ListNode head) {
 
 解法2： 构造环
 
-### 203. [Remove Linked List Elements](https://leetcode.com/problems/remove-linked-list-elements)  
+### [203. 移除链表元素](https://leetcode-cn.com/problems/remove-linked-list-elements/)
 
-### 234. [Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list)  
+```java
+// 双指针
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        if (head == null) {
+            return head;
+        }
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode pre = dummy;
+        ListNode cur = head;
+        while (cur != null) {
+            if (cur.val != val) {
+                pre = cur;
+                cur = cur.next;
+            } else {
+                pre.next = cur.next;
+                cur = pre.next;
+            }
+        }
+        return dummy.next;
+    }
+}
+```
+
+
+
+### [234. 回文链表](https://leetcode-cn.com/problems/palindrome-linked-list/)
+
+```java
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        if (head == null) {
+            return true;
+        }
+        Map<Integer, ListNode> map = new HashMap<>();
+        ListNode cur = head;
+        int n = 0;
+        while (cur != null) {
+            map.put(n, cur);
+            n++;
+            cur = cur.next;
+        }
+        cur = head;
+        for (int i = 0; i < n / 2; i++) {
+            System.out.println(cur.val);
+            if (cur.val != map.get(n - i - 1).val) {
+                return false;
+            }
+            cur = cur.next;
+        }
+        return true;
+
+    }
+}
+```
+
+
 
 ### 237. [Delete Node in a Linked List](https://leetcode.com/problems/delete-node-in-a-linked-list)  
 
-### 328. [Odd Even Linked List](https://leetcode.com/problems/odd-even-linked-list)  
+### [328. 奇偶链表](https://leetcode-cn.com/problems/odd-even-linked-list/)
+
+```java
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+        // 按照位置分奇偶
+        if (head == null) {
+            return head;
+        }
+        ListNode odd = new ListNode(-1);
+        ListNode even = new ListNode(-1);
+        ListNode oddHead = odd;
+        ListNode evenHead = even;
+        int i = 1;
+        while (head != null) {
+            if (i % 2 == 1) {
+                odd.next = head;
+                odd = odd.next;
+            } else {
+                even.next = head;
+                even = even.next;
+            }
+            head = head.next;
+            i++;
+        }
+        // 断链 （注意注意注意）
+        odd.next = evenHead.next;
+        even.next = null;
+        return oddHead.next;
+    }
+}
+```
+
+
 
 ### 369. [ Plus One Linked List](https://leetcode.com/problems/plus-one-linked-list)  
 
@@ -566,5 +694,4 @@ slow表示当前的元素，使用fast依次遍历其后续的元素，同时值
 
 
 ### 1369. [ Linked List in Binary Tree](https://leetcode.com/problems/linked-list-in-binary-tree)  
-
 

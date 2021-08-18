@@ -1770,20 +1770,20 @@ private void quickSort(String[] strings, int low, int high){
         quickSort(strings, pri+1, high);
     }
 }
-private int pri(String[] strs, int start, int end) {
-    String s = strs[start];
-    while (start < end) {
-        while (start < end && (strs[start] + strs[end]).compareTo(strs[end] + strs[star
-            end--;
+private int position(String[] strs, int left, int right) {
+        String temp = strs[left];
+        while (left < right) {
+            while(left < right && (strs[right] + temp).compareTo((temp + strs[right])) >= 0) {
+                right--;
+            }
+            strs[left] = strs[right];
+            while(left < right && (strs[left] + temp).compareTo((temp + strs[left])) <= 0) {
+                left++;
+            }
+            strs[right] = strs[left];
         }
-        strs[start] = strs[end];
-        while (start < end && (strs[start] + strs[end]).compareTo(strs[end] + strs[star
-            start++;
-        }
-        strs[end] = strs[start];
-    }
-    strs[start] = s;
-    return start;
+        strs[left] = temp;
+        return left;
 }
 ```
 

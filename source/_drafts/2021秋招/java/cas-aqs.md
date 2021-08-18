@@ -220,3 +220,17 @@ private void unparkSuccessor(Node node) {
 为什么从后往前
 
 > 后面从后往前遍历是因为插入的时候，cas和next节点赋值的时候可能会有其他线程打断，导致从前往后遍历会出现null。可以去看看enq方法就知道了
+
+
+
+
+
+## Condition
+
+新建一个绑定到当前Lock上的Condition对象，那么其作用是什么？
+
+表示等待状态。
+
+获取锁的某些线程，可能在某些时刻需要等待一些条件的完成才能继续执行，可以通过await方法组册在condition对象上进行等待，然通过condition对象的signal方法将其唤醒，
+
+一个Lock对象可以关联多个Condition，多个线程可以被绑定到不同的Condition对象上。这样就可以分组唤醒，同时还提供了限时、中断相关的功能。丰富线程的调度策略 
