@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Kafka在Linux上的配置 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="配置">
+    <meta name="description" content="序Kafka简介Kafka是由Apache软件基金会开发的一个开源流处理平台，由Scala和Java编写。该项目的目标是为处理实时数据提供一个统一、高吞吐、低延迟的平台。其持久化层本质上是一个“按照分布式事务日志架构的大规模发布&#x2F;订阅消息队列”，[3]这使它作为企业级基础设施来处理流式数据非常有价值。此外，Kafka可以通过Kafka Connect连接到外部系统（用于数据输入&#x2F;输出），并提供了K">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka在Linux上的配置">
+<meta property="og:url" content="https://winniekun.github.io/kafka-config/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="序Kafka简介Kafka是由Apache软件基金会开发的一个开源流处理平台，由Scala和Java编写。该项目的目标是为处理实时数据提供一个统一、高吞吐、低延迟的平台。其持久化层本质上是一个“按照分布式事务日志架构的大规模发布&#x2F;订阅消息队列”，[3]这使它作为企业级基础设施来处理流式数据非常有价值。此外，Kafka可以通过Kafka Connect连接到外部系统（用于数据输入&#x2F;输出），并提供了K">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210822223509558.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210822223415746.png">
+<meta property="article:published_time" content="2021-08-22T13:24:40.000Z">
+<meta property="article:modified_time" content="2021-08-22T14:35:22.469Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="配置">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210822223509558.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://winniekun.github.io/acsaber/#/" target="_blank" >
+                <i class="icon icon-lg icon-trello"></i>
+                LeetCode
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Kafka在Linux上的配置</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Kafka在Linux上的配置</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-08-22T13:24:40.000Z" itemprop="datePublished" class="page-time">
+  2021-08-22
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/kafka/">kafka</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#序"><span class="post-toc-number">1.</span> <span class="post-toc-text">序</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Kafka简介"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Kafka简介</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Kafka架构"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Kafka架构</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#环境依赖"><span class="post-toc-number">2.</span> <span class="post-toc-text">环境依赖</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基础使用"><span class="post-toc-number">3.</span> <span class="post-toc-text">基础使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-下载并解压"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">1. 下载并解压</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-启动服务"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">2. 启动服务</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-创建一个主题"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">3. 创建一个主题</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-发送消息"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">4. 发送消息</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-消费消息"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">5. 消费消息</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-使用-Kafka-Connect-来-导入-导出-数据"><span class="post-toc-number">3.6.</span> <span class="post-toc-text">6. 使用 Kafka Connect 来 导入&#x2F;导出 数据</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-使用Kafka-Stream来处理数据"><span class="post-toc-number">3.7.</span> <span class="post-toc-text">7. 使用Kafka Stream来处理数据</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#以系统服务方式启动kafka"><span class="post-toc-number">4.</span> <span class="post-toc-text">以系统服务方式启动kafka</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#启动服务"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">启动服务</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#references"><span class="post-toc-number">5.</span> <span class="post-toc-text">references</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-配置/kafka-config"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Kafka在Linux上的配置</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-08-22 21:24:40" datetime="2021-08-22T13:24:40.000Z"  itemprop="datePublished">2021-08-22</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/kafka/">kafka</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><h3 id="Kafka简介"><a href="#Kafka简介" class="headerlink" title="Kafka简介"></a>Kafka简介</h3><p><strong>Kafka</strong>是由<a href="https://zh.wikipedia.org/wiki/Apache%E8%BD%AF%E4%BB%B6%E5%9F%BA%E9%87%91%E4%BC%9A" target="_blank" rel="noopener">Apache软件基金会</a>开发的一个<a href="https://zh.wikipedia.org/wiki/%E5%BC%80%E6%BA%90" target="_blank" rel="noopener">开源</a><a href="https://zh.wikipedia.org/wiki/%E6%B5%81%E5%A4%84%E7%90%86" target="_blank" rel="noopener">流处理</a>平台，由<a href="https://zh.wikipedia.org/wiki/Scala" target="_blank" rel="noopener">Scala</a>和<a href="https://zh.wikipedia.org/wiki/Java" target="_blank" rel="noopener">Java</a>编写。该项目的目标是为处理实时数据提供一个统一、高吞吐、低延迟的平台。其持久化层本质上是一个“按照分布式事务日志架构的大规模发布/订阅消息队列”，[<a href="https://zh.wikipedia.org/wiki/Kafka#cite_note-3" target="_blank" rel="noopener">3]</a>这使它作为企业级基础设施来处理流式数据非常有价值。此外，Kafka可以通过Kafka Connect连接到外部系统（用于数据输入/输出），并提供了Kafka Streams——一个<a href="https://zh.wikipedia.org/wiki/Java" target="_blank" rel="noopener">Java</a>流式处理<a href="https://zh.wikipedia.org/wiki/%E5%BA%93_(%E8%AE%A1%E7%AE%97%E6%9C%BA)" target="_blank" rel="noopener">库</a>。</p>
+<h3 id="Kafka架构"><a href="#Kafka架构" class="headerlink" title="Kafka架构"></a>Kafka架构</h3><p>Kafka存储的消息来自任意多被称为“生产者”（Producer）的进程。数据从而可以被分配到不同的“分区”（Partition）、不同的“Topic”下。在一个分区内，这些消息被索引并连同时间戳存储在一起。其它被称为“消费者”（Consumer）的进程可以从分区查询消息。Kafka运行在一个由一台或多台服务器组成的集群上，并且分区可以跨集群结点分布。</p>
+<p>Kafka高效地处理实时流式数据，可以实现与Storm、HBase和Spark的集成。作为聚类部署到多台服务器上，Kafka处理它所有的发布和订阅消息系统使用了四个API，即生产者API、消费者API、Stream API和Connector API。它能够传递大规模流式消息，自带容错功能，已经取代了一些传统消息系统，如JMS、AMQP等。</p>
+<p>Kafka架构的主要术语包括Topic、Record和Broker。Topic由Record组成，Record持有不同的信息，而Broker则负责复制消息。Kafka有四个主要API：</p>
+<ul>
+<li><strong>生产者API</strong>：支持应用程序发布Record流。</li>
+<li><strong>消费者API</strong>：支持应用程序订阅Topic和处理Record流。</li>
+<li><strong>Stream API</strong>：将输入流转换为输出流，并产生结果。</li>
+<li><strong>Connector API</strong>：执行可重用的生产者和消费者API，可将Topic链接到现有应用程序。</li>
+</ul>
+<h2 id="环境依赖"><a href="#环境依赖" class="headerlink" title="环境依赖"></a>环境依赖</h2><ol>
+<li><a href="https://www.oracle.com/in/java/technologies/javase-downloads.html" target="_blank" rel="noopener">JDK11</a></li>
+<li><a href="https://kafka.apache.org/downloads" target="_blank" rel="noopener">kafka_2.13-2.8.0.tgz</a></li>
+</ol>
+<h2 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h2><p>假设<code>Kafka</code>环境和<code>Zookeeper</code>环境都没有</p>
+<h3 id="1-下载并解压"><a href="#1-下载并解压" class="headerlink" title="1. 下载并解压"></a>1. 下载并解压</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; tar -xzf kafka_2<span class="number">.13</span>-<span class="number">2.8</span><span class="number">.0</span>.tgz</span><br><span class="line">&gt; mv kafka_2<span class="number">.13</span>-<span class="number">2.8</span><span class="number">.0</span>.tgz  /usr/local/kafka</span><br><span class="line">&gt; cd /usr/local/kafka</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="2-启动服务"><a href="#2-启动服务" class="headerlink" title="2. 启动服务"></a>2. 启动服务</h3><blockquote>
+<p>kafka的启动依赖于Java环境，所以在使用Kakfa之前，记得配置Java8+的环境</p>
+</blockquote>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> bin/zookeeper-server-start.sh config/zookeeper.properties</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>打开另一个命令终端启动kafka服务：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 用于后台启动</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> bin/kafka-server-start.sh config/server.properties &amp;</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>一旦所有服务成功启动，那Kafka已经可以使用了。</p>
+<h3 id="3-创建一个主题"><a href="#3-创建一个主题" class="headerlink" title="3. 创建一个主题"></a>3. 创建一个主题</h3><p>创建一个名为“test”的Topic，只有一个分区和一个备份：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic <span class="built_in">test</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>创建好之后，可以通过运行以下命令，查看已创建的topic信息：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> bin/kafka-topics.sh --describe --topic <span class="built_in">test</span> --bootstrap-server localhost:9092</span></span><br><span class="line"></span><br><span class="line">Topic:quickstart-events  PartitionCount:1    ReplicationFactor:1 Configs:</span><br><span class="line">Topic: quickstart-events Partition: 0    Leader: 0   Replicas: 0 Isr: 0</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="4-发送消息"><a href="#4-发送消息" class="headerlink" title="4. 发送消息"></a>4. 发送消息</h3><p>Kafka提供了一个命令行的工具，可以从输入文件或者命令行中读取消息并发送给Kafka集群。每一行是一条消息。</p>
+<p>运行 <code>producer（生产者）</code>,然后在控制台输入几条消息到服务器。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> bin/kafka-console-producer.sh --broker-list localhost:9092 --topic <span class="built_in">test</span></span></span><br><span class="line">hello world</span><br><span class="line">what's your name</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="5-消费消息"><a href="#5-消费消息" class="headerlink" title="5. 消费消息"></a>5. 消费消息</h3><p>Kafka也提供了一个消费消息的命令行工具，将存储的信息输出出来，新打开一个命令控制台，输入：</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic <span class="built_in">test</span> --from-beginning</span></span><br><span class="line">hello world</span><br><span class="line">what's your name</span><br></pre></td></tr></tbody></table></figure>
+
+<blockquote>
+<p>注意，若是在服务器开启kafka服务，然后本地消费生产的消息，需要在kafka中的 config/service.properties 中修改配置（注意开启服务器对应的端口）</p>
+<p>advertised.listeners=PLAINTEXT://your ip : your port </p>
+</blockquote>
+<h3 id="6-使用-Kafka-Connect-来-导入-导出-数据"><a href="#6-使用-Kafka-Connect-来-导入-导出-数据" class="headerlink" title="6. 使用 Kafka Connect 来 导入/导出 数据"></a>6. 使用 Kafka Connect 来 导入/导出 数据</h3><p>可能现有的系统中拥有大量的数据，如<code>关系型数据库</code>或<code>传统的消息传递系统</code>，以及许多已经使用这些系统的应用程序。Kafka Connect允许你不断地从外部系统提取数据到Kafka，反之亦然。用Kafka整合现有的系统是非常容易的。为了使这个过程更加容易，有数百个这样的连接器现成可用。</p>
+<h3 id="7-使用Kafka-Stream来处理数据"><a href="#7-使用Kafka-Stream来处理数据" class="headerlink" title="7. 使用Kafka Stream来处理数据"></a>7. 使用Kafka Stream来处理数据</h3><p>一旦我们的数据存储在Kafka中，就可以用<a href="">Kafka Streams客户端库</a>来处理这些数据，该库适用于<code>Java/Scala</code>。它允许你实现自己的实时应用程序和微服务，其中输入和/或输出数据存储在Kafka主题中。Kafka Streams将在客户端编写和部署标准Java和Scala应用程序的简单性与Kafka服务器端集群技术的优势相结合，使这些应用程序具有<code>可扩展性</code>、<code>弹性</code>、<code>容错性</code>和<code>分布式</code>。该库支持精确的一次性处理、有状态操作和聚合、窗口化、连接、基于事件时间的处理等等。</p>
+<p>一个初步的体验，实现一个流行的<code>WordCount</code>算法的：</p>
+<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">KStream&lt;String, String&gt; textLines = builder.stream(<span class="string">"quickstart-events"</span>);</span><br><span class="line"></span><br><span class="line">KTable&lt;String, Long&gt; wordCounts = textLines</span><br><span class="line">            .flatMapValues(line -&gt; Arrays.asList(line.toLowerCase().split(<span class="string">" "</span>)))</span><br><span class="line">            .groupBy((keyIgnored, word) -&gt; word)</span><br><span class="line">            .count();</span><br><span class="line"></span><br><span class="line">wordCounts.toStream().to(<span class="string">"output-topic"</span>, Produced.with(Serdes.String(), Serdes.Long()));</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="以系统服务方式启动kafka"><a href="#以系统服务方式启动kafka" class="headerlink" title="以系统服务方式启动kafka"></a>以系统服务方式启动kafka</h2><p>创建 <code>/usr/lib/systemd/system/zookeeper.service</code> 并写入</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Requires=network.target</span><br><span class="line">After=network.target</span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">Environment="PATH=/opt/jdk-11.0.12/bin:/opt/jdk-11.0.12/jre/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin"</span><br><span class="line">LimitNOFILE=1048576</span><br><span class="line">ExecStart=/usr/local/kafka/bin/zookeeper-server-start.sh /usr/local/kafka/config/zookeeper.properties</span><br><span class="line">ExecStop=/usr/local/kafka/bin/zookeeper-server-stop.sh</span><br><span class="line">Restart=Always</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></tbody></table></figure>
+
+<p>创建 <code>/usr/lib/systemd/system/kafka.service</code> 并写入</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Requires=zookeeper.service</span><br><span class="line">After=zookeeper.service</span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">Environment="PATH=/opt/jdk-11.0.12/bin:/opt/jdk-11.0.12/jre/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin"</span><br><span class="line">LimitNOFILE=1048576</span><br><span class="line">ExecStart=/usr/local/kafka/bin/kafka-server-start.sh /usr/local/kafka/config/server.properties</span><br><span class="line">ExecStop=/usr/local/kafka/bin/kafka-server-stop.sh</span><br><span class="line">Restart=Always</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></tbody></table></figure>
+
+<p><strong>注意：示例的kafka安装地址在 <code>/usr/local/kafka</code></strong></p>
+<p>因为系统服务不会直接读取我们配置在<code>/etc/profile</code>或者<code>bash_profile</code>中的环境变量，所以<code>Environment</code>一定要记得配置。</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 查看当前环境变量</span></span></span><br><span class="line">export $PATH</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h3><p>重载系统服务并启动</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl <span class="built_in">enable</span> zookeeper &amp;&amp; systemctl <span class="built_in">enable</span> kafka</span><br><span class="line">systemctl start zookeeper &amp;&amp; systemctl start kafka</span><br><span class="line">systemctl status zookeeper &amp;&amp; systemctl status kafka</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210822223509558.png" alt="zookeeper" title="">
+                </div>
+                <div class="image-caption">zookeeper</div>
+            </figure>
+
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210822223415746.png" alt="kafka" title="">
+                </div>
+                <div class="image-caption">kafka</div>
+            </figure>
+
+<h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ol>
+<li><a href="https://zh.wikipedia.org/wiki/Kafka" target="_blank" rel="noopener">维基百科—kafka</a></li>
+<li><a href="https://www.orchome.com/189" target="_blank" rel="noopener">Kafka教程</a></li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2021-08-22T14:35:22.469Z" itemprop="dateUpdated">2021-08-22 22:35:22</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%85%8D%E7%BD%AE/" rel="tag">配置</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/kafka-config/&title=《Kafka在Linux上的配置》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/kafka-config/&title=《Kafka在Linux上的配置》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/kafka-config/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Kafka在Linux上的配置》 — Wkkの笔记&url=https://winniekun.github.io/kafka-config/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/kafka-config/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/virtual-memory/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">虚拟内存概览</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>weikunkun &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/kafka-config/&title=《Kafka在Linux上的配置》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/kafka-config/&title=《Kafka在Linux上的配置》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/kafka-config/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Kafka在Linux上的配置》 — Wkkの笔记&url=https://winniekun.github.io/kafka-config/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/kafka-config/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByklEQVR42u3ay27CMBAF0P7/T1Opq0qIcK8ndlF1vIoIwScsRvPw11e8Hj/r9/Xkk+e7Ny9cXNwx93G5nrn5L7yiX/8Fb14JFxf3IDcJXvlT7QskBlxc3M/kJtvkG+Pi4v4PbhK22pQIFxf3k7lrScl1YZM/taVWw8XFHXDXGqb3Xm/v7+Li4t40lUjCynW4ycNctC8uLu4RbrJlVJAM4mhbOOHi4p7k5glN/nptMyVqwuLi4h7hzil5otOmREUvBxcXdwO3bXfmIa8th+rECxcX91Zuu/11CrI2PilCHi4u7kFuXqispSyTRGp0HgQXF3dwVmGCyANTXj5FzVNcXNzN3HzA2SYo7bAEFxf3c7jFAGPQAF1rsrzp7+Li4m7jtgXMvhFLMRPGxcXdzE1YeXOkPa7RDl1wcXHPc9vZbJumzIevuLi4J7ltQ7MNTGsJU/EULi7uTdxHudYaKO345OVdXFzcI9xJ5MuPcF2Dtp8rwcXFXeJOxqvzb7blFi4u7kluewCrTWvmIxlcXNzP5yZpyqThUpwTwcXF/VNuG9rytkjRVMXFxT3IbY9XJiXN2hjmDR0XF/cId5KUtOlL3sG9rb+Li4vb3f0G1Tq+Vb1es8wAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
