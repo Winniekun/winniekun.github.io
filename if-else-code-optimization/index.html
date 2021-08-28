@@ -40,6 +40,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -54,10 +55,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -204,79 +205,223 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>代码中涉及到较为复杂的逻辑是，一般情况下会出现大量的<code>if-else</code>，虽然实现了整个功能，但是阅读起来比较耗时，并且维护的时候也十分的困难，同时只要有一个地方没有考虑清楚，修改起来就难免出现<code>bug</code>。最近在做公司某个节点的性能优化，就遇到了这个问题，然后在<code>review</code>的时候，同事和我讲了一些优化方案，以及默认的规范之后。自己重新修改之后，感觉很舒服，后续自己重新整理一下，所以就写了这篇博客。</p>
 <a id="more"></a>
-
 <h2 id="优化方案"><a href="#优化方案" class="headerlink" title="优化方案"></a>优化方案</h2><h3 id="优化一：提前return，去除不必要的else"><a href="#优化一：提前return，去除不必要的else" class="headerlink" title="优化一：提前return，去除不必要的else"></a>优化一：提前return，去除不必要的else</h3><p>如果<code>if-else</code>代码块包含<code>return</code>语句，可以考虑通过提前<code>return</code>，把多余<code>else</code>干掉，使代码更加优雅。</p>
-<h4 id="优化前"><a href="#优化前" class="headerlink" title="优化前"></a>优化前</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(condition){</span><br><span class="line">  <span class="comment">// do something</span></span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">  <span class="comment">// do other thing</span></span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-<h4 id="优化后"><a href="#优化后" class="headerlink" title="优化后"></a>优化后</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!condition) {</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">} </span><br><span class="line"><span class="comment">// do something</span></span><br></pre></td></tr></tbody></table></figure>
-
-
-
-<h3 id="优化二：使用三元运算"><a href="#优化二：使用三元运算" class="headerlink" title="优化二：使用三元运算"></a>优化二：使用三元运算</h3><h4 id="优化前-1"><a href="#优化前-1" class="headerlink" title="优化前"></a>优化前</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> price;</span><br><span class="line"><span class="keyword">if</span>(condition){</span><br><span class="line">  price = <span class="number">10</span>;</span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">  price = <span class="number">20</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<h4 id="优化后-1"><a href="#优化后-1" class="headerlink" title="优化后"></a>优化后</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> price = condition ? <span class="number">10</span> : <span class="number">20</span>;</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-<h3 id="优化三：使用枚举"><a href="#优化三：使用枚举" class="headerlink" title="优化三：使用枚举"></a>优化三：使用枚举</h3><h4 id="优化前-2"><a href="#优化前-2" class="headerlink" title="优化前"></a>优化前</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> orderStatus = getXXX(xxx);</span><br><span class="line">String OrderStatusDes;</span><br><span class="line"><span class="keyword">if</span>(orderStatus == <span class="number">0</span>) {</span><br><span class="line">    OrderStatusDes = <span class="string">"订单未支付"</span>;</span><br><span class="line">}<span class="keyword">else</span> <span class="keyword">if</span>(OrderStatus == <span class="number">1</span>) {</span><br><span class="line">    OrderStatusDes = <span class="string">"订单已支付"</span>;</span><br><span class="line">}<span class="keyword">else</span> <span class="keyword">if</span>(OrderStatus == <span class="number">2</span>) {</span><br><span class="line">   OrderStatusDes = <span class="string">"已发货"</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<h4 id="优化前"><a href="#优化前" class="headerlink" title="优化前"></a>优化前</h4><pre><code class="lang-java">if(condition){
+  // do something
+} else {
+  // do other thing
+  return;
+}
+</code></pre>
+<h4 id="优化后"><a href="#优化后" class="headerlink" title="优化后"></a>优化后</h4><pre><code class="lang-java">if(!condition) {
+  return;
+} 
+// do something
+</code></pre>
+<h3 id="优化二：使用三元运算"><a href="#优化二：使用三元运算" class="headerlink" title="优化二：使用三元运算"></a>优化二：使用三元运算</h3><h4 id="优化前-1"><a href="#优化前-1" class="headerlink" title="优化前"></a>优化前</h4><pre><code class="lang-java">int price;
+if(condition){
+  price = 10;
+} else {
+  price = 20;
+}
+</code></pre>
+<h4 id="优化后-1"><a href="#优化后-1" class="headerlink" title="优化后"></a>优化后</h4><pre><code class="lang-java">int price = condition ? 10 : 20;
+</code></pre>
+<h3 id="优化三：使用枚举"><a href="#优化三：使用枚举" class="headerlink" title="优化三：使用枚举"></a>优化三：使用枚举</h3><h4 id="优化前-2"><a href="#优化前-2" class="headerlink" title="优化前"></a>优化前</h4><pre><code class="lang-java">int orderStatus = getXXX(xxx);
+String OrderStatusDes;
+if(orderStatus == 0) {
+    OrderStatusDes = "订单未支付";
+}else if(OrderStatus == 1) {
+    OrderStatusDes = "订单已支付";
+}else if(OrderStatus == 2) {
+   OrderStatusDes = "已发货";
+}
+</code></pre>
 <h4 id="优化后-2"><a href="#优化后-2" class="headerlink" title="优化后"></a>优化后</h4><p><strong>先定义一个枚举类型</strong></p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> OrderStatusEnum {</span><br><span class="line">    UN_PAID(<span class="number">0</span>,<span class="string">"订单未支付"</span>),PAIDED(<span class="number">1</span>,<span class="string">"订单已支付"</span>),SENDED(<span class="number">2</span>,<span class="string">"已发货"</span>),;</span><br><span class="line">     </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> index;</span><br><span class="line">    <span class="keyword">private</span> String desc;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getIndex</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> index;</span><br><span class="line">    }</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDesc</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> desc;</span><br><span class="line">    }</span><br><span class="line"> </span><br><span class="line">    OrderStatusEnum(<span class="keyword">int</span> index, String desc){</span><br><span class="line">        <span class="keyword">this</span>.index = index;</span><br><span class="line">        <span class="keyword">this</span>.desc =desc;</span><br><span class="line">    }</span><br><span class="line"> </span><br><span class="line">    <span class="function">OrderStatusEnum <span class="title">ofCode</span><span class="params">(<span class="keyword">int</span> orderStatus)</span> </span>{</span><br><span class="line">        <span class="keyword">for</span> (OrderStatusEnum temp : OrderStatusEnum.values()) {</span><br><span class="line">            <span class="keyword">if</span> (temp.getIndex() == orderStatus) {</span><br><span class="line">                <span class="keyword">return</span> temp;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public enum OrderStatusEnum {
+    UN_PAID(0,"订单未支付"),PAIDED(1,"订单已支付"),SENDED(2,"已发货"),;
 
+    private int index;
+    private String desc;
+
+    public int getIndex() {
+        return index;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    OrderStatusEnum(int index, String desc){
+        this.index = index;
+        this.desc =desc;
+    }
+
+    OrderStatusEnum ofCode(int orderStatus) {
+        for (OrderStatusEnum temp : OrderStatusEnum.values()) {
+            if (temp.getIndex() == orderStatus) {
+                return temp;
+            }
+        }
+        return null;
+    }
+}
+</code></pre>
 <p>有了枚举之后，以上if-else逻辑分支，可以优化为一行代码</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String OrderStatusDes = OrderStatusEnum.ofCode(orderStatus).getDesc();</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">String OrderStatusDes = OrderStatusEnum.ofCode(orderStatus).getDesc();
+</code></pre>
 <h3 id="优化四：合并条件表达式"><a href="#优化四：合并条件表达式" class="headerlink" title="优化四：合并条件表达式"></a>优化四：合并条件表达式</h3><p>如果有一系列条件返回一样的结果，可以将它们合并为一个条件表达式，让逻辑更加清晰。</p>
-<h4 id="优化前-3"><a href="#优化前-3" class="headerlink" title="优化前"></a>优化前</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">getVipDiscount</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">if</span>(age&lt;<span class="number">18</span>){</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.8</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span>(<span class="string">"深圳"</span>.equals(city)){</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.8</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span>(isStudent){</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.8</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">//do somethig</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<h4 id="优化后-3"><a href="#优化后-3" class="headerlink" title="优化后"></a>优化后</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">getVipDiscount</span><span class="params">()</span></span>{</span><br><span class="line">    <span class="keyword">if</span>(age&lt;<span class="number">18</span>|| <span class="string">"深圳"</span>.equals(city)||isStudent){</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.8</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">//doSomthing</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<h4 id="优化前-3"><a href="#优化前-3" class="headerlink" title="优化前"></a>优化前</h4><pre><code class="lang-java">double getVipDiscount() {
+    if(age&lt;18){
+        return 0.8;
+    }
+    if("深圳".equals(city)){
+        return 0.8;
+    }
+    if(isStudent){
+        return 0.8;
+    }
+    //do somethig
+}
+</code></pre>
+<h4 id="优化后-3"><a href="#优化后-3" class="headerlink" title="优化后"></a>优化后</h4><pre><code class="lang-java">double getVipDiscount(){
+    if(age&lt;18|| "深圳".equals(city)||isStudent){
+        return 0.8;
+    }
+    //doSomthing
+}
+</code></pre>
 <p>如果返回统一结果的条件过多，可以再编写一个方法，封装起来<span class="github-emoji"><span>😄</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f604.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></p>
 <h3 id="优化五：使用Optional"><a href="#优化五：使用Optional" class="headerlink" title="优化五：使用Optional"></a>优化五：使用Optional</h3><p>有时候<code>if-else</code>比较多，是因为非空判断导致的，这时候你可以使用<code>Java9</code>的<code>Optional</code>进行优化。</p>
-<h4 id="优化前-4"><a href="#优化前-4" class="headerlink" title="优化前"></a>优化前</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String str = <span class="string">"wkk"</span>;</span><br><span class="line"><span class="keyword">if</span> (str != <span class="keyword">null</span>) {</span><br><span class="line">    System.out.println(str);</span><br><span class="line">} <span class="keyword">else</span> {</span><br><span class="line">    System.out.println(<span class="string">"Null"</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<h4 id="优化后-4"><a href="#优化后-4" class="headerlink" title="优化后"></a>优化后</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Optional&lt;String&gt; strOptional = Optional.ofNullable(<span class="string">"wkk"</span>);</span><br><span class="line">strOptional.ifPresentOrElse(System.out::println, () -&gt; System.out.println(<span class="string">"Null"</span>));</span><br></pre></td></tr></tbody></table></figure>
-
+<h4 id="优化前-4"><a href="#优化前-4" class="headerlink" title="优化前"></a>优化前</h4><pre><code class="lang-java">String str = "wkk";
+if (str != null) {
+    System.out.println(str);
+} else {
+    System.out.println("Null");
+}
+</code></pre>
+<h4 id="优化后-4"><a href="#优化后-4" class="headerlink" title="优化后"></a>优化后</h4><pre><code class="lang-java">Optional&lt;String&gt; strOptional = Optional.ofNullable("wkk");
+strOptional.ifPresentOrElse(System.out::println, () -&gt; System.out.println("Null"));
+</code></pre>
 <p><code>Java8</code>的<code>Optional</code>虽然没有这个方法，但是我们可以用Optional来优化非空的赋值操作</p>
 <p><strong>示例：</strong></p>
 <p>电池平台服役状态赋值：如果为null，赋值为0，否则为原来的值</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">batteryBasicInfoCollectDto.setFlowControlState(Optional.ofNullable(batteryInfo.getFlowControlState()).orElse(<span class="number">0</span>));</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">batteryBasicInfoCollectDto.setFlowControlState(Optional.ofNullable(batteryInfo.getFlowControlState()).orElse(0));
+</code></pre>
 <h3 id="优化六：表驱动法"><a href="#优化六：表驱动法" class="headerlink" title="优化六：表驱动法"></a>优化六：表驱动法</h3><h4 id="优化前-5"><a href="#优化前-5" class="headerlink" title="优化前"></a>优化前</h4><p><strong>表驱动法</strong>，又称之为表驱动、表驱动方法。表驱动方法是一种使你可以在表中查找信息，而不必用很多的逻辑语句（if或Case）来把它们找出来的方法。以下的demo，把map抽象成表，在map中查找信息，而省去不必要的逻辑语句。</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (param.equals(value1)) {</span><br><span class="line">    doAction1(someParams);</span><br><span class="line">} <span class="keyword">else</span> <span class="keyword">if</span> (param.equals(value2)) {</span><br><span class="line">    doAction2(someParams);</span><br><span class="line">} <span class="keyword">else</span> <span class="keyword">if</span> (param.equals(value3)) {</span><br><span class="line">    doAction3(someParams);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">if (param.equals(value1)) {
+    doAction1(someParams);
+} else if (param.equals(value2)) {
+    doAction2(someParams);
+} else if (param.equals(value3)) {
+    doAction3(someParams);
+}
+</code></pre>
+<h4 id="优化后-5"><a href="#优化后-5" class="headerlink" title="优化后"></a>优化后</h4><pre><code class="lang-java">// 这里泛型是为方便演示，实际可替换为你需要的类型
+Map&lt;?, Function&lt;?&gt; action&gt; actionMappings = new HashMap&lt;&gt;(); 
 
-<h4 id="优化后-5"><a href="#优化后-5" class="headerlink" title="优化后"></a>优化后</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里泛型是为方便演示，实际可替换为你需要的类型</span></span><br><span class="line">Map&lt;?, Function&lt;?&gt; action&gt; actionMappings = <span class="keyword">new</span> HashMap&lt;&gt;(); </span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化</span></span><br><span class="line">actionMappings.put(value1, (someParams) -&gt; { doAction1(someParams)});</span><br><span class="line">actionMappings.put(value2, (someParams) -&gt; { doAction2(someParams)});</span><br><span class="line">actionMappings.put(value3, (someParams) -&gt; { doAction3(someParams)});</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 省略多余逻辑语句</span></span><br><span class="line">actionMappings.get(param).apply(someParams);</span><br></pre></td></tr></tbody></table></figure>
+// 初始化
+actionMappings.put(value1, (someParams) -&gt; { doAction1(someParams)});
+actionMappings.put(value2, (someParams) -&gt; { doAction2(someParams)});
+actionMappings.put(value3, (someParams) -&gt; { doAction3(someParams)});
 
-<h3 id="优化七：优化逻辑结构，让正常流程走主干"><a href="#优化七：优化逻辑结构，让正常流程走主干" class="headerlink" title="优化七：优化逻辑结构，让正常流程走主干"></a>优化七：优化逻辑结构，让正常流程走主干</h3><h4 id="优化前-6"><a href="#优化前-6" class="headerlink" title="优化前"></a>优化前</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">getAdjustedCapital</span><span class="params">()</span></span>{</span><br><span class="line">    <span class="keyword">if</span>(_capital &lt;= <span class="number">0.0</span> ){</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.0</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span>(_intRate &gt; <span class="number">0</span> &amp;&amp; _duration &gt;<span class="number">0</span>){</span><br><span class="line">        <span class="keyword">return</span> (_income / _duration) *ADJ_FACTOR;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0.0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+// 省略多余逻辑语句
+actionMappings.get(param).apply(someParams);
+</code></pre>
+<h3 id="优化七：优化逻辑结构，让正常流程走主干"><a href="#优化七：优化逻辑结构，让正常流程走主干" class="headerlink" title="优化七：优化逻辑结构，让正常流程走主干"></a>优化七：优化逻辑结构，让正常流程走主干</h3><h4 id="优化前-6"><a href="#优化前-6" class="headerlink" title="优化前"></a>优化前</h4><pre><code class="lang-java">public double getAdjustedCapital(){
+    if(_capital &lt;= 0.0 ){
+        return 0.0;
+    }
+    if(_intRate &gt; 0 &amp;&amp; _duration &gt;0){
+        return (_income / _duration) *ADJ_FACTOR;
+    }
+    return 0.0;
+}
+</code></pre>
+<h4 id="优化后-6"><a href="#优化后-6" class="headerlink" title="优化后"></a>优化后</h4><pre><code class="lang-java">
+public double getAdjustedCapital(){
+    if(_capital &lt;= 0.0 ){
+        return 0.0;
+    }
+    if(_intRate &lt;= 0 || _duration &lt;= 0){
+        return 0.0;
+    }
 
-<h4 id="优化后-6"><a href="#优化后-6" class="headerlink" title="优化后"></a>优化后</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">getAdjustedCapital</span><span class="params">()</span></span>{</span><br><span class="line">    <span class="keyword">if</span>(_capital &lt;= <span class="number">0.0</span> ){</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.0</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span>(_intRate &lt;= <span class="number">0</span> || _duration &lt;= <span class="number">0</span>){</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.0</span>;</span><br><span class="line">    }</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> (_income / _duration) *ADJ_FACTOR;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+    return (_income / _duration) *ADJ_FACTOR;
+}
+</code></pre>
 <p><strong>将条件反转使异常情况先退出，让正常流程维持在主干流程，可以让代码结构更加清晰。</strong></p>
 <h3 id="优化八：策略模式-工厂方法消除if-else"><a href="#优化八：策略模式-工厂方法消除if-else" class="headerlink" title="优化八：策略模式+工厂方法消除if-else"></a>优化八：策略模式+工厂方法消除if-else</h3><p><strong>策略类定义</strong>：一个策略接口和一组实现这个接口的策略类。</p>
 <p><strong>特点</strong>：客户端代码基于接口而非实现编程，可以灵活地替换不同的策略。</p>
 <p><strong>假设需求</strong>：根据不同勋章类型，处理相对应的勋章服务</p>
-<h4 id="优化前-7"><a href="#优化前-7" class="headerlink" title="优化前"></a>优化前</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">String medalType = <span class="string">"guest"</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="string">"guest"</span>.equals(medalType)) {</span><br><span class="line">    System.out.println(<span class="string">"嘉宾勋章"</span>);</span><br><span class="line">} <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">"vip"</span>.equals(medalType)) {</span><br><span class="line">    System.out.println(<span class="string">"会员勋章"</span>);</span><br><span class="line">} <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">"guard"</span>.equals(medalType)) {</span><br><span class="line">    System.out.println(<span class="string">"展示守护勋章"</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<h4 id="优化前-7"><a href="#优化前-7" class="headerlink" title="优化前"></a>优化前</h4><pre><code class="lang-java">
+String medalType = "guest";
+if ("guest".equals(medalType)) {
+    System.out.println("嘉宾勋章");
+} else if ("vip".equals(medalType)) {
+    System.out.println("会员勋章");
+} else if ("guard".equals(medalType)) {
+    System.out.println("展示守护勋章");
+}
+</code></pre>
 <h4 id="优化后-7"><a href="#优化后-7" class="headerlink" title="优化后"></a>优化后</h4><p>首先，我们把每个条件逻辑代码块，抽象成一个公共的接口，可以得出以下代码：</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//勋章接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IMedalService</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">showMedal</span><span class="params">()</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">//勋章接口
+public interface IMedalService {
+    void showMedal();
+}
+</code></pre>
 <p>我们根据每个逻辑条件，定义相对应的策略实现类，可得以下代码：</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//守护勋章策略实现类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GuardMedalServiceImpl</span> <span class="keyword">implements</span> <span class="title">IMedalService</span> </span>{</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showMedal</span><span class="params">()</span> </span>{</span><br><span class="line">        System.out.println(<span class="string">"展示守护勋章"</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="comment">//嘉宾勋章策略实现类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GuestMedalServiceImpl</span> <span class="keyword">implements</span> <span class="title">IMedalService</span> </span>{</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showMedal</span><span class="params">()</span> </span>{</span><br><span class="line">        System.out.println(<span class="string">"嘉宾勋章"</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="comment">//VIP勋章策略实现类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VipMedalServiceImpl</span> <span class="keyword">implements</span> <span class="title">IMedalService</span> </span>{</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showMedal</span><span class="params">()</span> </span>{</span><br><span class="line">        System.out.println(<span class="string">"会员勋章"</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">//守护勋章策略实现类
+public class GuardMedalServiceImpl implements IMedalService {
+    @Override
+    public void showMedal() {
+        System.out.println("展示守护勋章");
+    }
+}
+//嘉宾勋章策略实现类
+public class GuestMedalServiceImpl implements IMedalService {
+    @Override
+    public void showMedal() {
+        System.out.println("嘉宾勋章");
+    }
+}
+//VIP勋章策略实现类
+public class VipMedalServiceImpl implements IMedalService {
+    @Override
+    public void showMedal() {
+        System.out.println("会员勋章");
+    }
+}
+</code></pre>
 <p>接下来，我们再定义策略工厂类，用来管理这些勋章实现策略类，如下：</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//勋章服务工产类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MedalServicesFactory</span> </span>{</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;String, IMedalService&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">static</span> {</span><br><span class="line">        map.put(<span class="string">"guard"</span>, <span class="keyword">new</span> GuardMedalServiceImpl());</span><br><span class="line">        map.put(<span class="string">"vip"</span>, <span class="keyword">new</span> VipMedalServiceImpl());</span><br><span class="line">        map.put(<span class="string">"guest"</span>, <span class="keyword">new</span> GuestMedalServiceImpl());</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IMedalService <span class="title">getMedalService</span><span class="params">(String medalType)</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> map.get(medalType);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">//勋章服务工产类
+public class MedalServicesFactory {
 
+    private static final Map&lt;String, IMedalService&gt; map = new HashMap&lt;&gt;();
+    static {
+        map.put("guard", new GuardMedalServiceImpl());
+        map.put("vip", new VipMedalServiceImpl());
+        map.put("guest", new GuestMedalServiceImpl());
+    }
+    public static IMedalService getMedalService(String medalType) {
+        return map.get(medalType);
+    }
+}
+</code></pre>
 <p>使用了策略+工厂模式之后，代码变得简洁多了，如下：</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        String medalType = <span class="string">"guest"</span>;</span><br><span class="line">        IMedalService medalService = MedalServicesFactory.getMedalService(medalType);</span><br><span class="line">        medalService.showMedal();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">public class Test {
+    public static void main(String[] args) {
+        String medalType = "guest";
+        IMedalService medalService = MedalServicesFactory.getMedalService(medalType);
+        medalService.showMedal();
+    }
+}
+</code></pre>
 
         </div>
 
@@ -403,6 +548,7 @@
 
 
 
+
 </article>
 
 
@@ -422,18 +568,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -442,6 +604,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -490,7 +653,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -546,6 +709,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

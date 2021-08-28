@@ -41,6 +41,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -55,10 +56,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -205,14 +206,26 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><a id="more"></a>
-
 <p>Session和Cookie的作用是为了保持访问用户与后端服务器的交互状态</p>
 <h2 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h2><p>Cookie的作用通俗来讲就是当一个用户通过HTTP请求访问服务器的时候, 服务器将<strong>一些Key/Value的键值对</strong>返回给客户端, 并且还可以给这些数据添加一些限制条件: 存活时间, 生效范围等, 在符合限制条件的情况下, 该用户再次发起请求, 数据将会被完整的返回给服务器.</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/cookie/set"</span>, method = RequestMethod.GET)</span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">setCookie</span><span class="params">(HttpServletResponse response)</span></span>{</span><br><span class="line">    <span class="comment">// 生成cookie</span></span><br><span class="line">    Cookie cookie = <span class="keyword">new</span> Cookie(<span class="string">"wkk"</span>, CommunityUtil.generateUUID());</span><br><span class="line">    <span class="comment">// 设置生效范围</span></span><br><span class="line">    cookie.setPath(<span class="string">"/community/alpha"</span>);</span><br><span class="line">    <span class="comment">// 设置cookie的生效时间（默认存在内存中， 设置时间之后会存在硬盘中）</span></span><br><span class="line">    cookie.setMaxAge(<span class="number">10</span>);</span><br><span class="line">    <span class="comment">// 发送给客户端</span></span><br><span class="line">    response.addCookie(cookie);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"set cookie"</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">@RequestMapping(value = "/cookie/set", method = RequestMethod.GET)
+@ResponseBody
+public String setCookie(HttpServletResponse response){
+    // 生成cookie
+    Cookie cookie = new Cookie("wkk", CommunityUtil.generateUUID());
+    // 设置生效范围
+    cookie.setPath("/community/alpha");
+    // 设置cookie的生效时间（默认存在内存中， 设置时间之后会存在硬盘中）
+    cookie.setMaxAge(10);
+    // 发送给客户端
+    response.addCookie(cookie);
+    return "set cookie";
+}
+</code></pre>
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -220,11 +233,6 @@
                 </div>
                 <div class="image-caption">Cookie</div>
             </figure>
-
-
-
-
-
 <p>W3C在设计Cookie的时候, 实际上考虑的是为了<strong>记录用户在一段时间的web应用的行为路径.</strong> 因为HTTP是无状态协议, 当用户访问完一次请求结束之后, 后端服务器无法知道下一次来访的是否还是上次访问的用户.   </p>
 <p>使用Cookies带来的优势:</p>
 <ol>
@@ -239,7 +247,6 @@
                 </div>
                 <div class="image-caption">Session</div>
             </figure>
-
 <p>同一个客户端每次和服务端交互的时候, 不需要每次都传回所有的Cookie值, 而只要传回一个ID, 这个ID是客户端第一次访问服务器时生成的, 而且每个客户端是唯一的, 这样每个客户端就有了唯一的ID, 客户端只要返回ID即可, 这个ID就是名为<strong>JSSIONID</strong>的一个Cookie</p>
 <h2 id="安全问题"><a href="#安全问题" class="headerlink" title="安全问题"></a>安全问题</h2><p>虽然Cookie和Session都可以跟踪客户端的访问记录,  但是工作方式不同, Cookie是通过把所有要保存的数据通过HTTP的头部从客户端传递到服务度端, 然后又从服务端传到客户端, 所有的数据都存储到客户端的浏览器中, 这些Cookie数据可以直接访问到, 设置可以修改, 所以安全性受到很大的挑战</p>
 <p>相比而言, Session的安全性高很多, 因为Session的数据存储在服务器里, 只是通过Cookie传递一个SessionID而已, 所以Session更适合存储用户隐私和重要的数据</p>
@@ -369,6 +376,7 @@
 
 
 
+
 </article>
 
 
@@ -388,18 +396,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -408,6 +432,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -456,7 +481,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -512,6 +537,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

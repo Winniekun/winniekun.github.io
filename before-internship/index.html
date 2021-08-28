@@ -42,6 +42,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -56,10 +57,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -206,11 +207,11 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>2020年2月底，在自己确定要找实习的时候，开始和女朋友哭诉所害怕自己找不到实习，没有公司要我，我太菜了等等等。经过耗时半年的时间，终于确定下来的了实习地点和实习公司，感觉整个过程还挺好玩儿的，所以就记录下来吧。</p>
 <a id="more"></a>
-
 <h2 id="现在"><a href="#现在" class="headerlink" title="现在"></a>现在</h2><p>挺尴尬的，本来想着再实习之前把文章写好，但是后面有别的事情就没有来得及写，最后想写的时候，发现<code>hexo</code>出问题了。所以就一直拖到了国庆假期，抽了点时间改改，终于又能重新写blog了。</p>
 <p>目前已经在NIO实习两周了，第一周还好，就是看看公司文档，然后按照需求完善了一个接口，后面老师安排我看几个节点的代码，然后修复<code>sonarQube</code>上检测出的<code>Bug</code>。第二周就开始忙碌了，刚好排期，分配了我还挺多的任务，希望能做的又好又棒。</p>
 <p>放张我所在楼的前台，感觉还挺好看的（假期前一天走的晚，刚好没有多少人，顺手拍的<span class="github-emoji"><span>😄</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f604.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>）。</p>
@@ -221,9 +222,6 @@
                 </div>
                 <div class="image-caption">NIO</div>
             </figure>
-
-
-
 <p>国庆假期人是真的多，虹桥车站爆满。不知道为什么，脑子里竟然是釜山行的画面…</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
@@ -232,7 +230,6 @@
                 </div>
                 <div class="image-caption">虹桥火车站</div>
             </figure>
-
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>面试真的并不可怕，大不了就是给面试官感觉你不行，在面试官面前尬聊一个小时，其他的真的没什么。面多了就感觉还挺好玩儿的（就是每次面试前还是会紧张好长时间）。面试期间，感觉有一些问题并没有标准的答案，所以可以使用和面试官讨论的形式阐述自己的观点。最后就是记得面试后做好复盘，这样不仅可以帮助自己查缺补漏，还能让自己能够更好的梳理知识点。</p>
 
         </div>
@@ -360,6 +357,7 @@
 
 
 
+
 </article>
 
 
@@ -379,18 +377,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -399,6 +413,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -447,7 +462,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -503,6 +518,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

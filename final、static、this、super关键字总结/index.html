@@ -38,6 +38,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -52,10 +53,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -178,7 +179,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#final-static-this-super关键字总结"><span class="post-toc-number">1.</span> <span class="post-toc-text">final  static this super关键字总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#final-关键字"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">final 关键字</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#static-关键字"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">static 关键字</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#this-关键字"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">this 关键字</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#super-关键字"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">super 关键字</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#final-static-this-super关键字总结"><span class="post-toc-number">1.</span> <span class="post-toc-text">final  static this super关键字总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#final-关键字"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">final 关键字</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#static-关键字"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">static 关键字</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -202,6 +203,7 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="final-static-this-super关键字总结"><a href="#final-static-this-super关键字总结" class="headerlink" title="final  static this super关键字总结"></a>final  static this super关键字总结</h2><h3 id="final-关键字"><a href="#final-关键字" class="headerlink" title="final 关键字"></a>final 关键字</h3><p>主要用于三个地方：类、方法、变量</p>
@@ -215,7 +217,6 @@
 <li>变量： <strong>对于一个final变量，如果是基本数据类型的变量，则其数值一旦在初始化之后便不能更改；如果是引用类型的变量，则在对其初始化之后便不能再让其指向另一个对象。</strong></li>
 </ol>
 <a id="more"></a>
-
 <h3 id="static-关键字"><a href="#static-关键字" class="headerlink" title="static 关键字"></a>static 关键字</h3><p>主要为四个地方放： 修饰成员变量和成员方法， 静态代码块、静态内部类、静态导包</p>
 <ol>
 <li><p>修饰静态成员变量和成员方法</p>
@@ -233,13 +234,50 @@
 </li>
 <li><p>静态导包</p>
 <p><code>mport static</code> 这两个关键字连用可以指定导入某个类中的指定静态资源，并且不需要使用类名调用类中静态成员，可以直接使用类中静态成员变量和成员方法。</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> com.train.keywords.Test.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FinalForKnow</span> </span>{</span><br><span class="line">    <span class="comment">// final 用于 类 方法 变量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String a = <span class="string">"1123"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        System.out.println(a);</span><br><span class="line">        System.out.println(name);</span><br><span class="line">        System.out.println(age);</span><br><span class="line">        <span class="comment">// 1123</span></span><br><span class="line">        <span class="comment">// 维坤坤</span></span><br><span class="line">        <span class="comment">// 0</span></span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>{</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span>  <span class="keyword">int</span> age;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String name = <span class="string">"维坤坤"</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
-</ol>
-<h3 id="this-关键字"><a href="#this-关键字" class="headerlink" title="this 关键字"></a>this 关键字</h3><p>引用类的当前实例</p>
-<h3 id="super-关键字"><a href="#super-关键字" class="headerlink" title="super 关键字"></a>super 关键字</h3><p>从子类访问父类的方法和变量</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Super</span> </span>{</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> number;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">showNumber</span><span class="params">()</span> </span>{</span><br><span class="line">        System.out.println(<span class="string">"number = "</span> + number);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Sub</span> <span class="keyword">extends</span> <span class="title">Super</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">super</span>.number = <span class="number">10</span>;</span><br><span class="line">        <span class="keyword">super</span>.showNumber();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>```java<br>import static com.train.keywords.Test.*;</p>
+<p>public class FinalForKnow {</p>
+<pre><code>// final 用于 类 方法 变量
+private static final String a = "1123";
 
-<ul>
+public static void main(String[] args) {
+    System.out.println(a);
+    System.out.println(name);
+    System.out.println(age);
+    // 1123
+    // 维坤坤
+    // 0
+}
+</code></pre><p>}</p>
+</li>
+</ol>
+<p>   public class Test {<br>       public static  int age;<br>       public static String name = “维坤坤”;<br>   }</p>
+<pre><code>
+
+
+### this 关键字
+
+引用类的当前实例
+
+### super 关键字
+
+从子类访问父类的方法和变量
+
+```java
+public class Super {
+    protected int number;
+
+    protected showNumber() {
+        System.out.println("number = " + number);
+    }
+}
+
+public class Sub extends Super {
+    void bar() {
+        super.number = 10;
+        super.showNumber();
+    }
+}
+</code></pre><ul>
 <li>在构造器中使用 <code>super（）</code> 调用父类中的其他构造方法时，该语句必须处于构造器的首行，否则编译器会报错。另外，this 调用本类中的其他构造方法时，也要放在首行。</li>
 <li>this、super不能用在static方法中。</li>
 </ul>
@@ -371,6 +409,7 @@
 
 
 
+
 </article>
 
 
@@ -390,18 +429,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -410,6 +465,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -460,7 +516,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -516,6 +572,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

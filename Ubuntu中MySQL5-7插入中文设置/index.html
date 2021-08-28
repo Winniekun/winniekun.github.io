@@ -38,6 +38,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -52,10 +53,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -202,21 +203,24 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>其实关MySQL中插入中文,自己前年是设置过的,之后就一直没有管过,后来系统重装之后,重新安装配置各种环境之后,今天开始用MySQL的时候,才发现这个问题还没有解决,然后一时也想不起来怎么弄了,就重新网上搜索教程,最后想了下还是写一下配置过程吧,以后备用</p>
 <a id="more"></a>
-
-<h2 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h2><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/mysql/mysql.conf.d/mysqld.cnf  /etc/mysql/my.cnf</span><br></pre></td></tr></tbody></table></figure>
-<h2 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h2><p>修改/etc/mysql/my.cnf文件，找到[client]标记后在下方添加一行代码：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">default-character-set=utf8</span><br></pre></td></tr></tbody></table></figure>
-<p>如果找不到[client]标记，就直接在文件末尾插入：</p>
-<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line">default-character-set=utf8</span><br></pre></td></tr></tbody></table></figure>
-<h2 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h2><p>找到[mysqld]标记，在该标记下方添加两行</p>
-<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">character-set-server=utf8</span><br><span class="line">collation-server=utf8_general_ci</span><br></pre></td></tr></tbody></table></figure>
-<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><h3 id="执行重启mysql命令："><a href="#执行重启mysql命令：" class="headerlink" title="执行重启mysql命令："></a>执行重启mysql命令：</h3><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service mysql restart</span><br></pre></td></tr></tbody></table></figure>
-<h3 id="查看修改结果"><a href="#查看修改结果" class="headerlink" title="查看修改结果"></a>查看修改结果</h3><p>进入MySQL，之后输入如下命令</p>
-<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show variables like 'character%';</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h2><pre><code>cp /etc/mysql/mysql.conf.d/mysqld.cnf  /etc/mysql/my.cnf
+</code></pre><h2 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h2><p>修改/etc/mysql/my.cnf文件，找到[client]标记后在下方添加一行代码：</p>
+<pre><code>default-character-set=utf8
+</code></pre><p>如果找不到[client]标记，就直接在文件末尾插入：</p>
+<pre><code>[client]
+default-character-set=utf8
+</code></pre><h2 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h2><p>找到[mysqld]标记，在该标记下方添加两行</p>
+<pre><code>character-set-server=utf8
+collation-server=utf8_general_ci
+</code></pre><h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><h3 id="执行重启mysql命令："><a href="#执行重启mysql命令：" class="headerlink" title="执行重启mysql命令："></a>执行重启mysql命令：</h3><pre><code>sudo service mysql restart
+</code></pre><h3 id="查看修改结果"><a href="#查看修改结果" class="headerlink" title="查看修改结果"></a>查看修改结果</h3><p>进入MySQL，之后输入如下命令</p>
+<pre><code>show variables like 'character%';
+</code></pre>
         </div>
 
         <blockquote class="post-copyright">
@@ -342,6 +346,7 @@
 
 
 
+
 </article>
 
 
@@ -361,18 +366,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -381,6 +402,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -429,7 +451,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -485,6 +507,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

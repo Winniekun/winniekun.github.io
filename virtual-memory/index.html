@@ -21,12 +21,12 @@
     
     
     <meta name="keywords" content="内存管理">
-    <meta name="description" content="序 “Any problem in computer science can be solved by another layer of indirection.  ——程序员的自我修养  物理寻址早期，CPU在处理某个进程的时候，处理的流程如下。   对于物理寻址而言，我们需要直接将程序全部装入到物理内存中，接下来运行期间，CPU在处理时，直接进行物理寻址。然后执行相关的读写命令。 对于物理内存">
+    <meta name="description" content="序 “Any problem in computer science can be solved by another layer of indirection.  ——程序员的自我修养  物理寻址早期，CPU在处理某个进程的时候，处理的流程如下。  对于物理寻址而言，我们需要直接将程序全部装入到物理内存中，接下来运行期间，CPU在处理时，直接进行物理寻址。然后执行相关的读写命令。 对于物理内存而">
 <meta property="og:type" content="article">
 <meta property="og:title" content="虚拟内存概览">
 <meta property="og:url" content="https://winniekun.github.io/virtual-memory/index.html">
 <meta property="og:site_name" content="Wkkの笔记">
-<meta property="og:description" content="序 “Any problem in computer science can be solved by another layer of indirection.  ——程序员的自我修养  物理寻址早期，CPU在处理某个进程的时候，处理的流程如下。   对于物理寻址而言，我们需要直接将程序全部装入到物理内存中，接下来运行期间，CPU在处理时，直接进行物理寻址。然后执行相关的读写命令。 对于物理内存">
+<meta property="og:description" content="序 “Any problem in computer science can be solved by another layer of indirection.  ——程序员的自我修养  物理寻址早期，CPU在处理某个进程的时候，处理的流程如下。  对于物理寻址而言，我们需要直接将程序全部装入到物理内存中，接下来运行期间，CPU在处理时，直接进行物理寻址。然后执行相关的读写命令。 对于物理内存而">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726165551742.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726164801304.png">
@@ -44,6 +44,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -58,10 +59,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -208,6 +209,7 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><blockquote>
@@ -215,8 +217,7 @@
 <p>——<a href="https://book.douban.com/subject/3652388/" target="_blank" rel="noopener">程序员的自我修养</a></p>
 </blockquote>
 <h2 id="物理寻址"><a href="#物理寻址" class="headerlink" title="物理寻址"></a>物理寻址</h2><p>早期，CPU在处理某个进程的时候，处理的流程如下。</p>
-<img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726165551742.png" alt="物理寻址方式" style="zoom:50%;">
-
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726165551742.png" alt="物理寻址方式" style="zoom:50%;"></p>
 <p>对于物理寻址而言，我们需要直接将程序全部装入到物理内存中，接下来运行期间，CPU在处理时，直接进行物理寻址。然后执行相关的读写命令。</p>
 <p>对于物理内存而言，是不做任何访问限制的，所以直接操作进行物理寻址会导致一个问题是：</p>
 <ol>
@@ -232,12 +233,11 @@
 </ol>
 </li>
 </ol>
-<p>所以，为了更加有效的管理内存并且少出错，现代的操作系统提供了一种对主存的抽象概念—<strong>虚拟内存</strong>。<strong>虚拟内存是硬件异常、硬件地址翻译、主存、磁盘和内核软件的完美交互</strong></p>
+<p>所以，为了更加有效的管理内存并且少出错，现代的操作系统提供了一种对主存的抽象概念—-<strong>虚拟内存</strong>。<strong>虚拟内存是硬件异常、硬件地址翻译、主存、磁盘和内核软件的完美交互</strong></p>
 <h2 id="虚拟内存概念"><a href="#虚拟内存概念" class="headerlink" title="虚拟内存概念"></a>虚拟内存概念</h2><blockquote>
 <p>虚拟内存是计算机系统内存管理的一种技术。它使得应用程序认为它拥有连续可用的内存（一个连续完整的地址空间），而实际上，它通常是被分隔成多个物理内存碎片，还有部分暂时存储在外部磁盘存储器上，在需要时进行数据交换。<br>现代所有用于一般应用的操作系统都对普通的应用程序使用虚拟内存技术，老一些的操作系统，如DOS和1980年代的Windows，或者那些1960年代的大型机，一般都没有虚拟内存的功能<br>——维基百科</p>
 </blockquote>
-<img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726164801304.png" alt="image-20210726164801304" style="zoom: 50%;">
-
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210726164801304.png" alt="image-20210726164801304" style="zoom: 50%;"></p>
 <p>引入序中所引用的话<strong>Any problem in computer science can be solved by another layer of indirection.</strong> 同理虚拟内存为<code>进程&lt;---&gt;物理内存</code>的中间层，它为进程隐藏了物理内存的概念，同时为其提供了更加简洁易用的接口，供其调用。同时还提供了一些更加复杂的功能。</p>
 <h3 id="能力一：高速缓存"><a href="#能力一：高速缓存" class="headerlink" title="能力一：高速缓存"></a>能力一：高速缓存</h3><p>我们可以将虚拟内存看作是磁盘上的一片空间，当这片空间中的一部分访问比较频繁时，<strong>该部分数据会以页为单位被缓存到主存中</strong>以加速 CPU 访问数据的性能，虚拟内存利用空间较大的磁盘存储作为『内存』并使用主存储缓存进行加速，<strong>让进程认为操作系统的内存很大而且很快，然而区域很大的磁盘并不快，而很快的内存也并不大</strong>。</p>
 <figure class="image-bubble">
@@ -247,7 +247,6 @@
                 </div>
                 <div class="image-caption">虚拟内存作为缓存</div>
             </figure>
-
 <p>在虚拟内存中的虚拟页共分为三种类型：</p>
 <ol>
 <li>未分配<ol>
@@ -282,7 +281,6 @@
                 </div>
                 <div class="image-caption">虚拟寻址方式</div>
             </figure>
-
 <p>通过MMU，每次都会读取页表中的一个页表条目(PTE)，通过在这些页表条目(PTE)中添加一些标志位，就能够实现对一个虚拟页的访问控制权限。譬如：</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
@@ -291,9 +289,8 @@
                 </div>
                 <div class="image-caption">带标志位的页表</div>
             </figure>
-
 <h2 id="应用程序如何如何使用和管理虚拟内存"><a href="#应用程序如何如何使用和管理虚拟内存" class="headerlink" title="应用程序如何如何使用和管理虚拟内存"></a>应用程序如何如何使用和管理虚拟内存</h2><ul>
-<li><input disabled="" type="checkbox"> TODO </li>
+<li>[ ] TODO </li>
 </ul>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虚拟内存的思想，整体来看就是：通过结合磁盘和内存各自的优势，<strong>利用中间层对资源进行更合理地调度，充分提高资源的利用率。并提供和谐以及统一的抽象</strong>。个人目前接触到的最直观的体现就是 JDK中集合类的设计与实现。其也可以算是数据和数据结构之间的中间层，结合其他的技术譬如泛型，为上层的数据提供了接口的同时，隐藏了内部数据结构的实现以及维护。</p>
 <p>最后再总结下为什么需要虚拟内存：</p>
@@ -434,6 +431,7 @@
 
 
 
+
 </article>
 
 
@@ -453,18 +451,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -473,6 +487,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -521,7 +536,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -577,6 +592,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

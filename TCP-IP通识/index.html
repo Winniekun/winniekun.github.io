@@ -39,6 +39,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -53,10 +54,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -203,10 +204,11 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="OSI参考模型"><a href="#OSI参考模型" class="headerlink" title="OSI参考模型"></a>OSI参考模型</h2><a id="more"></a>
-
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -216,7 +218,8 @@
 <th>应用</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>7</td>
 <td>应用层</td>
 <td>HTTP、SMTP、SSH</td>
@@ -258,9 +261,12 @@
 <td>同上</td>
 <td>0 、1数字信号</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h2 id="TCP-IP的具体意义"><a href="#TCP-IP的具体意义" class="headerlink" title="TCP/IP的具体意义"></a>TCP/IP的具体意义</h2><p>从字面意思上说，TCP/IP指的就是TCP、IP两个协议。虽然有些情况下就是这两个协议，其实不然。在大多数情况下，它是利用IP进行通信时所必须用到的协议群的统称。譬如：IP或ICMP、TCP或UDP、TELNET或FTP、以及 HTTP都属于TCP/IP协议。TCP/IP泛指这些协议。有时也统称TCP/IP为网际协议族。</p>
-<h2 id="TCP-IP协议分层模型"><a href="#TCP-IP协议分层模型" class="headerlink" title="TCP/IP协议分层模型"></a>TCP/IP协议分层模型</h2><table>
+<h2 id="TCP-IP协议分层模型"><a href="#TCP-IP协议分层模型" class="headerlink" title="TCP/IP协议分层模型"></a>TCP/IP协议分层模型</h2><div class="table-container">
+<table>
 <thead>
 <tr>
 <th>序号</th>
@@ -268,7 +274,8 @@
 <th>常用协议</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>5</td>
 <td>应用层</td>
 <td>HTTP、SMTP、SSH</td>
@@ -291,9 +298,10 @@
 <tr>
 <td>1</td>
 <td>物理层</td>
-<td></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h3 id="OSI模型和TCP-IP模型的区别"><a href="#OSI模型和TCP-IP模型的区别" class="headerlink" title="OSI模型和TCP/IP模型的区别"></a>OSI模型和TCP/IP模型的区别</h3><p><strong>OSI:</strong> 注重通信协议必要的功能是什么</p>
 <p><strong>TCP/IP:</strong> 注重在计算机实上现协议应该开发哪种程序</p>
 <h3 id="一些协议之间的区别"><a href="#一些协议之间的区别" class="headerlink" title="一些协议之间的区别"></a>一些协议之间的区别</h3><h4 id="IP和ICMP"><a href="#IP和ICMP" class="headerlink" title="IP和ICMP"></a>IP和ICMP</h4><p><strong>IP协议</strong>: 能使得整个互联网都能收到数据的协议，使用IP地址作为主机的标识，将数据包发送给目标地址。但是其不具有重发机制，即使发送失败，也不会重发，所以是一种非可靠性传输协议。</p>
@@ -429,6 +437,7 @@
 
 
 
+
 </article>
 
 
@@ -448,18 +457,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -468,6 +493,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -516,7 +542,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -572,6 +598,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

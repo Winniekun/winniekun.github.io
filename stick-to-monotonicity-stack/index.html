@@ -21,12 +21,12 @@
     
     
     <meta name="keywords" content="死磕系列,单调栈">
-    <meta name="description" content="单调栈前几天刷每日一题的时候, 遇到了一个很有趣的题, 刚开始自己直接暴力AC了, 然后优化的时候, 发现了单调栈这么个特殊的数据结构, 很有趣. 首先, 单调栈的作用范围不大, 只适合用来做一类题目–Next Greater Element  题目接雨水思路参考甜姨题解 123456789101112131415161718192021222324public int trap(int[] he">
+    <meta name="description" content="单调栈前几天刷每日一题的时候, 遇到了一个很有趣的题, 刚开始自己直接暴力AC了, 然后优化的时候, 发现了单调栈这么个特殊的数据结构, 很有趣. 首先, 单调栈的作用范围不大, 只适合用来做一类题目—Next Greater Element  题目接雨水思路参考甜姨题解 public int trap(int[] height) {         &#x2F;&#x2F; 思路 维护一个最小栈         i">
 <meta property="og:type" content="article">
 <meta property="og:title" content="死磕单调栈">
 <meta property="og:url" content="https://winniekun.github.io/stick-to-monotonicity-stack/index.html">
 <meta property="og:site_name" content="Wkkの笔记">
-<meta property="og:description" content="单调栈前几天刷每日一题的时候, 遇到了一个很有趣的题, 刚开始自己直接暴力AC了, 然后优化的时候, 发现了单调栈这么个特殊的数据结构, 很有趣. 首先, 单调栈的作用范围不大, 只适合用来做一类题目–Next Greater Element  题目接雨水思路参考甜姨题解 123456789101112131415161718192021222324public int trap(int[] he">
+<meta property="og:description" content="单调栈前几天刷每日一题的时候, 遇到了一个很有趣的题, 刚开始自己直接暴力AC了, 然后优化的时候, 发现了单调栈这么个特殊的数据结构, 很有趣. 首先, 单调栈的作用范围不大, 只适合用来做一类题目—Next Greater Element  题目接雨水思路参考甜姨题解 public int trap(int[] height) {         &#x2F;&#x2F; 思路 维护一个最小栈         i">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-06-14T11:56:11.000Z">
 <meta property="article:modified_time" content="2021-05-16T16:40:37.343Z">
@@ -39,6 +39,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -53,10 +54,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -203,15 +204,37 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="单调栈"><a href="#单调栈" class="headerlink" title="单调栈"></a>单调栈</h2><p>前几天刷每日一题的时候, 遇到了一个很有趣的题, 刚开始自己直接暴力AC了, 然后优化的时候, 发现了单调栈这么个特殊的数据结构, 很有趣.</p>
-<p>首先, 单调栈的作用范围不大, 只适合用来做一类题目–<code>Next Greater Element</code> </p>
+<p>首先, 单调栈的作用范围不大, 只适合用来做一类题目—<code>Next Greater Element</code> </p>
 <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><h3 id="接雨水"><a href="#接雨水" class="headerlink" title="接雨水"></a><a href="https://leetcode-cn.com/problems/trapping-rain-water/" target="_blank" rel="noopener">接雨水</a></h3><p>思路参考<a href="https://leetcode-cn.com/problems/trapping-rain-water/solution/dan-diao-zhan-jie-jue-jie-yu-shui-wen-ti-by-sweeti/" target="_blank" rel="noopener">甜姨题解</a></p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">trap</span><span class="params">(<span class="keyword">int</span>[] height)</span> </span>{</span><br><span class="line">        <span class="comment">// 思路 维护一个最小栈</span></span><br><span class="line">        <span class="keyword">if</span> (height == <span class="keyword">null</span> || height.length == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        Deque&lt;Integer&gt; stack = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; height.length; i++) {</span><br><span class="line">            <span class="keyword">while</span> (!stack.isEmpty() &amp;&amp; height[stack.peek()] &lt; height[i]) {</span><br><span class="line">                <span class="keyword">int</span> curIdx = stack.pop();</span><br><span class="line">                <span class="keyword">while</span>(!stack.isEmpty() &amp;&amp; height[stack.peek()] == height[curIdx]) {</span><br><span class="line">                    stack.pop();</span><br><span class="line">                }</span><br><span class="line">                <span class="keyword">if</span> (!stack.isEmpty()) {</span><br><span class="line">                    <span class="keyword">int</span> left = stack.peek();</span><br><span class="line">                    <span class="keyword">int</span> len = i - left -<span class="number">1</span> ;</span><br><span class="line">                    <span class="keyword">int</span> high = Math.min(height[i], height[left]) - height[curIdx];</span><br><span class="line">                    ans += len * high;</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">            stack.push(i);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">public int trap(int[] height) {
+        // 思路 维护一个最小栈
+        if (height == null || height.length == 0) {
+            return 0;
+        }
+        int ans = 0;
+        Deque&lt;Integer&gt; stack = new ArrayDeque&lt;&gt;();
+        for (int i = 0; i &lt; height.length; i++) {
+            while (!stack.isEmpty() &amp;&amp; height[stack.peek()] &lt; height[i]) {
+                int curIdx = stack.pop();
+                while(!stack.isEmpty() &amp;&amp; height[stack.peek()] == height[curIdx]) {
+                    stack.pop();
+                }
+                if (!stack.isEmpty()) {
+                    int left = stack.peek();
+                    int len = i - left -1 ;
+                    int high = Math.min(height[i], height[left]) - height[curIdx];
+                    ans += len * high;
+                }
+            }
+            stack.push(i);
+        }
+        return ans;
+    }
+</code></pre>
 
         </div>
 
@@ -338,6 +361,7 @@
 
 
 
+
 </article>
 
 
@@ -357,18 +381,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -377,6 +417,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -425,7 +466,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -481,6 +522,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

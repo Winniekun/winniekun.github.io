@@ -49,6 +49,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -63,10 +64,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -213,11 +214,11 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><a id="more"></a>
-
-<p>AVL树的引入是因为<code>BST</code>在极端的情况下，会退化为<code>链表</code>，那么查找的时间从$O(logN)$ —&gt; $O(N)$</p>
+<p>AVL树的引入是因为<code>BST</code>在极端的情况下，会退化为<code>链表</code>，那么查找的时间从$O(logN)$ —-&gt; $O(N)$</p>
 <p><strong>AVL树是一种自平衡的二叉树，定义如下</strong></p>
 <ol>
 <li>BST</li>
@@ -230,9 +231,6 @@
                 </div>
                 <div class="image-caption">AVL树.png</div>
             </figure>
-
-
-
 <h2 id="插入-amp-旋转"><a href="#插入-amp-旋转" class="headerlink" title="插入&amp;旋转"></a>插入&amp;旋转</h2><h3 id="三节点单旋转"><a href="#三节点单旋转" class="headerlink" title="三节点单旋转"></a>三节点单旋转</h3><h4 id="左旋"><a href="#左旋" class="headerlink" title="左旋"></a>左旋</h4><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -240,7 +238,6 @@
                 </div>
                 <div class="image-caption">AVL_左旋.png</div>
             </figure>
-
 <h4 id="右旋"><a href="#右旋" class="headerlink" title="右旋"></a>右旋</h4><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -248,9 +245,6 @@
                 </div>
                 <div class="image-caption">AVL_右旋.png</div>
             </figure>
-
-
-
 <h3 id="三节点双旋转"><a href="#三节点双旋转" class="headerlink" title="三节点双旋转"></a>三节点双旋转</h3><h4 id="LR旋转"><a href="#LR旋转" class="headerlink" title="LR旋转"></a>LR旋转</h4><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -258,7 +252,6 @@
                 </div>
                 <div class="image-caption">AVL_LR.png</div>
             </figure>
-
 <h4 id="RL旋转"><a href="#RL旋转" class="headerlink" title="RL旋转"></a>RL旋转</h4><p>同理</p>
 <h3 id="什么时候需要旋转"><a href="#什么时候需要旋转" class="headerlink" title="什么时候需要旋转"></a>什么时候需要旋转</h3><p>插入关键字key后，节点p的平衡因子由原来的1或者-1，变成了2或者-2，则需要旋转；只考虑插入key到左子树left的情形，即平衡因子为2</p>
 <ol>
@@ -275,9 +268,6 @@
                 </div>
                 <div class="image-caption">AVL_插入_情况1.png</div>
             </figure>
-
-
-
 <h4 id="情况2"><a href="#情况2" class="headerlink" title="情况2"></a>情况2</h4><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -285,9 +275,6 @@
                 </div>
                 <div class="image-caption">AVL_插入_情况2_1.png</div>
             </figure>
-
-
-
 <p><img src="https://i.loli.net/2020/04/01/yY6WFqocKQbzrm5.png" alt="AVL_插入_情况2_2.png"></p>
 <h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><p>类似插入，假设删除了p右子树的某个节点，引起了p的平衡因子d[p]=2，分析p的左子树left，三种情况如下：</p>
 <ol>
@@ -303,9 +290,6 @@
                 </div>
                 <div class="image-caption">AVL_删除_情况1.png</div>
             </figure>
-
-
-
 <h3 id="情况2-1"><a href="#情况2-1" class="headerlink" title="情况2"></a>情况2</h3><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -313,7 +297,6 @@
                 </div>
                 <div class="image-caption">AVL_删除_情况2.png</div>
             </figure>
-
 <h3 id="情况3"><a href="#情况3" class="headerlink" title="情况3"></a>情况3</h3><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -321,7 +304,6 @@
                 </div>
                 <div class="image-caption">AVL_删除_情况3.png</div>
             </figure>
-
 <h2 id="面试"><a href="#面试" class="headerlink" title="面试"></a>面试</h2><h3 id="排序数组（链表）转AVL"><a href="#排序数组（链表）转AVL" class="headerlink" title="排序数组（链表）转AVL"></a>排序数组（链表）转AVL</h3><h4 id="108-Convert-Sorted-Array-to-Binary-Search-Tree"><a href="#108-Convert-Sorted-Array-to-Binary-Search-Tree" class="headerlink" title="108. Convert Sorted Array to Binary Search Tree"></a>108. Convert Sorted Array to Binary Search Tree</h4><h4 id="109-Convert-Sorted-List-to-Binary-Search-Tree"><a href="#109-Convert-Sorted-List-to-Binary-Search-Tree" class="headerlink" title="109. Convert Sorted List to Binary Search Tree"></a>109. Convert Sorted List to Binary Search Tree</h4><h3 id="判断是否为平衡二叉树"><a href="#判断是否为平衡二叉树" class="headerlink" title="判断是否为平衡二叉树"></a>判断是否为平衡二叉树</h3><h4 id="LeetCode-110-Balanced-Binary-Tree"><a href="#LeetCode-110-Balanced-Binary-Tree" class="headerlink" title="LeetCode 110. Balanced Binary Tree"></a>LeetCode 110. Balanced Binary Tree</h4><p><strong>相关题目会持续添加</strong></p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
 <li><a href="https://github.com/kosoraYintai/TreeMapSourceAnalysis" target="_blank" rel="noopener">TreeMapSourceAnalysis</a></li>
@@ -452,6 +434,7 @@
 
 
 
+
 </article>
 
 
@@ -471,18 +454,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -491,6 +490,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -539,7 +539,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -595,6 +595,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

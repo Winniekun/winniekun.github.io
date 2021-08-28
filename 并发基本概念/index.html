@@ -39,6 +39,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -53,10 +54,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -203,10 +204,10 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h2><a id="more"></a>
-
 <h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><p>进程和线程都是并发执行的，不同的进程之间，存在不同的相互制约关系。为了协调这种制约关系，引入了同步的概念。</p>
 <h4 id="举例说明："><a href="#举例说明：" class="headerlink" title="举例说明："></a>举例说明：</h4><p>系统计算1+2×3。假设有两个进程进行计算该公式，一个是加法进程，一个是乘法进程。如果要计算正确，要先执行乘法进程，然后执行加法进程。但是因为系统的异步性（并发、虚拟、异步、共享），若是不加以制约，无法保证乘法进程在加法进程之前执行的。所以要制定一些机制去约束加法进程，让他在乘法进程完成之后运行。</p>
 <h4 id="同步-1"><a href="#同步-1" class="headerlink" title="同步"></a>同步</h4><p>同步也称为直接制约关系，是指一个任务的完成需要依赖另外一个任务时，只有等待被依赖的任务完成后，依赖的任务才能算完成，这是一种可靠的任务序列。要么成功都成功，失败都失败，两个任务的状态可以保持一致。</p>
@@ -228,30 +229,34 @@
 <p>虽然表面上看非阻塞的方式可以明显的提高 <code>CPU</code> 的利用率，但是也带了另外一种后果就是系统的线程切换增加。增加的 <code>CPU</code>使用时间能不能补偿系统的切换成本需要好好评估。</p>
 <h2 id="以上两种概念的花式组合"><a href="#以上两种概念的花式组合" class="headerlink" title="以上两种概念的花式组合"></a>以上两种概念的花式组合</h2><p>这里主要是和<code>I/O</code>相关</p>
 <p>排列组合之后，共四种情况：<code>同步阻塞</code>、<code>同步非阻塞</code>、<code>异步阻塞</code>、<code>异步非阻塞</code></p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th align="left">组合方式</th>
-<th align="left">性能</th>
+<th style="text-align:left">组合方式</th>
+<th style="text-align:left">性能</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left">同步阻塞</td>
-<td align="left">最常用的一种用法，使用也是最简单的，但是 I/O 性能一般很差，CPU 大部分在空闲状态。(BIO)</td>
+<tbody>
+<tr>
+<td style="text-align:left">同步阻塞</td>
+<td style="text-align:left">最常用的一种用法，使用也是最简单的，但是 I/O 性能一般很差，CPU 大部分在空闲状态。(BIO)</td>
 </tr>
 <tr>
-<td align="left">同步非阻塞</td>
-<td align="left">提升 I/O 性能的常用手段，就是将 I/O 的阻塞改成非阻塞方式，尤其在网络 I/O 是长连接，同时传输数据也不是很多的情况下，提升性能非常有效。这种方式通常能提升 I/O 性能，但是会增加 CPU 消耗，要考虑增加的 I/O 性能能不能补偿 CPU 的消耗，也就是系统的瓶颈是在 I/O 还是在 CPU 上。(NIO)</td>
+<td style="text-align:left">同步非阻塞</td>
+<td style="text-align:left">提升 I/O 性能的常用手段，就是将 I/O 的阻塞改成非阻塞方式，尤其在网络 I/O 是长连接，同时传输数据也不是很多的情况下，提升性能非常有效。这种方式通常能提升 I/O 性能，但是会增加 CPU 消耗，要考虑增加的 I/O 性能能不能补偿 CPU 的消耗，也就是系统的瓶颈是在 I/O 还是在 CPU 上。(NIO)</td>
 </tr>
 <tr>
-<td align="left">异步阻塞</td>
-<td align="left">这种方式在分布式数据库中经常用到，例如在网一个分布式数据库中写一条记录，通常会有一份是同步阻塞的记录，而还有两至三份是备份记录会写到其它机器上，这些备份记录通常都是采用异步阻塞的方式写 I/O。异步阻塞对网络 I/O 能够提升效率，尤其像上面这种同时写多份相同数据的情况。</td>
+<td style="text-align:left">异步阻塞</td>
+<td style="text-align:left">这种方式在分布式数据库中经常用到，例如在网一个分布式数据库中写一条记录，通常会有一份是同步阻塞的记录，而还有两至三份是备份记录会写到其它机器上，这些备份记录通常都是采用异步阻塞的方式写 I/O。异步阻塞对网络 I/O 能够提升效率，尤其像上面这种同时写多份相同数据的情况。</td>
 </tr>
 <tr>
-<td align="left">异步非阻塞</td>
-<td align="left">这种组合方式用起来比较复杂，只有在一些非常复杂的分布式情况下使用，像集群之间的消息同步机制一般用这种 I/O 组合方式。如 Cassandra 的 Gossip 通信机制就是采用异步非阻塞的方式。它适合同时要传多份相同的数据到集群中不同的机器，同时数据的传输量虽然不大，但是却非常频繁。这种网络 I/O 用这个方式性能能达到最高。(AIO)</td>
+<td style="text-align:left">异步非阻塞</td>
+<td style="text-align:left">这种组合方式用起来比较复杂，只有在一些非常复杂的分布式情况下使用，像集群之间的消息同步机制一般用这种 I/O 组合方式。如 Cassandra 的 Gossip 通信机制就是采用异步非阻塞的方式。它适合同时要传多份相同的数据到集群中不同的机器，同时数据的传输量虽然不大，但是却非常频繁。这种网络 I/O 用这个方式性能能达到最高。(AIO)</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>虽然<code>异步</code>和<code>非阻塞</code>能够提升 I/O 的性能，但是也会带来一些额外的性能成本，例如会增加线程数量从而增加 CPU 的消耗，同时也会导致程序设计的复杂度上升。如果设计的不合理的话反而会导致性能下降。在实际设计时要根据应用场景综合评估一下。</p>
 
         </div>
@@ -379,6 +384,7 @@
 
 
 
+
 </article>
 
 
@@ -398,18 +404,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -418,6 +440,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -466,7 +489,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -522,6 +545,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

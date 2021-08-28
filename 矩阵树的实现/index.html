@@ -43,6 +43,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -57,10 +58,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -207,20 +208,20 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <p><del><strong>TODO</strong></del></p>
 <a id="more"></a>
-
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>矩阵树定理的理解，且代码实现。并且添加了几道实战题目</p>
 <h2 id="简介-amp-思路"><a href="#简介-amp-思路" class="headerlink" title="简介&amp;思路"></a>简介&amp;思路</h2><p>Kirchhoff 矩阵树定理（简称矩阵树定理）解决了一张图的生成树个数计数问题。</p>
 <h3 id="无向图"><a href="#无向图" class="headerlink" title="无向图"></a>无向图</h3><p>设$G$是一个有n个顶点的无向图。定义度数矩阵$D(G)$为：</p>
-<p>$D_{ii}(G) = \mathrm{deg}(i), D_{ij} = 0, i\neq j$</p>
+<p>$D<em>{ii}(G) = \mathrm{deg}(i), D</em>{ij} = 0, i\neq j$</p>
 <p>G的邻接矩阵$A(G)$为：</p>
-<p>$A_{ij}(G) = A_{ij}(G)$</p>
+<p>$A<em>{ij}(G) = A</em>{ij}(G)$</p>
 <p>定义 Laplace 矩阵（亦称 Kirchhoff 矩阵）$L$为：</p>
 <p>$L(G) = D(G) - A(G)$</p>
-<p>$G$的所有不同的生成树的个数等于其<code>Laplace</code>矩阵（$L(G)$）的任何一个**<code>n-1</code>主子式的绝对值**，所谓 n-1 阶主子式,就是对<br>于 r(1≤r≤n),将$G$的第 r 行、第 r 列同时去掉后得到的新矩阵$G_r$</p>
+<p>$G$的所有不同的生成树的个数等于其<code>Laplace</code>矩阵（$L(G)$）的任何一个<strong><code>n-1</code>主子式的绝对值</strong>，所谓 n-1 阶主子式,就是对<br>于 r(1≤r≤n),将$G$的第 r 行、第 r 列同时去掉后得到的新矩阵$G_r$</p>
 <p><strong>举例：</strong></p>
 <p>无向图$G$如下图所示</p>
 <p><img src="https://i.loli.net/2020/04/25/Has7QUcl4q6u1PL.png" alt="图论.png"></p>
@@ -230,19 +231,16 @@
 $\begin{matrix}0 &amp; 1 &amp; 1 &amp; 0\\ 1 &amp; 0 &amp; 1 &amp; 1\\ 1 &amp; 1 &amp; 0 &amp; 0\\ 0 &amp; 1 &amp; 0 &amp; 0\\\end{matrix} $
 
 
-
 <p>$D(G)$表示为:</p>
 
 
 $\begin{matrix}2 &amp; 0 &amp; 0 &amp; 0\\ 0 &amp; 3 &amp; 0 &amp; 0\\ 0 &amp; 0 &amp; 2 &amp; 0\\ 0 &amp; 0 &amp; 0 &amp; 1\\\end{matrix} $
 
 
-
 <p>$L(G)$表示为：</p>
 
 
 $\begin{matrix}2 &amp; -1 &amp; -1 &amp; 0\\ -1 &amp; 3 &amp; -1 &amp; -1\\ -1 &amp; -1 &amp; 2 &amp; 0\\0&amp;-1&amp;0&amp;1\\ \end{matrix} $
-
 
 
 <p>去除$r$ = 1之后得到主子式$G_r$的绝对值即为该图的生成树个数。</p>
@@ -255,9 +253,6 @@ $\begin{matrix}2 &amp; -1 &amp; -1 &amp; 0\\ -1 &amp; 3 &amp; -1 &amp; -1\\ -1 &
                 </div>
                 <div class="image-caption">生成树个数.png</div>
             </figure>
-
-
-
 <p>是不是很神奇， 我也觉得很神奇，然后去看了证明，也很神奇<span class="github-emoji"><span>😑</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f611.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></p>
 <h3 id="有向图同理"><a href="#有向图同理" class="headerlink" title="有向图同理"></a>有向图同理</h3><p>同理</p>
 <h3 id="行列式的变换"><a href="#行列式的变换" class="headerlink" title="行列式的变换"></a>行列式的变换</h3><ol>
@@ -275,8 +270,63 @@ $\begin{matrix}2 &amp; -1 &amp; -1 &amp; 0\\ -1 &amp; 3 &amp; -1 &amp; -1\\ -1 &
 </ol>
 <h3 id="小Z的房间"><a href="#小Z的房间" class="headerlink" title="小Z的房间"></a>小Z的房间</h3><p>矩阵树定理的裸题，题目给定的限制为<code>1≤n,m≤9</code></p>
 <p>矩阵维度限制在了个位数，算法有待优化。</p>
-<figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> LL;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">100</span>;</span><br><span class="line"><span class="keyword">const</span> LL mod = <span class="number">1e9</span>;</span><br><span class="line"><span class="keyword">int</span> n, m, ed;</span><br><span class="line">LL ans = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> h[N][N], vis[N];</span><br><span class="line">LL f[N][N];</span><br><span class="line"><span class="keyword">char</span> s[N];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>, &amp;n, &amp;m);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%s"</span>, s);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; m; j++)</span><br><span class="line">            <span class="keyword">if</span> (s[j] == <span class="string">'.'</span>)</span><br><span class="line">                h[i][j + <span class="number">1</span>] = <span class="number">1</span>;  <span class="comment">//记录下房间的位置</span></span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                vis[(i - <span class="number">1</span>) * m + j + <span class="number">1</span>] = <span class="number">1</span>;  <span class="comment">//重要！！为墙的行一定全为0！！</span></span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) {</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= m; j++)</span><br><span class="line">            <span class="keyword">if</span> (h[i][j]) {  <span class="comment">//若为房间</span></span><br><span class="line">                ed = <span class="number">0</span>;     <span class="comment">//纪录度数矩阵</span></span><br><span class="line">                <span class="keyword">if</span> (h[i][j - <span class="number">1</span>])</span><br><span class="line">                    f[(i - <span class="number">1</span>) * m + j][(i - <span class="number">1</span>) * m + j - <span class="number">1</span>] = <span class="number">-1</span>, ed++;  <span class="comment">//左</span></span><br><span class="line">                <span class="keyword">if</span> (h[i][j + <span class="number">1</span>])</span><br><span class="line">                    f[(i - <span class="number">1</span>) * m + j][(i - <span class="number">1</span>) * m + j + <span class="number">1</span>] = <span class="number">-1</span>, ed++;  <span class="comment">//右</span></span><br><span class="line">                <span class="keyword">if</span> (h[i - <span class="number">1</span>][j])</span><br><span class="line">                    f[(i - <span class="number">1</span>) * m + j][(i - <span class="number">2</span>) * m + j] = <span class="number">-1</span>, ed++;  <span class="comment">//上</span></span><br><span class="line">                <span class="keyword">if</span> (h[i + <span class="number">1</span>][j])</span><br><span class="line">                    f[(i - <span class="number">1</span>) * m + j][i * m + j] = <span class="number">-1</span>, ed++;  <span class="comment">//下</span></span><br><span class="line">                f[(i - <span class="number">1</span>) * m + j][(i - <span class="number">1</span>) * m + j] = ed;      <span class="comment">//加上度数矩阵</span></span><br><span class="line">            }</span><br><span class="line">    }</span><br><span class="line">    n = n * m - <span class="number">1</span>;  <span class="comment">//删去最后一行最后一列，并计算行列式的大小</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++)</span><br><span class="line">        <span class="keyword">if</span> (!vis[i]) {  <span class="comment">//注意！ 非墙的才继续</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt;= n; j++)</span><br><span class="line">                <span class="keyword">if</span> (!vis[j])           <span class="comment">//同上</span></span><br><span class="line">                    <span class="keyword">while</span> (f[j][i]) {  <span class="comment">//辗转相除</span></span><br><span class="line">                        LL r = f[i][i] / f[j][i];</span><br><span class="line">                        <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">1</span>; k &lt;= n; k++)</span><br><span class="line">                            f[i][k] = (f[i][k] - f[j][k] * r % mod + mod) % mod, swap(f[i][k], f[j][k]);</span><br><span class="line">                        ans = (mod - ans) % mod;  <span class="comment">//交换两行，答案取负</span></span><br><span class="line">                    }</span><br><span class="line">            <span class="keyword">if</span> (f[i][i] == <span class="number">0</span>) {</span><br><span class="line">                <span class="built_in">puts</span>(<span class="string">"0"</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            }                                   <span class="comment">//若主对角线有0，则答案为0</span></span><br><span class="line">            ans = (ans * f[i][i] + mod) % mod;  <span class="comment">//计算答案</span></span><br><span class="line">        }</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lld\n"</span>, ans);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-c++">#include &lt;cstdio&gt;
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
+typedef long long LL;
+const int N = 100;
+const LL mod = 1e9;
+int n, m, ed;
+LL ans = 1;
+int h[N][N], vis[N];
+LL f[N][N];
+char s[N];
+int main() {
+    scanf("%d%d", &amp;n, &amp;m);
+    for (int i = 1; i &lt;= n; i++) {
+        scanf("%s", s);
+        for (int j = 0; j &lt; m; j++)
+            if (s[j] == '.')
+                h[i][j + 1] = 1;  //记录下房间的位置
+            else
+                vis[(i - 1) * m + j + 1] = 1;  //重要！！为墙的行一定全为0！！
+    }
+    for (int i = 1; i &lt;= n; i++) {
+        for (int j = 1; j &lt;= m; j++)
+            if (h[i][j]) {  //若为房间
+                ed = 0;     //纪录度数矩阵
+                if (h[i][j - 1])
+                    f[(i - 1) * m + j][(i - 1) * m + j - 1] = -1, ed++;  //左
+                if (h[i][j + 1])
+                    f[(i - 1) * m + j][(i - 1) * m + j + 1] = -1, ed++;  //右
+                if (h[i - 1][j])
+                    f[(i - 1) * m + j][(i - 2) * m + j] = -1, ed++;  //上
+                if (h[i + 1][j])
+                    f[(i - 1) * m + j][i * m + j] = -1, ed++;  //下
+                f[(i - 1) * m + j][(i - 1) * m + j] = ed;      //加上度数矩阵
+            }
+    }
+    n = n * m - 1;  //删去最后一行最后一列，并计算行列式的大小
+    for (int i = 1; i &lt;= n; i++)
+        if (!vis[i]) {  //注意！ 非墙的才继续
+            for (int j = i + 1; j &lt;= n; j++)
+                if (!vis[j])           //同上
+                    while (f[j][i]) {  //辗转相除
+                        LL r = f[i][i] / f[j][i];
+                        for (int k = 1; k &lt;= n; k++)
+                            f[i][k] = (f[i][k] - f[j][k] * r % mod + mod) % mod, swap(f[i][k], f[j][k]);
+                        ans = (mod - ans) % mod;  //交换两行，答案取负
+                    }
+            if (f[i][i] == 0) {
+                puts("0");
+                return 0;
+            }                                   //若主对角线有0，则答案为0
+            ans = (ans * f[i][i] + mod) % mod;  //计算答案
+        }
+    printf("%lld\n", ans);
+}
+</code></pre>
 <p>一下是测试结果</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
@@ -285,15 +335,12 @@ $\begin{matrix}2 &amp; -1 &amp; -1 &amp; 0\\ -1 &amp; 3 &amp; -1 &amp; -1\\ -1 &
                 </div>
                 <div class="image-caption">矩阵树定理-小Z的房间.png</div>
             </figure>
-
-
-
 <h3 id="轮状病毒"><a href="#轮状病毒" class="headerlink" title="轮状病毒"></a>轮状病毒</h3><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>引用周东老师的结束语吧：</p>
 <blockquote>
 <p> 扎实的数学功底是解决问题的保证,创造性地联想是解决问题的灵魂。</p>
 </blockquote>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
-<li><a href="https://docs.google.com/viewer?a=v&amp;pid=sites&amp;srcid=ZGVmYXVsdGRvbWFpbnx0aXp6eWR1YmJ8Z3g6NTAyMTNlZmQwZjQ3NDBjMQ" target="_blank" rel="noopener">生成树的计数及其应用 — 周东</a></li>
+<li><a href="https://docs.google.com/viewer?a=v&amp;pid=sites&amp;srcid=ZGVmYXVsdGRvbWFpbnx0aXp6eWR1YmJ8Z3g6NTAyMTNlZmQwZjQ3NDBjMQ" target="_blank" rel="noopener">生成树的计数及其应用 —- 周东</a></li>
 </ul>
 
         </div>
@@ -421,6 +468,7 @@ $\begin{matrix}2 &amp; -1 &amp; -1 &amp; 0\\ -1 &amp; 3 &amp; -1 &amp; -1\\ -1 &
 
 
 
+
 </article>
 
 
@@ -440,18 +488,34 @@ $\begin{matrix}2 &amp; -1 &amp; -1 &amp; 0\\ -1 &amp; 3 &amp; -1 &amp; -1\\ -1 &
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -460,6 +524,7 @@ $\begin{matrix}2 &amp; -1 &amp; -1 &amp; 0\\ -1 &amp; 3 &amp; -1 &amp; -1\\ -1 &
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -508,7 +573,7 @@ $\begin{matrix}2 &amp; -1 &amp; -1 &amp; 0\\ -1 &amp; 3 &amp; -1 &amp; -1\\ -1 &
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -564,6 +629,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

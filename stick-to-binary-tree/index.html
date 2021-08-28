@@ -41,6 +41,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -55,10 +56,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -205,26 +206,147 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>LeetCode死磕系列一： 二叉树</p>
 <a id="more"></a>
-
 <p>二叉树其自身就具有<code>递归</code>属性， 所以按道理，绝大多数题目用递归都是可以的</p>
 <p><strong>一般情况下:如果需要搜索整颗二叉树，那么递归函数就不要返回值，如果要搜索其中一条符合条件的路径，递归 函数就需要返回值，因为遇到符合条件的路径了就要及时返回</strong></p>
 <h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><ol>
 <li><p>遍历</p>
 <ol>
 <li><p>前序遍历</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归前序遍历</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">preOrder</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">    preOrder(root.left);</span><br><span class="line">    preOrder(root.right);</span><br><span class="line">}</span><br><span class="line"><span class="comment">//递归前序遍历</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">preOrder</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">  </span><br><span class="line">}</span><br><span class="line"><span class="comment">//非递归前序遍历</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">preOrderII</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    Deque&lt;TreeNode&gt; stack = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    TreeNode p = root;</span><br><span class="line">    <span class="keyword">while</span> (!stack.isEmpty() || p != <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">while</span> (p != <span class="keyword">null</span>) {</span><br><span class="line">            <span class="comment">// do something</span></span><br><span class="line">            stack.push(p);</span><br><span class="line">            p = p.left;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (!stack.isEmpty()) {</span><br><span class="line">           p = stack.pop();</span><br><span class="line">           p = p.right;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">//递归前序遍历
+public void preOrder(TreeNode root) {
+    if (Objects.isNull(root)) {
+        return;
+    }
+    // do something
+    preOrder(root.left);
+    preOrder(root.right);
+}
+//递归前序遍历
+public void preOrder(TreeNode root) {
+
+}
+//非递归前序遍历
+public void preOrderII(TreeNode root) {
+    if (Objects.isNull(root)) {
+        return;
+    }
+    Deque&lt;TreeNode&gt; stack = new ArrayDeque&lt;&gt;();
+    TreeNode p = root;
+    while (!stack.isEmpty() || p != null) {
+        while (p != null) {
+            // do something
+            stack.push(p);
+            p = p.left;
+        }
+        if (!stack.isEmpty()) {
+           p = stack.pop();
+           p = p.right;
+        }
+    }
+}
+</code></pre>
+</li>
 <li><p>中序遍历</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归中序遍历</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inOrder</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    inOrder(root.left);</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">    inOrder(root.right);</span><br><span class="line">}</span><br><span class="line"><span class="comment">//非递归中序遍历</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inOrderII</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    TreeNode p = root;</span><br><span class="line">    Deque&lt;TreeNode&gt; stack = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    <span class="keyword">while</span> (!stack.isEmpty() || p != <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">while</span> (p != <span class="keyword">null</span>) {</span><br><span class="line">            stack.push(p);</span><br><span class="line">            p = p.left;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (!stack.isEmpty()) {</span><br><span class="line">            p = stack.pop();</span><br><span class="line">            <span class="comment">// do something</span></span><br><span class="line">            p = p.right;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
-<li><p>后序遍历</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归后序遍历</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postOrder</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    postOrder(root.left);</span><br><span class="line">    postOrder(root.right);</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">}</span><br><span class="line"><span class="comment">//非递归后序遍历</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postOrderII</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    Deque&lt;TreeNode&gt; stack = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    Deque&lt;TreeNode&gt; list = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    Deque&lt;TreeNode&gt; reverse = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    TreeNode p = root;</span><br><span class="line">    stack.push(p);</span><br><span class="line">    <span class="keyword">while</span> (!stack.isEmpty()) {</span><br><span class="line">        p = stack.pop();</span><br><span class="line">        list.push(p);</span><br><span class="line">        <span class="keyword">if</span> (p.right != <span class="keyword">null</span>) {</span><br><span class="line">            stack.push(p.left);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (p.left != <span class="keyword">null</span>) {</span><br><span class="line">            stack.push(p.left);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">while</span> (!list.isEmpty()) {</span><br><span class="line">        reverse.add(list.pop());</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
-<li><p>层次遍历</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">levelOrder</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    Deque&lt;TreeNode&gt; queue = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    TreeNode p = root;</span><br><span class="line">    queue.offer(p);</span><br><span class="line">    <span class="keyword">while</span> (!queue.isEmpty()) {</span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) {</span><br><span class="line">            p = queue.poll();</span><br><span class="line">            <span class="keyword">if</span> (p.left != <span class="keyword">null</span>) {</span><br><span class="line">                queue.offer(p.left);</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">if</span> (p.right != <span class="keyword">null</span>) {</span><br><span class="line">                queue.offer(p.right);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">//递归中序遍历
+public void inOrder(TreeNode root) {
+    if (Objects.isNull(root)) {
+        return;
+    }
+    inOrder(root.left);
+    // do something
+    inOrder(root.right);
+}
+//非递归中序遍历
+public void inOrderII(TreeNode root) {
+    if (Objects.isNull(root)) {
+        return;
+    }
+    TreeNode p = root;
+    Deque&lt;TreeNode&gt; stack = new ArrayDeque&lt;&gt;();
+    while (!stack.isEmpty() || p != null) {
+        while (p != null) {
+            stack.push(p);
+            p = p.left;
+        }
+        if (!stack.isEmpty()) {
+            p = stack.pop();
+            // do something
+            p = p.right;
+        }
+    }
+}
+</code></pre>
+</li>
 </ol>
 </li>
+</ol>
+<ol>
+<li><p>后序遍历</p>
+<pre><code class="lang-java">//递归后序遍历
+public void postOrder(TreeNode root) {
+    if (Objects.isNull(root)) {
+        return;
+    }
+    postOrder(root.left);
+    postOrder(root.right);
+    // do something
+}
+//非递归后序遍历
+public void postOrderII(TreeNode root) {
+    if (Objects.isNull(root)) {
+        return;
+    }
+    Deque&lt;TreeNode&gt; stack = new ArrayDeque&lt;&gt;();
+    Deque&lt;TreeNode&gt; list = new ArrayDeque&lt;&gt;();
+    Deque&lt;TreeNode&gt; reverse = new ArrayDeque&lt;&gt;();
+    TreeNode p = root;
+    stack.push(p);
+    while (!stack.isEmpty()) {
+        p = stack.pop();
+        list.push(p);
+        if (p.right != null) {
+            stack.push(p.left);
+        }
+        if (p.left != null) {
+            stack.push(p.left);
+        }
+    }
+    while (!list.isEmpty()) {
+        reverse.add(list.pop());
+    }
+}
+</code></pre>
+</li>
+<li><p>层次遍历</p>
+<pre><code class="lang-java">public void levelOrder(TreeNode root) {
+    if (Objects.isNull(root)) {
+        return;
+    }
+    Deque&lt;TreeNode&gt; queue = new ArrayDeque&lt;&gt;();
+    TreeNode p = root;
+    queue.offer(p);
+    while (!queue.isEmpty()) {
+        int size = queue.size();
+        for (int i = 0; i &lt; size; i++) {
+            p = queue.poll();
+            if (p.left != null) {
+                queue.offer(p.left);
+            }
+            if (p.right != null) {
+                queue.offer(p.right);
+            }
+        }
+    }
+}
+</code></pre>
+</li>
+</ol>
+<ol>
 <li><p>公共祖先</p>
 </li>
 <li><p>树转链表</p>
@@ -240,7 +362,7 @@
 </ol>
 </li>
 </ol>
-<h2 id="LeetCode-amp-剑指offer-二叉树题目整理"><a href="#LeetCode-amp-剑指offer-二叉树题目整理" class="headerlink" title="LeetCode&amp;剑指offer 二叉树题目整理"></a>LeetCode&amp;剑指offer 二叉树题目整理</h2><ol start="3">
+<h2 id="LeetCode-amp-剑指offer-二叉树题目整理"><a href="#LeetCode-amp-剑指offer-二叉树题目整理" class="headerlink" title="LeetCode&amp;剑指offer 二叉树题目整理"></a>LeetCode&amp;剑指offer 二叉树题目整理</h2><ol>
 <li><p><a href="https://leetcode-cn.com/problems/binary-tree-preorder-traversal/" target="_blank" rel="noopener">二叉树的前序遍历</a></p>
 </li>
 <li><p><a href="https://leetcode-cn.com/problems/binary-tree-inorder-traversal/" target="_blank" rel="noopener">二叉树的中序遍历</a></p>
@@ -273,7 +395,7 @@
 </li>
 </ol>
 <p>以上两道题可以感觉出，层次遍历将二叉树定在了一个二维的坐标轴上，二叉树的层为一个方向，深度为一个方向。只要是和层和深度相关的内容都可以考虑试试层次遍历。以下的内容也都是在层和深度的基础上的一些小变化（最直白的简单题）</p>
-<ol start="3">
+<ol>
 <li>每一层的平均值、最大值、最小值等</li>
 <li>二叉树的左视图、右视图</li>
 </ol>
@@ -323,32 +445,147 @@
 </ol>
 <h3 id="二叉树的直径"><a href="#二叉树的直径" class="headerlink" title="二叉树的直径"></a>二叉树的直径</h3><h4 id="思路：-1"><a href="#思路：-1" class="headerlink" title="思路："></a>思路：</h4><p>感觉是二叉树的高度的延伸，思路是和二叉树的高度是类似的。</p>
 <p><strong>直径：</strong> 以当前节点为基础，然后依次获取当前节点的最大左子树深度L和右子树最大深度R，L+R=D即为结果，然后从每个节点的D中选取最大的即可</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> ans;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">diameterOfBinaryTree</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    }</span><br><span class="line">    ans = <span class="number">0</span>;</span><br><span class="line">    depth(root);</span><br><span class="line">    <span class="keyword">return</span> ans-<span class="number">1</span>;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">depth</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">int</span> left = depth(root.left);</span><br><span class="line">    <span class="keyword">int</span> right = depth(root.right);</span><br><span class="line">    ans = Math.max(ans, left+right);</span><br><span class="line">    <span class="keyword">return</span> Math.max(left, right) + <span class="number">1</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">private int ans;
+public int diameterOfBinaryTree(TreeNode root) {
+    if (Objects.isNull(root)) {
+        return 0;
+    }
+    ans = 0;
+    depth(root);
+    return ans-1;
+}
+private int depth(TreeNode root) {
+    if (Objects.isNull(root)) {
+        return 0;
+    }
+    int left = depth(root.left);
+    int right = depth(root.right);
+    ans = Math.max(ans, left+right);
+    return Math.max(left, right) + 1;
+}
+</code></pre>
 <h3 id="二叉树的层次遍历"><a href="#二叉树的层次遍历" class="headerlink" title="二叉树的层次遍历"></a>二叉树的层次遍历</h3><h4 id="102-二叉树的层序遍历"><a href="#102-二叉树的层序遍历" class="headerlink" title="102.二叉树的层序遍历"></a><a href="https://leetcode-cn.com/problems/binary-tree-level-order-traversal/" target="_blank" rel="noopener">102.二叉树的层序遍历</a></h4><p>层次遍历的基础模板题目</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; levelOrderBottom(TreeNode root) {</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        List&lt;Integer&gt; out = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        }</span><br><span class="line">        Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">        TreeNode p = root;</span><br><span class="line">        queue.offer(p);</span><br><span class="line">        <span class="keyword">while</span> (!queue.isEmpty()) {</span><br><span class="line">            <span class="keyword">int</span> size = queue.size();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) {</span><br><span class="line">                p = queue.poll();</span><br><span class="line">                out.add(p.val);</span><br><span class="line">                <span class="keyword">if</span> (p.left != <span class="keyword">null</span>) {</span><br><span class="line">                    queue.offer(p.left);</span><br><span class="line">                }</span><br><span class="line">                <span class="keyword">if</span> (p.right != <span class="keyword">null</span>) {</span><br><span class="line">                    queue.offer(p.right);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">            result.add(out);</span><br><span class="line">            out = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">public List&lt;List&lt;Integer&gt;&gt; levelOrderBottom(TreeNode root) {
+        List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
+        List&lt;Integer&gt; out = new ArrayList&lt;&gt;();
+        if (Objects.isNull(root)) {
+            return result;
+        }
+        Queue&lt;TreeNode&gt; queue = new ArrayDeque&lt;&gt;();
+        TreeNode p = root;
+        queue.offer(p);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for(int i = 0; i &lt; size; i++) {
+                p = queue.poll();
+                out.add(p.val);
+                if (p.left != null) {
+                    queue.offer(p.left);
+                }
+                if (p.right != null) {
+                    queue.offer(p.right);
+                }
+            }
+            result.add(out);
+            out = new ArrayList&lt;&gt;();
+        }
+        return result;
+    }
+</code></pre>
 <h4 id="107-二叉树的层次遍历II"><a href="#107-二叉树的层次遍历II" class="headerlink" title="107.二叉树的层次遍历II"></a><a href="https://leetcode-cn.com/problems/binary-tree-level-order-traversal-ii/" target="_blank" rel="noopener">107.二叉树的层次遍历II</a></h4><p>层次遍历的简单变形，根据list的特性，每次新增一层的结果的时，都在首位插入，即可完成逆序存储</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; levelOrderBottom(TreeNode root) {</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        List&lt;Integer&gt; out = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        }</span><br><span class="line">        Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">        TreeNode p = root;</span><br><span class="line">        queue.offer(p);</span><br><span class="line">        <span class="keyword">while</span> (!queue.isEmpty()) {</span><br><span class="line">            <span class="keyword">int</span> size = queue.size();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) {</span><br><span class="line">                p = queue.poll();</span><br><span class="line">                out.add(p.val);</span><br><span class="line">                <span class="keyword">if</span> (p.left != <span class="keyword">null</span>) {</span><br><span class="line">                    queue.offer(p.left);</span><br><span class="line">                }</span><br><span class="line">                <span class="keyword">if</span> (p.right != <span class="keyword">null</span>) {</span><br><span class="line">                    queue.offer(p.right);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">            result.add(<span class="number">0</span>, out);</span><br><span class="line">            out = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">public List&lt;List&lt;Integer&gt;&gt; levelOrderBottom(TreeNode root) {
+        List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;&gt;();
+        List&lt;Integer&gt; out = new ArrayList&lt;&gt;();
+        if (Objects.isNull(root)) {
+            return result;
+        }
+        Queue&lt;TreeNode&gt; queue = new ArrayDeque&lt;&gt;();
+        TreeNode p = root;
+        queue.offer(p);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for(int i = 0; i &lt; size; i++) {
+                p = queue.poll();
+                out.add(p.val);
+                if (p.left != null) {
+                    queue.offer(p.left);
+                }
+                if (p.right != null) {
+                    queue.offer(p.right);
+                }
+            }
+            result.add(0, out);
+            out = new ArrayList&lt;&gt;();
+        }
+        return result;
+    }
+</code></pre>
 <h4 id="199-二叉树的右视图"><a href="#199-二叉树的右视图" class="headerlink" title="199.二叉树的右视图 "></a><a href="https://leetcode-cn.com/problems/binary-tree-right-side-view/" target="_blank" rel="noopener">199.二叉树的右视图 </a></h4><p>二叉树层次遍历的简单变形。</p>
 <p><strong>思路：</strong> 每次遍历到当前层的最后一个非空节点的时候，存入到右视图的list中</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">rightSideView</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    List&lt;Integer&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    }</span><br><span class="line">    TreeNode p = root;</span><br><span class="line">    Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    queue.offer(p);</span><br><span class="line">    <span class="keyword">while</span> (!queue.isEmpty()) {</span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) {</span><br><span class="line">            p = queue.poll();</span><br><span class="line">            <span class="comment">// 每一层的最后一个节点</span></span><br><span class="line">            <span class="keyword">if</span> (i == size - <span class="number">1</span>) {</span><br><span class="line">                result.add(p.val);</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">if</span> (p.left != <span class="keyword">null</span>) {</span><br><span class="line">                queue.offer(p.left);</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">if</span> (p.right != <span class="keyword">null</span>) {</span><br><span class="line">                queue.offer(p.right);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">public List&lt;Integer&gt; rightSideView(TreeNode root) {
+    List&lt;Integer&gt; result = new ArrayList&lt;&gt;();
+    if (Objects.isNull(root)) {
+        return result;
+    }
+    TreeNode p = root;
+    Queue&lt;TreeNode&gt; queue = new ArrayDeque&lt;&gt;();
+    queue.offer(p);
+    while (!queue.isEmpty()) {
+        int size = queue.size();
+        for (int i = 0; i &lt; size; i++) {
+            p = queue.poll();
+            // 每一层的最后一个节点
+            if (i == size - 1) {
+                result.add(p.val);
+            }
+            if (p.left != null) {
+                queue.offer(p.left);
+            }
+            if (p.right != null) {
+                queue.offer(p.right);
+            }
+        }
+    }
+    return result;
+}
+</code></pre>
 <h4 id="637-二叉树的层平均值"><a href="#637-二叉树的层平均值" class="headerlink" title="637.二叉树的层平均值 "></a><a href="https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/" target="_blank" rel="noopener">637.二叉树的层平均值 </a></h4><p>二叉树层次遍历的简单变形。</p>
 <p><strong>思路：</strong> 求每一层的平均值</p>
 <h4 id="429-N叉树的层序遍历"><a href="#429-N叉树的层序遍历" class="headerlink" title="429.N叉树的层序遍历 "></a><a href="https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/" target="_blank" rel="noopener">429.N叉树的层序遍历 </a></h4><h4 id="515-在每个树行中找最大值"><a href="#515-在每个树行中找最大值" class="headerlink" title="515.在每个树行中找最大值"></a><a href="https://leetcode-cn.com/problems/find-largest-value-in-each-tree-row/" target="_blank" rel="noopener">515.在每个树行中找最大值</a></h4><h4 id="116-填充每个节点的下一个右侧节点指针"><a href="#116-填充每个节点的下一个右侧节点指针" class="headerlink" title="116.填充每个节点的下一个右侧节点指针"></a><a href="https://leetcode-cn.com/problems/populating-next-right-pointers-in-each-node/" target="_blank" rel="noopener">116.填充每个节点的下一个右侧节点指针</a></h4><h4 id="117-填充每个节点的下一个右侧节点指针II"><a href="#117-填充每个节点的下一个右侧节点指针II" class="headerlink" title="117.填充每个节点的下一个右侧节点指针II"></a><a href="https://leetcode-cn.com/problems/populating-next-right-pointers-in-each-node-ii/" target="_blank" rel="noopener">117.填充每个节点的下一个右侧节点指针II</a></h4><h4 id="104-二叉树的最大深度"><a href="#104-二叉树的最大深度" class="headerlink" title="104.二叉树的最大深度"></a><a href="https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/" target="_blank" rel="noopener">104.二叉树的最大深度</a></h4><p><strong>思路1 广度遍历(层次遍历)</strong></p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxDepth</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    }</span><br><span class="line">    TreeNode p = root;</span><br><span class="line">    Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    queue.offer(p);</span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (!queue.isEmpty()) {</span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        count++;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) {</span><br><span class="line">            p = queue.poll();</span><br><span class="line">            <span class="keyword">if</span> (p.left != <span class="keyword">null</span>) {</span><br><span class="line">                queue.offer(p.left);</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">if</span> (p.right != <span class="keyword">null</span>) {</span><br><span class="line">                queue.offer(p.right);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">public int maxDepth(TreeNode root) {
+    if (Objects.isNull(root)) {
+        return 0;
+    }
+    TreeNode p = root;
+    Queue&lt;TreeNode&gt; queue = new ArrayDeque&lt;&gt;();
+    queue.offer(p);
+    int count = 0;
+    while (!queue.isEmpty()) {
+        int size = queue.size();
+        count++;
+        for (int i = 0; i &lt; size; i++) {
+            p = queue.poll();
+            if (p.left != null) {
+                queue.offer(p.left);
+            }
+            if (p.right != null) {
+                queue.offer(p.right);
+            }
+        }
+    }
+    return count;
+}
+</code></pre>
 <p><strong>思路2 深度遍历(后序遍历)</strong></p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxDepth</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">int</span> left = maxDepthII(root.left);</span><br><span class="line">    <span class="keyword">int</span> right = maxDepthII(root.right);</span><br><span class="line">    <span class="keyword">return</span> Math.max(left, right) + <span class="number">1</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">public int maxDepth(TreeNode root) {
+    if (Objects.isNull(root)) {
+        return 0;
+    }
+    int left = maxDepthII(root.left);
+    int right = maxDepthII(root.right);
+    return Math.max(left, right) + 1;
+}
+</code></pre>
 <h4 id="111-二叉树的最小深度"><a href="#111-二叉树的最小深度" class="headerlink" title="111.二叉树的最小深度"></a><a href="https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/submissions/" target="_blank" rel="noopener">111.二叉树的最小深度</a></h4><p><strong>最小深度是从根节点到最近叶子节点的最短路径上的节点数量。</strong></p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
@@ -357,11 +594,56 @@
                 </div>
                 <div class="image-caption">image-20210223220242873</div>
             </figure>
-
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 深度遍历（后序）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minDepth</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">int</span> left = minDepth(root.left);</span><br><span class="line">    <span class="keyword">int</span> right = minDepth(root.right);</span><br><span class="line">    <span class="keyword">if</span> (root.left == <span class="keyword">null</span> &amp;&amp; root.right != <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span> + right;</span><br><span class="line">    } <span class="keyword">else</span> <span class="keyword">if</span> (root.left != <span class="keyword">null</span> &amp;&amp; root.right == <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span> + left;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> Math.min(left, right) + <span class="number">1</span>;</span><br><span class="line">}</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 广度遍历（层次）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> root</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minDepthII</span><span class="params">(TreeNode root)</span> </span>{</span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (Objects.isNull(root)) {</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    }</span><br><span class="line">    Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> ArrayDeque&lt;&gt;();</span><br><span class="line">    TreeNode p = root;</span><br><span class="line">    queue.offer(p);</span><br><span class="line">    <span class="keyword">while</span> (!queue.isEmpty()) {</span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        count++;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) {</span><br><span class="line">            p = queue.poll();</span><br><span class="line">            <span class="keyword">if</span> (p.left != <span class="keyword">null</span>) {</span><br><span class="line">                queue.offer(p.left);</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">if</span> (p.right != <span class="keyword">null</span>) {</span><br><span class="line">                queue.offer(p.right);</span><br><span class="line">            }</span><br><span class="line">            <span class="keyword">if</span> (p.left == <span class="keyword">null</span> &amp;&amp; p.right == <span class="keyword">null</span>) {</span><br><span class="line">                <span class="keyword">return</span> count;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">/**
+ * 深度遍历（后序）
+ * @param root
+ * @return
+ */
+public int minDepth(TreeNode root) {
+    if (Objects.isNull(root)) {
+        return 0;
+    }
+    int left = minDepth(root.left);
+    int right = minDepth(root.right);
+    if (root.left == null &amp;&amp; root.right != null) {
+        return 1 + right;
+    } else if (root.left != null &amp;&amp; root.right == null) {
+        return 1 + left;
+    }
+    return Math.min(left, right) + 1;
+}
+/**
+ * 广度遍历（层次）
+ * @param root
+ * @return
+ */
+public int minDepthII(TreeNode root) {
+    int count = 0;
+    if (Objects.isNull(root)) {
+        return count;
+    }
+    Queue&lt;TreeNode&gt; queue = new ArrayDeque&lt;&gt;();
+    TreeNode p = root;
+    queue.offer(p);
+    while (!queue.isEmpty()) {
+        int size = queue.size();
+        count++;
+        for (int i = 0; i &lt; size; i++) {
+            p = queue.poll();
+            if (p.left != null) {
+                queue.offer(p.left);
+            }
+            if (p.right != null) {
+                queue.offer(p.right);
+            }
+            if (p.left == null &amp;&amp; p.right == null) {
+                return count;
+            }
+        }
+    }
+    return count;
+}
+</code></pre>
 <h4 id="222-完全二叉树的节点个数"><a href="#222-完全二叉树的节点个数" class="headerlink" title="222.完全二叉树的节点个数"></a><a href="https://leetcode-cn.com/problems/count-complete-tree-nodes/submissions/" target="_blank" rel="noopener">222.完全二叉树的节点个数</a></h4><h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ul>
 <li><a href="https://github.com/youngyangyang04/leetcode-master" target="_blank" rel="noopener">代码随想录</a></li>
 </ul>
@@ -491,6 +773,7 @@
 
 
 
+
 </article>
 
 
@@ -510,18 +793,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -530,6 +829,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -578,7 +878,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -634,6 +934,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

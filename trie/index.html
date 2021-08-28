@@ -41,6 +41,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -55,10 +56,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -205,11 +206,11 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前缀树原理"><a href="#前缀树原理" class="headerlink" title="前缀树原理"></a>前缀树原理</h2><a id="more"></a>
-
-<p>Trie, 由<code>Edward Fredkin</code>提出, 来自英文单词<code>retrieval</code>, Trie也称为前缀树, 用于保存<a href="https://zh.wikipedia.org/wiki/%E5%85%B3%E8%81%94%E6%95%B0%E7%BB%84" target="_blank" rel="noopener">关联数组</a>，其中的键通常是<a href="https://zh.wikipedia.org/wiki/%E5%AD%97%E7%AC%A6%E4%B8%B2" target="_blank" rel="noopener">字符串</a>。与<a href="https://zh.wikipedia.org/wiki/%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91" target="_blank" rel="noopener">二叉查找树</a>不同，键不是直接保存在节点中，而是由节点在树中的位置决定。一个节点的所有子孙都有相同的<a href="https://zh.wikipedia.org/wiki/%E5%89%8D%E7%BC%80" target="_blank" rel="noopener">前缀</a>，也就是这个节点对应的字符串，而根节点对应<a href="https://zh.wikipedia.org/wiki/%E7%A9%BA%E5%AD%97%E7%AC%A6%E4%B8%B2" target="_blank" rel="noopener">空字符串</a>。一般情况下，不是所有的节点都有对应的值，只有叶子节点和部分内部节点所对应的键才有相关的值。 </p>
+<p>Trie, 由<code>Edward Fredkin</code>提出, 来自英文单词<code>retrieval</code>, Trie也称为前缀树, 用于保存<a href="https://zh.wikipedia.org/wiki/关联数组" target="_blank" rel="noopener">关联数组</a>，其中的键通常是<a href="https://zh.wikipedia.org/wiki/字符串" target="_blank" rel="noopener">字符串</a>。与<a href="https://zh.wikipedia.org/wiki/二叉查找树" target="_blank" rel="noopener">二叉查找树</a>不同，键不是直接保存在节点中，而是由节点在树中的位置决定。一个节点的所有子孙都有相同的<a href="https://zh.wikipedia.org/wiki/前缀" target="_blank" rel="noopener">前缀</a>，也就是这个节点对应的字符串，而根节点对应<a href="https://zh.wikipedia.org/wiki/空字符串" target="_blank" rel="noopener">空字符串</a>。一般情况下，不是所有的节点都有对应的值，只有叶子节点和部分内部节点所对应的键才有相关的值。 </p>
 <p>对于字符Trie而言, 如果使用二叉树那样的两个分支明显是不够的. 举个例子, 英语中一共有26个字母, 每个字母还区分大小写, 如果忽略大小写的话, 那么可以使用简单的限定分支(子树)个数为26. 如下图所示为一个字符串Trie</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
@@ -218,7 +219,6 @@
                 </div>
                 <div class="image-caption">Trie</div>
             </figure>
-
 <blockquote>
 <p>一个保存了8个键的trie结构，”A”, “to”, “tea”, “ted”, “ten”, “i”, “in”, “inn</p>
 </blockquote>
@@ -242,15 +242,46 @@
                 </div>
                 <div class="image-caption"></div>
             </figure>
-
-
-
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> TrieNode[] links;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isEnd;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> R = <span class="number">26</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TrieNode</span><span class="params">()</span> </span>{</span><br><span class="line">        links = <span class="keyword">new</span> TrieNode[R];</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">containsKey</span><span class="params">(<span class="keyword">char</span> ch)</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> links[ch - <span class="string">'a'</span>] != <span class="keyword">null</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(<span class="keyword">char</span> ch, TrieNode node)</span> </span>{</span><br><span class="line">        links[ch - <span class="string">'a'</span>] = node;</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TrieNode <span class="title">get</span><span class="params">(<span class="keyword">char</span> ch)</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> links[ch - <span class="string">'a'</span>];</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEnd</span><span class="params">()</span> </span>{</span><br><span class="line">        isEnd = <span class="keyword">true</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEnd</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> isEnd;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 插入</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(String word)</span> </span>{</span><br><span class="line">    <span class="comment">// 从根节点开始, 根节点为空</span></span><br><span class="line">    TrieNode node = root;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; word.length(); i++) {</span><br><span class="line">        <span class="keyword">char</span> current = word.charAt(i);</span><br><span class="line">        <span class="keyword">if</span> (!node.containsKey(current)) {</span><br><span class="line">            node.put(current, <span class="keyword">new</span> TrieNode());</span><br><span class="line">        }</span><br><span class="line">        node = node.get(current);</span><br><span class="line">    }</span><br><span class="line">    node.setEnd();</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">class TrieNode {
+    private TrieNode[] links;
+    private boolean isEnd;
+    private final int R = 26;
+    public TrieNode() {
+        links = new TrieNode[R];
+    }
+    public boolean containsKey(char ch) {
+        return links[ch - 'a'] != null;
+    }
+    public void put(char ch, TrieNode node) {
+        links[ch - 'a'] = node;
+    }
+    public TrieNode get(char ch) {
+        return links[ch - 'a'];
+    }
+    public void setEnd() {
+        isEnd = true;
+    }
+    public boolean isEnd() {
+        return isEnd;
+    }
+}
+</code></pre>
+<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><pre><code class="lang-java">/**
+ * 插入
+ */
+public void insert(String word) {
+    // 从根节点开始, 根节点为空
+    TrieNode node = root;
+    for (int i = 0; i &lt; word.length(); i++) {
+        char current = word.charAt(i);
+        if (!node.containsKey(current)) {
+            node.put(current, new TrieNode());
+        }
+        node = node.get(current);
+    }
+    node.setEnd();
+}
+</code></pre>
 <h3 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h3><p>每个键在 trie 中表示为从根到内部节点或叶的路径。我们用第一个键字符从根开始，。检查当前节点中与键字符对应的链接。有两种情况：</p>
 <ol>
 <li>存在链接。我们移动到该链接后面路径中的下一个节点，并继续搜索下一个键字符。</li>
@@ -260,33 +291,293 @@
 </ol>
 </li>
 </ol>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> TrieNode <span class="title">searchPrefix</span><span class="params">(String word)</span> </span>{</span><br><span class="line">    TrieNode node = root;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; word.length(); i++) {</span><br><span class="line">        <span class="keyword">char</span> current = word.charAt(i);</span><br><span class="line">        <span class="keyword">if</span> (node.containsKey(current)) {</span><br><span class="line">            node = node.get(current);</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">search</span><span class="params">(String word)</span> </span>{</span><br><span class="line">    TrieNode node = searchPrefix(word);</span><br><span class="line">    <span class="keyword">return</span> node != <span class="keyword">null</span> &amp;&amp; node.isEnd();</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 是否存在输入前缀的字符</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">startsWith</span><span class="params">(String prefix)</span> </span>{</span><br><span class="line">    TrieNode node = searchPrefix(prefix);</span><br><span class="line">    <span class="keyword">return</span> node != <span class="keyword">null</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">private TrieNode searchPrefix(String word) {
+    TrieNode node = root;
+    for (int i = 0; i &lt; word.length(); i++) {
+        char current = word.charAt(i);
+        if (node.containsKey(current)) {
+            node = node.get(current);
+        } else {
+            return null;
+        }
+    }
+    return node;
+}
 
-<h3 id="整体"><a href="#整体" class="headerlink" title="整体"></a>整体</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Trie</span> </span>{</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TrieNode root;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 初始化</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Trie</span><span class="params">()</span> </span>{</span><br><span class="line">        root = <span class="keyword">new</span> TrieNode();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 插入</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(String word)</span> </span>{</span><br><span class="line">        TrieNode node = root;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; word.length(); i++) {</span><br><span class="line">            <span class="keyword">char</span> current = word.charAt(i);</span><br><span class="line">            <span class="keyword">if</span> (!node.containsKey(current)) {</span><br><span class="line">                node.put(current, <span class="keyword">new</span> TrieNode());</span><br><span class="line">            }</span><br><span class="line">            node = node.get(current);</span><br><span class="line">        }</span><br><span class="line">        node.setEnd();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 删除</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">search</span><span class="params">(String word)</span> </span>{</span><br><span class="line">        TrieNode node = searchPrefix(word);</span><br><span class="line">        <span class="keyword">return</span> node != <span class="keyword">null</span> &amp;&amp; node.isEnd();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> TrieNode <span class="title">searchPrefix</span><span class="params">(String word)</span> </span>{</span><br><span class="line">        TrieNode node = root;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; word.length(); i++) {</span><br><span class="line">            <span class="keyword">char</span> current = word.charAt(i);</span><br><span class="line">            <span class="keyword">if</span> (node.containsKey(current)) {</span><br><span class="line">                node = node.get(current);</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 是否存在输入前缀的字符</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">startsWith</span><span class="params">(String prefix)</span> </span>{</span><br><span class="line">        TrieNode node = searchPrefix(prefix);</span><br><span class="line">        <span class="keyword">return</span> node != <span class="keyword">null</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span> </span>{</span><br><span class="line">        <span class="keyword">private</span> TrieNode[] links;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">boolean</span> isEnd;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> R = <span class="number">26</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">TrieNode</span><span class="params">()</span> </span>{</span><br><span class="line">            links = <span class="keyword">new</span> TrieNode[R];</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">containsKey</span><span class="params">(<span class="keyword">char</span> ch)</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> links[ch - <span class="string">'a'</span>] != <span class="keyword">null</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(<span class="keyword">char</span> ch, TrieNode node)</span> </span>{</span><br><span class="line">            links[ch - <span class="string">'a'</span>] = node;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> TrieNode <span class="title">get</span><span class="params">(<span class="keyword">char</span> ch)</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> links[ch - <span class="string">'a'</span>];</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEnd</span><span class="params">()</span> </span>{</span><br><span class="line">            isEnd = <span class="keyword">true</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEnd</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> isEnd;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+public boolean search(String word) {
+    TrieNode node = searchPrefix(word);
+    return node != null &amp;&amp; node.isEnd();
+}
 
+/**
+ * 是否存在输入前缀的字符
+ */
+public boolean startsWith(String prefix) {
+    TrieNode node = searchPrefix(prefix);
+    return node != null;
+}
+</code></pre>
+<h3 id="整体"><a href="#整体" class="headerlink" title="整体"></a>整体</h3><pre><code class="lang-java">class Trie {
 
+    private TrieNode root;
 
+    /**
+     * 初始化
+     */
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    /**
+     * 插入
+     */
+    public void insert(String word) {
+        TrieNode node = root;
+        for (int i = 0; i &lt; word.length(); i++) {
+            char current = word.charAt(i);
+            if (!node.containsKey(current)) {
+                node.put(current, new TrieNode());
+            }
+            node = node.get(current);
+        }
+        node.setEnd();
+    }
+
+    /**
+     * 删除
+     */
+    public boolean search(String word) {
+        TrieNode node = searchPrefix(word);
+        return node != null &amp;&amp; node.isEnd();
+    }
+
+    private TrieNode searchPrefix(String word) {
+        TrieNode node = root;
+        for (int i = 0; i &lt; word.length(); i++) {
+            char current = word.charAt(i);
+            if (node.containsKey(current)) {
+                node = node.get(current);
+            } else {
+                return null;
+            }
+        }
+        return node;
+    }
+
+    /**
+     * 是否存在输入前缀的字符
+     */
+    public boolean startsWith(String prefix) {
+        TrieNode node = searchPrefix(prefix);
+        return node != null;
+    }
+
+    class TrieNode {
+        private TrieNode[] links;
+        private boolean isEnd;
+        private final int R = 26;
+
+        public TrieNode() {
+            links = new TrieNode[R];
+        }
+
+        public boolean containsKey(char ch) {
+            return links[ch - 'a'] != null;
+        }
+
+        public void put(char ch, TrieNode node) {
+            links[ch - 'a'] = node;
+        }
+
+        public TrieNode get(char ch) {
+            return links[ch - 'a'];
+        }
+
+        public void setEnd() {
+            isEnd = true;
+        }
+
+        public boolean isEnd() {
+            return isEnd;
+        }
+
+    }
+}
+</code></pre>
 <h2 id="敏感词过滤的前缀树实现"><a href="#敏感词过滤的前缀树实现" class="headerlink" title="敏感词过滤的前缀树实现"></a>敏感词过滤的前缀树实现</h2><p>因为敏感词除了英文字母之外, 还有其他的字符, 所以使用散列表来实现, </p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Trie</span></span>{</span><br><span class="line">    <span class="comment">// 根节点</span></span><br><span class="line">	<span class="keyword">private</span> TrieNode rootNode = <span class="keyword">new</span> TrieNode();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将一个敏感词添加到前缀树中</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addKeyword</span><span class="params">(String keyword)</span> </span>{</span><br><span class="line">        TrieNode tempNode = rootNode;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; keyword.length(); i++) {</span><br><span class="line">            <span class="keyword">char</span> c = keyword.charAt(i);</span><br><span class="line">            TrieNode subNode = tempNode.getSubNode(c);</span><br><span class="line">            <span class="keyword">if</span>(!tempNode.containsKey(c)){</span><br><span class="line">                tempNode.addSubNode(c, <span class="keyword">new</span> TrieNode());</span><br><span class="line">            }</span><br><span class="line">            tempNode = tempNode.getSubNode(c);</span><br><span class="line">        }</span><br><span class="line">        tempNode.setKeywordEnd(<span class="keyword">true</span>);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 前缀树</span></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span> </span>{</span><br><span class="line">        <span class="comment">// 关键词结束标识</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">boolean</span> isKeywordEnd = <span class="keyword">false</span>;</span><br><span class="line">        <span class="comment">// 子节点(key是下级字符,value是下级节点)</span></span><br><span class="line">        <span class="keyword">private</span> Map&lt;Character, TrieNode&gt; subNodes = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isKeywordEnd</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> isKeywordEnd;</span><br><span class="line">        }</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setKeywordEnd</span><span class="params">(<span class="keyword">boolean</span> keywordEnd)</span> </span>{</span><br><span class="line">            isKeywordEnd = keywordEnd;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 添加子节点</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addSubNode</span><span class="params">(Character c, TrieNode node)</span> </span>{</span><br><span class="line">            subNodes.put(c, node);</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 获取子节点</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> TrieNode <span class="title">getSubNode</span><span class="params">(Character c)</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> subNodes.get(c);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class Trie{
+    // 根节点
+    private TrieNode rootNode = new TrieNode();
 
+    // 将一个敏感词添加到前缀树中
+    private void addKeyword(String keyword) {
+        TrieNode tempNode = rootNode;
+        for (int i = 0; i &lt; keyword.length(); i++) {
+            char c = keyword.charAt(i);
+            TrieNode subNode = tempNode.getSubNode(c);
+            if(!tempNode.containsKey(c)){
+                tempNode.addSubNode(c, new TrieNode());
+            }
+            tempNode = tempNode.getSubNode(c);
+        }
+        tempNode.setKeywordEnd(true);
+    }
 
+    // 前缀树
+    private class TrieNode {
+        // 关键词结束标识
+        private boolean isKeywordEnd = false;
+        // 子节点(key是下级字符,value是下级节点)
+        private Map&lt;Character, TrieNode&gt; subNodes = new HashMap&lt;&gt;();
+        public boolean isKeywordEnd() {
+            return isKeywordEnd;
+        }
+        public void setKeywordEnd(boolean keywordEnd) {
+            isKeywordEnd = keywordEnd;
+        }
+        // 添加子节点
+        public void addSubNode(Character c, TrieNode node) {
+            subNodes.put(c, node);
+        }
+        // 获取子节点
+        public TrieNode getSubNode(Character c) {
+            return subNodes.get(c);
+        }
+    }
+}
+</code></pre>
+<h3 id="实例讲解"><a href="#实例讲解" class="headerlink" title="实例讲解"></a>实例讲解</h3><h3 id="最终实现"><a href="#最终实现" class="headerlink" title="最终实现"></a>最终实现</h3><pre><code class="lang-java">public class SensitiveFilter {
 
-<h3 id="实例讲解"><a href="#实例讲解" class="headerlink" title="实例讲解"></a>实例讲解</h3><h3 id="最终实现"><a href="#最终实现" class="headerlink" title="最终实现"></a>最终实现</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SensitiveFilter</span> </span>{</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 替换符</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String REPLACEMENT = <span class="string">"***"</span>;</span><br><span class="line">    <span class="comment">// 根节点</span></span><br><span class="line">    <span class="keyword">private</span> TrieNode rootNode = <span class="keyword">new</span> TrieNode();</span><br><span class="line">    <span class="comment">// 加载敏感字符, 只加载一次</span></span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">try</span> (</span><br><span class="line">                InputStream is = <span class="keyword">this</span>.getClass().getClassLoader().getResourceAsStream(<span class="string">"sensitive-word.txt"</span>);</span><br><span class="line">                BufferedReader reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(is));</span><br><span class="line">        ) {</span><br><span class="line">            String keyword;</span><br><span class="line">            <span class="keyword">while</span> ((keyword = reader.readLine()) != <span class="keyword">null</span>) {</span><br><span class="line">                <span class="comment">// 添加到前缀树</span></span><br><span class="line">                <span class="keyword">this</span>.addKeyword(keyword);</span><br><span class="line">            }</span><br><span class="line">        } <span class="keyword">catch</span> (IOException e) {</span><br><span class="line">            logger.error(<span class="string">"加载敏感词文件失败: "</span> + e.getMessage());</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 将一个敏感词添加到前缀树中</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addKeyword</span><span class="params">(String keyword)</span> </span>{</span><br><span class="line">        TrieNode tempNode = rootNode;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; keyword.length(); i++) {</span><br><span class="line">            <span class="keyword">char</span> c = keyword.charAt(i);</span><br><span class="line">            TrieNode subNode = tempNode.getSubNode(c);</span><br><span class="line">            <span class="keyword">if</span>(!tempNode.containsKey(c)){</span><br><span class="line">                tempNode.addSubNode(c, <span class="keyword">new</span> TrieNode());</span><br><span class="line">            }</span><br><span class="line">            tempNode = tempNode.getSubNode(c);</span><br><span class="line">        }</span><br><span class="line">        tempNode.setKeywordEnd(<span class="keyword">true</span>);</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 过滤敏感词</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> text 待过滤的文本</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 过滤后的文本</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">filter</span><span class="params">(String text)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isBlank(text)) {</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 指针1</span></span><br><span class="line">        TrieNode tempNode = rootNode;</span><br><span class="line">        <span class="comment">// 指针2</span></span><br><span class="line">        <span class="keyword">int</span> begin = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 指针3</span></span><br><span class="line">        <span class="keyword">int</span> position = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 结果</span></span><br><span class="line">        StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="keyword">while</span> (position &lt; text.length()) {</span><br><span class="line">            <span class="keyword">char</span> c = text.charAt(position);</span><br><span class="line">            <span class="comment">// 跳过符号</span></span><br><span class="line">            <span class="keyword">if</span> (isSymbol(c)) {</span><br><span class="line">                <span class="comment">// 若指针1处于根节点,将此符号计入结果,让指针2向下走一步</span></span><br><span class="line">                <span class="keyword">if</span> (tempNode == rootNode) {</span><br><span class="line">                    sb.append(c);</span><br><span class="line">                    begin++;</span><br><span class="line">                }</span><br><span class="line">                <span class="comment">// 无论符号在开头或中间,指针3都向下走一步</span></span><br><span class="line">                position++;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            }</span><br><span class="line">            <span class="comment">// 检查下级节点</span></span><br><span class="line">            tempNode = tempNode.getSubNode(c);</span><br><span class="line">            <span class="keyword">if</span> (tempNode == <span class="keyword">null</span>) {</span><br><span class="line">                <span class="comment">// 以begin开头的字符串不是敏感词</span></span><br><span class="line">                sb.append(text.charAt(begin));</span><br><span class="line">                <span class="comment">// 进入下一个位置</span></span><br><span class="line">                position = ++begin;</span><br><span class="line">                <span class="comment">// 重新指向根节点</span></span><br><span class="line">                tempNode = rootNode;</span><br><span class="line">            } <span class="keyword">else</span> <span class="keyword">if</span> (tempNode.isKeywordEnd()) {</span><br><span class="line">                <span class="comment">// 发现敏感词,将begin~position字符串替换掉</span></span><br><span class="line">                sb.append(REPLACEMENT);</span><br><span class="line">                <span class="comment">// 进入下一个位置</span></span><br><span class="line">                begin = ++position;</span><br><span class="line">                <span class="comment">// 重新指向根节点</span></span><br><span class="line">                tempNode = rootNode;</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                <span class="comment">// 检查下一个字符</span></span><br><span class="line">                position++;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 将最后一批字符计入结果</span></span><br><span class="line">        sb.append(text.substring(begin));</span><br><span class="line">        <span class="keyword">return</span> sb.toString();</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 判断是否为符号</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isSymbol</span><span class="params">(Character c)</span> </span>{</span><br><span class="line">        <span class="comment">// 0x2E80~0x9FFF 是东亚文字范围</span></span><br><span class="line">        <span class="keyword">return</span> !CharUtils.isAsciiAlphanumeric(c) &amp;&amp; (c &lt; <span class="number">0x2E80</span> || c &gt; <span class="number">0x9FFF</span>);</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 前缀树</span></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span> </span>{</span><br><span class="line">        <span class="comment">// 关键词结束标识</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">boolean</span> isKeywordEnd = <span class="keyword">false</span>;</span><br><span class="line">        <span class="comment">// 子节点(key是下级字符,value是下级节点)</span></span><br><span class="line">        <span class="keyword">private</span> Map&lt;Character, TrieNode&gt; subNodes = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isKeywordEnd</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> isKeywordEnd;</span><br><span class="line">        }</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setKeywordEnd</span><span class="params">(<span class="keyword">boolean</span> keywordEnd)</span> </span>{</span><br><span class="line">            isKeywordEnd = keywordEnd;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 添加子节点</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addSubNode</span><span class="params">(Character c, TrieNode node)</span> </span>{</span><br><span class="line">            subNodes.put(c, node);</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 获取子节点</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> TrieNode <span class="title">getSubNode</span><span class="params">(Character c)</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> subNodes.get(c);</span><br><span class="line">        }</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">containsKey</span><span class="params">(Character c)</span></span>{</span><br><span class="line">            <span class="keyword">return</span> subNodes.containsKey(c);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+    // 替换符
+    private static final String REPLACEMENT = "***";
+    // 根节点
+    private TrieNode rootNode = new TrieNode();
+    // 加载敏感字符, 只加载一次
+    @PostConstruct
+    public void init() {
+        try (
+                InputStream is = this.getClass().getClassLoader().getResourceAsStream("sensitive-word.txt");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        ) {
+            String keyword;
+            while ((keyword = reader.readLine()) != null) {
+                // 添加到前缀树
+                this.addKeyword(keyword);
+            }
+        } catch (IOException e) {
+            logger.error("加载敏感词文件失败: " + e.getMessage());
+        }
+    }
+    // 将一个敏感词添加到前缀树中
+    private void addKeyword(String keyword) {
+        TrieNode tempNode = rootNode;
+        for (int i = 0; i &lt; keyword.length(); i++) {
+            char c = keyword.charAt(i);
+            TrieNode subNode = tempNode.getSubNode(c);
+            if(!tempNode.containsKey(c)){
+                tempNode.addSubNode(c, new TrieNode());
+            }
+            tempNode = tempNode.getSubNode(c);
+        }
+        tempNode.setKeywordEnd(true);
+    }
+    /**
+     * 过滤敏感词
+     *
+     * @param text 待过滤的文本
+     * @return 过滤后的文本
+     */
+    public String filter(String text) {
+        if (StringUtils.isBlank(text)) {
+            return null;
+        }
+        // 指针1
+        TrieNode tempNode = rootNode;
+        // 指针2
+        int begin = 0;
+        // 指针3
+        int position = 0;
+        // 结果
+        StringBuilder sb = new StringBuilder();
+        while (position &lt; text.length()) {
+            char c = text.charAt(position);
+            // 跳过符号
+            if (isSymbol(c)) {
+                // 若指针1处于根节点,将此符号计入结果,让指针2向下走一步
+                if (tempNode == rootNode) {
+                    sb.append(c);
+                    begin++;
+                }
+                // 无论符号在开头或中间,指针3都向下走一步
+                position++;
+                continue;
+            }
+            // 检查下级节点
+            tempNode = tempNode.getSubNode(c);
+            if (tempNode == null) {
+                // 以begin开头的字符串不是敏感词
+                sb.append(text.charAt(begin));
+                // 进入下一个位置
+                position = ++begin;
+                // 重新指向根节点
+                tempNode = rootNode;
+            } else if (tempNode.isKeywordEnd()) {
+                // 发现敏感词,将begin~position字符串替换掉
+                sb.append(REPLACEMENT);
+                // 进入下一个位置
+                begin = ++position;
+                // 重新指向根节点
+                tempNode = rootNode;
+            } else {
+                // 检查下一个字符
+                position++;
+            }
+        }
+        // 将最后一批字符计入结果
+        sb.append(text.substring(begin));
+        return sb.toString();
+    }
+    // 判断是否为符号
+    private boolean isSymbol(Character c) {
+        // 0x2E80~0x9FFF 是东亚文字范围
+        return !CharUtils.isAsciiAlphanumeric(c) &amp;&amp; (c &lt; 0x2E80 || c &gt; 0x9FFF);
+    }
+    // 前缀树
+    private class TrieNode {
+        // 关键词结束标识
+        private boolean isKeywordEnd = false;
+        // 子节点(key是下级字符,value是下级节点)
+        private Map&lt;Character, TrieNode&gt; subNodes = new HashMap&lt;&gt;();
+        public boolean isKeywordEnd() {
+            return isKeywordEnd;
+        }
+        public void setKeywordEnd(boolean keywordEnd) {
+            isKeywordEnd = keywordEnd;
+        }
+        // 添加子节点
+        public void addSubNode(Character c, TrieNode node) {
+            subNodes.put(c, node);
+        }
+        // 获取子节点
+        public TrieNode getSubNode(Character c) {
+            return subNodes.get(c);
+        }
+        public boolean containsKey(Character c){
+            return subNodes.containsKey(c);
+        }
+    }
+}
+</code></pre>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
 <li><p>算法新解</p>
 </li>
 <li><p><a href="https://leetcode-cn.com/problems/implement-trie-prefix-tree/solution/shi-xian-trie-qian-zhui-shu-by-leetcode/" target="_blank" rel="noopener">实现 Trie (前缀树)</a></p>
 </li>
-<li><p><a href="https://blog.nowcoder.net/n/543c682c844f4fcaab6be5d22b0530d4" target="_blank" rel="noopener">问答社区-敏感词过滤</a></p>
-</li>
-<li><p><a href="https://490.github.io/%E5%9F%BA%E4%BA%8E%E5%89%8D%E7%BC%80%E6%A0%91%E5%9B%BE%E6%96%87%E8%AF%A6%E8%A7%A3%E6%95%8F%E6%84%9F%E8%AF%8D%E8%BF%87%E6%BB%A4/" target="_blank" rel="noopener">基于前缀树图文详解敏感词过滤</a></p>
-</li>
+<li><a href="https://blog.nowcoder.net/n/543c682c844f4fcaab6be5d22b0530d4" target="_blank" rel="noopener">问答社区-敏感词过滤</a></li>
+<li><a href="https://490.github.io/基于前缀树图文详解敏感词过滤/" target="_blank" rel="noopener">基于前缀树图文详解敏感词过滤</a></li>
 <li><p><a href="https://leetcode-cn.com/problems/implement-trie-prefix-tree/solution/trie-tree-de-shi-xian-gua-he-chu-xue-zhe-by-huwt/" target="_blank" rel="noopener">Trie Tree 的实现 (适合初学者)</a>   </p>
 </li>
-<li><p> <a href="https://www.cnblogs.com/kubidemanong/p/10834993.html" target="_blank" rel="noopener">面试被虐 说说游戏中的敏感词过滤是如何实现的？</a></p>
+<li><p><a href="https://www.cnblogs.com/kubidemanong/p/10834993.html" target="_blank" rel="noopener">面试被虐 说说游戏中的敏感词过滤是如何实现的？</a></p>
 </li>
 </ul>
 
@@ -415,6 +706,7 @@
 
 
 
+
 </article>
 
 
@@ -434,18 +726,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -454,6 +762,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -502,7 +811,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -558,6 +867,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

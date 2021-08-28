@@ -38,6 +38,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -52,10 +53,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -202,13 +203,13 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <p><del><strong>TODO</strong></del></p>
 <a id="more"></a>
-
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>匈牙利算法记录，并且添加了几道实战题目</p>
-<h2 id="简介-amp-思路"><a href="#简介-amp-思路" class="headerlink" title="简介&amp;思路"></a>简介&amp;思路</h2><p><strong>匈牙利算法</strong>是一种在<a href="https://zh.wikipedia.org/wiki/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6" target="_blank" rel="noopener">多项式时间</a>内求解<a href="https://zh.wikipedia.org/wiki/%E4%BB%BB%E5%8A%A1%E5%88%86%E9%85%8D%E9%97%AE%E9%A2%98" target="_blank" rel="noopener">任务分配问题</a>的<a href="https://zh.wikipedia.org/wiki/%E7%BB%84%E5%90%88%E4%BC%98%E5%8C%96" target="_blank" rel="noopener">组合优化</a><a href="https://zh.wikipedia.org/wiki/%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">算法</a>，并推动了后来的<a href="https://zh.wikipedia.org/w/index.php?title=%E5%8E%9F%E5%A7%8B%E5%AF%B9%E5%81%B6%E6%96%B9%E6%B3%95&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">原始对偶方法</a>。美国数学家<a href="https://zh.wikipedia.org/w/index.php?title=%E5%93%88%E7%BD%97%E5%BE%B7%C2%B7%E5%BA%93%E6%81%A9&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">哈罗德·库恩</a>于1955年提出该算法。此算法之所以被称作匈牙利算法，是因为算法很大一部分是基于以前<a href="https://zh.wikipedia.org/wiki/%E5%8C%88%E7%89%99%E5%88%A9" target="_blank" rel="noopener">匈牙利</a>数学家Dénes Kőnig和Jenő Egerváry的工作之上创建起来的。匈牙利算法是基于Hall定理中充分性证明的思想，它是部图匹配最常见的算法，该算法的核心就是寻找<strong>增广路径</strong>(<em>是指从</em>M<em>中没有用到的<a href="https://zh.wikipedia.org/wiki/%E9%A1%B6%E7%82%B9_(%E5%9B%BE%E8%AE%BA)" target="_blank" rel="noopener">顶点</a>开始，并从</em>M<em>中没有用到的顶点结束的交替路径</em>)，它是一种用增广路径求二分图最大匹配的算法。</p>
+<h2 id="简介-amp-思路"><a href="#简介-amp-思路" class="headerlink" title="简介&amp;思路"></a>简介&amp;思路</h2><p><strong>匈牙利算法</strong>是一种在<a href="https://zh.wikipedia.org/wiki/时间复杂度" target="_blank" rel="noopener">多项式时间</a>内求解<a href="https://zh.wikipedia.org/wiki/任务分配问题" target="_blank" rel="noopener">任务分配问题</a>的<a href="https://zh.wikipedia.org/wiki/组合优化" target="_blank" rel="noopener">组合优化</a><a href="https://zh.wikipedia.org/wiki/算法" target="_blank" rel="noopener">算法</a>，并推动了后来的<a href="https://zh.wikipedia.org/w/index.php?title=原始对偶方法&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">原始对偶方法</a>。美国数学家<a href="https://zh.wikipedia.org/w/index.php?title=哈罗德·库恩&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">哈罗德·库恩</a>于1955年提出该算法。此算法之所以被称作匈牙利算法，是因为算法很大一部分是基于以前<a href="https://zh.wikipedia.org/wiki/匈牙利" target="_blank" rel="noopener">匈牙利</a>数学家Dénes Kőnig和Jenő Egerváry的工作之上创建起来的。匈牙利算法是基于Hall定理中充分性证明的思想，它是部图匹配最常见的算法，该算法的核心就是寻找<strong>增广路径</strong>(<em>是指从</em>M<em>中没有用到的<a href="https://zh.wikipedia.org/wiki/顶点_(图论" target="_blank" rel="noopener">顶点</a>)开始，并从</em>M<em>中没有用到的顶点结束的交替路径</em>)，它是一种用增广路径求二分图最大匹配的算法。</p>
 <h3 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h3><h4 id="匹配-amp-最大匹配-amp-完美匹配"><a href="#匹配-amp-最大匹配-amp-完美匹配" class="headerlink" title="匹配&amp;最大匹配&amp;完美匹配"></a>匹配&amp;最大匹配&amp;完美匹配</h4><ol>
 <li>匹配：<ol>
 <li>一种边的集合，其中任意两条边没有公共顶点</li>
@@ -225,11 +226,11 @@
 </ol>
 <h4 id="交替路径-amp-增广路径"><a href="#交替路径-amp-增广路径" class="headerlink" title="交替路径&amp;增广路径"></a>交替路径&amp;增广路径</h4><ol>
 <li>交替路：从一个未匹配点出发，依次经过非匹配边、匹配边、非匹配边…形成的路径叫交替路。</li>
-<li> 增广路：从一个未匹配点出发，走交替路，如果途径另一个未匹配点（出发的点不算），则这条交替路称为增广路。</li>
+<li>增广路：从一个未匹配点出发，走交替路，如果途径另一个未匹配点（出发的点不算），则这条交替路称为增广路。</li>
 </ol>
 <h2 id="思路-amp-实现"><a href="#思路-amp-实现" class="headerlink" title="思路&amp;实现"></a>思路&amp;实现</h2><p>该思路和主要为最佳匹配问题，</p>
 <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
-<li><a href="https://zh.wikipedia.org/wiki/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">维基百科</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/匈牙利算法" target="_blank" rel="noopener">维基百科</a></li>
 <li><a href="http://www.hungarianalgorithm.com/examplehungarianalgorithm.php" target="_blank" rel="noopener">Hungarian Algorithm</a></li>
 </ul>
 
@@ -358,6 +359,7 @@
 
 
 
+
 </article>
 
 
@@ -377,18 +379,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -397,6 +415,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -445,7 +464,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -501,6 +520,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

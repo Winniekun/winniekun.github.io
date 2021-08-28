@@ -38,6 +38,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -52,10 +53,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -202,26 +203,77 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><p>这里主要涉及的是四个基础的元注解(meta-annotation)</p>
 <p>Java中的注解，有四个基本的元注解<code>target</code> <code>Retention</code> <code>Documented</code>  <code>Inherited</code> 这四个元注解<code>Documented</code>和<code>Inherited</code>使用不多，主要为<code>target</code> <code>retention</code>两个注解</p>
 <a id="more"></a>
-
 <h3 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h3><p>描述注解的使用范围(即被修饰的注解可以用在什么地方).</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target {</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns an array of the kinds of elements an annotation type</span></span><br><span class="line"><span class="comment">     * can be applied to.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> an array of the kinds of elements an annotation type</span></span><br><span class="line"><span class="comment">     * can be applied to</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    ElementType[] value();</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">public @interface Target {
+    /**
+     * Returns an array of the kinds of elements an annotation type
+     * can be applied to.
+     * @return an array of the kinds of elements an annotation type
+     * can be applied to
+     */
+    ElementType[] value();
+}
+</code></pre>
 <p>使用的范围也就是ElementType[]中的枚举类型数据</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> ElementType {</span><br><span class="line">    <span class="comment">/** Class, interface (including annotation type), or enum declaration */</span></span><br><span class="line">    TYPE, <span class="comment">// 类、接口、枚举</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Field declaration (includes enum constants) */</span></span><br><span class="line">    FIELD, <span class="comment">// 成员变量</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Method declaration */</span></span><br><span class="line">    METHOD, <span class="comment">// 成员方法</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Formal parameter declaration */</span></span><br><span class="line">    PARAMETER, <span class="comment">// 方法参数</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Constructor declaration */</span></span><br><span class="line">    CONSTRUCTOR, <span class="comment">// 构造方法</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Local variable declaration */</span></span><br><span class="line">    LOCAL_VARIABLE, <span class="comment">// 局部变量</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Annotation type declaration */</span></span><br><span class="line">    ANNOTATION_TYPE, <span class="comment">// 注解类</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Package declaration */</span></span><br><span class="line">    PACKAGE, <span class="comment">// 包</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Type parameter declaration</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 1.8</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    TYPE_PARAMETER,  <span class="comment">// 类型参数（泛型）</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Use of a type</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@since</span> 1.8</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    TYPE_USE</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public enum ElementType {
+    /** Class, interface (including annotation type), or enum declaration */
+    TYPE, // 类、接口、枚举
 
+    /** Field declaration (includes enum constants) */
+    FIELD, // 成员变量
 
+    /** Method declaration */
+    METHOD, // 成员方法
 
+    /** Formal parameter declaration */
+    PARAMETER, // 方法参数
+
+    /** Constructor declaration */
+    CONSTRUCTOR, // 构造方法
+
+    /** Local variable declaration */
+    LOCAL_VARIABLE, // 局部变量
+
+    /** Annotation type declaration */
+    ANNOTATION_TYPE, // 注解类
+
+    /** Package declaration */
+    PACKAGE, // 包
+
+    /**
+     * Type parameter declaration
+     *
+     * @since 1.8
+     */
+    TYPE_PARAMETER,  // 类型参数（泛型）
+
+    /**
+     * Use of a type
+     *
+     * @since 1.8
+     */
+    TYPE_USE
+}
+</code></pre>
 <h3 id="Retention"><a href="#Retention" class="headerlink" title="Retention"></a>Retention</h3><p>描述注解保留的时间范围(即：被描述的注解在它所修饰的类中可以被保留到何时). </p>
 <p>Reteniton注解用来限定那些被它所注解的注解类在注解到其他类上以后，可被保留到何时，一共有三种策略</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> RetentionPolicy {</span><br><span class="line">	<span class="comment">// 源文件保留</span></span><br><span class="line">    SOURCE,</span><br><span class="line">	<span class="comment">// 编译期保留，默认值</span></span><br><span class="line">    CLASS,</span><br><span class="line">	<span class="comment">// 运行期保留，可通过反射去获取注解信息</span></span><br><span class="line">    RUNTIME</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><p><strong>正常方式</strong>:  <code>引入需要的包类名称</code> —&gt; <code>通过 new实例化</code> —&gt; <code>获取实例化对象</code></p>
-<p><strong>反射</strong>:  <code>实例化对象</code> —&gt; <code>getClass()方法</code> —&gt; <code>得到完整的包类名称</code></p>
+<pre><code class="lang-java">public enum RetentionPolicy {
+    // 源文件保留
+    SOURCE,
+    // 编译期保留，默认值
+    CLASS,
+    // 运行期保留，可通过反射去获取注解信息
+    RUNTIME
+}
+</code></pre>
+<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><p><strong>正常方式</strong>:  <code>引入需要的包类名称</code> —-&gt; <code>通过 new实例化</code> —-&gt; <code>获取实例化对象</code></p>
+<p><strong>反射</strong>:  <code>实例化对象</code> —-&gt; <code>getClass()方法</code> —-&gt; <code>得到完整的包类名称</code></p>
 <p>通过反射， 使得Java具有类似动态语言的特性</p>
 <h3 id="反射所提供的功能"><a href="#反射所提供的功能" class="headerlink" title="反射所提供的功能"></a>反射所提供的功能</h3><ul>
 <li>在运行时判断任意一个对象所属的类</li>
@@ -239,31 +291,77 @@
 <p>慢于直接执行相同的操作</p>
 <h3 id="获取Class类的实例"><a href="#获取Class类的实例" class="headerlink" title="获取Class类的实例"></a>获取Class类的实例</h3><ol>
 <li><p>已知某个类的实例</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">User user = <span class="keyword">new</span> User();</span><br><span class="line">Class&lt;? extends User&gt; aClass1 = user.getClass();</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">User user = new User();
+Class&lt;? extends User&gt; aClass1 = user.getClass();
+</code></pre>
+</li>
 <li><p>已知具体的类</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;User&gt; aClass2 = User<span class="class">.<span class="keyword">class</span></span>;</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">Class&lt;User&gt; aClass2 = User.class;
+</code></pre>
+</li>
 <li><p>已知类的全名称</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt; aClass3 = Class.forName(<span class="string">"com.xxx.xxx"</span>);</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">Class&lt;?&gt; aClass3 = Class.forName("com.xxx.xxx");
+</code></pre>
+</li>
 </ol>
-<h3 id="类的加载过程"><a href="#类的加载过程" class="headerlink" title="类的加载过程"></a>类的加载过程</h3><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">|—————————|          |——————————|           |————————————|</span><br><span class="line">| 类的加载 | ------&gt;  | 类的链接   |  -------&gt; | 类的初始化  |</span><br><span class="line">|   Load  | -----&gt;   |   Link   |  -------&gt; | Initialize |</span><br><span class="line">|—————————|          |——————————|           |————————————|</span><br></pre></td></tr></tbody></table></figure>
-
-<h3 id="获取Class对象之后可以做写什么"><a href="#获取Class对象之后可以做写什么" class="headerlink" title="获取Class对象之后可以做写什么"></a>获取Class对象之后可以做写什么</h3><ol>
+<h3 id="类的加载过程"><a href="#类的加载过程" class="headerlink" title="类的加载过程"></a>类的加载过程</h3><pre><code>|—————————|          |——————————|           |————————————|
+| 类的加载 | ------&gt;  | 类的链接   |  -------&gt; | 类的初始化  |
+|   Load  | -----&gt;   |   Link   |  -------&gt; | Initialize |
+|—————————|          |——————————|           |————————————|
+</code></pre><h3 id="获取Class对象之后可以做写什么"><a href="#获取Class对象之后可以做写什么" class="headerlink" title="获取Class对象之后可以做写什么"></a>获取Class对象之后可以做写什么</h3><ol>
 <li><p>创建类的对象</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aClass.newInstance(); <span class="comment">// 本质是调用了无参构造器</span></span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">aClass.newInstance(); // 本质是调用了无参构造器
+</code></pre>
 <p>若是没有无参构造器，可以通过明确调用对应的构造器，然后将参数传递进去即可</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aClass.getDeclaredConstrutor(Class...parameterTypes)</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">aClass.getDeclaredConstrutor(Class...parameterTypes)
+</code></pre>
+</li>
 <li><p>可以调用类中的方法</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">User user = (User) aClass.newInstance();</span><br><span class="line">Method setName = aClass.getDeclaredMethod(<span class="string">"setName"</span>, String<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"><span class="comment">// invoke: 激活</span></span><br><span class="line"><span class="comment">// (对象, "方法的值")</span></span><br><span class="line">setName.invoke(user, <span class="string">"维坤坤"</span>);</span><br><span class="line">System.out.println(user.getName());</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java"> User user = (User) aClass.newInstance();
+ Method setName = aClass.getDeclaredMethod("setName", String.class);
+ // invoke: 激活
+ // (对象, "方法的值")
+ setName.invoke(user, "维坤坤");
+ System.out.println(user.getName());
+</code></pre>
+</li>
 <li><p>操作类中的属性</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//反射操作属性</span></span><br><span class="line">User user3 = (User) aClass.newInstance();</span><br><span class="line">Field name = aClass.getDeclaredField(<span class="string">"name"</span>);</span><br><span class="line"><span class="comment">// 不能操作私有属性 需要关闭安全检测</span></span><br><span class="line">name.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">name.set(user3, <span class="string">"孔维坤"</span>);</span><br><span class="line">System.out.println(user3.getName());</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java"> //反射操作属性
+ User user3 = (User) aClass.newInstance();
+ Field name = aClass.getDeclaredField("name");
+ // 不能操作私有属性 需要关闭安全检测
+ name.setAccessible(true);
+ name.set(user3, "孔维坤");
+ System.out.println(user3.getName());
+</code></pre>
+</li>
 </ol>
 <h2 id="注解和反射的实际应用"><a href="#注解和反射的实际应用" class="headerlink" title="注解和反射的实际应用"></a>注解和反射的实际应用</h2><p>编写一个注解，适用于成员方法，然后运行保留</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.METHOD)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> AAAA {</span><br><span class="line">    <span class="function">String <span class="title">value</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface AAAA {
+    String value() default "";
+}
+</code></pre>
 <p>通过反射获取注解中的内容</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReAno</span> </span>{</span><br><span class="line">    <span class="meta">@AAAA</span>(<span class="string">"我是方法注解"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">(<span class="keyword">int</span> a)</span></span>{</span><br><span class="line">        System.out.println(<span class="string">"wtf "</span> + a);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException </span>{</span><br><span class="line">    	<span class="comment">// 通过反射获取类</span></span><br><span class="line">        Class&lt;ReAno&gt; reAnoClass = ReAno<span class="class">.<span class="keyword">class</span></span>;</span><br><span class="line">        Method say = reAnoClass.getDeclaredMethod(<span class="string">"say"</span>, <span class="keyword">int</span><span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        AAAA annotation = say.getAnnotation(AAAA<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        System.out.println(annotation.value());</span><br><span class="line">    	<span class="comment">// 输出: 我是方法注解</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class ReAno {
+    @AAAA("我是方法注解")
+    public void say(int a){
+        System.out.println("wtf " + a);
+    }
 
+public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
+        // 通过反射获取类
+        Class&lt;ReAno&gt; reAnoClass = ReAno.class;
+        Method say = reAnoClass.getDeclaredMethod("say", int.class);
+        AAAA annotation = say.getAnnotation(AAAA.class);
+        System.out.println(annotation.value());
+        // 输出: 我是方法注解
+
+
+    }
+}
+</code></pre>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过反射获取注解的方式就是注解应用在什么范围， 就先通过反射获取对应的方法、或者成员变量，然后获取其注解即可。</p>
 
         </div>
@@ -392,6 +490,7 @@ Java中的注解，有四个基本的元注解target Retention Docume..." data-t
 
 
 
+
 </article>
 
 
@@ -411,18 +510,34 @@ Java中的注解，有四个基本的元注解target Retention Docume..." data-t
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -431,6 +546,7 @@ Java中的注解，有四个基本的元注解target Retention Docume..." data-t
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -480,7 +596,7 @@ Java中的注解，有四个基本的元注解target Retention Docume..." data-t
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -536,6 +652,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

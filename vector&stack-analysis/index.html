@@ -42,6 +42,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -56,10 +57,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -206,10 +207,10 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="Vector源码解读"><a href="#Vector源码解读" class="headerlink" title="Vector源码解读"></a>Vector源码解读</h2><a id="more"></a>
-
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -217,9 +218,6 @@
                 </div>
                 <div class="image-caption">Vector依赖</div>
             </figure>
-
-
-
 <ul>
 <li>支持泛型, 继承了<strong>AbstractList</strong>类, 实现了<strong>List</strong>接口</li>
 <li><strong>RandomAccess</strong>用来表明其支持随机访问</li>
@@ -228,24 +226,47 @@
 </ul>
 <p>Vector的实现和ArrayLis基本类似, 底层使用的都是Object类型的数组, 只不过Vector在方法上添加了关键字<strong>synchronized</strong>, 实现了线程安全.</p>
 <p>所以具体的实现就不一一展开来了, 但是其扩容机制大小和ArrayList的不容,其他的部分, 分析<strong>Stack</strong>源码的时候相关涉及会再分析下</p>
-<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><h4 id="Vector"><a href="#Vector" class="headerlink" title="Vector()"></a>Vector()</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 无参构造</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">this</span>(<span class="number">10</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-<h4 id="Vector-int-initialCapacity"><a href="#Vector-int-initialCapacity" class="headerlink" title="Vector(int initialCapacity)"></a>Vector(int initialCapacity)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 指定初始化容量</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>{</span><br><span class="line">    <span class="keyword">this</span>(initialCapacity, <span class="number">0</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-<h4 id="Vector-int-initialCapacity-int-capacityIncrement"><a href="#Vector-int-initialCapacity-int-capacityIncrement" class="headerlink" title="Vector(int initialCapacity, int capacityIncrement)"></a>Vector(int initialCapacity, int capacityIncrement)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 即指定初始化容量又指定扩容大小</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">(<span class="keyword">int</span> initialCapacity, <span class="keyword">int</span> capacityIncrement)</span> </span>{</span><br><span class="line">    <span class="keyword">super</span>();</span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal Capacity: "</span>+</span><br><span class="line">                                           initialCapacity);</span><br><span class="line">    <span class="keyword">this</span>.elementData = <span class="keyword">new</span> Object[initialCapacity];</span><br><span class="line">    <span class="keyword">this</span>.capacityIncrement = capacityIncrement;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-<h4 id="Vector-Collection-lt-extends-E-gt-c"><a href="#Vector-Collection-lt-extends-E-gt-c" class="headerlink" title="Vector(Collection<? extends E> c)"></a>Vector(Collection&lt;? extends E&gt; c)</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构造包含指定collection元素的Vector</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>{</span><br><span class="line">    elementData = c.toArray();</span><br><span class="line">    elementCount = elementData.length;</span><br><span class="line">    <span class="comment">// c.toArray might (incorrectly) not return Object[] (see 6260652)</span></span><br><span class="line">    <span class="keyword">if</span> (elementData.getClass() != Object[]<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">        <span class="title">elementData</span> </span>= Arrays.copyOf(elementData, elementCount, Object[]<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-<h3 id="扩容机制"><a href="#扩容机制" class="headerlink" title="扩容机制"></a>扩容机制</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>{</span><br><span class="line">    <span class="comment">// overflow-conscious code</span></span><br><span class="line">    <span class="keyword">int</span> oldCapacity = elementData.length;</span><br><span class="line">    <span class="keyword">int</span> newCapacity = oldCapacity + ((capacityIncrement &gt; <span class="number">0</span>) ?</span><br><span class="line">                                     capacityIncrement : oldCapacity);</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><h4 id="Vector"><a href="#Vector" class="headerlink" title="Vector()"></a>Vector()</h4><pre><code class="lang-java">// 无参构造
+public Vector() {
+    this(10);
+}
+</code></pre>
+<h4 id="Vector-int-initialCapacity"><a href="#Vector-int-initialCapacity" class="headerlink" title="Vector(int initialCapacity)"></a>Vector(int initialCapacity)</h4><pre><code class="lang-java">// 指定初始化容量
+public Vector(int initialCapacity) {
+    this(initialCapacity, 0);
+}
+</code></pre>
+<h4 id="Vector-int-initialCapacity-int-capacityIncrement"><a href="#Vector-int-initialCapacity-int-capacityIncrement" class="headerlink" title="Vector(int initialCapacity, int capacityIncrement)"></a>Vector(int initialCapacity, int capacityIncrement)</h4><pre><code class="lang-java">// 即指定初始化容量又指定扩容大小
+public Vector(int initialCapacity, int capacityIncrement) {
+    super();
+    if (initialCapacity &lt; 0)
+        throw new IllegalArgumentException("Illegal Capacity: "+
+                                           initialCapacity);
+    this.elementData = new Object[initialCapacity];
+    this.capacityIncrement = capacityIncrement;
+}
+</code></pre>
+<h4 id="Vector-Collection-lt-extends-E-gt-c"><a href="#Vector-Collection-lt-extends-E-gt-c" class="headerlink" title="Vector(Collection<? extends E> c)"></a>Vector(Collection&lt;? extends E&gt; c)</h4><pre><code class="lang-java">// 构造包含指定collection元素的Vector
+public Vector(Collection&lt;? extends E&gt; c) {
+    elementData = c.toArray();
+    elementCount = elementData.length;
+    // c.toArray might (incorrectly) not return Object[] (see 6260652)
+    if (elementData.getClass() != Object[].class)
+        elementData = Arrays.copyOf(elementData, elementCount, Object[].class);
+}
+</code></pre>
+<h3 id="扩容机制"><a href="#扩容机制" class="headerlink" title="扩容机制"></a>扩容机制</h3><pre><code class="lang-java">private void grow(int minCapacity) {
+    // overflow-conscious code
+    int oldCapacity = elementData.length;
+    int newCapacity = oldCapacity + ((capacityIncrement &gt; 0) ?
+                                     capacityIncrement : oldCapacity);
+    if (newCapacity - minCapacity &lt; 0)
+        newCapacity = minCapacity;
+    if (newCapacity - MAX_ARRAY_SIZE &gt; 0)
+        newCapacity = hugeCapacity(minCapacity);
+    elementData = Arrays.copyOf(elementData, newCapacity);
+}
+</code></pre>
 <p>可以看到其扩容机制和<strong>ArrayList</strong>的不同, ArrayList的扩容是原容量的1.5倍, 但是<strong>Vector</strong>的扩容机制和<strong>capacityIncrement</strong>相关 </p>
 <ol>
 <li>capacityIncrement&gt;0 则 扩容容量为 <code>capacityIncrement</code>, 最后的容量为 <code>oldCapacity + capacityIncrement</code></li>
@@ -259,37 +280,103 @@
                 </div>
                 <div class="image-caption">Stack方法</div>
             </figure>
-
-<h3 id="empty"><a href="#empty" class="headerlink" title="empty()"></a>empty()</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">empty</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> size() == <span class="number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<h3 id="peek"><a href="#peek" class="headerlink" title="peek()"></a>peek()</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">peek</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">int</span> len = size();</span><br><span class="line">    <span class="keyword">if</span> (len == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> EmptyStackException();</span><br><span class="line">    <span class="keyword">return</span> elementAt(len - <span class="number">1</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<p>**peek()**函数调用了父类<code>Vector</code>的 **elementAt()**方法</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">elementAt</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= elementCount) {</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index + <span class="string">" &gt;= "</span> + elementCount);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> elementData(index);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<p><strong>elementData()<strong>函数和</strong>ArrayList</strong>中的一样</p>
+<h3 id="empty"><a href="#empty" class="headerlink" title="empty()"></a>empty()</h3><pre><code class="lang-java">public boolean empty() {
+    return size() == 0;
+}
+</code></pre>
+<h3 id="peek"><a href="#peek" class="headerlink" title="peek()"></a>peek()</h3><pre><code class="lang-java">public synchronized E peek() {
+    int len = size();
+    if (len == 0)
+        throw new EmptyStackException();
+    return elementAt(len - 1);
+}
+</code></pre>
+<p><strong>peek()</strong>函数调用了父类<code>Vector</code>的 <strong>elementAt()</strong>方法</p>
+<pre><code class="lang-java">public synchronized E elementAt(int index) {
+    if (index &gt;= elementCount) {
+        throw new ArrayIndexOutOfBoundsException(index + " &gt;= " + elementCount);
+    }
+    return elementData(index);
+}
+</code></pre>
+<p><strong>elementData()</strong>函数和<strong>ArrayList</strong>中的一样</p>
 <p>说白了就是返回数组中最后一位的元素</p>
-<h3 id="pop"><a href="#pop" class="headerlink" title="pop()"></a>pop()</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">pop</span><span class="params">()</span> </span>{</span><br><span class="line">    E obj;</span><br><span class="line">    <span class="keyword">int</span> len = size();</span><br><span class="line">    obj = peek();</span><br><span class="line">    removeElementAt(len - <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<p><strong>pop()<strong>函数调用了父类<code>Vector</code>的 <strong>removeElementAt()<strong>方法 这个方法和</strong>ArrayList</strong>的</strong>remove(int index)<strong>是一样的, 只不过添加了</strong>synchronized</strong>关键字实现线程安全</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">removeElementAt</span><span class="params">(<span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= elementCount) {</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index + <span class="string">" &gt;= "</span> +</span><br><span class="line">                                                 elementCount);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (index &lt; <span class="number">0</span>) {</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">int</span> j = elementCount - index - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (j &gt; <span class="number">0</span>) {</span><br><span class="line">        System.arraycopy(elementData, index + <span class="number">1</span>, elementData, index, j);</span><br><span class="line">    }</span><br><span class="line">    elementCount--;</span><br><span class="line">    elementData[elementCount] = <span class="keyword">null</span>; <span class="comment">/* to let gc do its work */</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<h3 id="pop"><a href="#pop" class="headerlink" title="pop()"></a>pop()</h3><pre><code class="lang-java">public synchronized E pop() {
+    E obj;
+    int len = size();
+    obj = peek();
+    removeElementAt(len - 1);
+    return obj;
+}
+</code></pre>
+<p><strong>pop()</strong>函数调用了父类<code>Vector</code>的 <strong>removeElementAt()</strong>方法 这个方法和<strong>ArrayList</strong>的<strong>remove(int index)</strong>是一样的, 只不过添加了<strong>synchronized</strong>关键字实现线程安全</p>
+<pre><code class="lang-java">public synchronized void removeElementAt(int index) {
+    modCount++;
+    if (index &gt;= elementCount) {
+        throw new ArrayIndexOutOfBoundsException(index + " &gt;= " +
+                                                 elementCount);
+    }
+    else if (index &lt; 0) {
+        throw new ArrayIndexOutOfBoundsException(index);
+    }
+    int j = elementCount - index - 1;
+    if (j &gt; 0) {
+        System.arraycopy(elementData, index + 1, elementData, index, j);
+    }
+    elementCount--;
+    elementData[elementCount] = null; /* to let gc do its work */
+}
+</code></pre>
 <p>移除最后一个元素, 基本上不会执行前面的判断分支, 会直接执行</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">elementCount--;</span><br><span class="line">elementData[elementCount] = <span class="keyword">null</span>; <span class="comment">/* to let gc do its work */</span></span><br></pre></td></tr></tbody></table></figure>
-
-
-
-<h3 id="push"><a href="#push" class="headerlink" title="push()"></a>push()</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">push</span><span class="params">(E item)</span> </span>{</span><br><span class="line">    addElement(item);</span><br><span class="line">    <span class="keyword">return</span> item;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<p><strong>push()<strong>调用了</strong>addElement()<strong>方法, 该方法首先会确定</strong>elementCount</strong>是否大于现在数组的容量大小, 若大扩容, 否则直接添加</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">addElement</span><span class="params">(E obj)</span> </span>{</span><br><span class="line">    modCount++;</span><br><span class="line">    ensureCapacityHelper(elementCount + <span class="number">1</span>);</span><br><span class="line">    elementData[elementCount++] = obj;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">elementCount--;
+elementData[elementCount] = null; /* to let gc do its work */
+</code></pre>
+<h3 id="push"><a href="#push" class="headerlink" title="push()"></a>push()</h3><pre><code class="lang-java">public E push(E item) {
+    addElement(item);
+    return item;
+}
+</code></pre>
+<p><strong>push()</strong>调用了<strong>addElement()</strong>方法, 该方法首先会确定<strong>elementCount</strong>是否大于现在数组的容量大小, 若大扩容, 否则直接添加</p>
+<pre><code class="lang-java">public synchronized void addElement(E obj) {
+    modCount++;
+    ensureCapacityHelper(elementCount + 1);
+    elementData[elementCount++] = obj;
+}
+</code></pre>
 <p>然后在数组尾部添加元素.</p>
 <h3 id="search"><a href="#search" class="headerlink" title="search()"></a>search()</h3><p>返回对应元素所在堆的位置</p>
 <p>这个对于底层的数组而言, 是相反的, 所以从尾到头遍历元素,同时因为允许元素为空, 所以首先会先判断查询元素是否为空</p>
 <p><strong>感觉这些索引位置和数组第几个元素的问题很恼火, 两者始终差个1</strong></p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">search</span><span class="params">(Object o)</span> </span>{</span><br><span class="line">    <span class="keyword">int</span> i = lastIndexOf(o);</span><br><span class="line">    <span class="comment">// 逆序返回</span></span><br><span class="line">    <span class="keyword">if</span> (i &gt;= <span class="number">0</span>) {</span><br><span class="line">        <span class="keyword">return</span> size() - i;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">}</span><br><span class="line"><span class="comment">// elementCount记录为数组中的元素个数</span></span><br><span class="line"><span class="comment">// 但是数组是从位置0开始</span></span><br><span class="line"><span class="comment">// 所以在数组中最后一个元素的位置为elementCount-1</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">lastIndexOf</span><span class="params">(Object o)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> lastIndexOf(o, elementCount-<span class="number">1</span>);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">lastIndexOf</span><span class="params">(Object o, <span class="keyword">int</span> index)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= elementCount)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(index + <span class="string">" &gt;= "</span>+ elementCount);</span><br><span class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = index; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">            <span class="keyword">if</span> (elementData[i]==<span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">return</span> i;</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = index; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">            <span class="keyword">if</span> (o.equals(elementData[i]))</span><br><span class="line">                <span class="keyword">return</span> i;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public synchronized int search(Object o) {
+    int i = lastIndexOf(o);
+    // 逆序返回
+    if (i &gt;= 0) {
+        return size() - i;
+    }
+    return -1;
+}
+// elementCount记录为数组中的元素个数
+// 但是数组是从位置0开始
+// 所以在数组中最后一个元素的位置为elementCount-1
+public synchronized int lastIndexOf(Object o) {
+    return lastIndexOf(o, elementCount-1);
+}
 
+public synchronized int lastIndexOf(Object o, int index) {
+    if (index &gt;= elementCount)
+        throw new IndexOutOfBoundsException(index + " &gt;= "+ elementCount);
+    if (o == null) {
+        for (int i = index; i &gt;= 0; i--)
+            if (elementData[i]==null)
+                return i;
+    } else {
+        for (int i = index; i &gt;= 0; i--)
+            if (o.equals(elementData[i]))
+                return i;
+    }
+    return -1;
+}
+</code></pre>
 <h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><h3 id="Vector和ArrayList的异同"><a href="#Vector和ArrayList的异同" class="headerlink" title="Vector和ArrayList的异同:"></a>Vector和ArrayList的异同:</h3><p><strong>异:</strong></p>
 <ol>
 <li>Vector通过在涉及到线程不安全的方法上添加<strong>synchronized</strong>关键字实现了线程安全,而ArrayList为线程不安全</li>
@@ -428,6 +515,7 @@
 
 
 
+
 </article>
 
 
@@ -447,18 +535,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -467,6 +571,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -515,7 +620,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -571,6 +676,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

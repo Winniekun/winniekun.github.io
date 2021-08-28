@@ -38,6 +38,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -52,10 +53,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -202,39 +203,303 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><a id="more"></a>
-
 <p>最近在看线程池的实现原理，后面又看了源码，发现其内部是一个<code>生产者-消费者</code>模型，用户是提交的任务（task）是生产者，线程池中的线程（worker）是消费者。</p>
 <p>然后感觉对<code>生产者-消费者</code>模型的实现，磕磕绊绊的，所以记录一下。下面会涉及多种生产者-消费者模型的实现，可以先抽象出关键的接口，并实现一些抽象类：</p>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="生产者消费者接口"><a href="#生产者消费者接口" class="headerlink" title="生产者消费者接口"></a>生产者消费者接口</h3><h4 id="生产者接口"><a href="#生产者接口" class="headerlink" title="生产者接口"></a><strong>生产者接口</strong></h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Producer</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">produce</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<h4 id="消费者接口"><a href="#消费者接口" class="headerlink" title="消费者接口"></a><strong>消费者接口</strong></h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Consumer</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">consume</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<h3 id="生产者消费者抽象类"><a href="#生产者消费者抽象类" class="headerlink" title="生产者消费者抽象类"></a>生产者消费者抽象类</h3><h4 id="生产者抽象类"><a href="#生产者抽象类" class="headerlink" title="生产者抽象类"></a><strong>生产者抽象类</strong></h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractProducer</span> <span class="keyword">implements</span> <span class="title">Runnable</span>, <span class="title">Producer</span> </span>{</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>){</span><br><span class="line">            <span class="keyword">try</span>{</span><br><span class="line">                produce();</span><br><span class="line">            }<span class="keyword">catch</span> (Exception e){</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<h4 id="消费者抽象类"><a href="#消费者抽象类" class="headerlink" title="消费者抽象类"></a><strong>消费者抽象类</strong></h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractConsumer</span> <span class="keyword">implements</span> <span class="title">Consumer</span>, <span class="title">Runnable</span> </span>{</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>){</span><br><span class="line">            <span class="keyword">try</span>{</span><br><span class="line">                consume();</span><br><span class="line">            }<span class="keyword">catch</span> (Exception e){</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="生产者消费者接口"><a href="#生产者消费者接口" class="headerlink" title="生产者消费者接口"></a>生产者消费者接口</h3><h4 id="生产者接口"><a href="#生产者接口" class="headerlink" title="生产者接口"></a><strong>生产者接口</strong></h4><pre><code class="lang-java">public interface Producer {
+    void produce() throws InterruptedException;
+}
+</code></pre>
+<h4 id="消费者接口"><a href="#消费者接口" class="headerlink" title="消费者接口"></a><strong>消费者接口</strong></h4><pre><code class="lang-java">public interface Consumer {
+    void consume() throws InterruptedException;
+}
+</code></pre>
+<h3 id="生产者消费者抽象类"><a href="#生产者消费者抽象类" class="headerlink" title="生产者消费者抽象类"></a>生产者消费者抽象类</h3><h4 id="生产者抽象类"><a href="#生产者抽象类" class="headerlink" title="生产者抽象类"></a><strong>生产者抽象类</strong></h4><pre><code class="lang-java">abstract class AbstractProducer implements Runnable, Producer {
+    @Override
+    public void run() {
+        while (true){
+            try{
+                produce();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+}
+</code></pre>
+<h4 id="消费者抽象类"><a href="#消费者抽象类" class="headerlink" title="消费者抽象类"></a><strong>消费者抽象类</strong></h4><pre><code class="lang-java">abstract class AbstractConsumer implements Consumer, Runnable {
+    @Override
+    public void run() {
+        while (true){
+            try{
+                consume();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+}
+</code></pre>
 <h3 id="Model接口"><a href="#Model接口" class="headerlink" title="Model接口"></a>Model接口</h3><p>对应的实现<code>生产者-消费者</code>模型，不同的<code>生产者-消费者</code>实现模型都实现该接口，</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Model</span> </span>{</span><br><span class="line">    <span class="function">Runnable <span class="title">newRunnableConsumer</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">Runnable <span class="title">newRunnableProducer</span><span class="params">()</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">public interface Model {
+    Runnable newRunnableConsumer();
+    Runnable newRunnableProducer();
+}
+</code></pre>
 <h3 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h3><p>将Task作为生产和消费的基本单位</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Task</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> no;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Task</span><span class="params">(<span class="keyword">int</span> no)</span></span>{</span><br><span class="line">        <span class="keyword">this</span>.no = no;</span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getNo</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> no;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNo</span><span class="params">(<span class="keyword">int</span> no)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.no = no;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class Task {
+    private int no;
 
+    public Task(int no){
+        this.no = no;
 
+    }
 
+    public int getNo() {
+        return no;
+    }
+
+    public void setNo(int no) {
+        this.no = no;
+    }
+}
+</code></pre>
 <h2 id="实现一：BlockingQueue"><a href="#实现一：BlockingQueue" class="headerlink" title="实现一：BlockingQueue"></a>实现一：BlockingQueue</h2><p>BlockingQueue的写法最简单。核心思想是，<strong>把并发和容量控制封装在缓冲区中</strong>。而BlockingQueue的性质天生满足这个要求。</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.train.concurrent.procon;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.BlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.LinkedBlockingDeque;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicInteger;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Time</span>: 2020/4/21下午8:54</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: kongwiki</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Email</span>: kongwiki@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BlockingQueueModel</span> <span class="keyword">implements</span> <span class="title">Model</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> BlockingQueue&lt;Task&gt; queue;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> AtomicInteger increTaskNo = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BlockingQueueModel</span><span class="params">(<span class="keyword">int</span> cap)</span></span>{</span><br><span class="line">        <span class="keyword">this</span>.queue = <span class="keyword">new</span> LinkedBlockingDeque&lt;&gt;(cap);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Runnable <span class="title">newRunnableConsumer</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConsumerImpl();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Runnable <span class="title">newRunnableProducer</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ProducerImpl();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsumerImpl</span> <span class="keyword">extends</span> <span class="title">AbstractConsumer</span> <span class="keyword">implements</span> <span class="title">Runnable</span>, <span class="title">Consumer</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">consume</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">            Task task = queue.take();</span><br><span class="line">            Thread.sleep(<span class="number">500</span> + (<span class="keyword">long</span>) (Math.random() * <span class="number">500</span>));</span><br><span class="line">            System.out.println(<span class="string">"consume: "</span> + task.getNo());</span><br><span class="line"></span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ProducerImpl</span> <span class="keyword">extends</span> <span class="title">AbstractProducer</span> <span class="keyword">implements</span> <span class="title">Runnable</span>, <span class="title">Producer</span></span>{</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">produce</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">            Thread.sleep((<span class="keyword">long</span>) (<span class="number">500</span> + (Math.random()) * <span class="number">1000</span>));</span><br><span class="line">            Task task = <span class="keyword">new</span> Task(increTaskNo.getAndIncrement());</span><br><span class="line">            System.out.println(<span class="string">"produce: "</span> + task.getNo());</span><br><span class="line">            queue.put(task);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        Model model = <span class="keyword">new</span> BlockingQueueModel(<span class="number">3</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++) {</span><br><span class="line">            <span class="keyword">new</span> Thread(model.newRunnableConsumer()).start();</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) {</span><br><span class="line">            <span class="keyword">new</span> Thread(model.newRunnableProducer()).start();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">package com.train.concurrent.procon;
 
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 
-<h2 id="实现二：wait-amp-notify"><a href="#实现二：wait-amp-notify" class="headerlink" title="实现二：wait&amp;notify"></a>实现二：wait&amp;notify</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.train.concurrent.procon;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.LinkedList;</span><br><span class="line"><span class="keyword">import</span> java.util.Queue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicInteger;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Time</span>: 2020/4/22上午7:40</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: kongwiki</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Email</span>: kongwiki@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WaitNotifyModel</span> <span class="keyword">implements</span> <span class="title">Model</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> integer;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object buffer_lock = <span class="keyword">new</span> Object();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Queue&lt;Task&gt; buffer = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> cap;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WaitNotifyModel</span><span class="params">(<span class="keyword">int</span> cap)</span></span>{</span><br><span class="line">        <span class="keyword">this</span>.cap = cap;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Runnable <span class="title">newRunnableConsumer</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConsumerImpl();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Runnable <span class="title">newRunnableProducer</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ProducerImpl();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProducerImpl</span> <span class="keyword">extends</span> <span class="title">AbstractProducer</span> <span class="keyword">implements</span> <span class="title">Runnable</span>, <span class="title">Producer</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">produce</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">            Thread.sleep((<span class="keyword">long</span>) (<span class="number">500</span> + (Math.random() * <span class="number">1000</span>)));</span><br><span class="line">            <span class="keyword">synchronized</span> (buffer_lock){</span><br><span class="line">                <span class="keyword">while</span> (buffer.size() == cap){</span><br><span class="line">                    buffer_lock.wait();</span><br><span class="line">                }</span><br><span class="line">                Task task = <span class="keyword">new</span> Task(integer++);</span><br><span class="line">                buffer.add(task);</span><br><span class="line">                System.out.println(<span class="string">"produce: "</span> + task.getNo());</span><br><span class="line">                buffer_lock.notifyAll();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsumerImpl</span> <span class="keyword">extends</span> <span class="title">AbstractConsumer</span> <span class="keyword">implements</span> <span class="title">Runnable</span>, <span class="title">Consumer</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">consume</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">            <span class="keyword">synchronized</span> (buffer_lock){</span><br><span class="line">                <span class="keyword">while</span> (buffer.size() == <span class="number">0</span>){</span><br><span class="line">                    buffer_lock.wait();</span><br><span class="line">                }</span><br><span class="line">                Task task = buffer.poll();</span><br><span class="line">                <span class="keyword">assert</span> task != <span class="keyword">null</span>;</span><br><span class="line">                Thread.sleep((<span class="keyword">long</span>) (<span class="number">500</span> + (Math.random() * <span class="number">1000</span>)));</span><br><span class="line">                System.out.println(<span class="string">"consume: "</span> + task.getNo());</span><br><span class="line">                buffer_lock.notifyAll();</span><br><span class="line"></span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        Model model = <span class="keyword">new</span> WaitNotifyModel(<span class="number">3</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) {</span><br><span class="line">            <span class="keyword">new</span> Thread(model.newRunnableConsumer()).start();</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) {</span><br><span class="line">            <span class="keyword">new</span> Thread(model.newRunnableProducer()).start();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"> }</span><br></pre></td></tr></tbody></table></figure>
+/**
+ * @Time: 2020/4/21下午8:54
+ * @Author: kongwiki
+ * @Email: kongwiki@163.com
+ */
+public class BlockingQueueModel implements Model {
+    private BlockingQueue&lt;Task&gt; queue;
+    private final AtomicInteger increTaskNo = new AtomicInteger(0);
+
+    public BlockingQueueModel(int cap){
+        this.queue = new LinkedBlockingDeque&lt;&gt;(cap);
+    }
 
 
+    @Override
+    public Runnable newRunnableConsumer() {
+        return new ConsumerImpl();
+    }
 
-<h2 id="实现三：lock-amp-amp-condition"><a href="#实现三：lock-amp-amp-condition" class="headerlink" title="实现三：lock &amp;&amp; condition"></a>实现三：lock &amp;&amp; condition</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.train.concurrent.procon;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.LinkedList;</span><br><span class="line"><span class="keyword">import</span> java.util.Queue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.Condition;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.Lock;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.ReentrantLock;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Time</span>: 2020/4/22上午8:01</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: kongwiki</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Email</span>: kongwiki@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LockConditionModel</span> <span class="keyword">implements</span> <span class="title">Model</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock BUFFER_LOCK = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Condition BUFFER_COND = BUFFER_LOCK.newCondition();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> integer;</span><br><span class="line">    <span class="keyword">private</span> Queue&lt;Task&gt; buffer = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> cap;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LockConditionModel</span><span class="params">(<span class="keyword">int</span> cap)</span></span>{</span><br><span class="line">        <span class="keyword">this</span>.cap = cap;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Runnable <span class="title">newRunnableConsumer</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConsumerImpl();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Runnable <span class="title">newRunnableProducer</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ProducerImpl();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProducerImpl</span> <span class="keyword">extends</span> <span class="title">AbstractProducer</span> <span class="keyword">implements</span> <span class="title">Producer</span>, <span class="title">Runnable</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">produce</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">            Thread.sleep((<span class="keyword">long</span>) (<span class="number">500</span> + (Math.random() * <span class="number">1000</span>)));</span><br><span class="line">            BUFFER_LOCK.lockInterruptibly();</span><br><span class="line">            <span class="keyword">try</span>{</span><br><span class="line">                <span class="keyword">while</span> (buffer.size() == cap){</span><br><span class="line">                    BUFFER_COND.await();</span><br><span class="line">                }</span><br><span class="line">                Task task = <span class="keyword">new</span> Task(integer++);</span><br><span class="line">                buffer.offer(task);</span><br><span class="line">                System.out.println(<span class="string">"produce: "</span>+ task.getNo());</span><br><span class="line">                BUFFER_COND.signalAll();</span><br><span class="line">            }<span class="keyword">catch</span> (Exception e){</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            }<span class="keyword">finally</span> {</span><br><span class="line">                BUFFER_LOCK.unlock();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsumerImpl</span> <span class="keyword">extends</span> <span class="title">AbstractConsumer</span> <span class="keyword">implements</span> <span class="title">Consumer</span>, <span class="title">Runnable</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">consume</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">            BUFFER_LOCK.lockInterruptibly();</span><br><span class="line">            <span class="keyword">try</span>{</span><br><span class="line">                <span class="keyword">while</span> (buffer.size() == <span class="number">0</span>){</span><br><span class="line">                    BUFFER_COND.await();</span><br><span class="line">                }</span><br><span class="line">                Task task = buffer.poll();</span><br><span class="line">                <span class="keyword">assert</span> task != <span class="keyword">null</span>;</span><br><span class="line">                System.out.println(<span class="string">"consume: "</span> + task.getNo());</span><br><span class="line">                BUFFER_COND.signalAll();</span><br><span class="line">            }<span class="keyword">catch</span> (Exception e){</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            }<span class="keyword">finally</span> {</span><br><span class="line">                BUFFER_LOCK.unlock();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        Model model = <span class="keyword">new</span> LockConditionModel(<span class="number">3</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) {</span><br><span class="line">            <span class="keyword">new</span> Thread(model.newRunnableConsumer()).start();</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) {</span><br><span class="line">            <span class="keyword">new</span> Thread(model.newRunnableProducer()).start();</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+    @Override
+    public Runnable newRunnableProducer() {
+        return new ProducerImpl();
+    }
 
+    private class ConsumerImpl extends AbstractConsumer implements Runnable, Consumer{
+
+        @Override
+        public void consume() throws InterruptedException {
+            Task task = queue.take();
+            Thread.sleep(500 + (long) (Math.random() * 500));
+            System.out.println("consume: " + task.getNo());
+
+        }
+    }
+
+    private class ProducerImpl extends AbstractProducer implements Runnable, Producer{
+        @Override
+        public void produce() throws InterruptedException {
+            Thread.sleep((long) (500 + (Math.random()) * 1000));
+            Task task = new Task(increTaskNo.getAndIncrement());
+            System.out.println("produce: " + task.getNo());
+            queue.put(task);
+        }
+    }
+
+    public static void main(String[] args) {
+        Model model = new BlockingQueueModel(3);
+        for (int i = 0; i &lt; 2; i++) {
+            new Thread(model.newRunnableConsumer()).start();
+        }
+
+        for (int i = 0; i &lt; 5; i++) {
+            new Thread(model.newRunnableProducer()).start();
+        }
+    }
+}
+</code></pre>
+<h2 id="实现二：wait-amp-notify"><a href="#实现二：wait-amp-notify" class="headerlink" title="实现二：wait&amp;notify"></a>实现二：wait&amp;notify</h2><pre><code class="lang-java">package com.train.concurrent.procon;
+
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * @Time: 2020/4/22上午7:40
+ * @Author: kongwiki
+ * @Email: kongwiki@163.com
+ */
+public class WaitNotifyModel implements Model {
+    private int integer;
+    private final Object buffer_lock = new Object();
+    private final Queue&lt;Task&gt; buffer = new LinkedList&lt;&gt;();
+    private int cap;
+
+    public WaitNotifyModel(int cap){
+        this.cap = cap;
+    }
+
+    @Override
+    public Runnable newRunnableConsumer() {
+        return new ConsumerImpl();
+    }
+
+    @Override
+    public Runnable newRunnableProducer() {
+        return new ProducerImpl();
+    }
+
+    public class ProducerImpl extends AbstractProducer implements Runnable, Producer{
+
+        @Override
+        public void produce() throws InterruptedException {
+            Thread.sleep((long) (500 + (Math.random() * 1000)));
+            synchronized (buffer_lock){
+                while (buffer.size() == cap){
+                    buffer_lock.wait();
+                }
+                Task task = new Task(integer++);
+                buffer.add(task);
+                System.out.println("produce: " + task.getNo());
+                buffer_lock.notifyAll();
+            }
+        }
+    }
+
+    public class ConsumerImpl extends AbstractConsumer implements Runnable, Consumer{
+
+        @Override
+        public void consume() throws InterruptedException {
+            synchronized (buffer_lock){
+                while (buffer.size() == 0){
+                    buffer_lock.wait();
+                }
+                Task task = buffer.poll();
+                assert task != null;
+                Thread.sleep((long) (500 + (Math.random() * 1000)));
+                System.out.println("consume: " + task.getNo());
+                buffer_lock.notifyAll();
+
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Model model = new WaitNotifyModel(3);
+        for (int i = 0; i &lt; 3; i++) {
+            new Thread(model.newRunnableConsumer()).start();
+        }
+
+        for (int i = 0; i &lt; 5; i++) {
+            new Thread(model.newRunnableProducer()).start();
+        }
+    }
+ }
+</code></pre>
+<h2 id="实现三：lock-amp-amp-condition"><a href="#实现三：lock-amp-amp-condition" class="headerlink" title="实现三：lock &amp;&amp; condition"></a>实现三：lock &amp;&amp; condition</h2><pre><code class="lang-java">package com.train.concurrent.procon;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+/**
+ * @Time: 2020/4/22上午8:01
+ * @Author: kongwiki
+ * @Email: kongwiki@163.com
+ */
+public class LockConditionModel implements Model {
+    private final Lock BUFFER_LOCK = new ReentrantLock();
+    private final Condition BUFFER_COND = BUFFER_LOCK.newCondition();
+    private int integer;
+    private Queue&lt;Task&gt; buffer = new LinkedList&lt;&gt;();
+    private int cap;
+
+    public LockConditionModel(int cap){
+        this.cap = cap;
+    }
+
+    @Override
+    public Runnable newRunnableConsumer() {
+        return new ConsumerImpl();
+    }
+
+    @Override
+    public Runnable newRunnableProducer() {
+        return new ProducerImpl();
+    }
+
+    public class ProducerImpl extends AbstractProducer implements Producer, Runnable{
+
+        @Override
+        public void produce() throws InterruptedException {
+            Thread.sleep((long) (500 + (Math.random() * 1000)));
+            BUFFER_LOCK.lockInterruptibly();
+            try{
+                while (buffer.size() == cap){
+                    BUFFER_COND.await();
+                }
+                Task task = new Task(integer++);
+                buffer.offer(task);
+                System.out.println("produce: "+ task.getNo());
+                BUFFER_COND.signalAll();
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                BUFFER_LOCK.unlock();
+            }
+        }
+    }
+
+    public class ConsumerImpl extends AbstractConsumer implements Consumer, Runnable{
+
+        @Override
+        public void consume() throws InterruptedException {
+            BUFFER_LOCK.lockInterruptibly();
+            try{
+                while (buffer.size() == 0){
+                    BUFFER_COND.await();
+                }
+                Task task = buffer.poll();
+                assert task != null;
+                System.out.println("consume: " + task.getNo());
+                BUFFER_COND.signalAll();
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                BUFFER_LOCK.unlock();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Model model = new LockConditionModel(3);
+        for (int i = 0; i &lt; 3; i++) {
+            new Thread(model.newRunnableConsumer()).start();
+        }
+
+        for (int i = 0; i &lt; 5; i++) {
+            new Thread(model.newRunnableProducer()).start();
+        }
+    }
+}
+</code></pre>
 
         </div>
 
@@ -361,6 +626,7 @@
 
 
 
+
 </article>
 
 
@@ -380,18 +646,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -400,6 +682,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -448,7 +731,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -504,6 +787,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

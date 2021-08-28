@@ -38,6 +38,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -52,10 +53,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -202,24 +203,64 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="Lombok使用"><a href="#Lombok使用" class="headerlink" title="Lombok使用"></a>Lombok使用</h2><blockquote>
 <p>Lombok是一款好用顺手的工具，值得去好好去熟练使用和深究。<strong>Lombok是一种Java™实用工具，可用来帮助开发人员消除Java的冗长代码，尤其是对于简单的Java对象（POJO）。它通过注释实现这一目的</strong>。通过在开发环境中实现Lombok，开发人员可以节省构建诸如hashCode()和equals()这样的方法以及以往用来分类各种accessor和mutator的大量时间。</p>
 </blockquote>
 <a id="more"></a>
-
 <h2 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h2><ol>
 <li><p>导入Maven依赖</p>
-<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>${lomok.version}<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+    &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+    &lt;version&gt;${lomok.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+</li>
 <li><p>在IDE中安装对应的插件（<strong>lombok plugin</strong>）</p>
 </li>
 </ol>
-<h2 id="常用注解详解"><a href="#常用注解详解" class="headerlink" title="常用注解详解"></a>常用注解详解</h2><h3 id="简化代码，增加可读性"><a href="#简化代码，增加可读性" class="headerlink" title="简化代码，增加可读性"></a>简化代码，增加可读性</h3><h4 id="Getter-amp-Setter"><a href="#Getter-amp-Setter" class="headerlink" title="@Getter&amp;@Setter"></a>@Getter&amp;@Setter</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@Setter</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String age;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<h2 id="常用注解详解"><a href="#常用注解详解" class="headerlink" title="常用注解详解"></a>常用注解详解</h2><h3 id="简化代码，增加可读性"><a href="#简化代码，增加可读性" class="headerlink" title="简化代码，增加可读性"></a>简化代码，增加可读性</h3><h4 id="Getter-amp-Setter"><a href="#Getter-amp-Setter" class="headerlink" title="@Getter&amp;@Setter"></a>@Getter&amp;@Setter</h4><pre><code class="lang-java">@Getter
+@Setter
+public class Person {
+    private Integer id;
+    private String name;
+    private String age;
+}
+</code></pre>
 <p>通过<code>@Getter和@Setter</code>之后，其就类似于如下的代码：</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Persons</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getId</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Integer id)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getAge</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(String age)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class Persons {
+    private Integer id;
+    private String name;
+    private String age;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+}
+</code></pre>
 <h4 id="Data"><a href="#Data" class="headerlink" title="@Data"></a>@Data</h4><p>其等同于如下的几个注解，使用的频率最高</p>
 <ul>
 <li>@Getter/@Setter</li>
@@ -228,15 +269,78 @@
 <li>@RequiredArgsConstructor</li>
 </ul>
 <h4 id="Buider"><a href="#Buider" class="headerlink" title="@Buider"></a>@Buider</h4><p>自动生成流式set写法，能够快速的设定<code>Object</code>值。但是需要注意的是，虽然该方法很好，但是因为大多数的框架都使用到了<code>set</code>方法进进行注入，<strong>所以在开发的时候，我们一般是将<code>@Builder</code>和<code>@Data</code>一起使用</strong>。</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方便查看输出对象</span></span><br><span class="line"><span class="meta">@ToString</span></span><br><span class="line"><span class="meta">@Builder</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        Person person = Person.builder().age(<span class="string">"11"</span>).id(<span class="number">1</span>).name(<span class="string">"wkk"</span>).build();</span><br><span class="line">        System.out.println(person);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">//Builder的使用等同于如下</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">PersonBuilder</span> </span>{</span><br><span class="line">        <span class="keyword">private</span> Integer id;</span><br><span class="line">        <span class="keyword">private</span> String name;</span><br><span class="line">        <span class="keyword">private</span> String age;</span><br><span class="line"></span><br><span class="line">        PersonBuilder() {</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Person.<span class="function">PersonBuilder <span class="title">id</span><span class="params">(Integer id)</span> </span>{</span><br><span class="line">            <span class="keyword">this</span>.id = id;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Person.<span class="function">PersonBuilder <span class="title">name</span><span class="params">(String name)</span> </span>{</span><br><span class="line">            <span class="keyword">this</span>.name = name;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Person.<span class="function">PersonBuilder <span class="title">age</span><span class="params">(String age)</span> </span>{</span><br><span class="line">            <span class="keyword">this</span>.age = age;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Person <span class="title">build</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Person(<span class="keyword">this</span>.id, <span class="keyword">this</span>.name, <span class="keyword">this</span>.age);</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Person.PersonBuilder(id="</span> + <span class="keyword">this</span>.id + <span class="string">", name="</span> + <span class="keyword">this</span>.name + <span class="string">", age="</span> + <span class="keyword">this</span>.age + <span class="string">")"</span>;</span><br><span class="line">        }</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">// 方便查看输出对象
+@ToString
+@Builder
+public class Person {
+    private Integer id;
+    private String name;
+    private String age;
 
+    public static void main(String[] args) {
+        Person person = Person.builder().age("11").id(1).name("wkk").build();
+        System.out.println(person);
+    }
+}
 
+//Builder的使用等同于如下
+public static class PersonBuilder {
+        private Integer id;
+        private String name;
+        private String age;
 
+        PersonBuilder() {
+        }
+
+        public Person.PersonBuilder id(Integer id) {
+            this.id = id;
+            return this;
+        }
+
+        public Person.PersonBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Person.PersonBuilder age(String age) {
+            this.age = age;
+            return this;
+        }
+
+        public Person build() {
+            return new Person(this.id, this.name, this.age);
+        }
+
+        public String toString() {
+            return "Person.PersonBuilder(id=" + this.id + ", name=" + this.name + ", age=" + this.age + ")";
+        }
+    }
+</code></pre>
 <h3 id="日志使用"><a href="#日志使用" class="headerlink" title="日志使用"></a>日志使用</h3><p>一般情况下，我们做日志处理，都会先生成一个Logger的静态常量，使用<code>@Slf4j</code>之后，我们就可以完全不用new一个该常量了。</p>
- <figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(Person<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String age;</span><br><span class="line">  </span><br><span class="line">  	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>{</span><br><span class="line">      	logger.info(<span class="string">"logger: {}"</span>, <span class="string">"aaaa"</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// Lombok实现</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        System.out.println(<span class="string">"fsda"</span>);</span><br><span class="line">        log.info(<span class="string">"Person: {}"</span>, <span class="string">"fdsa"</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class Person{
+    private static final Logger logger = LoggerFactory.getLogger(Person.class);
+    private Integer id;
+    private String name;
+    private String age;
 
+      public static void main(String[] args){
+          logger.info("logger: {}", "aaaa");
+    }
+}
 
+// Lombok实现
+@Slf4j
+public class Person {
+    private Integer id;
+    private String name;
+    private String age;
 
+    public static void main(String[] args) {
+        System.out.println("fsda");
+        log.info("Person: {}", "fdsa");
+    }
+}
+</code></pre>
 <h3 id="流式对象的关闭"><a href="#流式对象的关闭" class="headerlink" title="流式对象的关闭"></a><del>流式对象的关闭</del></h3>
         </div>
 
@@ -364,6 +468,7 @@ Lombok是一款好用顺手的工具，值得去好好去熟练使用和深究�
 
 
 
+
 </article>
 
 
@@ -383,18 +488,34 @@ Lombok是一款好用顺手的工具，值得去好好去熟练使用和深究�
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -403,6 +524,7 @@ Lombok是一款好用顺手的工具，值得去好好去熟练使用和深究�
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -452,7 +574,7 @@ Lombok是一款好用顺手的工具，值得去好好去熟练使用和深究�
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -508,6 +630,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

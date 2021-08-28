@@ -41,6 +41,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -55,10 +56,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -181,7 +182,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内涵与表象"><span class="post-toc-number">1.</span> <span class="post-toc-text">内涵与表象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#定义"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">**定义: **</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用"><span class="post-toc-number">2.</span> <span class="post-toc-text">使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#volatile的使用场景"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">volatile的使用场景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#状态标记量"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">状态标记量</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#单例模式的double-check"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">单例模式的double check</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#可见性、有序性实现原理"><span class="post-toc-number">3.</span> <span class="post-toc-text">可见性、有序性实现原理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#可见性："><span class="post-toc-number">3.1.</span> <span class="post-toc-text">可见性：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#有序性"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">有序性</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#禁止重排序"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">禁止重排序</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">4.</span> <span class="post-toc-text">References</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内涵与表象"><span class="post-toc-number">1.</span> <span class="post-toc-text">内涵与表象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#定义"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">定义: </span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用"><span class="post-toc-number">2.</span> <span class="post-toc-text">使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#volatile的使用场景"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">volatile的使用场景</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#状态标记量"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">状态标记量</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#单例模式的double-check"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">单例模式的double check</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#可见性、有序性实现原理"><span class="post-toc-number">3.</span> <span class="post-toc-text">可见性、有序性实现原理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#可见性："><span class="post-toc-number">3.1.</span> <span class="post-toc-text">可见性：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#有序性"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">有序性</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#禁止重排序"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">禁止重排序</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">4.</span> <span class="post-toc-text">References</span></a></li></ol>
         </nav>
     </aside>
 
@@ -205,10 +206,10 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="内涵与表象"><a href="#内涵与表象" class="headerlink" title="内涵与表象"></a>内涵与表象</h2><a id="more"></a>
-
 <p>volatile主要有一下的功能：</p>
 <ol>
 <li><p>保证变量的内存可见性</p>
@@ -220,7 +221,7 @@
 </li>
 </ol>
 <p><img src="https://i.loli.net/2020/04/24/sBE5dy3Dfh7ctLI.png" alt="volatile.png"></p>
-<h3 id="定义"><a href="#定义" class="headerlink" title="**定义: **"></a>**定义: **</h3><blockquote>
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义: "></a><strong>定义: </strong></h3><blockquote>
 <p>Volatile是轻量级的synchronized。它在多处理器开发过程中保证的共享变量的<strong>可见性</strong>、<strong>有序性</strong></p>
 </blockquote>
 <h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="volatile的使用场景"><a href="#volatile的使用场景" class="headerlink" title="volatile的使用场景"></a>volatile的使用场景</h3><p>但是使用volatile必须<strong>满足两个条件</strong>：</p>
@@ -228,20 +229,59 @@
 <li><p>对变量的写操作不依赖当前值，如多线程下执行a++，是无法通过volatile保证结果准确性的</p>
 </li>
 <li><p>该变量没有包含在具有其它变量的不变式中(如下例子解释)</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NumberRange</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> lower = <span class="number">0</span>;</span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> upper = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getLower</span><span class="params">()</span> </span>{ <span class="keyword">return</span> lower; }</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getUpper</span><span class="params">()</span> </span>{ <span class="keyword">return</span> upper; }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLower</span><span class="params">(<span class="keyword">int</span> value)</span> </span>{ </span><br><span class="line">        <span class="keyword">if</span> (value &gt; upper) </span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(...);</span><br><span class="line">        lower = value;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUpper</span><span class="params">(<span class="keyword">int</span> value)</span> </span>{ </span><br><span class="line">        <span class="keyword">if</span> (value &lt; lower) </span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(...);</span><br><span class="line">        upper = value;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class NumberRange {
+    private volatile int lower = 0;
+     private volatile int upper = 10;
 
-<p>若是有两个线程同时分别执行了<strong>setLower(8)<strong>和</strong>setUpper(5)</strong> 然后 均通过了判断, 则最后的范围从$[0, 10]$ 变为了 $[8, 5]$成为了一个无效的范围, 这样就出现了问题. 这种场景下就只能使用<strong>synchronized</strong>, 同一时间只允许getLower和getUpper方法中其中一个执行</p>
+    public int getLower() { return lower; }
+    public int getUpper() { return upper; }
+
+    public void setLower(int value) { 
+        if (value &gt; upper) 
+            throw new IllegalArgumentException(...);
+        lower = value;
+    }
+
+    public void setUpper(int value) { 
+        if (value &lt; lower) 
+            throw new IllegalArgumentException(...);
+        upper = value;
+    }
+}
+</code></pre>
+<p>若是有两个线程同时分别执行了<strong>setLower(8)</strong>和<strong>setUpper(5)</strong> 然后 均通过了判断, 则最后的范围从$[0, 10]$ 变为了 $[8, 5]$成为了一个无效的范围, 这样就出现了问题. 这种场景下就只能使用<strong>synchronized</strong>, 同一时间只允许getLower和getUpper方法中其中一个执行</p>
 </li>
 </ol>
-<h4 id="状态标记量"><a href="#状态标记量" class="headerlink" title="状态标记量"></a>状态标记量</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerHandler</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> isopen;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (isopen) {</span><br><span class="line">           <span class="comment">//促销逻辑</span></span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">          <span class="comment">//正常逻辑</span></span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setIsopen</span><span class="params">(<span class="keyword">boolean</span> isopen)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.isopen = isopen</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<h4 id="状态标记量"><a href="#状态标记量" class="headerlink" title="状态标记量"></a>状态标记量</h4><pre><code class="lang-java">public class ServerHandler {
+    private volatile isopen;
+    public void run() {
+        if (isopen) {
+           //促销逻辑
+        } else {
+          //正常逻辑
+        }
+    }
+    public void setIsopen(boolean isopen) {
+        this.isopen = isopen
+    }
+}
+</code></pre>
 <h4 id="单例模式的double-check"><a href="#单例模式的double-check" class="headerlink" title="单例模式的double check"></a>单例模式的double check</h4><p>单例模式的一种实现方式，但很多人会忽略volatile关键字，因为没有该关键字，程序也可以很好的运行，只不过代码的稳定性总不是100%，说不定在未来的某个时刻，隐藏的bug就出来了。</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton instance;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>{</span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>){</span><br><span class="line">            sychronized(Singleton<span class="class">.<span class="keyword">class</span>)</span>{</span><br><span class="line">                <span class="keyword">if</span>(instance == <span class="keyword">null</span>){</span><br><span class="line">                    instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class Singleton{
+    private volatile static Singleton instance;
 
-
-
+    public static Singleton getInstance(){
+        if(instance == null){
+            sychronized(Singleton.class){
+                if(instance == null){
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+}
+</code></pre>
 <p>在JMM中, 有主内存和本地内存, 每个线程都有一个本地内存, 且共享主内存中的数据, <code>普通变量</code>和<code>volatile变量</code>的区别如下:</p>
 <ol>
 <li>普通变量进行读操作的时候, 首先会读取本地内存中的数据, 若是不存在, 则去主内存中拷贝一份在本地内存, 写操作只会写入到本地内存. 这样其他变量就不会读取变量的最新值</li>
@@ -279,7 +319,6 @@
                 </div>
                 <div class="image-caption">内存屏障</div>
             </figure>
-
 <p>再介绍一下volatile与普通变量的重排序规则:</p>
 <ol>
 <li>如果第一个操作是volatile读，那无论第二个操作是什么，都不能重排序；</li>
@@ -416,6 +455,7 @@
 
 
 
+
 </article>
 
 
@@ -435,18 +475,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -455,6 +511,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -503,7 +560,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -559,6 +616,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

@@ -40,6 +40,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -54,10 +55,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -204,10 +205,10 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="CAS概念"><a href="#CAS概念" class="headerlink" title="CAS概念"></a>CAS概念</h2><a id="more"></a>
-
 <p>CAS ，Compare And Swap ，即比较并交换。Doug Lea 大神在实现同步组件时，大量使用CAS 技术，鬼斧神工地实现了Java 多线程的并发操作。整个 AQS 同步组件、Atomic 原子类操作等等都是基 CAS 实现的，甚至 ConcurrentHashMap 在 JDK 1.8 的版本中，也调整为 CAS + <code>synchronized</code> 。可以说，CAS 是整个 J.U.C 的基石。</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
@@ -216,7 +217,6 @@
                 </div>
                 <div class="image-caption">CAS</div>
             </figure>
-
 <p>在CAS中，有这样三个值：</p>
 <ul>
 <li>V：要更新的变量(var)</li>
@@ -240,18 +240,48 @@
 <p><strong>当多个线程同时使用CAS操作一个变量时，只有一个会胜出，并成功更新，其余均会失败，但失败的线程并不会被挂起，仅是被告知失败，并且允许再次尝试，当然也允许失败的线程放弃操作。</strong></p>
 </blockquote>
 <h3 id="CAS-的实现"><a href="#CAS-的实现" class="headerlink" title="CAS 的实现"></a>CAS 的实现</h3><h4 id="Java实现CAS的原理-Unsafe类"><a href="#Java实现CAS的原理-Unsafe类" class="headerlink" title="Java实现CAS的原理 - Unsafe类"></a>Java实现CAS的原理 - Unsafe类</h4><p>在Java中, 如果有一个方法是native的, 那么Java不负责实现它, 而是交由底层的JVM使用C或C++去实现. 在Java中有一个<code>Unsafe</code>类, 位于<code>sun.misc</code>包中, 里面是native方法, 其中有几个关于CAS的</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapObject</span><span class="params">(Object var1, <span class="keyword">long</span> var2, Object var4, Object var5)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapInt</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">int</span> var4, <span class="keyword">int</span> var5)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapLong</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">long</span> var4, <span class="keyword">long</span> var6)</span></span>;</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">public final native boolean compareAndSwapObject(Object var1, long var2, Object var4, Object var5);
+public final native boolean compareAndSwapInt(Object var1, long var2, int var4, int var5);
+public final native boolean compareAndSwapLong(Object var1, long var2, long var4, long var6);
+</code></pre>
 <p>J.U.C 下的 Atomic 类，都是通过 CAS 来实现的, 以AtomicInteger为例子, 阐述CAS的实现</p>
-<h4 id="AtomicInteger"><a href="#AtomicInteger" class="headerlink" title="AtomicInteger"></a>AtomicInteger</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// setup to use Unsafe.compareAndSwapInt for updates</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Unsafe unsafe = Unsafe.getUnsafe();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> valueOffset;</span><br><span class="line"><span class="keyword">static</span> {</span><br><span class="line">    <span class="keyword">try</span> {</span><br><span class="line">        valueOffset = unsafe.objectFieldOffset</span><br><span class="line">            (AtomicInteger.class.getDeclaredField("value"));</span><br><span class="line">    } <span class="keyword">catch</span> (Exception ex) { <span class="keyword">throw</span> <span class="keyword">new</span> Error(ex); }</span><br><span class="line">}</span><br><span class="line"> </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> value;</span><br></pre></td></tr></tbody></table></figure>
+<h4 id="AtomicInteger"><a href="#AtomicInteger" class="headerlink" title="AtomicInteger"></a>AtomicInteger</h4><pre><code class="lang-java">// setup to use Unsafe.compareAndSwapInt for updates
+private static final Unsafe unsafe = Unsafe.getUnsafe();
+private static final long valueOffset;
+static {
+    try {
+        valueOffset = unsafe.objectFieldOffset
+            (AtomicInteger.class.getDeclaredField("value"));
+    } catch (Exception ex) { throw new Error(ex); }
+}
 
+private volatile int value;
+</code></pre>
 <ul>
 <li>Unsafe 是 CAS 的核心类，Java 无法直接访问底层操作系统，而是通过本地 <code>native</code> 方法来访问。不过尽管如此，JVM还是开了一个后门：Unsafe ，<strong>它提供了硬件级别的原子操作</strong>。</li>
 <li><code>valueOffset</code> 为变量值在内存中的偏移地址，Unsafe 就是通过<strong>偏移地址</strong>来得到数据的原值的。</li>
 <li><code>value</code> 当前值，使用 <code>volatile</code> 修饰，保证多线程环境下看见的是同一个。</li>
 </ul>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AtomicInterger类</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">addAndGet</span><span class="params">(<span class="keyword">int</span> delta)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> unsafe.getAndAddInt(<span class="keyword">this</span>, valueOffset, delta) + delta;</span><br><span class="line">}</span><br><span class="line"><span class="comment">// Unsafe(核心)  CAS的具体实现</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndAddInt</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">int</span> var4)</span> </span>{</span><br><span class="line">    <span class="keyword">int</span> var5;</span><br><span class="line">    <span class="keyword">do</span> {</span><br><span class="line">        <span class="comment">// 放入do内, 时刻获取最新的期望值(期望值在多线程中会被其他的线程修改)</span></span><br><span class="line">        var5 = <span class="keyword">this</span>.getIntVolatile(var1, var2);</span><br><span class="line">    } <span class="keyword">while</span>(!<span class="keyword">this</span>.compareAndSwapInt(var1, var2, var5, var5 + var4));</span><br><span class="line">    <span class="keyword">return</span> var5;</span><br><span class="line">}</span><br><span class="line"><span class="comment">// Unsafe</span></span><br><span class="line"><span class="comment">// var1: 对象</span></span><br><span class="line"><span class="comment">// var2: 对象地址</span></span><br><span class="line"><span class="comment">// var4: 预期值</span></span><br><span class="line"><span class="comment">// var5: 新值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">compareAndSwapInt</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">int</span> var4, <span class="keyword">int</span> var5)</span></span>;</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">// AtomicInterger类
+public final int addAndGet(int delta) {
+    return unsafe.getAndAddInt(this, valueOffset, delta) + delta;
+}
+// Unsafe(核心)  CAS的具体实现
+public final int getAndAddInt(Object var1, long var2, int var4) {
+    int var5;
+    do {
+        // 放入do内, 时刻获取最新的期望值(期望值在多线程中会被其他的线程修改)
+        var5 = this.getIntVolatile(var1, var2);
+    } while(!this.compareAndSwapInt(var1, var2, var5, var5 + var4));
+    return var5;
+}
+// Unsafe
+// var1: 对象
+// var2: 对象地址
+// var4: 预期值
+// var5: 新值
+public final native boolean compareAndSwapInt(Object var1, long var2, int var4, int var5);
+</code></pre>
 <p><code>CAS</code>是<code>无锁</code>的基础，它允许更新失败。所以经常会与while循环搭配，在失败后不断去重试。 <code>getAndInt()</code>方法, 其返回的值是预期值(E), 也就是旧值, 新值(N)是<code>var5+var4</code></p>
 <p>这里使用的是<strong>do-while循环</strong>。这种循环不多见，它的目的是<strong>保证循环体内的语句至少会被执行一遍</strong>。这样才能保证return 的值<code>v</code>是我们期望的值。</p>
 <blockquote>
@@ -274,7 +304,7 @@
 <p>解决该问题通常是在变量前面追加<code>版本号或者时间戳</code>. 从JDK 1.5开始，JDK的atomic包里提供了一个类<code>AtomicStampedReference</code>类来解决ABA问题。</p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
 <li><a href="http://www.iocoder.cn/JUC/sike/CAS/" target="_blank" rel="noopener">深入分析CAS</a></li>
-<li><a href="http://concurrent.redspider.group/article/02/10.html#%E7%AC%AC%E5%8D%81%E7%AB%A0-%E4%B9%90%E8%A7%82%E9%94%81%E5%92%8C%E6%82%B2%E8%A7%82%E9%94%81" target="_blank" rel="noopener">CAS与原子操作</a></li>
+<li><a href="http://concurrent.redspider.group/article/02/10.html#第十章-乐观锁和悲观锁" target="_blank" rel="noopener">CAS与原子操作</a></li>
 </ul>
 
         </div>
@@ -402,6 +432,7 @@
 
 
 
+
 </article>
 
 
@@ -421,18 +452,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -441,6 +488,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -489,7 +537,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -545,6 +593,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

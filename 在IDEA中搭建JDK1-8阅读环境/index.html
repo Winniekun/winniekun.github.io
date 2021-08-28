@@ -42,6 +42,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -56,10 +57,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -206,11 +207,11 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>自己从去年12月份开始看JDK上的部分源码，之前因为是懒，觉得看源码嘛，看嘛，突出看。直接就是阅读源码，然后每个代码逻辑都是靠自己推测， 还有理解， 并没有看输出， 现在才发现在<code>IDEA</code>中<code>File | Settings | Build, Execution, Deployment | Debugger | Stepping</code>中可以将<code>Do not step into the classes</code>即可，当然，若是想直接在源码中添加注释，需要进行一些配置。</p>
 <a id="more"></a>
-
 <h2 id="JDK1-8在IDEA中搭建阅读环境"><a href="#JDK1-8在IDEA中搭建阅读环境" class="headerlink" title="JDK1.8在IDEA中搭建阅读环境"></a>JDK1.8在IDEA中搭建阅读环境</h2><h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>解压系统JDK所在路径中的<code>sc.zip</code> 到自定义的文件中，譬如<code>src</code>中的<code>source</code></p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
@@ -219,9 +220,6 @@
                 </div>
                 <div class="image-caption">jdk-项目结构.png</div>
             </figure>
-
-
-
 <h3 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h3><p>导入到自己的源码工程文件中</p>
 <h3 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h3><p>修改工程文件中<code>SDKs</code>的<code>Sourcepath</code>  将<code>sc,zip</code>替换成图一中<code>sc.zip</code>解压到的文件。<code>javafx-src.zip</code>不动。如下图：</p>
 <figure class="image-bubble">
@@ -231,9 +229,6 @@
                 </div>
                 <div class="image-caption">jdk-sdks.png</div>
             </figure>
-
-
-
 <p><img src="https://i.loli.net/2020/03/25/DrORwTvnxWfJVeB.png" alt="jdk-lib.png"></p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
 <li><a href="https://www.jianshu.com/p/c00db010265b" target="_blank" rel="noopener">JDK1.8源码分析03之idea搭建源码阅读环境</a></li>
@@ -365,6 +360,7 @@
 
 
 
+
 </article>
 
 
@@ -384,18 +380,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -404,6 +416,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -452,7 +465,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -508,6 +521,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

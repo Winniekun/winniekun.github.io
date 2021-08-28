@@ -45,6 +45,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -59,10 +60,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -209,11 +210,11 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="B树"><a href="#B树" class="headerlink" title="B树"></a>B树</h2><p>共分为两个部分， 首先是B的性质、B树的建立、插入和删除，之后是B+树性质、以及相比于B树，区别在哪儿</p>
 <a id="more"></a>
-
 <h3 id="B树的性质"><a href="#B树的性质" class="headerlink" title="B树的性质"></a>B树的性质</h3><p>B树又称为多路平衡查找树，B树中所有结点的孩子结点数的最大值称为B树的阶。通常使用m表示。</p>
 <p><strong>一颗m阶B树或为空，或为满足如下特性的m叉树。</strong></p>
 <ol>
@@ -226,8 +227,9 @@
 <li><p>所有的非叶子结点的结构如下：</p>
 <p><img src="https://i.loli.net/2020/03/19/IqcESBNlWG3kfbs.png" alt="b树节点信息.png"></p>
 </li>
-<li><p>所有叶子节点都出现在同一层次上，并且不带任何信息</p>
-</li>
+</ol>
+<ol>
+<li>所有叶子节点都出现在同一层次上，并且不带任何信息</li>
 </ol>
 <figure class="image-bubble">
                 <div class="img-lightbox">
@@ -236,9 +238,6 @@
                 </div>
                 <div class="image-caption">b树示例.png</div>
             </figure>
-
-
-
 <h3 id="B树的高度"><a href="#B树的高度" class="headerlink" title="B树的高度"></a>B树的高度</h3><p>$ n$ : 关键字的个数</p>
 <p>$h \le log_\lceil m/2 \rceil ((n+1)/2) + 1  $</p>
 <p>具体的证明，百度。。。</p>
@@ -287,9 +286,6 @@
                 </div>
                 <div class="image-caption">B_树结构示意图.png</div>
             </figure>
-
-
-
 <h3 id="B-树的性质II："><a href="#B-树的性质II：" class="headerlink" title="B+树的性质II："></a>B+树的性质II：</h3><p>才发现，原来各种资料上关于<code>B+</code>树的性质，不经相同….. 以下为<code>维基百科</code>的定义</p>
 <p>和王道的定义区别不大，但是<strong>分支节点关键字个数比子树个数小1</strong>， 也就是和B的节点定义一样。</p>
 <blockquote>
@@ -307,9 +303,6 @@
                 </div>
                 <div class="image-caption">B_树结构示意图.png</div>
             </figure>
-
-
-
 <h2 id="B和B-区别"><a href="#B和B-区别" class="headerlink" title="B和B+区别"></a>B和B+区别</h2><blockquote>
 <p><em>B+ trees don’t store data pointer in interior nodes, they are ONLY stored in leaf nodes. This is not optional as in B-Tree. This means that interior nodes can fit more keys on block of memory and thus fan out better.</em></p>
 <p><em>The leaf nodes of B+ trees are linked, so doing a linear scan of all keys will requires just one pass through all the leaf nodes. A B tree, on the other hand, would require a traversal of every level in the tree. This property can be utilized for efficient search as well, since data is stored only in leafs.</em></p>
@@ -451,6 +444,7 @@
 
 
 
+
 </article>
 
 
@@ -470,18 +464,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -490,6 +500,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -538,7 +549,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -594,6 +605,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

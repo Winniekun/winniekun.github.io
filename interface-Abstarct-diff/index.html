@@ -39,6 +39,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -53,10 +54,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -203,10 +204,10 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><a id="more"></a>
-
 <p>接口是不是类，是对类的一组需求的描述，这些类要遵从接口描述的同一格式进行定义（其是对行为的抽象，是抽象方法的集合）。有两个方面的职责：</p>
 <ol>
 <li>抽象方法的集合（<strong>主要</strong>）</li>
@@ -219,8 +220,7 @@
 </li>
 <li><p>接口中的属性对所有实现类只有一份，所以是static。</p>
 </li>
-<li><p>要使实现类为了向上转型成功，所以必须是final的。</p>
-</li>
+<li>要使实现类为了向上转型成功，所以必须是final的。</li>
 </ol>
 </blockquote>
 <h3 id="疑问2：为什么方法要么是抽象方法，要么是静态方法"><a href="#疑问2：为什么方法要么是抽象方法，要么是静态方法" class="headerlink" title="疑问2：为什么方法要么是抽象方法，要么是静态方法"></a>疑问2：为什么方法要么是抽象方法，要么是静态方法</h3><blockquote>
@@ -251,8 +251,6 @@
 </ol>
 <blockquote>
 <p>在一些情况下存在特定场景,需要抽象出与具体实现、实例化无关的通用逻辑,或者纯调用关系的逻辑，这样的话，因为Java不支持多继承，就无法使用抽象类进行实现，常用的方法是实现由静态方法构成的工具类，比如<code>java.util.Collections</code></p>
-</blockquote>
-<blockquote>
 <p>接口的职责也不仅仅限于抽象方法的集合,其实有各种不同的实践。有一类没有任何方法的接口,通常叫作 Marker Interface,顾名思义,它的目的就是为了声明某些东西,比如我们熟知的 Cloneable、Serializable 等。这种用法,也存在于业界其他的 Java 产品代码中。</p>
 </blockquote>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
@@ -384,6 +382,7 @@
 
 
 
+
 </article>
 
 
@@ -403,18 +402,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -423,6 +438,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -471,7 +487,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -527,6 +543,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

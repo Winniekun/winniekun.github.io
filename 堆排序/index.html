@@ -41,6 +41,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -55,10 +56,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -205,10 +206,10 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><a id="more"></a>
-
 <p>堆排序在 top K 问题中使用比较频繁，并且经常被用来实现优先级队列。堆排序是采用二叉堆的数据结构来实现的，虽然实质上还是一维数组。二叉堆是一个近似完全二叉树 。</p>
 <p>堆的定义如下：</p>
 <ol>
@@ -222,7 +223,6 @@
                 </div>
                 <div class="image-caption">大根堆示意图.png</div>
             </figure>
-
 <p>堆排序的关键是构造初始堆，对初始序列建堆，就是一个反复筛选的过程，因为是近似于完全二叉树，所以从第$\lfloor n/2 \rfloor$为根的子树开始调整（对于大根堆，根节点的关键字和其左右子女中关键字相比较大的进行交换）之后依次对各个节点$\lfloor n/2 \rfloor -1 ～ 1$为根的子树进行筛选。</p>
 <h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><p>对关键字序列：53、17、 78、 9、 45、 65、 87 、32 构建大根堆</p>
 <figure class="image-bubble">
@@ -232,13 +232,34 @@
                 </div>
                 <div class="image-caption">大根堆的构建.png</div>
             </figure>
-
-
-
 <h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><p>插入是从尾部插入(当前堆有n个元素，在第n+1位置中插入)，然后调整</p>
 <h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><p>删除是从根节点开始删除，删除之后再进行调整</p>
-<h2 id="Java代码实现"><a href="#Java代码实现" class="headerlink" title="Java代码实现"></a>Java代码实现</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buildMaxHeap</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>{</span><br><span class="line">    <span class="keyword">int</span> length = (nums.length - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">    <span class="comment">// 从n/2开始构建初始堆</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = length; i &gt;= <span class="number">0</span>; i--) {</span><br><span class="line">        adjustDown(nums, i, nums.length-<span class="number">1</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">adjustDown</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k, <span class="keyword">int</span> len)</span> </span>{</span><br><span class="line">    nums[<span class="number">0</span>] = nums[k];</span><br><span class="line">    <span class="comment">// 以第k个节点为根的子树进行调整</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span> * k; i &lt;= len; i *= <span class="number">2</span>) {</span><br><span class="line">        <span class="comment">// 寻找子树中的最值</span></span><br><span class="line">        <span class="keyword">if</span>(i &lt; len &amp;&amp; nums[i] &lt; nums[i+<span class="number">1</span>]){</span><br><span class="line">            i ++;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span>(nums[<span class="number">0</span>] &gt;= nums[i]){</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">else</span> {</span><br><span class="line">            nums[k] = nums[i];</span><br><span class="line">            k = i;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    nums[k] = nums[<span class="number">0</span>];</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<h2 id="Java代码实现"><a href="#Java代码实现" class="headerlink" title="Java代码实现"></a>Java代码实现</h2><pre><code class="lang-java">public void buildMaxHeap(int[] nums) {
+    int length = (nums.length - 1) / 2;
+    // 从n/2开始构建初始堆
+    for (int i = length; i &gt;= 0; i--) {
+        adjustDown(nums, i, nums.length-1);
+    }
+}
+private void adjustDown(int[] nums, int k, int len) {
+    nums[0] = nums[k];
+    // 以第k个节点为根的子树进行调整
+    for (int i = 2 * k; i &lt;= len; i *= 2) {
+        // 寻找子树中的最值
+        if(i &lt; len &amp;&amp; nums[i] &lt; nums[i+1]){
+            i ++;
+        }
+        if(nums[0] &gt;= nums[i]){
+            break;
+        }
+        else {
+            nums[k] = nums[i];
+            k = i;
+        }
+    }
+    nums[k] = nums[0];
+}
+</code></pre>
 
         </div>
 
@@ -365,6 +386,7 @@
 
 
 
+
 </article>
 
 
@@ -384,18 +406,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -404,6 +442,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -452,7 +491,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -508,6 +547,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

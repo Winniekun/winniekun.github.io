@@ -38,6 +38,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -52,10 +53,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -202,22 +203,133 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="线程通信"><a href="#线程通信" class="headerlink" title="线程通信"></a>线程通信</h2><a id="more"></a>
-
 <p>合理的使用Java多线程可以更好地利用服务器资源。一般来讲，线程内部有自己私有的线程上下文，互不干扰。但是当我们需要多个线程之间相互协作的时候，就需要我们掌握Java线程的通信方式。本文将介绍Java线程之间的几种通信原理。</p>
 <h3 id="锁同步机制"><a href="#锁同步机制" class="headerlink" title="锁同步机制"></a>锁同步机制</h3><p>使用<code>synchronized</code></p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">lockSyn</span> </span>{</span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadA</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>{</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">synchronized</span> (<span class="keyword">this</span>) {</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) {</span><br><span class="line">                    System.out.println(<span class="string">"ThreadA "</span> + i);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadB</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">synchronized</span> (<span class="keyword">this</span>) {</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) {</span><br><span class="line">                    System.out.println(<span class="string">"ThreadB "</span> + i);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> ThreadA()).start();</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> ThreadB()).start();</span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class lockSyn {
+    static class ThreadA implements Runnable{
+        @Override
+        public void run() {
+            synchronized (this) {
+                for (int i = 0; i &lt; 10; i++) {
+                    System.out.println("ThreadA " + i);
+                }
+            }
+        }
+    }
 
+    static class ThreadB implements Runnable{
+
+        @Override
+        public void run() {
+            synchronized (this) {
+                for (int i = 0; i &lt; 10; i++) {
+                    System.out.println("ThreadB " + i);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        new Thread(new ThreadA()).start();
+        Thread.sleep(1000);
+        new Thread(new ThreadB()).start();
+
+    }
+}
+</code></pre>
 <p>这段程序能够保证先执行线程A，之后再执行线程B。</p>
 <h3 id="等待-通知机制"><a href="#等待-通知机制" class="headerlink" title="等待/通知机制"></a>等待/通知机制</h3><p>使用<code>wait()/notify()</code>机制</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">waitNotify</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Object lock = <span class="keyword">new</span> Object();</span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">synchronized</span> (lock){</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) {</span><br><span class="line">                    System.out.println(<span class="string">"A:"</span> + i);</span><br><span class="line">                    lock.notify();</span><br><span class="line">                    <span class="keyword">try</span> {</span><br><span class="line">                        lock.wait();</span><br><span class="line">                    } <span class="keyword">catch</span> (InterruptedException e) {</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">                lock.notify();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">synchronized</span> (lock){</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) {</span><br><span class="line">                    System.out.println(<span class="string">"B:"</span> + i);</span><br><span class="line">                    lock.notify();</span><br><span class="line">                    <span class="keyword">try</span> {</span><br><span class="line">                        lock.wait();</span><br><span class="line">                    } <span class="keyword">catch</span> (InterruptedException e) {</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    }</span><br><span class="line">                }</span><br><span class="line">                lock.notify();</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> A()).start();</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> B()).start();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class waitNotify {
+    private static Object lock = new Object();
+    static class A implements Runnable{
 
+        @Override
+        public void run() {
+            synchronized (lock){
+                for (int i = 0; i &lt; 5; i++) {
+                    System.out.println("A:" + i);
+                    lock.notify();
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                lock.notify();
+            }
+        }
+    }
+
+    static class B implements Runnable{
+
+        @Override
+        public void run() {
+            synchronized (lock){
+                for (int i = 0; i &lt; 5; i++) {
+                    System.out.println("B:" + i);
+                    lock.notify();
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                lock.notify();
+            }
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        new Thread(new A()).start();
+        Thread.sleep(1000);
+        new Thread(new B()).start();
+
+
+    }
+}
+</code></pre>
 <p><strong>wait():</strong> 会释放锁。</p>
-<h3 id="信号量机制"><a href="#信号量机制" class="headerlink" title="信号量机制"></a>信号量机制</h3><p>使用volatile定义信号量(涉及JMM—Java内存模型)</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">semaphore</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">int</span> signal = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadA</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">while</span> (signal &lt; <span class="number">10</span>){</span><br><span class="line">                <span class="keyword">if</span>(signal % <span class="number">2</span> == <span class="number">0</span>){</span><br><span class="line">                    System.out.println(<span class="string">"ThreadA: "</span> + signal);</span><br><span class="line">                    signal++;</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadB</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>{</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line">            <span class="keyword">while</span> (signal &lt; <span class="number">10</span>){</span><br><span class="line">                <span class="keyword">if</span>(signal % <span class="number">2</span> == <span class="number">1</span>){</span><br><span class="line">                    System.out.println(<span class="string">"ThreadB: "</span>+ signal);</span><br><span class="line">                    signal++;</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>{</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> ThreadA()).start();</span><br><span class="line">        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> ThreadB()).start();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="信号量机制"><a href="#信号量机制" class="headerlink" title="信号量机制"></a>信号量机制</h3><p>使用volatile定义信号量(涉及JMM—-Java内存模型)</p>
+<pre><code class="lang-java">public class semaphore {
+    private static volatile int signal = 0;
 
+    static class ThreadA implements Runnable{
+
+        @Override
+        public void run() {
+            while (signal &lt; 10){
+                if(signal % 2 == 0){
+                    System.out.println("ThreadA: " + signal);
+                    signal++;
+                }
+            }
+        }
+    }
+
+    static class ThreadB implements Runnable{
+
+        @Override
+        public void run() {
+            while (signal &lt; 10){
+                if(signal % 2 == 1){
+                    System.out.println("ThreadB: "+ signal);
+                    signal++;
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        new Thread(new ThreadA()).start();
+        Thread.sleep(1000);
+        new Thread(new ThreadB()).start();
+    }
+}
+</code></pre>
 
         </div>
 
@@ -344,6 +456,7 @@
 
 
 
+
 </article>
 
 
@@ -363,18 +476,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -383,6 +512,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -431,7 +561,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -487,6 +617,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

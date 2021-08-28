@@ -43,6 +43,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -57,10 +58,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -207,13 +208,11 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一个星期在做论坛形式的web应用，逻辑越写越多，脑子也是越写越乱，也越要越感觉<code>SpringBoot</code>和<code>Flask</code>的思想上好像。今天终于撸完了所有的业务逻辑，以及测试。开始部署，以下，记录部署的整个过程。<span class="github-emoji"><span>😄</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/1f604.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></p>
 <a id="more"></a>
-
-
-
 <h2 id="环境依赖"><a href="#环境依赖" class="headerlink" title="环境依赖"></a>环境依赖</h2><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -221,47 +220,47 @@
                 </div>
                 <div class="image-caption">部署</div>
             </figure>
-
 <p>项目中的环境依赖如上图所述，按照步骤来， 先ssh链接服务器， 之后配置<code>Java</code>环境、<code>MySQL</code>、<code>Redis</code>、<code>Kafka</code>、<code>Maven</code>。之后配置<code>Tomcat</code>、<code>Nginx</code>。服务器使用的是Ubuntu18.04LTS</p>
 <h3 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h3><p>因为，ssh长时间不操作就断开，所以还是需要进行配置下</p>
 <h4 id="服务器配置"><a href="#服务器配置" class="headerlink" title="服务器配置"></a>服务器配置</h4><p>1、 连接SSH</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh root@ip</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">ssh root@ip
+</code></pre>
 <p>2、编辑sshd_config</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/ssh/sshd_config</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">vim /etc/ssh/sshd_config
+</code></pre>
 <p>3、找到ClientAliveInterval，将前面的#去掉（懒得找的话，直接在最后添加即可）</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 服务器每隔60秒会给客户端发送一次保活信息包给客户端，可以将这个值设置大一点</span></span><br><span class="line">ClientAliveInterval 60</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell"># 服务器每隔60秒会给客户端发送一次保活信息包给客户端，可以将这个值设置大一点
+ClientAliveInterval 60
+</code></pre>
 <p>4、找到ClientAliveCountMax，将前面的#去掉（同理）</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 服务器发出的请求如果客户端没有响应，则判断超时1次，这个参数是表示允许超时的次数。可以将这个值设置大一点。</span></span><br><span class="line">ClientAliveCountMax 888</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-
-
+<pre><code class="lang-shell"># 服务器发出的请求如果客户端没有响应，则判断超时1次，这个参数是表示允许超时的次数。可以将这个值设置大一点。
+ClientAliveCountMax 888
+</code></pre>
 <h3 id="Java环境"><a href="#Java环境" class="headerlink" title="Java环境"></a>Java环境</h3><p>oracle官网下载<a href="https://www.oracle.com/java/technologies/javase-jdk8-downloads.html" target="_blank" rel="noopener">JDK</a>，个人使用的是JDK8。之后将下载好的JDK上传服务器，也可以直接服务器安装，个人想试试scp命令，而且自己系统也是Ubuntu的，所有依赖环境压缩上传即可，更加方便</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp filepath/filename username@ip:/targetfilepath</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-shell">scp filepath/filename username@ip:/targetfilepath
+</code></pre>
 <p>譬如，下载好的本地JDK在<code>Downloads</code>文件夹下，想传入服务器root用户根目录下的<code>community</code>目录下，方便同一管理，后续的文件都传入<code>community</code>目录下</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp /Downloads/jdk-8u251-linux-x64.tar.gz root@ip:/community</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">scp /Downloads/jdk-8u251-linux-x64.tar.gz root@ip:/community
+</code></pre>
 <p>之后使用终端登录服务器，解压JDK，配置环境(/etc/profile)</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh root@ip -p xxx (如果更改ssh端口的话)</span><br><span class="line">vim /etc/profile  （配置环境变量）</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">ssh root@ip -p xxx (如果更改ssh端口的话)
+vim /etc/profile  （配置环境变量）
+</code></pre>
 <p><strong>profile</strong>的配置如下</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># java environment</span></span></span><br><span class="line">export JAVA_HOME=/community/jdk1.8.0_251</span><br><span class="line">export JRE_HOME=$JAVA_HOME/jre</span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH</span><br><span class="line">export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">## java environment
+export JAVA_HOME=/community/jdk1.8.0_251
+export JRE_HOME=$JAVA_HOME/jre
+export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
+export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+</code></pre>
 <p>之后，<strong>激活</strong></p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">source /etc/profile
+</code></pre>
 <p>最后，使用命令<code>java -version</code>检测是否配置成功</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java version "1.8.0_251"</span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_191-b12)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.191-b12, mixed mode)</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-shell">java version "1.8.0_251"
+Java(TM) SE Runtime Environment (build 1.8.0_191-b12)
+Java HotSpot(TM) 64-Bit Server VM (build 25.191-b12, mixed mode)
+</code></pre>
 <h3 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h3><p><a href="https://dev.mysql.com/downloads/" target="_blank" rel="noopener">官网下载</a>，点击<a href="https://dev.mysql.com/downloads/repo/apt/" target="_blank" rel="noopener">MySQL APT Repository</a>下载即可</p><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -270,73 +269,151 @@
                 <div class="image-caption">MySQL</div>
             </figure><p></p>
 <p>之后同理，传入服务，</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp mysq-apt-config_0.8.15-1_all.deb root@ip:/community</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">scp mysq-apt-config_0.8.15-1_all.deb root@ip:/community
+</code></pre>
 <p>之后通过之前ssh链接服务器的终端，安装MySQL</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i mysq-apt-config_0.8.15-1_all.deb</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">sudo dpkg -i mysq-apt-config_0.8.15-1_all.deb
+</code></pre>
 <p>期间有让选择MySQL的版本，个人选择的是5.7的，因为开发的时候用的是5.7。之后更新<code>source.list</code>，下载MySQL即可</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update </span><br><span class="line">sudo apt-get install mysql-server</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">sudo apt-get update 
+sudo apt-get install mysql-server
+</code></pre>
 <p>等待片刻后，会弹出mysql一个小的配置程序界面，要求你输入下root用户的密码（输入2次）等等。安装成功之后，登录尝试下即可</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 输出信息</span></span></span><br><span class="line">Enter password: </span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 24</span><br><span class="line">Server version: 5.7.30-0ubuntu0.18.04.1 (Ubuntu)</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.</span><br><span class="line"></span><br><span class="line"><span class="meta">mysql&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-shell">mysql -u root -p
 
+## 输出信息
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 24
+Server version: 5.7.30-0ubuntu0.18.04.1 (Ubuntu)
 
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
 
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql&gt;
+</code></pre>
 <h4 id="MySQL的卸载"><a href="#MySQL的卸载" class="headerlink" title="MySQL的卸载"></a>MySQL的卸载</h4><p><a href="https://ywnz.com/linuxysjk/3141.html" target="_blank" rel="noopener">在Ubuntu18.04系统下彻底删除MySQL的方法</a></p>
 <h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h3><p>在此之前安装 <code>add-apt-respository</code></p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install software-properties-common</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">sudo apt-get update
+sudo apt-get install software-properties-common
+</code></pre>
 <p><a href="https://redis.io/download" target="_blank" rel="noopener">步骤</a></p>
-<figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo add-apt-repository ppa:redislabs/redis</span><br><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install redis</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-sh">$ sudo add-apt-repository ppa:redislabs/redis
+$ sudo apt-get update
+$ sudo apt-get install redis
+</code></pre>
 <h3 id="Kafka"><a href="#Kafka" class="headerlink" title="Kafka"></a>Kafka</h3><p><a href="https://kafka.apache.org/documentation/" target="_blank" rel="noopener">Kafka官网</a>，个人下载的是  <a href="https://www.apache.org/dyn/closer.cgi?path=/kafka/2.5.0/kafka_2.12-2.5.0.tgz" target="_blank" rel="noopener">kafka_2.12-2.5.0.tgz</a>，前缀<code>2.12</code>是支持的<code>Scala</code>版本，本机电脑安装的<code>Scala</code>版本是<code>2.12</code></p>
 <p>下载之后，直接上传即可， 没有特别需要配置的东西，个人更改了log的地址，因为是服务器， 所以需要长期的运行，可执行如下命令</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> zookeeper</span></span><br><span class="line">bin/zookeeper-server-start.sh -daemon config/zookeeper.properties</span><br><span class="line"><span class="meta">#</span><span class="bash"> kafka server</span></span><br><span class="line">nohup bin/kafka-server-start.sh config/server.properties  1&gt;/dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-shell"># zookeeper
+bin/zookeeper-server-start.sh -daemon config/zookeeper.properties
+# kafka server
+nohup bin/kafka-server-start.sh config/server.properties  1&gt;/dev/null 2&gt;&amp;1 &amp;
+</code></pre>
+<h3 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h3><p>[Maven 3.6.3](<a href="https://apache.website-solution.net/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz，因为墙的问题，所以自己配置了setting.xml里面的`localRepository`和`mirrors`" target="_blank" rel="noopener">https://apache.website-solution.net/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz，因为墙的问题，所以自己配置了setting.xml里面的`localRepository`和`mirrors`</a></p>
+<pre><code class="lang-xml">  &lt;localRepository&gt;/home/kongweikun/maven&lt;/localRepository&gt;
 
+        &lt;mirror&gt;
+            &lt;id&gt;alimaven&lt;/id&gt;
+            &lt;name&gt;aliyun maven&lt;/name&gt;
+            &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
+            &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+        &lt;/mirror&gt;
 
+        &lt;mirror&gt;
+            &lt;id&gt;uk&lt;/id&gt;
+            &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+            &lt;name&gt;Human Readable Name for this Mirror.&lt;/name&gt;
+            &lt;url&gt;http://uk.maven.org/maven2/&lt;/url&gt;
+        &lt;/mirror&gt;
 
+        &lt;mirror&gt;
+            &lt;id&gt;CN&lt;/id&gt;
+            &lt;name&gt;OSChina Central&lt;/name&gt;
+            &lt;url&gt;http://maven.oschina.net/content/groups/public/&lt;/url&gt;
+            &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+        &lt;/mirror&gt;
 
-
-<h3 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h3><p>[Maven 3.6.3](<a href="https://apache.website-solution.net/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz%EF%BC%8C%E5%9B%A0%E4%B8%BA%E5%A2%99%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%8C%E6%89%80%E4%BB%A5%E8%87%AA%E5%B7%B1%E9%85%8D%E7%BD%AE%E4%BA%86setting.xml%E9%87%8C%E9%9D%A2%E7%9A%84%60localRepository%60%E5%92%8C%60mirrors%60" target="_blank" rel="noopener">https://apache.website-solution.net/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz，因为墙的问题，所以自己配置了setting.xml里面的`localRepository`和`mirrors`</a></p>
-<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>/home/kongweikun/maven<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">id</span>&gt;</span>alimaven<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">name</span>&gt;</span>aliyun maven<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">      <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">id</span>&gt;</span>uk<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">name</span>&gt;</span>Human Readable Name for this Mirror.<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://uk.maven.org/maven2/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">      <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">id</span>&gt;</span>CN<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">name</span>&gt;</span>OSChina Central<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.oschina.net/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">      <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">name</span>&gt;</span>internal nexus repository<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://repo.maven.apache.org/maven2<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
-
+        &lt;mirror&gt;
+            &lt;id&gt;nexus&lt;/id&gt;
+            &lt;name&gt;internal nexus repository&lt;/name&gt;
+            &lt;url&gt;http://repo.maven.apache.org/maven2&lt;/url&gt;
+            &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+        &lt;/mirror&gt;
+</code></pre>
 <p>同理，需要在<code>/etc/profile</code>中配置</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># maven</span></span></span><br><span class="line">export M2_HOME=/community/apache-maven-3.6.3</span><br><span class="line">export PATH=${M2_HOME}/bin:$PATH</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">## maven
+export M2_HOME=/community/apache-maven-3.6.3
+export PATH=${M2_HOME}/bin:$PATH
+</code></pre>
 <p><strong>激活</strong></p>
 <h3 id="Tomcat"><a href="#Tomcat" class="headerlink" title="Tomcat"></a>Tomcat</h3><p><a href="https://mirror-hk.koddos.net/apache/tomcat/tomcat-9/v9.0.34/bin/apache-tomcat-9.0.34.tar.gz" target="_blank" rel="noopener">tomcat 9.0.34</a>，下载之后，上传服务器即可，之后解压，<code>/etc/profile</code>配置</p>
-<figure class="highlight sh"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## tomcat</span></span><br><span class="line"><span class="built_in">export</span> CATALINA_HOME=/community/apache-tomcat-9.0.34</span><br><span class="line"><span class="built_in">export</span> CLASSPATH=<span class="variable">${CLASSPATH}</span>:<span class="variable">${CATALINA_HOME}</span>/lib</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">${PATH}</span>:<span class="variable">${CATALINA_HOME}</span>/bin</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-sh">## tomcat
+export CATALINA_HOME=/community/apache-tomcat-9.0.34
+export CLASSPATH=${CLASSPATH}:${CATALINA_HOME}/lib
+export PATH=${PATH}:${CATALINA_HOME}/bin
+</code></pre>
 <p>之后，终端运行<code>startup.sh</code>，过一会儿用浏览器访问<code>IP:8080</code>查看是否能访问，不能访问的话，检查8080端口是否开发</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">netstat -apn | grep 8080 # 观察8080端口是否开放</span><br><span class="line">netstat -ntpl # 显示网络状态, 可查看8080端口状态</span><br><span class="line">ps -ef | grep tomcat # 查看tomcat进程</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-<h3 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install nginx</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">netstat -apn | grep 8080 # 观察8080端口是否开放
+netstat -ntpl # 显示网络状态, 可查看8080端口状态
+ps -ef | grep tomcat # 查看tomcat进程
+</code></pre>
+<h3 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h3><pre><code class="lang-shell">sudo apt-get install nginx
+</code></pre>
 <p>安装之后，可将<code>/etc/nginx/sites-available/</code>的default文件删除，但记得做备份。</p>
 <p>之后在<code>/etc/nginx/nginx.conf</code>中的<code>http</code>中添加如下部分即可</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">upstream myserver{</span><br><span class="line">        server 127.0.0.1:8080 max_fails=3 fail_timeout=30s;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">server {</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name ip;</span><br><span class="line">        location / {</span><br><span class="line">                proxy_pass http://myserver;</span><br><span class="line">        }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-shell">upstream myserver{
+        server 127.0.0.1:8080 max_fails=3 fail_timeout=30s;
+}
 
-<h4 id="nginx命令"><a href="#nginx命令" class="headerlink" title="nginx命令"></a>nginx命令</h4><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart nginx  # 重启nginx</span><br><span class="line">systemctl status nginx # 检测nginx状态</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+server {
+        listen 80;
+        server_name ip;
+        location / {
+                proxy_pass http://myserver;
+        }
+}
+</code></pre>
+<h4 id="nginx命令"><a href="#nginx命令" class="headerlink" title="nginx命令"></a>nginx命令</h4><pre><code class="lang-shell">sudo systemctl restart nginx  # 重启nginx
+systemctl status nginx # 检测nginx状态
+</code></pre>
 <h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>最后，所有的环境安装成功之后，就是最重要的应用程序部署了。因为，Tomcat默认启动的是其<code>webapps</code>下的<code>ROOT</code>应用。其内部的应用程序，在路由上添加对应的名字即可，但是，因为我们想直接将ip绑定到应用程序，不加前缀，所以可以用如下的方式解决：</p>
 <ol>
 <li><p>将自己的应用打包为war包，命名为ROOT，替换为Tomcat自带的ROOT应用。将properties中的<code>server.servlet.context-path = xxx</code> 后面的<code>xxx</code>去除，然后应用中涉及到context-path的也修改</p>
 </li>
 <li><p>pom.xml</p>
-<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--打成war包--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">packaging</span>&gt;</span>war<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--打包名字--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">finalName</span>&gt;</span>ROOT<span class="tag">&lt;/<span class="name">finalName</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        xxx</span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-xml">&lt;!--打成war包--&gt;
+&lt;packaging&gt;war&lt;/packaging&gt;
+
+&lt;build&gt;
+    &lt;!--打包名字--&gt;
+    &lt;finalName&gt;ROOT&lt;/finalName&gt;
+    &lt;plugins&gt;
+        xxx
+    &lt;/plugins&gt;
+&lt;/build&gt;
+</code></pre>
+</li>
+</ol>
+<ol>
 <li><p>编写CommunityServleInitializer，继承SpringBootServletInitializer</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommunityServleInitializer</span> <span class="keyword">extends</span> <span class="title">SpringBootServletInitializer</span> </span>{</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> SpringApplicationBuilder <span class="title">configure</span><span class="params">(SpringApplicationBuilder builder)</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> builder.sources(CommunityApplication<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">public class CommunityServleInitializer extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(CommunityApplication.class);
+    }
+}
+</code></pre>
+</li>
 </ol>
 <p>将自己的应用程序上传服务器，然后使用maven打包</p>
-<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean package -Dmaven.test.skip=true</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-shell">mvn clean package -Dmaven.test.skip=true
+</code></pre>
 <p>之后将<code>target</code>下的<code>ROOT.war</code>移动到Tomcat下的<code>webapps</code>中即可， 然后<code>startup.sh</code></p>
 <p><strong>over</strong></p>
 <figure class="image-bubble">
@@ -346,9 +423,6 @@
                 </div>
                 <div class="image-caption">部署成功展示</div>
             </figure>
-
-
-
 <p>看来，这几年用Ubuntu还是有成果的，最起码，服务器上部署应用不用再那么恼火了，可以快速部署了。</p>
 
         </div>
@@ -476,6 +550,7 @@
 
 
 
+
 </article>
 
 
@@ -495,18 +570,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -515,6 +606,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -563,7 +655,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -619,6 +711,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

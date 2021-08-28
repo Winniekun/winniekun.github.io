@@ -40,6 +40,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -54,10 +55,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -204,10 +205,10 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="Bean的依赖注入方式"><a href="#Bean的依赖注入方式" class="headerlink" title="Bean的依赖注入方式"></a>Bean的依赖注入方式</h2><a id="more"></a>
-
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -215,7 +216,6 @@
                 </div>
                 <div class="image-caption">spring-bean.jpg</div>
             </figure>
-
 <p>Bean配置信息定义了Bean的<strong>实现及依赖关系</strong>，Spring容器根据各种形式的Bean配置信息在容器内部建立Bean定义注册表，然后根据注册表加载、实例化Bean，并建立Bean和Bean的依赖关系，最后将这些准备就绪的Bean放到Bean缓存池中，以供外层的应用程序进行调用。</p>
 <p>Bean的注入方式有两种：</p>
 <ol>
@@ -227,26 +227,98 @@
 </li>
 <li>使用注解的方式注入</li>
 </ol>
-<h2 id="XML中的配置依赖注入"><a href="#XML中的配置依赖注入" class="headerlink" title="XML中的配置依赖注入"></a>XML中的配置依赖注入</h2><h3 id="构造方法注入"><a href="#构造方法注入" class="headerlink" title="构造方法注入"></a>构造方法注入</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 利用构造方法注入</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UserServiceImpl</span><span class="params">(UserDao userDao)</span></span>{</span><br><span class="line">        <span class="keyword">this</span>.userDao = userDao;</span><br><span class="line">    }</span><br><span class="line"><span class="comment">//    //利用set进行动态实现值的注入</span></span><br><span class="line"><span class="comment">//    public void setUserDao(UserDao userDao) {</span></span><br><span class="line"><span class="comment">//        this.userDao = userDao;</span></span><br><span class="line"><span class="comment">//    }</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>{</span><br><span class="line">        userDao.getUser();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="XML中的配置依赖注入"><a href="#XML中的配置依赖注入" class="headerlink" title="XML中的配置依赖注入"></a>XML中的配置依赖注入</h2><h3 id="构造方法注入"><a href="#构造方法注入" class="headerlink" title="构造方法注入"></a>构造方法注入</h3><pre><code class="lang-java">public class UserServiceImpl implements UserService {
+    private UserDao userDao;
 
-<h4 id="bean-xml配置"><a href="#bean-xml配置" class="headerlink" title="bean.xml配置"></a>bean.xml配置</h4><figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"userImpl"</span> <span class="attr">class</span>=<span class="string">"com.wkk.dao.impl.UserDaoImpl"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- collaborators and configuration for this bean go here --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"mysqlImpl"</span> <span class="attr">class</span>=<span class="string">"com.wkk.dao.impl.UserDaoMysqlImpl"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"userServiceImpl"</span> <span class="attr">class</span>=<span class="string">"com.wkk.service.impl.UserServiceImpl"</span>&gt;</span></span><br><span class="line">       <span class="comment">&lt;!--&lt;property name="userDao" ref="mysqlImpl"/&gt;--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">ref</span>=<span class="string">"mysqlImpl"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+    // 利用构造方法注入
+    public UserServiceImpl(UserDao userDao){
+        this.userDao = userDao;
+    }
+//    //利用set进行动态实现值的注入
+//    public void setUserDao(UserDao userDao) {
+//        this.userDao = userDao;
+//    }
 
+    public void getUser() {
+        userDao.getUser();
+    }
 
+}
+</code></pre>
+<h4 id="bean-xml配置"><a href="#bean-xml配置" class="headerlink" title="bean.xml配置"></a>bean.xml配置</h4><pre><code class="lang-xml">&lt;bean id="userImpl" class="com.wkk.dao.impl.UserDaoImpl"/&gt;
+    &lt;!-- collaborators and configuration for this bean go here --&gt;
+&lt;bean id="mysqlImpl" class="com.wkk.dao.impl.UserDaoMysqlImpl"/&gt;
+&lt;bean id="userServiceImpl" class="com.wkk.service.impl.UserServiceImpl"&gt;
+       &lt;!--&lt;property name="userDao" ref="mysqlImpl"/&gt;--&gt;
+    &lt;constructor-arg ref="mysqlImpl"/&gt;
+&lt;/bean&gt;
+</code></pre>
+<h3 id="属性注入-setter方法"><a href="#属性注入-setter方法" class="headerlink" title="属性注入(setter方法)"></a>属性注入(setter方法)</h3><pre><code class="lang-java">public class UserServiceImpl implements UserService {
+    private UserDao userDao;
 
-<h3 id="属性注入-setter方法"><a href="#属性注入-setter方法" class="headerlink" title="属性注入(setter方法)"></a>属性注入(setter方法)</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//     利用set进行动态实现值的注入</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUserDao</span><span class="params">(UserDao userDao)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.userDao = userDao;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="comment">//      System.out.println("UserService实现类: 对用户数据的逻辑操作(用户角度)");</span></span><br><span class="line">        userDao.getUser();</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+    //     利用set进行动态实现值的注入
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
-<h4 id="bean-xml配置-1"><a href="#bean-xml配置-1" class="headerlink" title="bean.xml配置"></a>bean.xml配置</h4><figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"userImpl"</span> <span class="attr">class</span>=<span class="string">"com.wkk.dao.impl.UserDaoImpl"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- collaborators and configuration for this bean go here --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"mysqlImpl"</span> <span class="attr">class</span>=<span class="string">"com.wkk.dao.impl.UserDaoMysqlImpl"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"userServiceImpl"</span> <span class="attr">class</span>=<span class="string">"com.wkk.service.impl.UserServiceImpl"</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"userDao"</span> <span class="attr">ref</span>=<span class="string">"mysqlImpl"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+    public void getUser() {
+    //      System.out.println("UserService实现类: 对用户数据的逻辑操作(用户角度)");
+        userDao.getUser();
+    }
 
-
-
+}
+</code></pre>
+<h4 id="bean-xml配置-1"><a href="#bean-xml配置-1" class="headerlink" title="bean.xml配置"></a>bean.xml配置</h4><pre><code class="lang-xml">&lt;bean id="userImpl" class="com.wkk.dao.impl.UserDaoImpl"/&gt;
+    &lt;!-- collaborators and configuration for this bean go here --&gt;
+&lt;bean id="mysqlImpl" class="com.wkk.dao.impl.UserDaoMysqlImpl"/&gt;
+&lt;bean id="userServiceImpl" class="com.wkk.service.impl.UserServiceImpl"&gt;
+   &lt;property name="userDao" ref="mysqlImpl"/&gt;
+&lt;/bean&gt;
+</code></pre>
 <h3 id="工厂方式注入"><a href="#工厂方式注入" class="headerlink" title="工厂方式注入"></a><del>工厂方式注入</del></h3><p>不写了，文档上没遇到， 然后平时感觉也没怎么遇到过。后面遇到再写</p>
-<h2 id="使用注解方式注入"><a href="#使用注解方式注入" class="headerlink" title="使用注解方式注入"></a>使用注解方式注入</h2><h3 id="使用-Autowired自动注入"><a href="#使用-Autowired自动注入" class="headerlink" title="使用@Autowired自动注入"></a>使用@Autowired自动注入</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserService</span> </span>{</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="meta">@Qualifier</span>(<span class="string">"userDaoImpl2"</span>)</span><br><span class="line">    <span class="keyword">private</span> UserDao userDao;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">()</span></span>{</span><br><span class="line">        userDao.say();</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoImpl1</span> <span class="keyword">implements</span> <span class="title">UserDao</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">()</span> </span>{</span><br><span class="line">        System.out.println(<span class="string">"这是UserDao的第一种实现方式"</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoImpl2</span> <span class="keyword">implements</span> <span class="title">UserDao</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">()</span> </span>{</span><br><span class="line">        System.out.println(<span class="string">"这是UserDao的第二种实现方式"</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="使用注解方式注入"><a href="#使用注解方式注入" class="headerlink" title="使用注解方式注入"></a>使用注解方式注入</h2><h3 id="使用-Autowired自动注入"><a href="#使用-Autowired自动注入" class="headerlink" title="使用@Autowired自动注入"></a>使用@Autowired自动注入</h3><pre><code class="lang-java">@Component
+public class UserService {
+    @Autowired
+    @Qualifier("userDaoImpl2")
+    private UserDao userDao;
 
-<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(SpringJUnit4ClassRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">ContextConfiguration</span>(<span class="title">classes</span> </span>= JavaConfig<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">UserServiceTest</span> </span>{</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    UserService userService;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">()</span> </span>{</span><br><span class="line">         Assert.assertNotNull(userService);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+    public void say(){
+        userDao.say();
+    }
+}
 
+@Component
+public class UserDaoImpl1 implements UserDao {
+    public void say() {
+        System.out.println("这是UserDao的第一种实现方式");
+    }
+}
+
+
+@Component
+public class UserDaoImpl2 implements UserDao {
+    public void say() {
+        System.out.println("这是UserDao的第二种实现方式");
+    }
+}
+</code></pre>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><pre><code class="lang-java">@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = JavaConfig.class)
+public class UserServiceTest {
+
+    @Autowired
+    UserService userService;
+    @Test
+    public void say() {
+         Assert.assertNotNull(userService);
+    }
+}
+</code></pre>
 <p><code>@Autowired</code>不仅能对属性进行注解，还可以对方法、构造函数等。<code>@Autowired</code>类似与<code>xml</code>中使用构造方法注入或属性注入</p>
-<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"userDao"</span> <span class="attr">ref</span>=<span class="string">"mysqlImpl"</span>/&gt;</span></span><br><span class="line">  or</span><br><span class="line"><span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">ref</span>=<span class="string">"mysqlImpl"</span>/&gt;</span></span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-xml">&lt;property name="userDao" ref="mysqlImpl"/&gt;
+  or
+&lt;constructor-arg ref="mysqlImpl"/&gt;
+</code></pre>
 <p><strong>如果使用了@Autowired或者Resource等，就不需要在定义Bean时使用属性注入和构造方法注入了</strong>。意思就是使用注解，可以省略繁杂的xml的配置。</p>
 <p>@Autowired注解在setter方法上和属性注入的区别就是：</p>
 <p><strong>setter方法注入是setter方法+bean.xml配置，@Autowired方式省去了bean.xml的配置</strong></p>
@@ -379,6 +451,7 @@
 
 
 
+
 </article>
 
 
@@ -398,18 +471,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -418,6 +507,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -466,7 +556,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -522,6 +612,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

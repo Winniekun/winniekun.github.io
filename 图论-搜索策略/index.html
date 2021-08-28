@@ -45,6 +45,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -59,10 +60,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -209,10 +210,10 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><a id="more"></a>
-
 <p>以下算法的是实现，BFS、DFS是基于<code>图的邻接表</code>存储方式实现的， A*基于<code>图的邻接矩阵</code>存储</p>
 <h2 id="BFS"><a href="#BFS" class="headerlink" title="BFS"></a>BFS</h2><p>BFS，广度优先遍历，其遍历的形式可以理解为树的层次遍历，直到找到对应的节点，然后停止。所以，可以通过一个队列来实现该算法。</p>
 <figure class="image-bubble">
@@ -222,12 +223,66 @@
                 </div>
                 <div class="image-caption">图论-bfs.png</div>
             </figure>
+<pre><code class="lang-java">package com.wkk.utils;
 
+import com.wkk.graph.LGraph;
+import org.omg.CORBA.INTERNAL;
 
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wkk.utils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.wkk.graph.LGraph;</span><br><span class="line"><span class="keyword">import</span> org.omg.CORBA.INTERNAL;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.LinkedList;</span><br><span class="line"><span class="keyword">import</span> java.util.Queue;</span><br><span class="line"><span class="keyword">import</span> java.util.Stack;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Time</span>: 20-3-20下午3:16</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: kongwiki</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Email</span>: kongwiki@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BFS</span> </span>{</span><br><span class="line">    <span class="comment">// 图使用邻接表进行存储</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span>[] marked;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span>[] edgeTo;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> s;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BFS</span><span class="params">(LGraph graph, <span class="keyword">int</span> s)</span> </span>{</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="keyword">boolean</span>[graph.V()];</span><br><span class="line">        edgeTo = <span class="keyword">new</span> <span class="keyword">int</span>[graph.V()];</span><br><span class="line">        <span class="keyword">this</span>.s = s;</span><br><span class="line">        bfs(graph, s);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">bfs</span><span class="params">(LGraph graph, <span class="keyword">int</span> s)</span> </span>{</span><br><span class="line">        Queue&lt;Integer&gt; queue = <span class="keyword">new</span> LinkedList&lt;Integer&gt;();</span><br><span class="line">        queue.offer(s);</span><br><span class="line">        marked[s] = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">while</span> (!queue.isEmpty()){</span><br><span class="line">            Integer v = queue.poll();</span><br><span class="line">            <span class="keyword">for</span> (Integer element : graph.adj(v)) {</span><br><span class="line">                <span class="keyword">if</span>(!marked[element]){</span><br><span class="line">                    edgeTo[element] = v;</span><br><span class="line">                    marked[element] = <span class="keyword">true</span>;</span><br><span class="line">                    queue.offer(element);</span><br><span class="line">                }</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">	<span class="comment">// 判断是否存在路径 s ---&gt; v</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasPathTo</span><span class="params">(<span class="keyword">int</span> v)</span></span>{</span><br><span class="line">        <span class="keyword">return</span> marked[v];</span><br><span class="line">    }</span><br><span class="line">	<span class="comment">// 存储s---&gt;v的路径</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Stack&lt;Integer&gt; <span class="title">pathTo</span><span class="params">(<span class="keyword">int</span> v)</span></span>{</span><br><span class="line">        <span class="keyword">if</span> (!hasPathTo(v)) {<span class="keyword">return</span> <span class="keyword">null</span>;}</span><br><span class="line">        Stack&lt;Integer&gt; path = <span class="keyword">new</span> Stack&lt;Integer&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> x = v; x != s; x = edgeTo[x]) {</span><br><span class="line">            path.push(x);</span><br><span class="line">        }</span><br><span class="line">        path.push(s);</span><br><span class="line">        <span class="keyword">return</span> path;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+/**
+ * @Time: 20-3-20下午3:16
+ * @Author: kongwiki
+ * @Email: kongwiki@163.com
+ */
+public class BFS {
+    // 图使用邻接表进行存储
+    private boolean[] marked;
+    private int[] edgeTo;
+    private final int s;
 
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>BFS算法能够找到 <code>s</code> —&gt; <code>v</code>路径中的最优解</p>
+    public BFS(LGraph graph, int s) {
+        marked = new boolean[graph.V()];
+        edgeTo = new int[graph.V()];
+        this.s = s;
+        bfs(graph, s);
+    }
+
+    private void bfs(LGraph graph, int s) {
+        Queue&lt;Integer&gt; queue = new LinkedList&lt;Integer&gt;();
+        queue.offer(s);
+        marked[s] = true;
+        while (!queue.isEmpty()){
+            Integer v = queue.poll();
+            for (Integer element : graph.adj(v)) {
+                if(!marked[element]){
+                    edgeTo[element] = v;
+                    marked[element] = true;
+                    queue.offer(element);
+                }
+            }
+        }
+    }
+
+    // 判断是否存在路径 s ---&gt; v
+    public boolean hasPathTo(int v){
+        return marked[v];
+    }
+    // 存储s---&gt;v的路径
+    public Stack&lt;Integer&gt; pathTo(int v){
+        if (!hasPathTo(v)) {return null;}
+        Stack&lt;Integer&gt; path = new Stack&lt;Integer&gt;();
+        for (int x = v; x != s; x = edgeTo[x]) {
+            path.push(x);
+        }
+        path.push(s);
+        return path;
+    }
+}
+</code></pre>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>BFS算法能够找到 <code>s</code> —-&gt; <code>v</code>路径中的最优解</p>
 <h2 id="DFS"><a href="#DFS" class="headerlink" title="DFS"></a>DFS</h2><p>关于<code>dfs</code>， 其应用范围很广，譬如可以解决排列组合问题等等等。首先，会从开始节点朝某一个方向进发，直到遇到边界或者障碍物，才回溯。<code>dfs</code>算法需要一个栈进行从存储所扫描路径上的所有节点，递归其本身也是一个栈的使用， 所以完全可以使用递归实现DFS算法。</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
@@ -236,18 +291,40 @@
                 </div>
                 <div class="image-caption">图论-dfs.png</div>
             </figure>
+<pre><code class="lang-java">public class DFS {
+    private boolean[] marked;
+    private int count;
+    public DFS(LGraph graph, int v){
+        marked = new boolean[graph.V()];
+        dfs(graph, v);
+    }
 
+    public void  dfs(LGraph graph, int v){
+        marked[v] = true;
+        count++;
+        for (Integer w : graph.adj(v)) {
+            if(!marked[w]){
+                dfs(graph, w);
+            }
 
+        }
+    }
 
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DFS</span> </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span>[] marked;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DFS</span><span class="params">(LGraph graph, <span class="keyword">int</span> v)</span></span>{</span><br><span class="line">        marked = <span class="keyword">new</span> <span class="keyword">boolean</span>[graph.V()];</span><br><span class="line">        dfs(graph, v);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">dfs</span><span class="params">(LGraph graph, <span class="keyword">int</span> v)</span></span>{</span><br><span class="line">        marked[v] = <span class="keyword">true</span>;</span><br><span class="line">        count++;</span><br><span class="line">        <span class="keyword">for</span> (Integer w : graph.adj(v)) {</span><br><span class="line">            <span class="keyword">if</span>(!marked[w]){</span><br><span class="line">                dfs(graph, w);</span><br><span class="line">            }</span><br><span class="line"></span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">marked</span><span class="params">(<span class="keyword">int</span> w)</span></span>{</span><br><span class="line">        <span class="keyword">return</span> marked[w];</span><br><span class="line">    }</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">count</span><span class="params">()</span></span>{</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+    public boolean marked(int w){
+        return marked[w];
+    }
+    public int count(){
+        return count;
+    }
+}
+</code></pre>
 <h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>DFS算法存在问题有：</p>
 <ol>
 <li>路径不可能是最优解</li>
 <li>寻路时间比较长</li>
 </ol>
-<h2 id="A"><a href="#A" class="headerlink" title="A*"></a>A*</h2><h3 id="官方定义"><a href="#官方定义" class="headerlink" title="官方定义"></a>官方定义</h3><p><strong>A*搜索算法</strong>（A* search algorithm）是一种在图形平面上，有多个<a href="https://zh.wikipedia.org/wiki/%E7%AF%80%E9%BB%9E" target="_blank" rel="noopener">节点</a>的<a href="https://zh.wikipedia.org/wiki/%E8%B7%AF%E5%BE%84" target="_blank" rel="noopener">路径</a>，求出最低通过<a href="https://zh.wikipedia.org/wiki/%E6%88%90%E6%9C%AC" target="_blank" rel="noopener">成本</a>的<a href="https://zh.wikipedia.org/wiki/%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">算法</a>。其应用非常的广，主要分为两大应用，第一就是游戏中的NPC的移动计算，第二就是地图导航的应用。简而言之，其就是一种寻路算法。</p>
-<p>该算法综合了<a href="https://zh.wikipedia.org/w/index.php?title=%E6%9C%80%E8%89%AF%E5%84%AA%E5%85%88%E6%90%9C%E7%B4%A2&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">最良优先搜索</a>和<a href="https://zh.wikipedia.org/wiki/Dijkstra%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">Dijkstra算法</a>的优点：在进行启发式搜索提高算法效率的同时，可以保证找到一条最优路径（基于评估函数）。</p>
+<h2 id="A"><a href="#A" class="headerlink" title="A*"></a>A*</h2><h3 id="官方定义"><a href="#官方定义" class="headerlink" title="官方定义"></a>官方定义</h3><p><strong>A*搜索算法</strong>（A* search algorithm）是一种在图形平面上，有多个<a href="https://zh.wikipedia.org/wiki/節點" target="_blank" rel="noopener">节点</a>的<a href="https://zh.wikipedia.org/wiki/路径" target="_blank" rel="noopener">路径</a>，求出最低通过<a href="https://zh.wikipedia.org/wiki/成本" target="_blank" rel="noopener">成本</a>的<a href="https://zh.wikipedia.org/wiki/算法" target="_blank" rel="noopener">算法</a>。其应用非常的广，主要分为两大应用，第一就是游戏中的NPC的移动计算，第二就是地图导航的应用。简而言之，其就是一种寻路算法。</p>
+<p>该算法综合了<a href="https://zh.wikipedia.org/w/index.php?title=最良優先搜索&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">最良优先搜索</a>和<a href="https://zh.wikipedia.org/wiki/Dijkstra算法" target="_blank" rel="noopener">Dijkstra算法</a>的优点：在进行启发式搜索提高算法效率的同时，可以保证找到一条最优路径（基于评估函数）。</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -255,16 +332,13 @@
                 </div>
                 <div class="image-caption">Astar_progress_animation.gif</div>
             </figure>
-
-
-
 <p>A*算法的评估函数，其中$ g(n) $表示从起点到任意顶点n的实际距离，$h(n)$ 表示任意顶点$ n$ 到起点的估算距离。</p>
 <p>$ f(n) =  g(n) + h(n) $</p>
 <p>这个公式遵循以下特性：</p>
 <ul>
-<li>如果$g(n)$为0，即只计算任意顶点$n$到目标的评估函数$h(n)$而不计算起点到顶点$n$的距离，则算法转化为使用贪心策略的<a href="https://zh.wikipedia.org/w/index.php?title=%E6%9C%80%E8%89%AF%E5%84%AA%E5%85%88%E6%90%9C%E7%B4%A2&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">最良优先搜索</a>，速度最快，但可能得不出最优解；</li>
-<li>如果$h(n)$不大于顶点$n$到目标<a href="https://zh.wikipedia.org/wiki/%E9%A1%B6%E7%82%B9_(%E5%9B%BE%E8%AE%BA)" target="_blank" rel="noopener">顶点</a>的实际距离，则一定可以求出最优解，而且$h(n)$越小，需要计算的节点越多，算法效率越低，常见的评估函数有——<a href="https://zh.wikipedia.org/wiki/%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97%E8%B7%9D%E7%A6%BB" target="_blank" rel="noopener">欧几里得距离</a>、<a href="https://zh.wikipedia.org/wiki/%E6%9B%BC%E5%93%88%E9%A0%93%E8%B7%9D%E9%9B%A2" target="_blank" rel="noopener">曼哈顿距离</a>、<a href="https://zh.wikipedia.org/wiki/%E5%88%87%E6%AF%94%E9%9B%AA%E5%A4%AB%E8%B7%9D%E7%A6%BB" target="_blank" rel="noopener">切比雪夫距离</a>；</li>
-<li>如果$ h(n) $为0，即只需求出起点到任意顶点的$ n $最短路径$ g(n) $，而不计算任何评估函数$ h(n) $，则转化为<a href="https://zh.wikipedia.org/w/index.php?title=%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">单源最短路径</a>问题，即<a href="https://zh.wikipedia.org/wiki/Dijkstra%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">Dijkstra算法</a>，此时需要计算最多的顶点；</li>
+<li>如果$g(n)$为0，即只计算任意顶点$n$到目标的评估函数$h(n)$而不计算起点到顶点$n$的距离，则算法转化为使用贪心策略的<a href="https://zh.wikipedia.org/w/index.php?title=最良優先搜索&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">最良优先搜索</a>，速度最快，但可能得不出最优解；</li>
+<li>如果$h(n)$不大于顶点$n$到目标<a href="https://zh.wikipedia.org/wiki/顶点_(图论" target="_blank" rel="noopener">顶点</a>)的实际距离，则一定可以求出最优解，而且$h(n)$越小，需要计算的节点越多，算法效率越低，常见的评估函数有——<a href="https://zh.wikipedia.org/wiki/欧几里得距离" target="_blank" rel="noopener">欧几里得距离</a>、<a href="https://zh.wikipedia.org/wiki/曼哈頓距離" target="_blank" rel="noopener">曼哈顿距离</a>、<a href="https://zh.wikipedia.org/wiki/切比雪夫距离" target="_blank" rel="noopener">切比雪夫距离</a>；</li>
+<li>如果$ h(n) $为0，即只需求出起点到任意顶点的$ n $最短路径$ g(n) $，而不计算任何评估函数$ h(n) $，则转化为<a href="https://zh.wikipedia.org/w/index.php?title=单源最短路径&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">单源最短路径</a>问题，即<a href="https://zh.wikipedia.org/wiki/Dijkstra算法" target="_blank" rel="noopener">Dijkstra算法</a>，此时需要计算最多的顶点；</li>
 </ul>
 <p>以上的摘自<code>维基百科</code>，一些名词可能有些抽象，现做举例说明；</p>
 <h3 id="实例讲解"><a href="#实例讲解" class="headerlink" title="实例讲解"></a>实例讲解</h3><figure class="image-bubble">
@@ -274,7 +348,6 @@
                 </div>
                 <div class="image-caption">图论-A*</div>
             </figure>
-
 <p>对于上图，从顶点<code>s</code>出发，均走了两步，分别到达了<code>M1</code>和<code>M2</code>，接下来应该选择哪条路线到达终点<code>E</code>，很明显，选择<code>M1</code>这条路， 因为从<code>M1</code>出发，到<code>E</code>的距离终于7步，比从<code>M2</code>出发到<code>E</code>的距离9步，要少。</p>
 <p>回想刚才的思路，发现，我们不仅思考了从起始点到当前点的距离， 还考虑了当前点到终点的距离。这就是<code>A*</code>算法的核心。其相比于<code>BFS</code>算法，除了考虑中间某个点到出发点的距离以外，还考虑了这个点同目标点的距离。这就是A*算法比广度优先算法智能的地方。也就是所谓的<code>启发式搜索</code>。实例中的<code>s</code> 到<code>M1</code>的距离就是<code>g(n)</code>, <code>M1</code>到<code>E</code>的距离就是<code>h(n)</code></p>
 <p>对于上述的公式， <code>g(n)</code>是已知的，但是<code>h(n)</code>是需要进行计算的。 对于<code>h(n)</code>的精确计算，可以按照刚才实例的方式，使用<code>横向距离</code>+<code>纵向距离</code>的方式进行计算（曼哈顿距离），理论上来说是可行的，但是遇到如下的问题，那么使用刚才的方式计算<code>h(n)</code>的精确值就是错误的了</p>
@@ -285,9 +358,6 @@
                 </div>
                 <div class="image-caption">图论-A-star1.png</div>
             </figure>
-
-
-
 <p>因为有障碍物，<code>M</code>到<code>E</code>的就需要绕过这个障碍物。但是，我们完全没有必要计算<code>h(n)</code>的精确的值，只需要尽可能找那些<code>f(n)=g(n)+h(n)</code>小的点（其中<code>h(n)</code>是个估算值），当做我们的路径经过点，即使实际的<code>h'(n)</code>值可能和<code>h(n)</code>值不等也没关系，我们就当做一个参考（总比广度优先搜索好）。如果通过这个估算，能干掉很多明显很差的点，我们也就节省了很多不必要的花销。</p>
 <p>比如，上图中， <code>M</code>点即使是绕路，也比<code>M'</code>点要强。在估算的时候，我们就可以将S左边的点基本上都抛弃掉，从而减少我们扩展的点数，节约计算的时间。</p>
 <p>经过上述的分析，接下来就只需要解决如下的两个问题：</p>
@@ -310,8 +380,12 @@
 <li><p><code>h'(n) &lt; h(n)</code></p>
 <ol>
 <li><p>我们到最后一定能找到一条最短路径(如果存在另外一条更短的评估路径，就会选择更小的那个)，但是有可能会经过很多无效的点。极端情况，当h==0的时候，最终的距离函数就变成：</p>
-<figure class="highlight tex"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f(n)=g(n)+h(n)</span><br><span class="line"></span><br><span class="line">=&gt; f(n)=g(n)+0</span><br><span class="line"></span><br><span class="line">=&gt; f(n)=g(n)</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-tex">f(n)=g(n)+h(n)
 
+=&gt; f(n)=g(n)+0
+
+=&gt; f(n)=g(n)
+</code></pre>
 <p>这也就是<code>BFS</code>算法。</p>
 </li>
 </ol>
@@ -338,14 +412,13 @@
                 </div>
                 <div class="image-caption">图论-A-star实例.jpeg</div>
             </figure>
-
 <ul>
 <li>每个方块代表一个节点，</li>
 <li>方块中左下角为<code>g(n)</code></li>
 <li>方块中右下角为<code>h(n)</code></li>
 <li>方块中左上角为<code>f(n)</code></li>
 </ul>
-<h4 id="辅助表：Open、Close列表"><a href="#辅助表：Open、Close列表" class="headerlink" title="辅助表：Open、Close列表"></a>辅助表：Open、Close列表</h4><p>在A*算法中，需要使用两个辅助表来记录结点。 一个用于<strong>记录可被访问的结点</strong>，称为Open表；一个是<strong>记录已访问过的结点</strong>，称为Close表。 <strong>这两个表决定了算法的结束：条件是最终结点在Close表中(找到路径)或Open表为空(找不到了路径)。</strong></p>
+<h4 id="辅助表：Open、Close列表"><a href="#辅助表：Open、Close列表" class="headerlink" title="辅助表：Open、Close列表"></a>辅助表：Open、Close列表</h4><p>在A<em>算法中，需要使用两个辅助表来记录结点。 一个用于<strong>记录可被访问的结点</strong>，称为Open表；一个是<strong>记录已访问过的结点</strong>，称为Close表。 <em>*这两个表决定了算法的结束：条件是最终结点在Close表中(找到路径)或Open表为空(找不到了路径)。</em></em></p>
 <h4 id="移动结点、相邻结点的处理"><a href="#移动结点、相邻结点的处理" class="headerlink" title="移动结点、相邻结点的处理"></a>移动结点、相邻结点的处理</h4><p>每次从Open表中取出F值最小的结点出来（<strong>这里我们使用优先队列来处理比较好</strong>），作为当前结点；然后将当前结点的所有邻结点按照<strong>邻结点规则</strong>加入到Open表中；最后将当前结点放入Close表中，这里就是每次循环的执行内容。</p>
 <h4 id="邻结点规则："><a href="#邻结点规则：" class="headerlink" title="邻结点规则："></a><strong>邻结点规则</strong>：</h4><ol>
 <li>当邻结点不在地图中，不加入Open表</li>
@@ -379,49 +452,246 @@
 <h4 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h4><p><strong>输入涉及数据结构</strong>：</p>
 <ol>
 <li><p>代表地图二值二维数组(0表示可通路，1表示路障)</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[][] maps = {</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">        };</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">int[][] maps = {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0 },
+                { 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+        };
+</code></pre>
+</li>
 <li><p>坐标类</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Coord</span> </span>{</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 坐标原点在左上角 所以y是高 x是宽</span></span><br><span class="line"><span class="comment">     * y向下递增 x向右递增</span></span><br><span class="line"><span class="comment">     * 将x和y封装成一个类 方便传参</span></span><br><span class="line"><span class="comment">     * 重写equals方法比较坐标(x,y)是不是同一个。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> x;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> y;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Coord</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.x = x;</span><br><span class="line">        <span class="keyword">this</span>.y = y;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (obj == <span class="keyword">null</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> Coord) {</span><br><span class="line">            Coord c = (Coord) obj;</span><br><span class="line">            <span class="keyword">return</span> x == c.x &amp;&amp; y == c.y;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">public class Coord {
+    /**
+     * 坐标原点在左上角 所以y是高 x是宽
+     * y向下递增 x向右递增
+     * 将x和y封装成一个类 方便传参
+     * 重写equals方法比较坐标(x,y)是不是同一个。
+     */
+    public int x;
+    public int y;
+
+    public Coord(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof Coord) {
+            Coord c = (Coord) obj;
+            return x == c.x &amp;&amp; y == c.y;
+        }
+        return false;
+    }
+}
+</code></pre>
+</li>
 <li><p>Node类</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Node</span>&gt; </span>{</span><br><span class="line">    <span class="comment">// 坐标</span></span><br><span class="line">    <span class="keyword">public</span> Coord coord;</span><br><span class="line">    <span class="comment">// 父结点</span></span><br><span class="line">    <span class="keyword">public</span> Node parent;</span><br><span class="line">    <span class="comment">// G：是个准确的值，是起点到当前结点的代价</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> G;</span><br><span class="line">    <span class="comment">// H：是个估值，当前结点到目的结点的估计代价</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> H;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.coord = <span class="keyword">new</span> Coord(x, y);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(Coord coord, Node parent, <span class="keyword">int</span> g, <span class="keyword">int</span> h)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.coord = coord;</span><br><span class="line">        <span class="keyword">this</span>.parent = parent;</span><br><span class="line">        G = g;</span><br><span class="line">        H = h;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 方便优先队列排序。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Node o)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (o == <span class="keyword">null</span>) {</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span> (G + H &gt; o.G + o.H) {</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        } <span class="keyword">else</span> <span class="keyword">if</span> (G + H &lt; o.G + o.H) {</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">public class Node implements Comparable&lt;Node&gt; {
+    // 坐标
+    public Coord coord;
+    // 父结点
+    public Node parent;
+    // G：是个准确的值，是起点到当前结点的代价
+    public int G;
+    // H：是个估值，当前结点到目的结点的估计代价
+    public int H;
+
+    public Node(int x, int y) {
+        this.coord = new Coord(x, y);
+    }
+
+    public Node(Coord coord, Node parent, int g, int h) {
+        this.coord = coord;
+        this.parent = parent;
+        G = g;
+        H = h;
+    }
+
+    // 方便优先队列排序。
+    public int compareTo(Node o) {
+        if (o == null) {
+            return -1;
+        }
+        if (G + H &gt; o.G + o.H) {
+            return 1;
+        } else if (G + H &lt; o.G + o.H) {
+            return -1;
+        }
+        return 0;
+    }
+
+}
+</code></pre>
+</li>
 <li><p>A*算法输入的数据结构的封装</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wkk.a;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Time</span>: 20-3-21上午12:35</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: kongwiki</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Email</span>: kongwiki@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MapInfo</span> </span>{</span><br><span class="line">    <span class="comment">// 二维数组的地图</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[][] maps;</span><br><span class="line">    <span class="comment">//地图的宽</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> width;</span><br><span class="line">    <span class="comment">// 地图的高</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> hight;</span><br><span class="line">    <span class="comment">// 起始结点</span></span><br><span class="line">    <span class="keyword">public</span> Node start;</span><br><span class="line">    <span class="comment">// 最终结点</span></span><br><span class="line">    <span class="keyword">public</span> Node end;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MapInfo</span><span class="params">(<span class="keyword">int</span>[][] maps, <span class="keyword">int</span> width, <span class="keyword">int</span> hight, Node start, Node end)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.maps = maps;</span><br><span class="line">        <span class="keyword">this</span>.width = width;</span><br><span class="line">        <span class="keyword">this</span>.hight = hight;</span><br><span class="line">        <span class="keyword">this</span>.start = start;</span><br><span class="line">        <span class="keyword">this</span>.end = end;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">package com.wkk.a;
+
+/**
+ * @Time: 20-3-21上午12:35
+ * @Author: kongwiki
+ * @Email: kongwiki@163.com
+ */
+public class MapInfo {
+    // 二维数组的地图
+    public int[][] maps;
+    //地图的宽
+    public int width;
+    // 地图的高
+    public int hight;
+    // 起始结点
+    public Node start;
+    // 最终结点
+    public Node end;
+
+    public MapInfo(int[][] maps, int width, int hight, Node start, Node end) {
+        this.maps = maps;
+        this.width = width;
+        this.hight = hight;
+        this.start = start;
+        this.end = end;
+    }
+}
+</code></pre>
+</li>
 </ol>
 <p><strong>处理</strong>:</p>
 <ol>
 <li><p>几个常量：二维数组中哪个值表示障碍物、二维数组中绘制路径的代表值、计算G值需要的横纵移动代价和斜移动代价。</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 障碍值</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> BAR = <span class="number">1</span>;</span><br><span class="line"><span class="comment">// 路径</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> PATH = <span class="number">2</span>;</span><br><span class="line"><span class="comment">// 横竖移动代价</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> DIRECT_VALUE = <span class="number">10</span>;</span><br><span class="line"><span class="comment">// 斜移动代价</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> OBLIQUE_VALUE = <span class="number">14</span>;</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">// 障碍值
+public final static int BAR = 1;
+// 路径
+public final static int PATH = 2;
+// 横竖移动代价
+public final static int DIRECT_VALUE = 10;
+// 斜移动代价
+public final static int OBLIQUE_VALUE = 14;
+</code></pre>
+</li>
 <li><p>定义两个辅助表：Open表和Close表。Open表的使用是需要取最小值，使用优先队列PriorityQueue，Close只是用来保存结点，没其他特殊用途，就用ArrayList。</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 优先队列(升序)</span></span><br><span class="line">Queue&lt;Node&gt; openList = <span class="keyword">new</span> PriorityQueue&lt;Node&gt;()</span><br><span class="line">List&lt;Node&gt; closeList = <span class="keyword">new</span> ArrayList&lt;Node&gt;();</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">// 优先队列(升序)
+Queue&lt;Node&gt; openList = new PriorityQueue&lt;Node&gt;()
+List&lt;Node&gt; closeList = new ArrayList&lt;Node&gt;();
+</code></pre>
+</li>
 <li><p>定义几个布尔判断方法：最终结点的判断、结点能否加入open表的判断、结点是否在Close表中的判断。</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 判断结点是否是最终结点</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isEndNode</span><span class="params">(Coord end, Coord coord)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> coord != <span class="keyword">null</span> &amp;&amp; end.equals(coord);</span><br><span class="line">}</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 判断结点能否放入Open列表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">canAddNodeToOpen</span><span class="params">(MapInfo mapInfo, <span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>{</span><br><span class="line">    <span class="comment">// 是否在地图中</span></span><br><span class="line">    <span class="keyword">if</span> (x &lt; <span class="number">0</span> || x &gt;= mapInfo.width || y &lt; <span class="number">0</span> || y &gt;= mapInfo.hight) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 判断是否是不可通过的结点</span></span><br><span class="line">    <span class="keyword">if</span> (mapInfo.maps[y][x] == BAR) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 判断结点是否存在close表</span></span><br><span class="line">    <span class="keyword">if</span> (isCoordInClose(x, y)) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">}</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 判断坐标是否在close表中</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isCoordInClose</span><span class="params">(Coord coord)</span> </span>{</span><br><span class="line">    <span class="keyword">return</span> coord != <span class="keyword">null</span> &amp;&amp; isCoordInClose(coord.x, coord.y);</span><br><span class="line">}</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 判断坐标是否在close表中</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isCoordInClose</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (closeList.isEmpty()) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">for</span> (Node node : closeList) {</span><br><span class="line">        <span class="keyword">if</span> (node.coord.x == x &amp;&amp; node.coord.y == y) {</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">/**
+ * 判断结点是否是最终结点
+ */
+private boolean isEndNode(Coord end, Coord coord) {
+    return coord != null &amp;&amp; end.equals(coord);
+}
+/**
+ * 判断结点能否放入Open列表
+ */
+private boolean canAddNodeToOpen(MapInfo mapInfo, int x, int y) {
+    // 是否在地图中
+    if (x &lt; 0 || x &gt;= mapInfo.width || y &lt; 0 || y &gt;= mapInfo.hight) {
+        return false;
+    }
+    // 判断是否是不可通过的结点
+    if (mapInfo.maps[y][x] == BAR) {
+        return false;
+    }
+    // 判断结点是否存在close表
+    if (isCoordInClose(x, y)) {
+        return false;
+    }
+    return true;
+}
+/**
+ * 判断坐标是否在close表中
+ */
+private boolean isCoordInClose(Coord coord) {
+    return coord != null &amp;&amp; isCoordInClose(coord.x, coord.y);
+}
+/**
+ * 判断坐标是否在close表中
+ */
+private boolean isCoordInClose(int x, int y) {
+    if (closeList.isEmpty()) {
+        return false;
+    }
+    for (Node node : closeList) {
+        if (node.coord.x == x &amp;&amp; node.coord.y == y) {
+            return true;
+        }
+    }
+    return false;
+}
+</code></pre>
+</li>
 <li><p>回溯绘制路径</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 在二维数组中绘制路径</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">drawPath</span><span class="params">(<span class="keyword">int</span>[][] maps, Node end)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (end == <span class="keyword">null</span> || maps == <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    System.out.println(<span class="string">"总代价："</span> + end.G);</span><br><span class="line">    <span class="keyword">while</span> (end != <span class="keyword">null</span>) {</span><br><span class="line">        Coord c = end.coord;</span><br><span class="line">        maps[c.y][c.x] = PATH;</span><br><span class="line">        end = end.parent;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">/**
+ * 在二维数组中绘制路径
+ */
+private void drawPath(int[][] maps, Node end) {
+    if (end == null || maps == null) {
+        return;
+    }
+    System.out.println("总代价：" + end.G);
+    while (end != null) {
+        Coord c = end.coord;
+        maps[c.y][c.x] = PATH;
+        end = end.parent;
+    }
+}
+</code></pre>
+</li>
 </ol>
 <h3 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h3><p>自定义Graph</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[][] maps = {</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">                { <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span> },</span><br><span class="line">        };</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">int[][] maps = {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0 },
+                { 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
+        };
+</code></pre>
 <p>开始节点为：<code>（1,1）</code></p>
 <p>结束节点为： <code>（9， 5）</code></p>
 <p>输出结果：</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">总代价：<span class="number">176</span></span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">2</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">2</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">2</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">1</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></tbody></table></figure>
-
-<h4 id="待优化"><a href="#待优化" class="headerlink" title="待优化"></a>待优化</h4><p>int类型 —&gt; 泛型</p>
+<pre><code class="lang-java">总代价：176
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 2 2 2 2 2 2 2 2 2 2 2 2 0 0 
+0 0 1 1 0 0 0 0 0 0 1 1 1 2 0 
+0 0 0 1 0 0 0 0 0 1 1 2 2 0 0 
+0 0 0 1 1 1 1 1 1 1 2 0 0 0 0 
+0 0 0 1 0 0 1 0 0 2 0 0 0 0 0 
+0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 
+0 0 0 1 0 0 0 0 1 0 0 0 0 0 0
+</code></pre>
+<h4 id="待优化"><a href="#待优化" class="headerlink" title="待优化"></a>待优化</h4><p>int类型 —-&gt; 泛型</p>
 <p>异常数据处理</p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
 <li><p>算法第四版</p>
 </li>
-<li><p><a href="https://zh.wikipedia.org/wiki/A*%E6%90%9C%E5%B0%8B%E6%BC%94%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">A*搜索算法</a></p>
+<li><p><a href="https://zh.wikipedia.org/wiki/A*搜尋演算法" target="_blank" rel="noopener">A*搜索算法</a></p>
 </li>
 <li><p><a href="https://zhuanlan.zhihu.com/p/54510444" target="_blank" rel="noopener">路径规划之 A* 算法</a></p>
 </li>
-<li><p><a href="https://zh.wikipedia.org/wiki/%E5%AF%BB%E8%B7%AF" target="_blank" rel="noopener">寻路</a></p>
+<li><p><a href="https://zh.wikipedia.org/wiki/寻路" target="_blank" rel="noopener">寻路</a></p>
 </li>
 <li><p><a href="https://www.youtube.com/watch?v=-L-WgKMFuhE&amp;list=PLFt_AvWsXl0cq5Umv3pMC9SPnKjfp9eGW" target="_blank" rel="noopener">A* Pathfinding</a></p>
 </li>
-<li><p><a href="https://www.tangyuecan.com/2018/03/13/%E9%82%A3%E4%B8%AA%E4%BC%A0%E8%AF%B4%E4%B8%AD%E7%9A%84%E7%AE%97%E6%B3%95-a%E7%AE%97%E6%B3%95/" target="_blank" rel="noopener">那个传说中的算法——A*算法</a></p>
+<li><p><a href="https://www.tangyuecan.com/2018/03/13/那个传说中的算法-a算法/" target="_blank" rel="noopener">那个传说中的算法——A*算法</a></p>
 </li>
 <li><p><a href="https://github.com/KongWiki/GraphTree" target="_blank" rel="noopener">GraphTree</a></p>
 </li>
@@ -552,6 +822,7 @@
 
 
 
+
 </article>
 
 
@@ -571,18 +842,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -591,6 +878,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -639,7 +927,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -695,6 +983,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

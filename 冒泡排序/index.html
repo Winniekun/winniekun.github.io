@@ -38,6 +38,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -52,10 +53,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -202,18 +203,29 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><a id="more"></a>
-
 <p>冒泡排序每次检查相邻两个元素，以升序为例， 如果前面的元素大于后面的元素，就将相邻两个元素交换。当没有相邻的元素需要交换时，排序就完成了。</p>
 <p>时间复杂度：$O(n^2)$</p>
 <p>冒泡排序是<code>稳定排序</code></p>
 <h2 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h2><p>$ \begin{array}{ll} 1 &amp; \textbf{Input. } \text{An array } A \text{ consisting of }n\text{ elements.} \newline 2 &amp; \textbf{Output. } A\text{ will be sorted in nondecreasing order stably.} \newline 3 &amp; \textbf{Method. } \newline 4 &amp; flag\gets True \newline 5 &amp; \textbf{while }flag\newline 6 &amp; \qquad flag\gets False\newline 7 &amp; \qquad\textbf{for }i\gets1\textbf{ to }n-1\newline 8 &amp; \qquad\qquad\textbf{if }A[i] &gt;A[i + 1]\newline 9 &amp; \qquad\qquad\qquad flag\gets True\newline 10 &amp; \qquad\qquad\qquad \text{Swap } A[i]\text{ and }A[i + 1] \end{array}$</p>
-<h2 id="Java实现"><a href="#Java实现" class="headerlink" title="Java实现"></a>Java实现</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bubbleSorted</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>{</span><br><span class="line">    <span class="keyword">boolean</span> flag = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">while</span>(flag){</span><br><span class="line">        flag = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt; nums.length-<span class="number">1</span>; i++){</span><br><span class="line">            <span class="keyword">if</span>(nums[i] &gt; nums[i+<span class="number">1</span>]){</span><br><span class="line">                <span class="keyword">int</span> temp = nums[i];</span><br><span class="line">                nums[i] = nums[i+<span class="number">1</span>];</span><br><span class="line">                nums[i+<span class="number">1</span>] = temp;</span><br><span class="line">                flag = <span class="keyword">true</span>;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<h2 id="Java实现"><a href="#Java实现" class="headerlink" title="Java实现"></a>Java实现</h2><pre><code class="lang-java">public void bubbleSorted(int[] nums){
+    boolean flag = true;
+    while(flag){
+        flag = false;
+        for(int i = 0; i&lt; nums.length-1; i++){
+            if(nums[i] &gt; nums[i+1]){
+                int temp = nums[i];
+                nums[i] = nums[i+1];
+                nums[i+1] = temp;
+                flag = true;
+            }
+        }
+    }
+}
+</code></pre>
 
         </div>
 
@@ -340,6 +352,7 @@
 
 
 
+
 </article>
 
 
@@ -359,18 +372,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -379,6 +408,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -427,7 +457,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -483,6 +513,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

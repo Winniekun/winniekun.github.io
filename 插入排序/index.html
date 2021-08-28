@@ -38,6 +38,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -52,10 +53,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -178,7 +179,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#插入排序"><span class="post-toc-number">1.</span> <span class="post-toc-text">插入排序</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#算法思想"><span class="post-toc-number">3.</span> <span class="post-toc-text">算法思想</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#插入"><span class="post-toc-number">4.</span> <span class="post-toc-text">插入</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基本插入算法"><span class="post-toc-number">5.</span> <span class="post-toc-text">基本插入算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优化一：-使用鶸二分查找"><span class="post-toc-number">6.</span> <span class="post-toc-text">优化一： 使用鶸二分查找</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优化二：-为了优化而优化的链表"><span class="post-toc-number">7.</span> <span class="post-toc-text">优化二： 为了优化而优化的链表</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优化三：-终极进化之二叉搜索树"><span class="post-toc-number">8.</span> <span class="post-toc-text">优化三： 终极进化之二叉搜索树</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">9.</span> <span class="post-toc-text">References</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#插入排序"><span class="post-toc-number">1.</span> <span class="post-toc-text">插入排序</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#算法思想"><span class="post-toc-number">3.</span> <span class="post-toc-text">算法思想</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#插入"><span class="post-toc-number">4.</span> <span class="post-toc-text">插入</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基本插入算法"><span class="post-toc-number">5.</span> <span class="post-toc-text">基本插入算法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优化一：-使用鶸二分查找"><span class="post-toc-number">6.</span> <span class="post-toc-text">优化一： 使用鶸二分查找</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优化三：-终极进化之二叉搜索树"><span class="post-toc-number">7.</span> <span class="post-toc-text">优化三： 终极进化之二叉搜索树</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">8.</span> <span class="post-toc-text">References</span></a></li></ol>
         </nav>
     </aside>
 
@@ -202,31 +203,76 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><a id="more"></a>
-
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>插入排序的思想很直观，其在性能上不如一些分治的排序策略，例如快速排序，归并排序。插入排序是一种基于比较的排序算法。</p>
 <h2 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h2><p>其类似于打牌的抓牌环节，抓到牌后都会按照点数插入到合适的位置，核心思想是保证一个已排序区间，剩下的未排序区间依次与前面的已排序区间进行比较，插入到对应的位置。</p>
 <h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><p>有关于插入，若是序列是使用数组进行存储，则可以从右向左扫描已排序数组，因为这样可以在性能上有所优化。因为对于数组的插入，其不像链表一样，只需要断链，然后链接，其需要移动大量的元素，才能够进行插入，若是从左向右，譬如数组的长度为<code>n</code>，在位置<code>i</code>插入，则需要扫描<code>i</code>次，然后移动<code>n-i+1</code>次，最后插入数据。若是从右向左，最多需要<code>i</code>次扫描，然后可以边扫描边右移动</p>
 <h2 id="基本插入算法"><a href="#基本插入算法" class="headerlink" title="基本插入算法"></a>基本插入算法</h2><ul>
 <li>复杂度:O(n^2)</li>
 <li>比较次数（查找）: O(n^2)</li>
-<li>移动次数（插入后导致的移动）: O(n^2)<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">insertSort</span><span class="params">(arraylist)</span>:</span></span><br><span class="line">    arrayLen = len(arraylist)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, arrayLen):</span><br><span class="line">        current = arraylist[i]</span><br><span class="line">        j = i - <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> j &gt; <span class="number">0</span> <span class="keyword">and</span> arraylist[j] &lt; current:</span><br><span class="line">            arraylist[j+<span class="number">1</span>] = arraylist[j]</span><br><span class="line">            j = j - <span class="number">1</span></span><br><span class="line">        arraylist[j+<span class="number">1</span>] = current</span><br><span class="line">    <span class="keyword">return</span> arraylist</span><br></pre></td></tr></tbody></table></figure></li>
+<li>移动次数（插入后导致的移动）: O(n^2)<pre><code class="lang-python">def insertSort(arraylist):
+  arrayLen = len(arraylist)
+  for i in range(1, arrayLen):
+      current = arraylist[i]
+      j = i - 1
+      while j &gt; 0 and arraylist[j] &lt; current:
+          arraylist[j+1] = arraylist[j]
+          j = j - 1
+      arraylist[j+1] = current
+  return arraylist
+</code></pre>
+</li>
 </ul>
 <h2 id="优化一：-使用鶸二分查找"><a href="#优化一：-使用鶸二分查找" class="headerlink" title="优化一： 使用鶸二分查找"></a>优化一： 使用鶸二分查找</h2><p>因为已经确定了前面的排序区间是有序的，所以可以直接使用二分查找来确定插入的位置，这样查找的时间就得到了优化</p>
 <ul>
 <li>复杂度: O(n^2)</li>
 <li>比较次数: O(nlgn)</li>
-<li>移动次数: O(n^2)<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">binarySearch</span><span class="params">(arraylist, key)</span>:</span></span><br><span class="line">    low = <span class="number">0</span></span><br><span class="line">    high = len(arraylist)</span><br><span class="line">    <span class="keyword">while</span> low &lt; high:</span><br><span class="line">        mid = (log + hig)//<span class="number">2</span></span><br><span class="line">        <span class="keyword">if</span> arraylist[mid] == key:</span><br><span class="line">            <span class="keyword">return</span> mid</span><br><span class="line">        <span class="keyword">elif</span> arraylist[mid] &gt; key:</span><br><span class="line">            high = mid</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            low = mid + <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> low</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">insertSort</span><span class="params">(arraylist)</span>:</span></span><br><span class="line">    arrayLen = len(arraylist)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, arrayLen):</span><br><span class="line">        current = arraylist[i]</span><br><span class="line">        position = binarySearch(arraylist[:i], key)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(i, position, <span class="number">-1</span>):</span><br><span class="line">            arraylist[i] = arraylist[i<span class="number">-1</span>]</span><br><span class="line">        arraylist[position] = current</span><br><span class="line">    <span class="keyword">return</span> arraylist</span><br></pre></td></tr></tbody></table></figure></li>
+<li>移动次数: O(n^2)<br>```python<br>def binarySearch(arraylist, key):<br>  low = 0<br>  high = len(arraylist)<br>  while low &lt; high:<pre><code>  mid = (log + hig)//2
+  if arraylist[mid] == key:
+      return mid
+  elif arraylist[mid] &gt; key:
+      high = mid
+  else:
+      low = mid + 1
+</code></pre>  return low</li>
 </ul>
-<h2 id="优化二：-为了优化而优化的链表"><a href="#优化二：-为了优化而优化的链表" class="headerlink" title="优化二： 为了优化而优化的链表"></a>优化二： 为了优化而优化的链表</h2><p>使用链表之后，改变其数据结构，可以优化插入的时间，由最初的O(n)优化到了O(1)</p>
-<ul>
-<li>复杂度: O(n^2)</li>
-<li>比较次数: O(n^2)</li>
-<li>移动次数: O(1)<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">insert</span><span class="params">(arrayList, next, i)</span>:</span></span><br><span class="line">    j = <span class="number">-1</span></span><br><span class="line">    <span class="comment"># print("当前j为{}, next[j]={}，arrayList[next[j]]={} arrayList[i]={}".format(j, next[j], arrayList[next[j]], arrayList[i]))</span></span><br><span class="line">    <span class="keyword">while</span> next[j] != <span class="number">-1</span> <span class="keyword">and</span> arrayList[next[j]] &lt; arrayList[i]:</span><br><span class="line">        j = next[j]</span><br><span class="line">        <span class="comment"># print("目前j={}".format(j))</span></span><br><span class="line">    next[j], next[i] = i, next[j]</span><br><span class="line">    <span class="comment"># print("交换后的next[j]={}, next[i]={} \n".format(next[j], next[i]))</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">reorder</span><span class="params">(arrayList, next)</span>:</span></span><br><span class="line">    i = <span class="number">-1</span></span><br><span class="line">    ys = []</span><br><span class="line">    <span class="keyword">while</span> next[i] != <span class="number">-1</span>:</span><br><span class="line">        ys.append(arrayList[next[i]])</span><br><span class="line">        i = next[i]</span><br><span class="line">    <span class="keyword">return</span> ys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">insertSortIII</span><span class="params">(arrayList)</span>:</span></span><br><span class="line">    arrayLen = len(arrayList)</span><br><span class="line">    next = [<span class="number">-1</span>]*(arrayLen+<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(arrayLen):</span><br><span class="line">        insert(arrayList, next, i)</span><br><span class="line">    <span class="keyword">return</span> reorder(arrayList, next)</span><br></pre></td></tr></tbody></table></figure></li>
-</ul>
-<h2 id="优化三：-终极进化之二叉搜索树"><a href="#优化三：-终极进化之二叉搜索树" class="headerlink" title="优化三： 终极进化之二叉搜索树"></a>优化三： 终极进化之二叉搜索树</h2><p>对于以上的优化，只能在插入和查找之中二选一的进行优化。单独提高其中一个仍会使插入算法保持在O(n^2)中，使用二分查找能够将查找次数降到最低—O(lgN),对于插入，为了能实现常数时间的插入，必定需要改变其数据结构。<br>二叉搜索树刚好满足以上的所有的需求，但是对于这个，应该不算是严格意义的插入排序了，应是更宽泛的定位—基于比较的排序。</p>
+<p>def insertSort(arraylist):<br>    arrayLen = len(arraylist)<br>    for i in range(1, arrayLen):<br>        current = arraylist[i]<br>        position = binarySearch(arraylist[:i], key)<br>        for i in range(i, position, -1):<br>            arraylist[i] = arraylist[i-1]<br>        arraylist[position] = current<br>    return arraylist</p>
+<pre><code>
+## 优化二： 为了优化而优化的链表
+使用链表之后，改变其数据结构，可以优化插入的时间，由最初的O(n)优化到了O(1)
++ 复杂度: O(n^2)
++ 比较次数: O(n^2)
++ 移动次数: O(1)
+```python
+def insert(arrayList, next, i):
+    j = -1
+    # print("当前j为{}, next[j]={}，arrayList[next[j]]={} arrayList[i]={}".format(j, next[j], arrayList[next[j]], arrayList[i]))
+    while next[j] != -1 and arrayList[next[j]] &lt; arrayList[i]:
+        j = next[j]
+        # print("目前j={}".format(j))
+    next[j], next[i] = i, next[j]
+    # print("交换后的next[j]={}, next[i]={} \n".format(next[j], next[i]))
+
+
+def reorder(arrayList, next):
+    i = -1
+    ys = []
+    while next[i] != -1:
+        ys.append(arrayList[next[i]])
+        i = next[i]
+    return ys
+
+
+def insertSortIII(arrayList):
+    arrayLen = len(arrayList)
+    next = [-1]*(arrayLen+1)
+    for i in range(arrayLen):
+        insert(arrayList, next, i)
+    return reorder(arrayList, next)
+</code></pre><h2 id="优化三：-终极进化之二叉搜索树"><a href="#优化三：-终极进化之二叉搜索树" class="headerlink" title="优化三： 终极进化之二叉搜索树"></a>优化三： 终极进化之二叉搜索树</h2><p>对于以上的优化，只能在插入和查找之中二选一的进行优化。单独提高其中一个仍会使插入算法保持在O(n^2)中，使用二分查找能够将查找次数降到最低—-O(lgN),对于插入，为了能实现常数时间的插入，必定需要改变其数据结构。<br>二叉搜索树刚好满足以上的所有的需求，但是对于这个，应该不算是严格意义的插入排序了，应是更宽泛的定位—-基于比较的排序。</p>
 <ul>
 <li>第一，其本身定义就支持二分查找。</li>
 <li>同时查找到对应的值之后，即可插入，所以插入的时间为常数项O(1)。</li>
@@ -239,7 +285,57 @@
 <li>比较次数  O(lgn)</li>
 </ul>
 <p><strong>实现</strong><br>首先将数据构造为二叉搜索树，之后再进行中序遍历即可。</p>
-<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data)</span>:</span></span><br><span class="line">        self.data = data</span><br><span class="line">        self.leftChild = <span class="literal">None</span></span><br><span class="line">        self.rightChild = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">insert</span><span class="params">(self, newData)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        插入数据</span></span><br><span class="line"><span class="string">        # edage case: 若是value相同如何解决 Word天</span></span><br><span class="line"><span class="string">        :param newData:</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> newData == self.data:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        <span class="keyword">elif</span> newData &lt; self.data:</span><br><span class="line">            <span class="keyword">if</span> self.leftChild == <span class="literal">None</span>:</span><br><span class="line">                self.leftChild = TreeNode(newData)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self.leftChild.insert(newData)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> self.rightChild == <span class="literal">None</span>:</span><br><span class="line">                self.rightChild = TreeNode(newData)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self.rightChild.insert(newData)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 以下的前中后遍历均为递归的遍历</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">preOrder</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        前序遍历</span></span><br><span class="line"><span class="string">        根左右</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        print(self.data)</span><br><span class="line">        <span class="keyword">if</span> self.leftChild:</span><br><span class="line">            self.leftChild.preOrder()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.rightChild.preOrder()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">inOrder</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        中序遍历</span></span><br><span class="line"><span class="string">        左根右</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> self.leftChild:</span><br><span class="line">            self.leftChild.inOrder()</span><br><span class="line">        print(self.data)</span><br><span class="line">        <span class="keyword">if</span> self.rightChild:</span><br><span class="line">            self.rightChild.inOrder()</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-python">class TreeNode:
+    def __init__(self, data):
+        self.data = data
+        self.leftChild = None
+        self.rightChild = None
+
+    def insert(self, newData):
+        """
+        插入数据
+        # edage case: 若是value相同如何解决 Word天
+        :param newData:
+        :return:
+        """
+        if newData == self.data:
+            return False
+        elif newData &lt; self.data:
+            if self.leftChild == None:
+                self.leftChild = TreeNode(newData)
+            else:
+                self.leftChild.insert(newData)
+        else:
+            if self.rightChild == None:
+                self.rightChild = TreeNode(newData)
+            else:
+                self.rightChild.insert(newData)
+
+    # 以下的前中后遍历均为递归的遍历
+    def preOrder(self):
+        """
+        前序遍历
+        根左右
+        :return:
+        """
+        print(self.data)
+        if self.leftChild:
+            self.leftChild.preOrder()
+        else:
+            self.rightChild.preOrder()
+
+    def inOrder(self):
+        """
+        中序遍历
+        左根右
+        :return:
+        """
+        if self.leftChild:
+            self.leftChild.inOrder()
+        print(self.data)
+        if self.rightChild:
+            self.rightChild.inOrder()
+</code></pre>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
 <li>算法新解</li>
 <li>算法第四版</li>
@@ -370,6 +466,7 @@
 
 
 
+
 </article>
 
 
@@ -389,18 +486,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -409,6 +522,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -457,7 +571,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -513,6 +627,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

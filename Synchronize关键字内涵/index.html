@@ -41,6 +41,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -55,10 +56,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -205,10 +206,10 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="内涵与表象"><a href="#内涵与表象" class="headerlink" title="内涵与表象"></a>内涵与表象</h2><a id="more"></a>
-
 <p>synchronized关键字的解释如下：</p>
 <blockquote>
 <p>Java语言的关键字，当它用来修饰一个方法或者一个代码块的时候，能够保证在同一时刻最多只有一个线程执行该段代码。</p>
@@ -230,8 +231,10 @@
 <li>写入count 值</li>
 </ol>
 <p>其包含了三个步骤，且每次的步骤都依赖于上一次的结果。所以不是原子性的</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span>(<span class="keyword">this</span>){</span><br><span class="line">    count++;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">synchronized(this){
+    count++;
+}
+</code></pre>
 <p>使用如上的方式，就确保了原子性。因为原子操作是线程安全的，这其实也是我们经常使用synchronize来实现线程安全的原因。</p>
 <p><strong>如何实现的原子性？</strong></p>
 <p>因为synchronized被编译之后，使用的是monitorenter和monitroexit两个字节码指令，而这两个字节码指令实质上是依赖于操作系统中的互斥锁（mutex lock）实现。通过互斥锁，保证了同一时刻，只有一个线程修改了该共享变量，所以确保了原子性</p>
@@ -261,7 +264,6 @@
                 </div>
                 <div class="image-caption">markword</div>
             </figure>
-
 <p>我们知道在Java中Synchronized能够实现的线程的同步，synchronized被编译之后会生成monirotenter和monitorexit两个字节码指令，依赖这两个字节码指令实现线程同步。</p>
 <p>Monirtor：可以理解为只能容纳一名客人的房间，而线程可以等比于客人。整个状态的流转可以理解为一个状态机，同一时刻只有一个线程处于Active状态。</p>
 <figure class="image-bubble">
@@ -271,7 +273,6 @@
                 </div>
                 <div class="image-caption">monitor</div>
             </figure>
-
 <blockquote>
 <p>Every object has an intrinsic lock associated with it. —— <a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/locksync.html" target="_blank" rel="noopener">The Java™ Tutorials</a></p>
 </blockquote>
@@ -307,11 +308,22 @@
 <li>如果轻量级锁的更新操作失败了，虚拟机首先会检查对象的Mark Word是否指向当前线程的栈帧，如果是就说明当前线程已经拥有了这个对象的锁，那就可以直接进入同步块继续执行，否则说明多个线程竞争锁。若当前只有一个等待线程，则该线程通过自旋进行等待。但是当自旋超过一定的次数，或者一个线程在持有锁，一个在自旋，又有第三个来访时，轻量级锁升级为重量级锁</li>
 </ol>
 <h3 id="重量锁"><a href="#重量锁" class="headerlink" title="重量锁"></a>重量锁</h3><p>互斥锁</p>
-<h2 id="可重入："><a href="#可重入：" class="headerlink" title="可重入："></a>可重入：</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Widget</span></span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>{</span><br><span class="line">        ...</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoggingWidget</span> <span class="keyword">extends</span> <span class="title">Widget</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>{</span><br><span class="line">        sout(<span class="string">"..."</span>);</span><br><span class="line">        <span class="keyword">super</span>.doSomething();</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h2 id="可重入："><a href="#可重入：" class="headerlink" title="可重入："></a>可重入：</h2><pre><code class="lang-java">public class Widget{
+    public synchronized void doSomething(){
+        ...
+    }
+}
 
+public class LoggingWidget extends Widget {
+    public synchronized void doSomething(){
+        sout("...");
+        super.doSomething();
+    }
+}
+</code></pre>
 <p>如果没有可重入性，那么该代码会产生死锁。</p>
 <h3 id="可重入的定义："><a href="#可重入的定义：" class="headerlink" title="可重入的定义："></a>可重入的定义：</h3><blockquote>
-<p>若一个程序或子程序可以“在任意时刻被中断然后操作系统调度执行另外一段代码，这段代码又调用了该子程序不会出错”，则称其为可重入（reentrant或re-entrant）的。即当该子程序正在运行时，执行线程可以再次进入并执行它，仍然获得符合设计时预期的结果。与多线程并发执行的线程安全不同，可重入强调对单个线程执行时重新进入同一个子程序仍然是安全的。 — <a href="https://zh.wikipedia.org/wiki/%E5%8F%AF%E9%87%8D%E5%85%A5" target="_blank" rel="noopener">维基百科</a></p>
+<p>若一个程序或子程序可以“在任意时刻被中断然后操作系统调度执行另外一段代码，这段代码又调用了该子程序不会出错”，则称其为可重入（reentrant或re-entrant）的。即当该子程序正在运行时，执行线程可以再次进入并执行它，仍然获得符合设计时预期的结果。与多线程并发执行的线程安全不同，可重入强调对单个线程执行时重新进入同一个子程序仍然是安全的。 —- <a href="https://zh.wikipedia.org/wiki/可重入" target="_blank" rel="noopener">维基百科</a></p>
 </blockquote>
 <p>从设计上讲，当一个线程请求一个由其他线程持有的对象锁时，该线程会阻塞。当线程请求自己持有的对象锁时，如果该线程是重入锁，请求就会成功，否则阻塞。</p>
 <p>synchronized拥有强制原子性的内部锁机制，是一个可重入锁。因此，在一个线程使用synchronized方法时调用该对象另一个synchronized方法或调用父类的synchronized方法，即一个线程得到一个对象锁后再次请求该对象锁，是<strong>永远可以拿到锁的</strong>。</p>
@@ -320,7 +332,7 @@
 <li>Java中每个对象都有一个<strong>内置锁</strong>。</li>
 <li>synchronized使用对象自带的内置锁来进行加锁，从而保证在同一时刻最多只有一个线程执行代码。</li>
 <li>所有的加锁行为，都可以带来三个个保障——<strong>原子性</strong>、<strong>可见性</strong>、<strong>有序性</strong>。其中，原子性是相对锁所在的线程的角度而言，而可见性、有序性则是相对其他线程而言。</li>
-<li><strong>锁的持有者是<code>线程</code><strong>，而不是<code>调用</code>，这也是锁的为什么是</strong>可重入</strong>的原因。</li>
+<li><strong>锁的持有者是<code>线程</code></strong>，而不是<code>调用</code>，这也是锁的为什么是<strong>可重入</strong>的原因。</li>
 </ol>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
 <li>Java并发编程实战</li>
@@ -453,6 +465,7 @@
 
 
 
+
 </article>
 
 
@@ -472,18 +485,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -492,6 +521,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -540,7 +570,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -596,6 +626,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

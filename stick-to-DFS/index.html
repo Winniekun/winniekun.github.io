@@ -39,6 +39,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -53,10 +54,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -203,12 +204,12 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>LeetCode死磕系列三： DFS</p>
 <p>刷了那么多题， 感觉DFS应用很广泛哇，遇到排列组合、搜索等问题，理解题意之后，直接无脑<code>DFS</code>都能行的通。</p>
 <a id="more"></a>
-
 <h2 id="LeetCode-DFS题目整理"><a href="#LeetCode-DFS题目整理" class="headerlink" title="LeetCode DFS题目整理"></a>LeetCode DFS题目整理</h2><ul>
 <li>200 Number of Islands</li>
 </ul>
@@ -216,10 +217,35 @@
 <p><strong>思路</strong>：</p>
 <p>使用<code>dfs</code>, 从（0,0）开始，顺序<code>下、上、右、左</code></p>
 <p>每次访问到的陆地都改为水。这样就略去了标记为数组，减少空间</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span>[][] DIRS = <span class="keyword">new</span> <span class="keyword">int</span>[][]{{<span class="number">1</span>, <span class="number">0</span>}, {-<span class="number">1</span>, <span class="number">0</span>}, {<span class="number">0</span>, <span class="number">1</span>}, {<span class="number">0</span>, -<span class="number">1</span>}};</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">char</span> L = <span class="string">'1'</span>, W = <span class="string">'0'</span>;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">numIslands</span><span class="params">(<span class="keyword">char</span>[][] grid)</span></span>{</span><br><span class="line">       <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; grid.length; i++) {</span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; grid[<span class="number">0</span>].length; j++) {</span><br><span class="line">               <span class="keyword">if</span> (grid[i][j] == L) {</span><br><span class="line">                   count++;</span><br><span class="line">                   dfs(grid, i, j);</span><br><span class="line">               }</span><br><span class="line">           }</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">return</span> count;</span><br><span class="line">   }</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">char</span>[][] grid, <span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>{</span><br><span class="line">       <span class="comment">// 边界判断</span></span><br><span class="line">       <span class="keyword">if</span> (x &lt; <span class="number">0</span>  || x &gt; grid.length-<span class="number">1</span> || y &lt; <span class="number">0</span> || y &gt; grid[<span class="number">0</span>].length-<span class="number">1</span>) {</span><br><span class="line">           <span class="keyword">return</span>;</span><br><span class="line">       }</span><br><span class="line">       <span class="keyword">if</span>(grid[x][y] == L){</span><br><span class="line">           grid[x][y] = W;</span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span>[] dir : DIRS) {</span><br><span class="line">               dfs(grid, x+dir[<span class="number">0</span>], y+dir[<span class="number">1</span>]);</span><br><span class="line">           }</span><br><span class="line">       }</span><br><span class="line">   }</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java"> private static final int[][] DIRS = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    private static final char L = '1', W = '0';
 
+    public int numIslands(char[][] grid){
+        int count = 0;
+        for (int i = 0; i &lt; grid.length; i++) {
+            for (int j = 0; j &lt; grid[0].length; j++) {
+                if (grid[i][j] == L) {
+                    count++;
+                    dfs(grid, i, j);
+                }
+            }
+        }
+        return count;
+    }
 
-
+    private void dfs(char[][] grid, int x, int y) {
+        // 边界判断
+        if (x &lt; 0  || x &gt; grid.length-1 || y &lt; 0 || y &gt; grid[0].length-1) {
+            return;
+        }
+        if(grid[x][y] == L){
+            grid[x][y] = W;
+            for (int[] dir : DIRS) {
+                dfs(grid, x+dir[0], y+dir[1]);
+            }
+        }
+    }
+</code></pre>
 
         </div>
 
@@ -347,6 +373,7 @@
 
 
 
+
 </article>
 
 
@@ -366,18 +393,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -386,6 +429,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -435,7 +479,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -491,6 +535,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

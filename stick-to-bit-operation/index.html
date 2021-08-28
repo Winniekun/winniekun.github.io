@@ -39,6 +39,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -53,10 +54,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -203,59 +204,63 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>LeetCode死磕系列五： 位运算</p>
 <p>位运算，在性能上是超过加减乘除的，只不过，费些脑细胞。基础的<code>与&amp;</code> <code>或|</code> <code>异或^</code> 运算，以及左移动、右移。</p>
 <a id="more"></a>
-
-
-
 <h3 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h3><h4 id="amp-、-、-、-gt-gt-、-lt-lt-、-gt-gt-gt"><a href="#amp-、-、-、-gt-gt-、-lt-lt-、-gt-gt-gt" class="headerlink" title="&amp;、| 、^、>>、<<、>>>"></a>&amp;、| 、^、&gt;&gt;、&lt;&lt;、&gt;&gt;&gt;</h4><p>假设整数变量 A 的值为 60 和变量 B 的值为 13：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th align="left">操作符</th>
-<th align="left">描述</th>
-<th align="left">例子</th>
+<th style="text-align:left">操作符</th>
+<th style="text-align:left">描述</th>
+<th style="text-align:left">例子</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left">＆</td>
-<td align="left">如果相对应位都是1，则结果为1，否则为0</td>
-<td align="left">（A＆B），得到12，即0000 1100</td>
+<tbody>
+<tr>
+<td style="text-align:left">＆</td>
+<td style="text-align:left">如果相对应位都是1，则结果为1，否则为0</td>
+<td style="text-align:left">（A＆B），得到12，即0000 1100</td>
 </tr>
 <tr>
-<td align="left">|</td>
-<td align="left">如果相对应位都是 0，则结果为 0，否则为 1</td>
-<td align="left">（A | B）得到61，即 0011 1101</td>
+<td style="text-align:left">\</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">如果相对应位都是 0，则结果为 0，否则为 1</td>
+<td>（A \</td>
+<td>B）得到61，即 0011 1101</td>
 </tr>
 <tr>
-<td align="left">^</td>
-<td align="left">如果相对应位值相同，则结果为0，否则为1</td>
-<td align="left">（A ^ B）得到49，即 0011 0001</td>
+<td style="text-align:left">^</td>
+<td style="text-align:left">如果相对应位值相同，则结果为0，否则为1</td>
+<td style="text-align:left">（A ^ B）得到49，即 0011 0001</td>
 </tr>
 <tr>
-<td align="left">〜</td>
-<td align="left">按位取反运算符翻转操作数的每一位，即0变成1，1变成0。</td>
-<td align="left">（〜A）得到-61，即1100 0011</td>
+<td style="text-align:left">〜</td>
+<td style="text-align:left">按位取反运算符翻转操作数的每一位，即0变成1，1变成0。</td>
+<td style="text-align:left">（〜A）得到-61，即1100 0011</td>
 </tr>
 <tr>
-<td align="left">&lt;&lt;</td>
-<td align="left">按位左移运算符。左操作数按位左移右操作数指定的位数。</td>
-<td align="left">A &lt;&lt; 2得到240，即 1111 0000</td>
+<td style="text-align:left">&lt;&lt;</td>
+<td style="text-align:left">按位左移运算符。左操作数按位左移右操作数指定的位数。</td>
+<td style="text-align:left">A &lt;&lt; 2得到240，即 1111 0000</td>
 </tr>
 <tr>
-<td align="left">&gt;&gt;</td>
-<td align="left">按位右移运算符。左操作数按位右移右操作数指定的位数。</td>
-<td align="left">A &gt;&gt; 2得到15即 1111</td>
+<td style="text-align:left">&gt;&gt;</td>
+<td style="text-align:left">按位右移运算符。左操作数按位右移右操作数指定的位数。</td>
+<td style="text-align:left">A &gt;&gt; 2得到15即 1111</td>
 </tr>
 <tr>
-<td align="left">&gt;&gt;&gt;</td>
-<td align="left">按位右移补零操作符。左操作数的值按右操作数指定的位数右移，移动得到的空位以零填充。</td>
-<td align="left">A&gt;&gt;&gt;2得到15即0000 1111</td>
+<td style="text-align:left">&gt;&gt;&gt;</td>
+<td style="text-align:left">按位右移补零操作符。左操作数的值按右操作数指定的位数右移，移动得到的空位以零填充。</td>
+<td style="text-align:left">A&gt;&gt;&gt;2得到15即0000 1111</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <ol>
 <li><p>异或</p>
 <p>2 ^ 2 = 0;</p>
@@ -267,21 +272,39 @@
 </ol>
 <h4 id="n-amp-n-1"><a href="#n-amp-n-1" class="headerlink" title="n &amp; (n-1)"></a>n &amp; (n-1)</h4><p>10000000；</p>
 <p>01111111;</p>
-<figure class="highlight tex"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">     &lt;----- binary ----&gt;</span><br><span class="line"> n      n    n-1   n&amp;(n-1)</span><br><span class="line">--   ----   ----   -------</span><br><span class="line"> 0   0000   0111    0000 *</span><br><span class="line"> 1   0001   0000    0000 *</span><br><span class="line"> 2   0010   0001    0000 *</span><br><span class="line"> 3   0011   0010    0010</span><br><span class="line"> 4   0100   0011    0000 *</span><br><span class="line"> 5   0101   0100    0100</span><br><span class="line"> 6   0110   0101    0100</span><br><span class="line"> 7   0111   0110    0110</span><br><span class="line"> 8   1000   0111    0000 *</span><br><span class="line"> 9   1001   1000    1000</span><br><span class="line">10   1010   1001    1000</span><br><span class="line">11   1011   1010    1010</span><br><span class="line">12   1100   1011    1000</span><br><span class="line">13   1101   1100    1100</span><br><span class="line">14   1110   1101    1100</span><br><span class="line">15   1111   1110    1110</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-tex">     &lt;----- binary ----&gt;
+ n      n    n-1   n&amp;(n-1)
+--   ----   ----   -------
+ 0   0000   0111    0000 *
+ 1   0001   0000    0000 *
+ 2   0010   0001    0000 *
+ 3   0011   0010    0010
+ 4   0100   0011    0000 *
+ 5   0101   0100    0100
+ 6   0110   0101    0100
+ 7   0111   0110    0110
+ 8   1000   0111    0000 *
+ 9   1001   1000    1000
+10   1010   1001    1000
+11   1011   1010    1010
+12   1100   1011    1000
+13   1101   1100    1100
+14   1110   1101    1100
+15   1111   1110    1110
+</code></pre>
 <p>可以看到，其第一个方式是用于判断是否为2的幂次，<code>n&amp;(n-1)</code>的结果为0的话，则为2的幂次。</p>
 <p>从运算结果分析（以12为例）：</p>
 <p>12二进制表示为：<code>1100</code>，减去1之后，为<code>1011</code>，可以发现，减去1之后，是将该数字的二进制的最右边的1改为0，n&amp;(n-1)之后的结果为<code>1000</code>，比较<code>1100</code>和<code>1000</code>，这个操作可以总结为：将当前数字二进制最右边的<code>1</code>去除。最右边的<code>1</code>左边部分不变。所以，也可可以用于统计<strong>数字的二进制中1的个数问题</strong>。</p>
 <p><strong>补码：</strong></p>
-<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~x + 1 是 x的补码;</span><br><span class="line"></span><br><span class="line">   补码</span><br><span class="line">1 + 11111111111111111 = 000000000000000000;</span><br><span class="line">2 + 11111111111111110 = 000000000000000000</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-11java">~x + 1 是 x的补码;
 
-
-
+   补码
+1 + 11111111111111111 = 000000000000000000;
+2 + 11111111111111110 = 000000000000000000
+</code></pre>
 <h4 id="s-1-lt-lt-k"><a href="#s-1-lt-lt-k" class="headerlink" title="(s | 1<<k)"></a>(s | 1&lt;&lt;k)</h4><p><strong>s:</strong> 集合（二进制表示包含的元素）</p>
 <blockquote>
-<p>集合元素$s = {1,4,6}$ 则 $s = 1010010_{2} = 82_{10}$</p>
+<p>集合元素$s = {1,4,6}$ 则 $s = 1010010<em>{2} = 82</em>{10}$</p>
 </blockquote>
 <p><strong>k:</strong> 元素</p>
 <blockquote>
@@ -291,27 +314,37 @@
 <p>当前$s=82$, 此时$k=2$，将$k$放入集合$s$中</p>
 <ol>
 <li>$(1&lt;&lt;k) = 4 = 100_{2}$</li>
-<li>$(s | 1&lt;&lt; k) == 1010110_{2} == 86_{10}$</li>
+<li>$(s | 1&lt;&lt; k) == 1010110<em>{2} == 86</em>{10}$</li>
 </ol>
 <p>神奇的操作，适用于压缩状态dp</p>
 <h3 id="LeetCode-amp-剑指offer-位运算题目整理"><a href="#LeetCode-amp-剑指offer-位运算题目整理" class="headerlink" title="LeetCode &amp; 剑指offer 位运算题目整理"></a>LeetCode &amp; 剑指offer 位运算题目整理</h3><ul>
 <li>面试题15：二进制中1的个数</li>
 <li>136 Single Number</li>
 </ul>
-<h2 id="LeetCode-位运算题目整理"><a href="#LeetCode-位运算题目整理" class="headerlink" title="LeetCode 位运算题目整理"></a>LeetCode 位运算题目整理</h2><h3 id="面试题15：二进制中1的个数"><a href="#面试题15：二进制中1的个数" class="headerlink" title="面试题15：二进制中1的个数"></a>面试题15：二进制中1的个数</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">numberOf</span><span class="params">(<span class="keyword">int</span> n)</span></span>{</span><br><span class="line">        <span class="comment">// n &amp; (n - 1) 会消除 n 中最后一位中的 1。</span></span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (n != <span class="number">0</span>){</span><br><span class="line">            res++;</span><br><span class="line">            n &amp;= (n-<span class="number">1</span>);</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<h2 id="LeetCode-位运算题目整理"><a href="#LeetCode-位运算题目整理" class="headerlink" title="LeetCode 位运算题目整理"></a>LeetCode 位运算题目整理</h2><h3 id="面试题15：二进制中1的个数"><a href="#面试题15：二进制中1的个数" class="headerlink" title="面试题15：二进制中1的个数"></a>面试题15：二进制中1的个数</h3><pre><code class="lang-java">public static int numberOf(int n){
+        // n &amp; (n - 1) 会消除 n 中最后一位中的 1。
+        int res = 0;
+        while (n != 0){
+            res++;
+            n &amp;= (n-1);
+        }
+        return res;
+    }
+</code></pre>
 <h3 id="136-Single-Number"><a href="#136-Single-Number" class="headerlink" title="136 Single Number"></a><a href="https://leetcode.com/problems/single-number/" target="_blank" rel="noopener">136 Single Number</a></h3><p>这题是去除数组中的重复元素（给的测试集是只有一个不重复的元素），用了异或运算，</p>
 <p>思路：</p>
 <p>相等的数相异或结果为0，0和任何数相异或结果为这个数本身。根据这个特点，可以先设置一个初始值为0，然后分别和数组中的每个元素相异或，最后保留的肯定为唯一一个不重复的值。</p>
 <blockquote>
 <p>相等的元素相异或的值为0，不是特指相等的元素必须相连，也可以不相连。</p>
 </blockquote>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">singleNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>{</span><br><span class="line">    <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> i : nums){</span><br><span class="line">        res ^= i;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">public singleNumber(int[] nums){
+    int res = 0;
+    for( int i : nums){
+        res ^= i;
+    }
+    return res;
+}
+</code></pre>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
 <li><a href="https://stackoverflow.com/questions/4678333/n-n-1-what-does-this-expression-do" target="_blank" rel="noopener">n &amp; (n-1) what does this expression do? duplicate</a></li>
 </ul>
@@ -442,6 +475,7 @@
 
 
 
+
 </article>
 
 
@@ -461,18 +495,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -481,6 +531,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -530,7 +581,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -586,6 +637,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

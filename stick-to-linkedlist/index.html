@@ -41,6 +41,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -55,10 +56,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -205,22 +206,24 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>LeetCode死磕系列二： 链表</p>
 <a id="more"></a>
-
 <p>链表作为基础的数据结构，将链表的操作掌握了，其他的相关结构与算法，理论上来说为题不大了。LeetCode中， 链表的操作是有迹可循的， 当然也可当场理解，然后画图，找解法（奈何我太笨，编码功底还不够），反正链表的所有操作都离不开基础的<code>CRUD</code>, 还需要注意的是，当涉及到头结点的操作的时候，最好设置一个<code>dummy</code>节点指向头结点，这样方便统一处理。</p>
 <p>刷了LeetCode中所有链表有关的题目（34题免费题目）做了如下总结</p>
 <h3 id="CRUD"><a href="#CRUD" class="headerlink" title="CRUD"></a>CRUD</h3><h4 id="增"><a href="#增" class="headerlink" title="增"></a>增</h4><p>需要注意构造新链表时的<code>头插法</code> 和<code>尾插法</code></p>
 <p><code>头插法</code>： 逆序</p>
 <p><code>尾插法</code>： 正序</p>
 <h4 id="删"><a href="#删" class="headerlink" title="删"></a>删</h4><p><strong>根据前驱删除</strong></p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pre.next = pre.next.next;</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">pre.next = pre.next.next;
+</code></pre>
 <p><strong>根据当前节点删除</strong></p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ListNode next = cur.next;</span><br><span class="line">cur.val = next.val;</span><br><span class="line">cur.next = next.next;</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">ListNode next = cur.next;
+cur.val = next.val;
+cur.next = next.next;
+</code></pre>
 <h4 id="改"><a href="#改" class="headerlink" title="改"></a>改</h4><h4 id="查"><a href="#查" class="headerlink" title="查"></a>查</h4><h2 id="链表的常用操作"><a href="#链表的常用操作" class="headerlink" title="链表的常用操作"></a>链表的常用操作</h2><ol>
 <li>两两之间的交换</li>
 <li>多节点的交换</li>
@@ -232,44 +235,198 @@
 <li>445 Add Two Numbers II</li>
 </ul>
 <h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><h3 id="2-Add-Two-Numbers"><a href="#2-Add-Two-Numbers" class="headerlink" title="2.  Add Two Numbers"></a>2. <a href="https://leetcode.com/problems/add-two-numbers" target="_blank" rel="noopener"> Add Two Numbers</a></h3><p><strong>Example:</strong></p>
-<figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: (2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)</span><br><span class="line">Output: 7 -&gt; 0 -&gt; 8</span><br><span class="line">Explanation: 342 + 465 = 807.</span><br></pre></td></tr></tbody></table></figure>
-
-<p>思路：</p>
+<pre><code>Input: (2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)
+Output: 7 -&gt; 0 -&gt; 8
+Explanation: 342 + 465 = 807.
+</code></pre><p>思路：</p>
 <p>链表的反转序列代表一个整数，然后整数的相加之后，结果用<code>个位--&gt;十位---&gt;百位</code>的顺序表示。所以可以使用两个队列存储两个链表，然后开始依次弹出，进行相加，使用<code>尾插法</code>构造输出链表</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">addTwoNumbers</span><span class="params">(ListNode l1, ListNode l2)</span> </span>{</span><br><span class="line">    Queue&lt;ListNode&gt; queue1 = list2Queue(l1);</span><br><span class="line">    Queue&lt;ListNode&gt; queue2 = list2Queue(l2);</span><br><span class="line">    <span class="comment">// 应题目要求 使用尾插发</span></span><br><span class="line">    ListNode dummy = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">    ListNode real = dummy;</span><br><span class="line">    <span class="keyword">int</span> carry = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (!queue1.isEmpty() || !queue2.isEmpty()) {</span><br><span class="line">        <span class="keyword">int</span> p1 = queue1.isEmpty() ? <span class="number">0</span> : queue1.poll().val;</span><br><span class="line">        <span class="keyword">int</span> p2 = queue2.isEmpty() ? <span class="number">0</span> : queue2.poll().val;</span><br><span class="line">        <span class="keyword">int</span> sum = p1 + p2 + carry;</span><br><span class="line">        <span class="keyword">int</span> i = sum % <span class="number">10</span>;</span><br><span class="line">        <span class="comment">// 尾插法</span></span><br><span class="line">        ListNode cur = <span class="keyword">new</span> ListNode(i);</span><br><span class="line">        real.next = cur;</span><br><span class="line">        real = cur;</span><br><span class="line">        carry = sum / <span class="number">10</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span> (carry &gt; <span class="number">0</span>) {</span><br><span class="line">        ListNode node = <span class="keyword">new</span> ListNode(carry);</span><br><span class="line">        real.next = node;</span><br><span class="line">        real = node;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> dummy.next;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">public</span> Queue&lt;ListNode&gt; <span class="title">list2Queue</span><span class="params">(ListNode node)</span> </span>{</span><br><span class="line">    Queue&lt;ListNode&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    <span class="keyword">while</span> (node != <span class="keyword">null</span>) {</span><br><span class="line">        queue.offer(node);</span><br><span class="line">        node = node.next;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> queue;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    Queue&lt;ListNode&gt; queue1 = list2Queue(l1);
+    Queue&lt;ListNode&gt; queue2 = list2Queue(l2);
+    // 应题目要求 使用尾插发
+    ListNode dummy = new ListNode(-1);
+    ListNode real = dummy;
+    int carry = 0;
+    while (!queue1.isEmpty() || !queue2.isEmpty()) {
+        int p1 = queue1.isEmpty() ? 0 : queue1.poll().val;
+        int p2 = queue2.isEmpty() ? 0 : queue2.poll().val;
+        int sum = p1 + p2 + carry;
+        int i = sum % 10;
+        // 尾插法
+        ListNode cur = new ListNode(i);
+        real.next = cur;
+        real = cur;
+        carry = sum / 10;
+    }
+    if (carry &gt; 0) {
+        ListNode node = new ListNode(carry);
+        real.next = node;
+        real = node;
+    }
+    return dummy.next;
+}
+public Queue&lt;ListNode&gt; list2Queue(ListNode node) {
+    Queue&lt;ListNode&gt; queue = new LinkedList&lt;&gt;();
+    while (node != null) {
+        queue.offer(node);
+        node = node.next;
+    }
+    return queue;
+}
+</code></pre>
 <h3 id="445-Add-Two-Numbers-II"><a href="#445-Add-Two-Numbers-II" class="headerlink" title="445 Add Two Numbers II"></a>445 <a href="https://leetcode.com/problems/add-two-numbers-ii/" target="_blank" rel="noopener">Add Two Numbers II</a></h3><p>思路</p>
 <p>链表代表一个整数，两整数相加之后，结果用<code>最高位---&gt;....---&gt;十位---&gt;个位</code>顺序表示。所以可以使用两个栈存储两个链表，然后开始依次弹出，进行相加，使用头插法构造输出链表。</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">addTwoNumbersII</span><span class="params">(ListNode l1, ListNode l2)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (l1 == <span class="keyword">null</span> &amp;&amp; l2 == <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    }</span><br><span class="line">    Stack&lt;ListNode&gt; s1 = <span class="keyword">new</span> Stack();</span><br><span class="line">    <span class="keyword">while</span>(l1 != <span class="keyword">null</span>) {</span><br><span class="line">        s1.push(l1);</span><br><span class="line">        l1 = l1.next;</span><br><span class="line">    }</span><br><span class="line">    Stack&lt;ListNode&gt; s2 = <span class="keyword">new</span> Stack();</span><br><span class="line">    <span class="keyword">while</span>(l2 != <span class="keyword">null</span>) {</span><br><span class="line">        s2.push(l2);</span><br><span class="line">        l2 = l2.next;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">int</span> carry = <span class="number">0</span>;</span><br><span class="line">    ListNode resNode = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">while</span> (!s1.isEmpty() || !s2.isEmpty()) {</span><br><span class="line">        <span class="keyword">int</span> n1 = s1.isEmpty() ? <span class="number">0</span> : s1.pop().val;</span><br><span class="line">        <span class="keyword">int</span> n2 = s2.isEmpty() ? <span class="number">0</span> : s2.pop().val;</span><br><span class="line">        <span class="keyword">int</span> sum = n1 + n2 + carry;</span><br><span class="line">        ListNode n = <span class="keyword">new</span> ListNode(sum % <span class="number">10</span>);</span><br><span class="line">        <span class="comment">// 头插法</span></span><br><span class="line">        n.next = resNode;</span><br><span class="line">        resNode = n;</span><br><span class="line">        </span><br><span class="line">        carry = sum / <span class="number">10</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 最高位</span></span><br><span class="line">    <span class="keyword">if</span> (carry &gt; <span class="number">0</span>) {</span><br><span class="line">        ListNode n = <span class="keyword">new</span> ListNode(carry);</span><br><span class="line">        n.next = resNode;</span><br><span class="line">        resNode = n;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> resNode;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public ListNode addTwoNumbersII(ListNode l1, ListNode l2) {
+    if (l1 == null &amp;&amp; l2 == null) {
+        return null;
+    }
+    Stack&lt;ListNode&gt; s1 = new Stack();
+    while(l1 != null) {
+        s1.push(l1);
+        l1 = l1.next;
+    }
+    Stack&lt;ListNode&gt; s2 = new Stack();
+    while(l2 != null) {
+        s2.push(l2);
+        l2 = l2.next;
+    }
+    int carry = 0;
+    ListNode resNode = null;
+    while (!s1.isEmpty() || !s2.isEmpty()) {
+        int n1 = s1.isEmpty() ? 0 : s1.pop().val;
+        int n2 = s2.isEmpty() ? 0 : s2.pop().val;
+        int sum = n1 + n2 + carry;
+        ListNode n = new ListNode(sum % 10);
+        // 头插法
+        n.next = resNode;
+        resNode = n;
 
-
-
+        carry = sum / 10;
+    }
+    // 最高位
+    if (carry &gt; 0) {
+        ListNode n = new ListNode(carry);
+        n.next = resNode;
+        resNode = n;
+    }
+    return resNode;
+}
+</code></pre>
 <p>链表表示整数，进行加法计算，这是两个链表的操作，没有涉及链表的增删改查，实现方式数组中的<code>Add Two Numbers</code>同理。但是需要注意题目要求，上述两个题目思路是一样的，但是需要注意题目说明，<strong>给定的链表是如何代表一个整数的，然后输出结果是如何表示的</strong>，（因为我们的算法是从个位开始计算的）</p>
 <h4 id="正序表示整数-amp-amp-从个位依次输出"><a href="#正序表示整数-amp-amp-从个位依次输出" class="headerlink" title="正序表示整数 &amp;&amp; 从个位依次输出"></a>正序表示整数 &amp;&amp; 从个位依次输出</h4><p>使用栈存储，尾插法构造结果</p>
 <h4 id="逆序表示整数-amp-amp-从最高位依次输出"><a href="#逆序表示整数-amp-amp-从最高位依次输出" class="headerlink" title="逆序表示整数 &amp;&amp; 从最高位依次输出"></a>逆序表示整数 &amp;&amp; 从最高位依次输出</h4><p>使用队列存储，头插法构造结果</p>
 <h3 id="19-Remove-Nth-Node-From-End-of-List"><a href="#19-Remove-Nth-Node-From-End-of-List" class="headerlink" title="19. Remove Nth Node From End of List"></a>19. <a href="https://leetcode.com/problems/remove-nth-node-from-end-of-list" target="_blank" rel="noopener">Remove Nth Node From End of List</a></h3><p><strong>查、删</strong></p>
 <p>倒数第n个节点删除</p>
 <p>先获取第n个节点的前驱节点，然后按照<code>前驱结点删除法删除</code>即可</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ListNode <span class="title">removeNthFromEnd</span><span class="params">(ListNode head, <span class="keyword">int</span> n)</span> </span>{</span><br><span class="line">    ListNode dummy = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">    dummy.next = head;</span><br><span class="line">    ListNode preNode = getPreNode(dummy, n);</span><br><span class="line">    preNode.next = preNode.next.next;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ListNode <span class="title">getPreNode</span><span class="params">(ListNode head, <span class="keyword">int</span> n)</span></span>{</span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    ListNode p = head;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="keyword">null</span>){</span><br><span class="line">        count ++;</span><br><span class="line">        p = p.next;</span><br><span class="line">    }</span><br><span class="line">    p = head;</span><br><span class="line">    <span class="keyword">while</span> ( count-n-<span class="number">1</span> &gt; <span class="number">0</span>){</span><br><span class="line">        p = p.next;</span><br><span class="line">        count --;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// 也可以直接使用第二种删除方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">removeNthFromEnd</span><span class="params">(ListNode head, <span class="keyword">int</span> n)</span> </span>{</span><br><span class="line">        ListNode dummy = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        dummy.next = head;</span><br><span class="line">        ListNode fast = dummy;</span><br><span class="line">        ListNode slow = dummy;</span><br><span class="line">        <span class="keyword">while</span>(n &gt; <span class="number">0</span>){</span><br><span class="line">            fast = fast.next;</span><br><span class="line">            n--;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">while</span>(fast.next != <span class="keyword">null</span>){</span><br><span class="line">            fast = fast.next;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">        }</span><br><span class="line">        </span><br><span class="line">        slow.next = slow.next.next;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">return</span> dummy.next;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public static ListNode removeNthFromEnd(ListNode head, int n) {
+    ListNode dummy = new ListNode(-1);
+    dummy.next = head;
+    ListNode preNode = getPreNode(dummy, n);
+    preNode.next = preNode.next.next;
+    return head;
+}
+public static ListNode getPreNode(ListNode head, int n){
+    int count = 0;
+    ListNode p = head;
+    while (p != null){
+        count ++;
+        p = p.next;
+    }
+    p = head;
+    while ( count-n-1 &gt; 0){
+        p = p.next;
+        count --;
+    }
+    return p;
+}
 
+// 也可以直接使用第二种删除方法
+public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode fast = dummy;
+        ListNode slow = dummy;
+        while(n &gt; 0){
+            fast = fast.next;
+            n--;
+        }
+        while(fast.next != null){
+            fast = fast.next;
+            slow = slow.next;
+        }
 
+        slow.next = slow.next.next;
 
+        return dummy.next;
+}
+</code></pre>
 <h3 id="21-Merge-Two-Sorted-Lists"><a href="#21-Merge-Two-Sorted-Lists" class="headerlink" title="21. Merge Two Sorted Lists"></a>21. <a href="https://leetcode.com/problems/merge-two-sorted-lists" target="_blank" rel="noopener">Merge Two Sorted Lists</a></h3><p>增、查</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeTwoLists</span><span class="params">(ListNode l1, ListNode l2)</span> </span>{</span><br><span class="line">    ListNode dummy = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">    ListNode real = dummy;</span><br><span class="line">    <span class="keyword">while</span> (l1 != <span class="keyword">null</span> &amp;&amp; l2 != <span class="keyword">null</span>){</span><br><span class="line">        <span class="keyword">if</span>(l1.val &lt;= l2.val){</span><br><span class="line">            real.next = l1;</span><br><span class="line">            l1 = l1.next;</span><br><span class="line">        }<span class="keyword">else</span> {</span><br><span class="line">            real.next = l2;</span><br><span class="line">            l2 = l2.next;</span><br><span class="line">        }</span><br><span class="line">        real= real.next;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span> (l1 != <span class="keyword">null</span>){</span><br><span class="line">        real.next = l1;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span> (l2 != <span class="keyword">null</span>) {</span><br><span class="line">        real.next = l2;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> dummy.next;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    ListNode dummy = new ListNode(-1);
+    ListNode real = dummy;
+    while (l1 != null &amp;&amp; l2 != null){
+        if(l1.val &lt;= l2.val){
+            real.next = l1;
+            l1 = l1.next;
+        }else {
+            real.next = l2;
+            l2 = l2.next;
+        }
+        real= real.next;
+    }
+    if (l1 != null){
+        real.next = l1;
+    }
+    if (l2 != null) {
+        real.next = l2;
+    }
+    return dummy.next;
+}
+</code></pre>
 <h3 id="23-Merge-k-Sorted-Lists"><a href="#23-Merge-k-Sorted-Lists" class="headerlink" title="23. Merge k Sorted Lists"></a>23. <a href="https://leetcode.com/problems/merge-k-sorted-lists" target="_blank" rel="noopener">Merge k Sorted Lists</a></h3><p>增，查</p>
 <h4 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h4><p>多链表之间按照递增顺序进行整合。（根据上一题的思路，先两两合并，最后合并成一个链表）</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeKLists</span><span class="params">(ListNode[] lists)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (lists == <span class="keyword">null</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">int</span> length = lists.length;</span><br><span class="line">        <span class="keyword">while</span> (length &gt; <span class="number">1</span>) {</span><br><span class="line">            <span class="keyword">int</span> k = (length + <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; (length / <span class="number">2</span>); i++) {</span><br><span class="line">                <span class="comment">// mergeTwo为21题函数</span></span><br><span class="line">                lists[i]  = mergeTwo(lists[i], lists[i+k]);</span><br><span class="line">            }</span><br><span class="line">            length = k;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> lists[<span class="number">0</span>];</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null) {
+            return null;
+        }
+        int length = lists.length;
+        while (length &gt; 1) {
+            int k = (length + 1) / 2;
+            for (int i = 0; i &lt; (length / 2); i++) {
+                // mergeTwo为21题函数
+                lists[i]  = mergeTwo(lists[i], lists[i+k]);
+            }
+            length = k;
+        }
+        return lists[0];
+    }
+</code></pre>
 <h4 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h4><p>使用小根堆</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">mergeKLists</span><span class="params">(ListNode[] lists)</span> </span>{</span><br><span class="line">        PriorityQueue&lt;ListNode&gt; heap = <span class="keyword">new</span> PriorityQueue&lt;&gt;(<span class="keyword">new</span> Comparator&lt;ListNode&gt;() {</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(ListNode o1, ListNode o2)</span> </span>{</span><br><span class="line">                <span class="keyword">return</span> o1.val - o2.val;</span><br><span class="line">            }</span><br><span class="line">        });</span><br><span class="line">        <span class="comment">// 尾插法</span></span><br><span class="line">        ListNode dummy = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        ListNode real = dummy;</span><br><span class="line">        <span class="keyword">for</span> (ListNode node : lists) {</span><br><span class="line">            <span class="keyword">if</span> (node != <span class="keyword">null</span>) {</span><br><span class="line">                heap.offer(node);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">while</span> (!heap.isEmpty()) {</span><br><span class="line">            real.next = heap.poll();</span><br><span class="line">            real = real.next;</span><br><span class="line">            <span class="keyword">if</span> (real.next != <span class="keyword">null</span>) {</span><br><span class="line">                heap.offer(real.next);</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dummy.next;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">public ListNode mergeKLists(ListNode[] lists) {
+        PriorityQueue&lt;ListNode&gt; heap = new PriorityQueue&lt;&gt;(new Comparator&lt;ListNode&gt;() {
+            @Override
+            public int compare(ListNode o1, ListNode o2) {
+                return o1.val - o2.val;
+            }
+        });
+        // 尾插法
+        ListNode dummy = new ListNode(-1);
+        ListNode real = dummy;
+        for (ListNode node : lists) {
+            if (node != null) {
+                heap.offer(node);
+            }
+        }
+        while (!heap.isEmpty()) {
+            real.next = heap.poll();
+            real = real.next;
+            if (real.next != null) {
+                heap.offer(real.next);
+            }
+        }
+        return dummy.next;
+    }
+</code></pre>
 <h3 id="24-Swap-Nodes-in-Pairs"><a href="#24-Swap-Nodes-in-Pairs" class="headerlink" title="24.  Swap Nodes in Pairs"></a>24. <a href="https://leetcode.com/problems/swap-nodes-in-pairs" target="_blank" rel="noopener"> Swap Nodes in Pairs</a></h3><p><strong>改</strong></p>
 <p>两两交换，</p>
 <p>两个节点的交换， 必然牵引到四个指针的改变</p>
@@ -281,57 +438,254 @@
                 </div>
                 <div class="image-caption">链表.png</div>
             </figure>
-
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ListNode <span class="title">swapPairs</span><span class="params">(ListNode head)</span></span>{</span><br><span class="line">        <span class="keyword">if</span>(head == <span class="keyword">null</span>){</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        }</span><br><span class="line">        ListNode dummy = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        dummy.next = head;</span><br><span class="line">        ListNode pre = dummy;</span><br><span class="line">        <span class="keyword">while</span> (head!=<span class="keyword">null</span> &amp;&amp; head.next!=<span class="keyword">null</span>){</span><br><span class="line">            ListNode temp = head.next;</span><br><span class="line">            head.next = temp.next;</span><br><span class="line">            temp.next = pre.next;</span><br><span class="line">            pre.next = temp;</span><br><span class="line">            pre = head;</span><br><span class="line">            head = head.next;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dummy.next;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">public static ListNode swapPairs(ListNode head){
+        if(head == null){
+            return head;
+        }
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode pre = dummy;
+        while (head!=null &amp;&amp; head.next!=null){
+            ListNode temp = head.next;
+            head.next = temp.next;
+            temp.next = pre.next;
+            pre.next = temp;
+            pre = head;
+            head = head.next;
+        }
+        return dummy.next;
+    }
+</code></pre>
 <h3 id="25-Reverse-Nodes-in-k-Group"><a href="#25-Reverse-Nodes-in-k-Group" class="headerlink" title="25.  Reverse Nodes in k-Group"></a>25.  <a href="https://leetcode.com/problems/reverse-nodes-in-k-group" target="_blank" rel="noopener">Reverse Nodes in k-Group</a></h3><p>思路和上一题一样。但是需要注意<code>pre</code>的<code>cur</code></p>
 <h3 id="92-Reverse-Linked-List-II"><a href="#92-Reverse-Linked-List-II" class="headerlink" title="92. Reverse Linked List II"></a>92. <a href="https://leetcode.com/problems/reverse-linked-list-ii" target="_blank" rel="noopener">Reverse Linked List II</a></h3><p>和上述同理</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ListNode <span class="title">reverseBetween</span><span class="params">(ListNode head, <span class="keyword">int</span> m, <span class="keyword">int</span> n)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span> || n - m == <span class="number">0</span>) {</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        }</span><br><span class="line">        ListNode dummy = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        dummy.next = head;</span><br><span class="line">        ListNode pre  = dummy;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m-<span class="number">1</span>; i++) {</span><br><span class="line">            pre = pre.next;</span><br><span class="line">        }</span><br><span class="line">        ListNode cur = pre.next;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = m; i &lt; n; i++) {</span><br><span class="line">            ListNode temp = cur.next;</span><br><span class="line">            cur.next = temp.next;</span><br><span class="line">            temp.next = pre.next;</span><br><span class="line">            pre.next = temp;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dummy.next;</span><br><span class="line"></span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public static ListNode reverseBetween(ListNode head, int m, int n) {
+        if (head == null || n - m == 0) {
+            return head;
+        }
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode pre  = dummy;
+        for (int i = 0; i &lt; m-1; i++) {
+            pre = pre.next;
+        }
+        ListNode cur = pre.next;
+        for (int i = m; i &lt; n; i++) {
+            ListNode temp = cur.next;
+            cur.next = temp.next;
+            temp.next = pre.next;
+            pre.next = temp;
+        }
+        return dummy.next;
 
+    }
+</code></pre>
 <h3 id="206-Reverse-Linked-List"><a href="#206-Reverse-Linked-List" class="headerlink" title="206. Reverse Linked List"></a>206. <a href="https://leetcode.com/problems/reverse-linked-list" target="_blank" rel="noopener">Reverse Linked List</a></h3><p>头插法解决</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">reverseList</span><span class="params">(ListNode head)</span> </span>{</span><br><span class="line">        ListNode dummy = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">while</span>(head != <span class="keyword">null</span>){</span><br><span class="line">            ListNode curr = head.next;</span><br><span class="line">            head.next = dummy.next;</span><br><span class="line">            dummy.next = head;</span><br><span class="line">            head = curr;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dummy.next;</span><br><span class="line">        </span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public ListNode reverseList(ListNode head) {
+        ListNode dummy = new ListNode(-1);
+        while(head != null){
+            ListNode curr = head.next;
+            head.next = dummy.next;
+            dummy.next = head;
+            head = curr;
+        }
+        return dummy.next;
 
+    }
+</code></pre>
 <h3 id="61-Rotate-List"><a href="#61-Rotate-List" class="headerlink" title="61. Rotate List"></a>61. <a href="https://leetcode.com/problems/rotate-list" target="_blank" rel="noopener">Rotate List</a></h3><p><strong>查</strong></p>
 <p>快慢指针法，<code>fast</code>指针先走<code>k</code>步，之后<code>slow</code>和<code>fast</code>一起走，<code>fast</code>到链表尾部，然后将链表头尾相连。此时<code>slow</code>指向新的头结点的前驱节点，然后重新设置头指针，断开链表即可。</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 快慢指针</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ListNode <span class="title">roateRightII</span><span class="params">(ListNode head, <span class="keyword">int</span> k)</span></span>{</span><br><span class="line">    <span class="keyword">if</span>(head == <span class="keyword">null</span>){</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">int</span> length = getLength(head);</span><br><span class="line">    k %= length;</span><br><span class="line">    ListNode endNode = getEndNode(head);</span><br><span class="line">    ListNode fast = head, slow = head;</span><br><span class="line">    <span class="keyword">while</span> (k &gt; <span class="number">0</span>){</span><br><span class="line">        fast = fast.next;</span><br><span class="line">        k--;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">while</span> (fast.next != <span class="keyword">null</span>){</span><br><span class="line">        fast = fast.next;</span><br><span class="line">        slow = slow.next;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 构成环</span></span><br><span class="line">    fast.next = head;</span><br><span class="line">    <span class="comment">// 重新设置</span></span><br><span class="line">    head = slow.next;</span><br><span class="line">    slow.next = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">// 快慢指针
+public static ListNode roateRightII(ListNode head, int k){
+    if(head == null){
+        return null;
+    }
+    int length = getLength(head);
+    k %= length;
+    ListNode endNode = getEndNode(head);
+    ListNode fast = head, slow = head;
+    while (k &gt; 0){
+        fast = fast.next;
+        k--;
+    }
+    while (fast.next != null){
+        fast = fast.next;
+        slow = slow.next;
+    }
+    // 构成环
+    fast.next = head;
+    // 重新设置
+    head = slow.next;
+    slow.next = null;
+    return head;
+}
+</code></pre>
 <h3 id="83-Remove-Duplicates-from-Sorted-List"><a href="#83-Remove-Duplicates-from-Sorted-List" class="headerlink" title="83. Remove Duplicates from Sorted List"></a>83. <a href="https://leetcode.com/problems/remove-duplicates-from-sorted-list" target="_blank" rel="noopener">Remove Duplicates from Sorted List</a></h3><p><strong>删</strong></p>
 <p>删除有重复的节点</p>
 <p>使用<code>前驱节点</code>删除法，所以需要一个<code>pre</code>指针，和<code>cur</code>指针。</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">deleteDuplicates</span><span class="params">(ListNode head)</span> </span>{</span><br><span class="line">    ListNode pre = head;</span><br><span class="line">    ListNode cur;</span><br><span class="line">    <span class="keyword">while</span> (pre.next != <span class="keyword">null</span>){</span><br><span class="line">        cur = pre.next;</span><br><span class="line">        <span class="comment">// 因为是和cur的前驱比较， 所以不用判断cur.next!=null, 而是使用cur!=null</span></span><br><span class="line">        <span class="keyword">while</span> (cur!=<span class="keyword">null</span> &amp;&amp; cur.val == pre.val){</span><br><span class="line">            cur = cur.next;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span>(pre.next != cur){</span><br><span class="line">            pre.next = cur;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">else</span> {</span><br><span class="line">            pre = pre.next;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">public ListNode deleteDuplicates(ListNode head) {
+    ListNode pre = head;
+    ListNode cur;
+    while (pre.next != null){
+        cur = pre.next;
+        // 因为是和cur的前驱比较， 所以不用判断cur.next!=null, 而是使用cur!=null
+        while (cur!=null &amp;&amp; cur.val == pre.val){
+            cur = cur.next;
+        }
+        if(pre.next != cur){
+            pre.next = cur;
+        }
+        else {
+            pre = pre.next;
+        }
+    }
+    return head;
+}
+</code></pre>
 <h3 id="82-Remove-Duplicates-from-Sorted-List-II"><a href="#82-Remove-Duplicates-from-Sorted-List-II" class="headerlink" title="82.  Remove Duplicates from Sorted List II"></a>82.  <a href="https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii" target="_blank" rel="noopener">Remove Duplicates from Sorted List II</a></h3><p><strong>删</strong></p>
 <p>删光重复的节点</p>
 <p>使用<code>前驱节点</code>删除法，所以需要一个<code>pre</code>指针，和<code>cur</code>指针。</p>
 <p>可能存在头结点会变换, 所以设置一个空的头结点</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">deleteDuplicates</span><span class="params">(ListNode head)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (head == <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    }</span><br><span class="line">    ListNode dummy = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">    dummy.next = head;</span><br><span class="line">    ListNode cur = <span class="keyword">null</span>;</span><br><span class="line">    ListNode pre = dummy;</span><br><span class="line">    <span class="keyword">while</span> (pre.next != <span class="keyword">null</span>) {</span><br><span class="line">        cur = pre.next;</span><br><span class="line">        <span class="keyword">while</span> (cur.next != <span class="keyword">null</span> &amp;&amp; cur.next.val == cur.val) {</span><br><span class="line">            cur = cur.next;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">if</span>(cur != pre.next){</span><br><span class="line">            pre.next = cur.next;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">else</span> {</span><br><span class="line">            pre = pre.next;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> dummy.next;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public ListNode deleteDuplicates(ListNode head) {
+    if (head == null) {
+        return null;
+    }
+    ListNode dummy = new ListNode(-1);
+    dummy.next = head;
+    ListNode cur = null;
+    ListNode pre = dummy;
+    while (pre.next != null) {
+        cur = pre.next;
+        while (cur.next != null &amp;&amp; cur.next.val == cur.val) {
+            cur = cur.next;
+        }
+        if(cur != pre.next){
+            pre.next = cur.next;
+        }
+        else {
+            pre = pre.next;
+        }
+    }
+    return dummy.next;
+}
+</code></pre>
+<h3 id="86-Partition-List"><a href="#86-Partition-List" class="headerlink" title="86.  Partition List"></a>86. <a href="https://leetcode.com/problems/partition-list" target="_blank" rel="noopener"> Partition List</a></h3><h3 id="109-Convert-Sorted-List-to-Binary-Search-Tree"><a href="#109-Convert-Sorted-List-to-Binary-Search-Tree" class="headerlink" title="109. Convert Sorted List to Binary Search Tree"></a>109. <a href="https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree" target="_blank" rel="noopener">Convert Sorted List to Binary Search Tree</a></h3><h3 id="138-复制带随机指针的链表"><a href="#138-复制带随机指针的链表" class="headerlink" title="138. 复制带随机指针的链表"></a><a href="https://leetcode-cn.com/problems/copy-list-with-random-pointer/" target="_blank" rel="noopener">138. 复制带随机指针的链表</a></h3><pre><code class="lang-java">class Solution {
+    public Node copyRandomList(Node head) {
+        if (head == null) {
+            return head;
+        }
+        // key 旧。value  新
+        Map&lt;Node, Node&gt; map = new HashMap&lt;&gt;();
+        Node newHead = new Node(head.val);
+        Node oddHead = head;
+        map.put(oddHead, newHead);
+        Node nCur = newHead;
+        Node oCur = head.next;
+        while (oCur != null) {
+            nCur.next = new Node(oCur.val);
+            nCur = nCur.next;
+            map.put(oCur, nCur);
+            oCur = oCur.next;
+        }
 
-<h3 id="86-Partition-List"><a href="#86-Partition-List" class="headerlink" title="86.  Partition List"></a>86. <a href="https://leetcode.com/problems/partition-list" target="_blank" rel="noopener"> Partition List</a></h3><h3 id="109-Convert-Sorted-List-to-Binary-Search-Tree"><a href="#109-Convert-Sorted-List-to-Binary-Search-Tree" class="headerlink" title="109. Convert Sorted List to Binary Search Tree"></a>109. <a href="https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree" target="_blank" rel="noopener">Convert Sorted List to Binary Search Tree</a></h3><h3 id="138-复制带随机指针的链表"><a href="#138-复制带随机指针的链表" class="headerlink" title="138. 复制带随机指针的链表"></a><a href="https://leetcode-cn.com/problems/copy-list-with-random-pointer/" target="_blank" rel="noopener">138. 复制带随机指针的链表</a></h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Node <span class="title">copyRandomList</span><span class="params">(Node head)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) {</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// key 旧。value  新</span></span><br><span class="line">        Map&lt;Node, Node&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        Node newHead = <span class="keyword">new</span> Node(head.val);</span><br><span class="line">        Node oddHead = head;</span><br><span class="line">        map.put(oddHead, newHead);</span><br><span class="line">        Node nCur = newHead;</span><br><span class="line">        Node oCur = head.next;</span><br><span class="line">        <span class="keyword">while</span> (oCur != <span class="keyword">null</span>) {</span><br><span class="line">            nCur.next = <span class="keyword">new</span> Node(oCur.val);</span><br><span class="line">            nCur = nCur.next;</span><br><span class="line">            map.put(oCur, nCur);</span><br><span class="line">            oCur = oCur.next;</span><br><span class="line">        }</span><br><span class="line">        </span><br><span class="line">        oCur = head;</span><br><span class="line">        nCur = newHead;</span><br><span class="line">        <span class="keyword">while</span> (oCur != <span class="keyword">null</span>) {</span><br><span class="line">            <span class="keyword">if</span> (oCur.random != <span class="keyword">null</span>) {</span><br><span class="line">                <span class="comment">// random ！！！！</span></span><br><span class="line">                Node ran = map.get(oCur.random);</span><br><span class="line">                nCur.random = ran;</span><br><span class="line">            }</span><br><span class="line">            oCur = oCur.next;</span><br><span class="line">            nCur = nCur.next;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> newHead;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+        oCur = head;
+        nCur = newHead;
+        while (oCur != null) {
+            if (oCur.random != null) {
+                // random ！！！！
+                Node ran = map.get(oCur.random);
+                nCur.random = ran;
+            }
+            oCur = oCur.next;
+            nCur = nCur.next;
+        }
+        return newHead;
+    }
+}
+</code></pre>
 <h3 id="141-Linked-List-Cycle"><a href="#141-Linked-List-Cycle" class="headerlink" title="141. Linked List Cycle"></a>141. <a href="https://leetcode.com/problems/linked-list-cycle" target="_blank" rel="noopener">Linked List Cycle</a></h3><h3 id="142-Linked-List-Cycle-II"><a href="#142-Linked-List-Cycle-II" class="headerlink" title="142.  Linked List Cycle II"></a>142. <a href="https://leetcode.com/problems/linked-list-cycle-ii" target="_blank" rel="noopener"> Linked List Cycle II</a></h3><h3 id="143-Reorder-List"><a href="#143-Reorder-List" class="headerlink" title="143. Reorder List"></a>143. <a href="https://leetcode.com/problems/reorder-list" target="_blank" rel="noopener">Reorder List</a></h3><h3 id="147-Insertion-Sort-List"><a href="#147-Insertion-Sort-List" class="headerlink" title="147. Insertion Sort List"></a>147. <a href="https://leetcode.com/problems/insertion-sort-list" target="_blank" rel="noopener">Insertion Sort List</a></h3><h3 id="148-Sort-List"><a href="#148-Sort-List" class="headerlink" title="148. Sort List"></a>148. <a href="https://leetcode.com/problems/sort-list" target="_blank" rel="noopener">Sort List</a></h3><h3 id="160-Intersection-of-Two-Linked-Lists"><a href="#160-Intersection-of-Two-Linked-Lists" class="headerlink" title="160.  Intersection of Two Linked Lists"></a>160.  <a href="https://leetcode.com/problems/intersection-of-two-linked-lists" target="_blank" rel="noopener">Intersection of Two Linked Lists</a></h3><p>解法1：暴力求解</p>
 <p>解法2： 构造环</p>
-<h3 id="203-移除链表元素"><a href="#203-移除链表元素" class="headerlink" title="203. 移除链表元素"></a><a href="https://leetcode-cn.com/problems/remove-linked-list-elements/" target="_blank" rel="noopener">203. 移除链表元素</a></h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 双指针</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">removeElements</span><span class="params">(ListNode head, <span class="keyword">int</span> val)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) {</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        }</span><br><span class="line">        ListNode dummy = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        dummy.next = head;</span><br><span class="line">        ListNode pre = dummy;</span><br><span class="line">        ListNode cur = head;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) {</span><br><span class="line">            <span class="keyword">if</span> (cur.val != val) {</span><br><span class="line">                pre = cur;</span><br><span class="line">                cur = cur.next;</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                pre.next = cur.next;</span><br><span class="line">                cur = pre.next;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> dummy.next;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="203-移除链表元素"><a href="#203-移除链表元素" class="headerlink" title="203. 移除链表元素"></a><a href="https://leetcode-cn.com/problems/remove-linked-list-elements/" target="_blank" rel="noopener">203. 移除链表元素</a></h3><pre><code class="lang-java">// 双指针
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        if (head == null) {
+            return head;
+        }
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode pre = dummy;
+        ListNode cur = head;
+        while (cur != null) {
+            if (cur.val != val) {
+                pre = cur;
+                cur = cur.next;
+            } else {
+                pre.next = cur.next;
+                cur = pre.next;
+            }
+        }
+        return dummy.next;
+    }
+}
+</code></pre>
+<h3 id="234-回文链表"><a href="#234-回文链表" class="headerlink" title="234. 回文链表"></a><a href="https://leetcode-cn.com/problems/palindrome-linked-list/" target="_blank" rel="noopener">234. 回文链表</a></h3><pre><code class="lang-java">class Solution {
+    public boolean isPalindrome(ListNode head) {
+        if (head == null) {
+            return true;
+        }
+        Map&lt;Integer, ListNode&gt; map = new HashMap&lt;&gt;();
+        ListNode cur = head;
+        int n = 0;
+        while (cur != null) {
+            map.put(n, cur);
+            n++;
+            cur = cur.next;
+        }
+        cur = head;
+        for (int i = 0; i &lt; n / 2; i++) {
+            System.out.println(cur.val);
+            if (cur.val != map.get(n - i - 1).val) {
+                return false;
+            }
+            cur = cur.next;
+        }
+        return true;
 
-
-
-<h3 id="234-回文链表"><a href="#234-回文链表" class="headerlink" title="234. 回文链表"></a><a href="https://leetcode-cn.com/problems/palindrome-linked-list/" target="_blank" rel="noopener">234. 回文链表</a></h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isPalindrome</span><span class="params">(ListNode head)</span> </span>{</span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) {</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        }</span><br><span class="line">        Map&lt;Integer, ListNode&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        ListNode cur = head;</span><br><span class="line">        <span class="keyword">int</span> n = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) {</span><br><span class="line">            map.put(n, cur);</span><br><span class="line">            n++;</span><br><span class="line">            cur = cur.next;</span><br><span class="line">        }</span><br><span class="line">        cur = head;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n / <span class="number">2</span>; i++) {</span><br><span class="line">            System.out.println(cur.val);</span><br><span class="line">            <span class="keyword">if</span> (cur.val != map.get(n - i - <span class="number">1</span>).val) {</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            }</span><br><span class="line">            cur = cur.next;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
-<h3 id="237-Delete-Node-in-a-Linked-List"><a href="#237-Delete-Node-in-a-Linked-List" class="headerlink" title="237. Delete Node in a Linked List"></a>237. <a href="https://leetcode.com/problems/delete-node-in-a-linked-list" target="_blank" rel="noopener">Delete Node in a Linked List</a></h3><h3 id="328-奇偶链表"><a href="#328-奇偶链表" class="headerlink" title="328. 奇偶链表"></a><a href="https://leetcode-cn.com/problems/odd-even-linked-list/" target="_blank" rel="noopener">328. 奇偶链表</a></h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">oddEvenList</span><span class="params">(ListNode head)</span> </span>{</span><br><span class="line">        <span class="comment">// 按照位置分奇偶</span></span><br><span class="line">        <span class="keyword">if</span> (head == <span class="keyword">null</span>) {</span><br><span class="line">            <span class="keyword">return</span> head;</span><br><span class="line">        }</span><br><span class="line">        ListNode odd = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        ListNode even = <span class="keyword">new</span> ListNode(-<span class="number">1</span>);</span><br><span class="line">        ListNode oddHead = odd;</span><br><span class="line">        ListNode evenHead = even;</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (head != <span class="keyword">null</span>) {</span><br><span class="line">            <span class="keyword">if</span> (i % <span class="number">2</span> == <span class="number">1</span>) {</span><br><span class="line">                odd.next = head;</span><br><span class="line">                odd = odd.next;</span><br><span class="line">            } <span class="keyword">else</span> {</span><br><span class="line">                even.next = head;</span><br><span class="line">                even = even.next;</span><br><span class="line">            }</span><br><span class="line">            head = head.next;</span><br><span class="line">            i++;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// 断链 （注意注意注意）</span></span><br><span class="line">        odd.next = evenHead.next;</span><br><span class="line">        even.next = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">return</span> oddHead.next;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+    }
+}
+</code></pre>
+<h3 id="237-Delete-Node-in-a-Linked-List"><a href="#237-Delete-Node-in-a-Linked-List" class="headerlink" title="237. Delete Node in a Linked List"></a>237. <a href="https://leetcode.com/problems/delete-node-in-a-linked-list" target="_blank" rel="noopener">Delete Node in a Linked List</a></h3><h3 id="328-奇偶链表"><a href="#328-奇偶链表" class="headerlink" title="328. 奇偶链表"></a><a href="https://leetcode-cn.com/problems/odd-even-linked-list/" target="_blank" rel="noopener">328. 奇偶链表</a></h3><pre><code class="lang-java">class Solution {
+    public ListNode oddEvenList(ListNode head) {
+        // 按照位置分奇偶
+        if (head == null) {
+            return head;
+        }
+        ListNode odd = new ListNode(-1);
+        ListNode even = new ListNode(-1);
+        ListNode oddHead = odd;
+        ListNode evenHead = even;
+        int i = 1;
+        while (head != null) {
+            if (i % 2 == 1) {
+                odd.next = head;
+                odd = odd.next;
+            } else {
+                even.next = head;
+                even = even.next;
+            }
+            head = head.next;
+            i++;
+        }
+        // 断链 （注意注意注意）
+        odd.next = evenHead.next;
+        even.next = null;
+        return oddHead.next;
+    }
+}
+</code></pre>
 <h3 id="369-Plus-One-Linked-List"><a href="#369-Plus-One-Linked-List" class="headerlink" title="369.  Plus One Linked List"></a>369. <a href="https://leetcode.com/problems/plus-one-linked-list" target="_blank" rel="noopener"> Plus One Linked List</a></h3><h3 id="379-Design-Phone-Directory"><a href="#379-Design-Phone-Directory" class="headerlink" title="379. Design Phone Directory"></a>379. <a href="https://leetcode.com/problems/design-phone-directory" target="_blank" rel="noopener">Design Phone Directory</a></h3><h3 id="426-Convert-Binary-Search-Tree-to-Sorted-Doubly-Linked-List"><a href="#426-Convert-Binary-Search-Tree-to-Sorted-Doubly-Linked-List" class="headerlink" title="426.  Convert Binary Search Tree to Sorted Doubly Linked List"></a>426. <a href="https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list" target="_blank" rel="noopener"> Convert Binary Search Tree to Sorted Doubly Linked List</a></h3><h3 id="430-Flatten-a-Multilevel-Doubly-Linked-List"><a href="#430-Flatten-a-Multilevel-Doubly-Linked-List" class="headerlink" title="430.  Flatten a Multilevel Doubly Linked List"></a>430. <a href="https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list" target="_blank" rel="noopener"> Flatten a Multilevel Doubly Linked List</a></h3><h3 id="445-Add-Two-Numbers-II-1"><a href="#445-Add-Two-Numbers-II-1" class="headerlink" title="445.  Add Two Numbers II"></a>445. <a href="https://leetcode.com/problems/add-two-numbers-ii" target="_blank" rel="noopener"> Add Two Numbers II</a></h3><h3 id="707-Design-Linked-List"><a href="#707-Design-Linked-List" class="headerlink" title="707.  Design Linked List"></a>707. <a href="https://leetcode.com/problems/design-linked-list" target="_blank" rel="noopener"> Design Linked List</a></h3><h3 id="708-Insert-into-a-Sorted-Circular-Linked-List"><a href="#708-Insert-into-a-Sorted-Circular-Linked-List" class="headerlink" title="708. Insert into a Sorted Circular Linked List"></a>708. <a href="https://leetcode.com/problems/insert-into-a-sorted-circular-linked-list" target="_blank" rel="noopener">Insert into a Sorted Circular Linked List</a></h3><h3 id="725-Split-Linked-List-in-Parts"><a href="#725-Split-Linked-List-in-Parts" class="headerlink" title="725.  Split Linked List in Parts"></a>725. <a href="https://leetcode.com/problems/split-linked-list-in-parts" target="_blank" rel="noopener"> Split Linked List in Parts</a></h3><h3 id="817-Linked-List-Components"><a href="#817-Linked-List-Components" class="headerlink" title="817. Linked List Components"></a>817. <a href="https://leetcode.com/problems/linked-list-components" target="_blank" rel="noopener">Linked List Components</a></h3><h3 id="876-Middle-of-the-Linked-List"><a href="#876-Middle-of-the-Linked-List" class="headerlink" title="876. Middle of the Linked List"></a>876. <a href="https://leetcode.com/problems/middle-of-the-linked-list" target="_blank" rel="noopener">Middle of the Linked List</a></h3><h3 id="1019-Next-Greater-Node-In-Linked-List"><a href="#1019-Next-Greater-Node-In-Linked-List" class="headerlink" title="1019.  Next Greater Node In Linked List"></a>1019. <a href="https://leetcode.com/problems/next-greater-node-in-linked-list" target="_blank" rel="noopener"> Next Greater Node In Linked List</a></h3><h3 id="1171-Remove-Zero-Sum-Consecutive-Nodes-from-Linked-List"><a href="#1171-Remove-Zero-Sum-Consecutive-Nodes-from-Linked-List" class="headerlink" title="1171. Remove Zero Sum Consecutive Nodes from Linked List"></a>1171. <a href="https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list" target="_blank" rel="noopener">Remove Zero Sum Consecutive Nodes from Linked List</a></h3><p>删</p>
 <p>快慢指针</p>
 <p>其实是和计算一个链表中是否存在和为n的子链表是一样的意思。</p>
-<p>slow表示当前的元素，使用fast依次遍历其后续的元素，同时值相加，如果等于0，则<code>slow.next </code> = <code>fast.next</code>,如果<code>fast</code>遍历完了所有的元素了，没有等于0， 则<code>slow</code>移动到下一个元素 </p>
+<p>slow表示当前的元素，使用fast依次遍历其后续的元素，同时值相加，如果等于0，则<code>slow.next</code> = <code>fast.next</code>,如果<code>fast</code>遍历完了所有的元素了，没有等于0， 则<code>slow</code>移动到下一个元素 </p>
 <h3 id="1290-Convert-Binary-Number-in-a-Linked-List-to-Integer"><a href="#1290-Convert-Binary-Number-in-a-Linked-List-to-Integer" class="headerlink" title="1290. Convert Binary Number in a Linked List to Integer"></a>1290. <a href="https://leetcode.com/problems/convert-binary-number-in-a-linked-list-to-integer" target="_blank" rel="noopener">Convert Binary Number in a Linked List to Integer</a></h3><p>查</p>
 <h3 id="1369-Linked-List-in-Binary-Tree"><a href="#1369-Linked-List-in-Binary-Tree" class="headerlink" title="1369.  Linked List in Binary Tree"></a>1369. <a href="https://leetcode.com/problems/linked-list-in-binary-tree" target="_blank" rel="noopener"> Linked List in Binary Tree</a></h3>
         </div>
@@ -459,6 +813,7 @@
 
 
 
+
 </article>
 
 
@@ -478,18 +833,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -498,6 +869,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -546,7 +918,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -602,6 +974,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

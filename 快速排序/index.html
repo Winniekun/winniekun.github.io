@@ -38,6 +38,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -52,10 +53,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -202,10 +203,10 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><a id="more"></a>
-
 <p>时间复杂度：$O(nlogn)$</p>
 <p>快速排序是<code>不稳定算法</code></p>
 <h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>分为三个过程：</p>
@@ -214,10 +215,36 @@
 <li>递归的在两个划分好的部分分别进行快排</li>
 <li>不用合并，因为此时集合已经完全有序</li>
 </ol>
-<h2 id="Java实现"><a href="#Java实现" class="headerlink" title="Java实现"></a>Java实现</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span>[] data, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> <span class="keyword">throws</span> Exception </span>{</span><br><span class="line">    <span class="keyword">if</span>(low == high){</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">if</span>(low &lt; high){</span><br><span class="line">        <span class="keyword">int</span> partition = partition(data, data.length, low, high);</span><br><span class="line">        quickSort(data, low, partition-<span class="number">1</span>);</span><br><span class="line">        quickSort(data, partition+<span class="number">1</span>, high);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span> data[], <span class="keyword">int</span> length, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> <span class="keyword">throws</span> Exception </span>{</span><br><span class="line">    <span class="keyword">if</span>(data == <span class="keyword">null</span> || data.length&lt;= <span class="number">0</span> || low &lt; <span class="number">0</span> || high &gt;= length ){</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">"Invalid Parameters"</span>);</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 默认选择首位作为枢轴</span></span><br><span class="line">    <span class="keyword">int</span> position = data[low];</span><br><span class="line">    <span class="keyword">while</span> (low &lt; high){</span><br><span class="line">        <span class="keyword">while</span> (low&lt; high &amp;&amp; data[high] &gt;= position){</span><br><span class="line">            high--;</span><br><span class="line">        }</span><br><span class="line">        data[low] = data[high];</span><br><span class="line">        <span class="keyword">while</span> (low&lt;high &amp;&amp; data[low] &lt;= position){</span><br><span class="line">            low++;</span><br><span class="line">        }</span><br><span class="line">        data[high] = data[low];</span><br><span class="line">    }</span><br><span class="line">    data[low] = position;</span><br><span class="line">    <span class="keyword">return</span> low;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<h2 id="Java实现"><a href="#Java实现" class="headerlink" title="Java实现"></a>Java实现</h2><pre><code class="lang-java">public static void quickSort(int[] data, int low, int high) throws Exception {
+    if(low == high){
+        return;
+    }
+    if(low &lt; high){
+        int partition = partition(data, data.length, low, high);
+        quickSort(data, low, partition-1);
+        quickSort(data, partition+1, high);
+    }
+}
+private static int partition(int data[], int length, int low, int high) throws Exception {
+    if(data == null || data.length&lt;= 0 || low &lt; 0 || high &gt;= length ){
+        throw new Exception("Invalid Parameters");
+    }
+    // 默认选择首位作为枢轴
+    int position = data[low];
+    while (low &lt; high){
+        while (low&lt; high &amp;&amp; data[high] &gt;= position){
+            high--;
+        }
+        data[low] = data[high];
+        while (low&lt;high &amp;&amp; data[low] &lt;= position){
+            low++;
+        }
+        data[high] = data[low];
+    }
+    data[low] = position;
+    return low;
+}
+</code></pre>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
 <li><a href="https://oi-wiki.org/basic/quick-sort/" target="_blank" rel="noopener">快速排序</a></li>
 <li>算法第四版</li>
@@ -348,6 +375,7 @@
 
 
 
+
 </article>
 
 
@@ -367,18 +395,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -387,6 +431,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -435,7 +480,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -491,6 +536,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

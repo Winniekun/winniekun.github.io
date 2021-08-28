@@ -38,6 +38,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -52,10 +53,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -202,13 +203,23 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>在Java中一直强调数据类型的概念，其自身有8种基础的数据类型，同时我们自定义的类，也可以理解为自定义的数据类型。我们熟知的容器类，也是基于泛型实现的。这样才实现了一个容器类，适用于各种各样的数据类型。</p>
 <p>通过泛型，使得类、接口、方法能够适用于非常广泛的数据类型，使得具体的代码能够和操作的具体的数据类型不再强行绑定到一起。同一套代码能够适用于多种数据类型。从而达到复用代码、降低耦合度、提高代码的可读性的目的。</p>
 <h1 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h1><ul>
 <li><p>避免类型转换</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 未使用泛型</span></span><br><span class="line">List list = <span class="keyword">new</span> ArrayList();</span><br><span class="line">list.add(<span class="string">"hello"</span>);</span><br><span class="line">String s = (String) list.get(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 使用泛型</span></span><br><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">list.add(<span class="string">"hello"</span>);</span><br><span class="line">String s = list.get(<span class="number">0</span>);   <span class="comment">// 不需要进行类型转换</span></span><br></pre></td></tr></tbody></table></figure></li>
+<pre><code class="lang-java">// 未使用泛型
+List list = new ArrayList();
+list.add("hello");
+String s = (String) list.get(0);
+// 使用泛型
+List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+list.add("hello");
+String s = list.get(0);   // 不需要进行类型转换
+</code></pre>
+</li>
 <li><p>编译时强类型检测</p>
 <p>泛型要求在声明时指定实际数据类型，Java 编译器在编译时会对泛型代码做强类型检查，并在代码违反类型安全时发出告警。早发现，早治理，把隐患扼杀于摇篮，在编译时发现并修复错误所付出的代价远比在运行时小。</p>
 </li>
@@ -217,35 +228,118 @@
 </li>
 </ul>
 <h1 id="泛型类型"><a href="#泛型类型" class="headerlink" title="泛型类型"></a>泛型类型</h1><p><strong><code>泛型类型</code>是被参数化的类或接口</strong></p>
-<h2 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">name</span>&lt;<span class="title">T1</span>, <span class="title">T2</span>, ... <span class="title">Tn</span>&gt;</span>{}</span><br></pre></td></tr></tbody></table></figure>
-
+<h2 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h2><pre><code class="lang-java">class name&lt;T1, T2, ... Tn&gt;{}
+</code></pre>
 <p>一般将泛型中的类名称为<strong>原型</strong>，而将 <code>&lt;&gt;</code> 指定的参数称为<strong>类型参数</strong>。</p>
-<h3 id="单类型参数（T）"><a href="#单类型参数（T）" class="headerlink" title="单类型参数（T）"></a>单类型参数（T）</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleInfo</span>&lt;<span class="title">T</span>&gt; </span>{</span><br><span class="line">    <span class="keyword">private</span> T value;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getValue</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T value)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.value = value;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"SingleInfo{"</span> +</span><br><span class="line">                <span class="string">"value="</span> + value +</span><br><span class="line">                <span class="string">'}'</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h3 id="单类型参数（T）"><a href="#单类型参数（T）" class="headerlink" title="单类型参数（T）"></a>单类型参数（T）</h3><pre><code class="lang-java">public class SingleInfo&lt;T&gt; {
+    private T value;
 
-<h3 id="多类型参数（K，V）"><a href="#多类型参数（K，V）" class="headerlink" title="多类型参数（K，V）"></a>多类型参数（K，V）</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MultiInfo</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>{</span><br><span class="line">    <span class="keyword">private</span> K key;</span><br><span class="line">    <span class="keyword">private</span> V value;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MultiInfo</span><span class="params">(K key, V value)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.key = key;</span><br><span class="line">        <span class="keyword">this</span>.value = value;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"MultiInfo{"</span> +</span><br><span class="line">                <span class="string">"key="</span> + key +</span><br><span class="line">                <span class="string">", value="</span> + value +</span><br><span class="line">                <span class="string">'}'</span>;</span><br><span class="line">    }</span><br></pre></td></tr></tbody></table></figure>
+    public T getValue() {
+        return value;
+    }
 
-<h3 id="泛型类的嵌套"><a href="#泛型类的嵌套" class="headerlink" title="泛型类的嵌套"></a>泛型类的嵌套</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MultiInfo&lt;Integer, MultiInfo&lt;Integer, String&gt;&gt; multi = <span class="keyword">new</span> MultiInfo&lt;&gt;(<span class="number">1</span>, <span class="keyword">new</span> MultiInfo&lt;&gt;(<span class="number">1</span>,<span class="string">"32"</span>));</span><br><span class="line">System.out.println(multi);</span><br><span class="line"><span class="comment">// MultiInfo{key=1, value=MultiInfo{key=1, value=32}}</span></span><br></pre></td></tr></tbody></table></figure>
+    public void setValue(T value) {
+        this.value = value;
+    }
 
-<h2 id="泛型接口"><a href="#泛型接口" class="headerlink" title="泛型接口"></a>泛型接口</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Content</span>&lt;<span class="title">T</span>&gt; </span>{</span><br><span class="line">    <span class="function">T <span class="title">text</span><span class="params">()</span></span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+    @Override
+    public String toString() {
+        return "SingleInfo{" +
+                "value=" + value +
+                '}';
+    }
+}
+</code></pre>
+<h3 id="多类型参数（K，V）"><a href="#多类型参数（K，V）" class="headerlink" title="多类型参数（K，V）"></a>多类型参数（K，V）</h3><pre><code class="lang-java">public class MultiInfo&lt;K, V&gt; {
+    private K key;
+    private V value;
 
-<h3 id="实现接口的子类型声明具体的类型"><a href="#实现接口的子类型声明具体的类型" class="headerlink" title="实现接口的子类型声明具体的类型"></a>实现接口的子类型声明具体的类型</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ImplInterface</span> <span class="keyword">implements</span> <span class="title">MyInterface</span>&lt;<span class="title">Integer</span>&gt; </span>{</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> a = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ImplInterface</span><span class="params">(<span class="keyword">int</span> a)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.a = a;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getT</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> a;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+    public MultiInfo(K key, V value) {
+        this.key = key;
+        this.value = value;
+    }
 
-<h3 id="实现接口的子类型不声明具体类型"><a href="#实现接口的子类型不声明具体类型" class="headerlink" title="实现接口的子类型不声明具体类型"></a>实现接口的子类型不声明具体类型</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NoImplInterface</span>&lt;<span class="title">T</span>&gt; <span class="keyword">implements</span> <span class="title">MyInterface</span>&lt;<span class="title">T</span>&gt; </span>{</span><br><span class="line">    <span class="keyword">private</span> T text;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NoImplInterface</span><span class="params">(T text)</span> </span>{</span><br><span class="line">        <span class="keyword">this</span>.text = text;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>{</span><br><span class="line">        <span class="keyword">return</span> text;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+    @Override
+    public String toString() {
+        return "MultiInfo{" +
+                "key=" + key +
+                ", value=" + value +
+                '}';
+    }
+</code></pre>
+<h3 id="泛型类的嵌套"><a href="#泛型类的嵌套" class="headerlink" title="泛型类的嵌套"></a>泛型类的嵌套</h3><pre><code class="lang-java">MultiInfo&lt;Integer, MultiInfo&lt;Integer, String&gt;&gt; multi = new MultiInfo&lt;&gt;(1, new MultiInfo&lt;&gt;(1,"32"));
+System.out.println(multi);
+// MultiInfo{key=1, value=MultiInfo{key=1, value=32}}
+</code></pre>
+<h2 id="泛型接口"><a href="#泛型接口" class="headerlink" title="泛型接口"></a>泛型接口</h2><pre><code class="lang-java">public interface Content&lt;T&gt; {
+    T text();
+}
+</code></pre>
+<h3 id="实现接口的子类型声明具体的类型"><a href="#实现接口的子类型声明具体的类型" class="headerlink" title="实现接口的子类型声明具体的类型"></a>实现接口的子类型声明具体的类型</h3><pre><code class="lang-java">public class ImplInterface implements MyInterface&lt;Integer&gt; {
+    private int a = 100;
 
+    public ImplInterface(int a) {
+        this.a = a;
+    }
+
+    @Override
+    public Integer getT() {
+        return a;
+    }
+}
+</code></pre>
+<h3 id="实现接口的子类型不声明具体类型"><a href="#实现接口的子类型不声明具体类型" class="headerlink" title="实现接口的子类型不声明具体类型"></a>实现接口的子类型不声明具体类型</h3><pre><code class="lang-java">public class NoImplInterface&lt;T&gt; implements MyInterface&lt;T&gt; {
+    private T text;
+
+    public NoImplInterface(T text) {
+        this.text = text;
+    }
+
+    @Override
+    public T getT() {
+        return text;
+    }
+}
+</code></pre>
 <h2 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h2><p>泛型方法是引入其自己的类型参数的方法。泛型方法可以是普通方法、静态方法以及构造方法。</p>
 <p>泛型方法语法形式如下：</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">func</span><span class="params">(T obj)</span> </span>{}</span><br><span class="line"><span class="comment">// 类型变量放在修饰符 (这里是 public static ) 的后面 , 返回类型的前面</span></span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">public &lt;T&gt; T func(T obj) {}
+// 类型变量放在修饰符 (这里是 public static ) 的后面 , 返回类型的前面
+</code></pre>
 <p><strong>是否拥有泛型方法，与其所在的类是否是泛型没有关系。</strong></p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsMethodDemo01</span> </span>{</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">printClass</span><span class="params">(T obj)</span> </span>{</span><br><span class="line">        System.out.println(obj.getClass().toString());</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        printClass(<span class="string">"abc"</span>);</span><br><span class="line">        printClass(<span class="number">10</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// class java.lang.String</span></span><br><span class="line"><span class="comment">// class java.lang.Integer</span></span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class GenericsMethodDemo01 {
+    public static &lt;T&gt; void printClass(T obj) {
+        System.out.println(obj.getClass().toString());
+    }
 
-
-
+    public static void main(String[] args) {
+        printClass("abc");
+        printClass(10);
+    }
+}
+// Output:
+// class java.lang.String
+// class java.lang.Integer
+</code></pre>
 <p>泛型方法中也可以使用可变参数列表</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericVarargsMethodDemo</span> </span>{</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">makeList</span><span class="params">(T... args)</span> </span>{</span><br><span class="line">        List&lt;T&gt; result = <span class="keyword">new</span> ArrayList&lt;T&gt;();</span><br><span class="line">        Collections.addAll(result, args);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        List&lt;String&gt; ls = makeList(<span class="string">"A"</span>);</span><br><span class="line">        System.out.println(ls);</span><br><span class="line">        ls = makeList(<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>);</span><br><span class="line">        System.out.println(ls);</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// [A]</span></span><br><span class="line"><span class="comment">// [A, B, C]</span></span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class GenericVarargsMethodDemo {
+    public static &lt;T&gt; List&lt;T&gt; makeList(T... args) {
+        List&lt;T&gt; result = new ArrayList&lt;T&gt;();
+        Collections.addAll(result, args);
+        return result;
+    }
 
-
-
+    public static void main(String[] args) {
+        List&lt;String&gt; ls = makeList("A");
+        System.out.println(ls);
+        ls = makeList("A", "B", "C");
+        System.out.println(ls);
+    }
+}
+// Output:
+// [A]
+// [A, B, C]
+</code></pre>
 <h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>上述的定义各种泛型参数具体什么类嘞，其实就是Object。对于Java文件，在被使用之前需要经过编译、加载到JVM中两个阶段。编译阶段，编译器会把Java文件转换为.class文件。对于泛型，在编译阶段就会将泛型代码转换为普通的非泛型代码。使用javap也无法直接看到，因为在字节码里面也是看不到泛型的，因为已经被擦除了。将类型参数擦除之后，会使用Object进行替代以及必要的强制类型转换。然后Java虚拟机在执行过程中，已经不知道泛型的事情了，在其眼里就是普通的类。</p>
 <h3 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h3><p>==<strong>Java中的泛型基本上都是在编译器这个层次来实现的。</strong>==</p>
 <p>Java 语言引入泛型是为了在编译时提供更严格的类型检查，并支持泛型编程。不同于 C++ 的模板机制，<strong>Java 泛型是使用类型擦除来实现的，使用泛型时，任何具体的类型信息都被擦除了</strong>。</p>
@@ -257,41 +351,86 @@
 <li>生成桥接方法以保留扩展泛型类型中的多态性。类型擦除确保不为参数化类型创建新类；因此，泛型不会产生运行时开销。</li>
 </ul>
 <p>示例：</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsErasureTypeDemo</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        List&lt;Object&gt; list1 = <span class="keyword">new</span> ArrayList&lt;Object&gt;();</span><br><span class="line">        List&lt;String&gt; list2 = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        System.out.println(list1.getClass());</span><br><span class="line">        System.out.println(list2.getClass());</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// class java.util.ArrayList</span></span><br><span class="line"><span class="comment">// class java.util.ArrayList</span></span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">public class GenericsErasureTypeDemo {
+    public static void main(String[] args) {
+        List&lt;Object&gt; list1 = new ArrayList&lt;Object&gt;();
+        List&lt;String&gt; list2 = new ArrayList&lt;String&gt;();
+        System.out.println(list1.getClass());
+        System.out.println(list2.getClass());
+    }
+}
+// Output:
+// class java.util.ArrayList
+// class java.util.ArrayList
+</code></pre>
 <h3 id="泛型和继承"><a href="#泛型和继承" class="headerlink" title="泛型和继承"></a>泛型和继承</h3><p><strong>泛型不能用于显式地引用运行时类型的操作之中，例如：转型、instanceof 操作和 new 表达式。因为所有关于参数的类型信息都丢失了</strong>。</p>
 <p>泛型无法向上转型</p>
 <blockquote>
 <p>向上转型是指用子类实例去初始化父类，这是面向对象中多态的重要表现。</p>
 </blockquote>
 <p>这是因为，泛型类并没有自己独有的 <code>Class</code> 类对象。比如：并不存在 <code>List.class</code> 或是 <code>List.class</code>，Java 编译器会将二者都视为 <code>List.class</code>。</p>
-<h3 id="类型边界"><a href="#类型边界" class="headerlink" title="类型边界"></a>类型边界</h3><p>有时您可能希望限制可在参数化类型中用作类型参数的类型。**<code>类型边界</code>可以对泛型的类型参数设置限制条件**。例如，对数字进行操作的方法可能只想接受 <code>Number</code> 或其子类的实例。</p>
+<h3 id="类型边界"><a href="#类型边界" class="headerlink" title="类型边界"></a>类型边界</h3><p>有时您可能希望限制可在参数化类型中用作类型参数的类型。<strong><code>类型边界</code>可以对泛型的类型参数设置限制条件</strong>。例如，对数字进行操作的方法可能只想接受 <code>Number</code> 或其子类的实例。</p>
 <p>要声明有界类型参数，请列出类型参数的名称，然后是 <code>extends</code> 关键字，后跟其限制类或接口。</p>
 <p>类型边界的语法形式如下：</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;T extends XXX&gt;</span><br></pre></td></tr></tbody></table></figure>
-
-
-
+<pre><code class="lang-java">&lt;T extends XXX&gt;
+</code></pre>
 <h3 id="类型通配符"><a href="#类型通配符" class="headerlink" title="类型通配符"></a>类型通配符</h3><p><code>类型通配符</code>一般是使用 <code>?</code> 代替具体的类型参数。例如 <code>List</code> 在逻辑上是 <code>List</code> ，<code>List</code> 等所有 <code>List&lt;具体类型实参&gt;</code> 的父类</p>
-<h4 id="上界通配符"><a href="#上界通配符" class="headerlink" title="上界通配符"></a>上界通配符</h4><p>可以使用**<code>上界通配符</code>**来缩小类型参数的类型范围。</p>
+<h4 id="上界通配符"><a href="#上界通配符" class="headerlink" title="上界通配符"></a>上界通配符</h4><p>可以使用<strong><code>上界通配符</code></strong>来缩小类型参数的类型范围。</p>
 <p>它的语法形式为：<code>&lt;? extends Number&gt;</code></p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsUpperBoundedWildcardDemo</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">sumOfList</span><span class="params">(List&lt;? extends Number&gt; list)</span> </span>{</span><br><span class="line">        <span class="keyword">double</span> s = <span class="number">0.0</span>;</span><br><span class="line">        <span class="keyword">for</span> (Number n : list) {</span><br><span class="line">            s += n.doubleValue();</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">return</span> s;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        List&lt;Integer&gt; li = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">        System.out.println(<span class="string">"sum = "</span> + sumOfList(li));</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// sum = 6.0</span></span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class GenericsUpperBoundedWildcardDemo {
+    public static double sumOfList(List&lt;? extends Number&gt; list) {
+        double s = 0.0;
+        for (Number n : list) {
+            s += n.doubleValue();
+        }
+        return s;
+    }
 
-<h4 id="下界通配符"><a href="#下界通配符" class="headerlink" title="下界通配符"></a>下界通配符</h4><p>**<code>下界通配符</code>**将未知类型限制为该类型的特定类型或超类类型。</p>
+    public static void main(String[] args) {
+        List&lt;Integer&gt; li = Arrays.asList(1, 2, 3);
+        System.out.println("sum = " + sumOfList(li));
+    }
+}
+// Output:
+// sum = 6.0
+</code></pre>
+<h4 id="下界通配符"><a href="#下界通配符" class="headerlink" title="下界通配符"></a>下界通配符</h4><p><strong><code>下界通配符</code></strong>将未知类型限制为该类型的特定类型或超类类型。</p>
 <blockquote>
 <p>🔔 注意：<strong>上界通配符和下界通配符不能同时使用</strong>。</p>
 </blockquote>
 <p>它的语法形式为：<code>&lt;? super Number&gt;</code></p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsLowerBoundedWildcardDemo</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">addNumbers</span><span class="params">(List&lt;? <span class="keyword">super</span> Integer&gt; list)</span> </span>{</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++) {</span><br><span class="line">            list.add(i);</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        addNumbers(list);</span><br><span class="line">        System.out.println(Arrays.deepToString(list.toArray()));</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"><span class="comment">// Output:</span></span><br><span class="line"><span class="comment">// [1, 2, 3, 4, 5]</span></span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class GenericsLowerBoundedWildcardDemo {
+    public static void addNumbers(List&lt;? super Integer&gt; list) {
+        for (int i = 1; i &lt;= 5; i++) {
+            list.add(i);
+        }
+    }
 
+    public static void main(String[] args) {
+        List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+        addNumbers(list);
+        System.out.println(Arrays.deepToString(list.toArray()));
+    }
+}
+// Output:
+// [1, 2, 3, 4, 5]
+</code></pre>
 <h4 id="无界通配符"><a href="#无界通配符" class="headerlink" title="无界通配符"></a>无界通配符</h4><p>无界通配符有两种应用场景：</p>
 <ul>
 <li>可以使用 Object 类中提供的功能来实现的方法。</li>
 <li>使用不依赖于类型参数的泛型类中的方法。</li>
 </ul>
 <h4 id="通配符和向上转型"><a href="#通配符和向上转型" class="headerlink" title="通配符和向上转型"></a>通配符和向上转型</h4><p><strong>泛型不能向上转型。但是，我们可以通过使用通配符来向上转型</strong>。</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericsWildcardDemo</span> </span>{</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</span><br><span class="line">        List&lt;Integer&gt; intList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        List&lt;Number&gt; numList = intList;  <span class="comment">// Error</span></span><br><span class="line"></span><br><span class="line">        List&lt;? extends Integer&gt; intList2 = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        List&lt;? extends Number&gt; numList2 = intList2;  <span class="comment">// OK</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public class GenericsWildcardDemo {
+    public static void main(String[] args) {
+        List&lt;Integer&gt; intList = new ArrayList&lt;&gt;();
+        List&lt;Number&gt; numList = intList;  // Error
 
+        List&lt;? extends Integer&gt; intList2 = new ArrayList&lt;&gt;();
+        List&lt;? extends Number&gt; numList2 = intList2;  // OK
+    }
+}
+</code></pre>
 <h3 id="泛型约束"><a href="#泛型约束" class="headerlink" title="泛型约束"></a>泛型约束</h3><p><a href="https://docs.oracle.com/javase/tutorial/java/generics/restrictions.html#instantiate" target="_blank" rel="noopener">Restrictions on Generics</a></p>
 <h3 id="泛型实践"><a href="#泛型实践" class="headerlink" title="泛型实践"></a>泛型实践</h3><h4 id="泛型命名"><a href="#泛型命名" class="headerlink" title="泛型命名"></a>泛型命名</h4><p>泛型一些约定俗成的命名：</p>
 <ul>
@@ -428,6 +567,7 @@
 
 
 
+
 </article>
 
 
@@ -447,18 +587,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -467,6 +623,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -515,7 +672,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -571,6 +728,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

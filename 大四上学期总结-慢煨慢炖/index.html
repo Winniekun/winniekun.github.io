@@ -38,6 +38,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -52,10 +53,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -202,13 +203,13 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这学期都已经过半了，因为开学一直有事情，就一直拖到现在。</p>
 <a id="more"></a>
-
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li><strong>学习上</strong><br>上学期基本就是三点一线的生活，<code>寝室</code> &lt;—&gt; <code>图书馆</code> &lt;—&gt; <code>食堂</code><br>其实没有啥好总结的，感觉的话，自己的计算机基础的确是深化了，那几个月的确 很难受，周围的朋友实习的去实习了，保研的保研了，自己一直还没有确定下来。<br>不过好处还是有的，自己深刻的体会到了团队的重要性，之前一直认为任何时候， 自己一个人终究好比过一堆人一起。不管是从效率上来讲还是从技术上来讲，但是 经过上学期的备考，感觉到了当大家共同为一个目标努力的时候，那种效率和自控 力是很高的。</li>
+<li><strong>学习上</strong><br>上学期基本就是三点一线的生活，<code>寝室</code> &lt;—-&gt; <code>图书馆</code> &lt;—-&gt; <code>食堂</code><br>其实没有啥好总结的，感觉的话，自己的计算机基础的确是深化了，那几个月的确 很难受，周围的朋友实习的去实习了，保研的保研了，自己一直还没有确定下来。<br>不过好处还是有的，自己深刻的体会到了团队的重要性，之前一直认为任何时候， 自己一个人终究好比过一堆人一起。不管是从效率上来讲还是从技术上来讲，但是 经过上学期的备考，感觉到了当大家共同为一个目标努力的时候，那种效率和自控 力是很高的。</li>
 <li><strong>技术上</strong><br>大概有进半年没有撸过代码吧，博客也没有更新过了，编码能力讲真是有一定的退步的，但是目前的感觉是比之之前的学习速度快了（在脑子保持清醒的情况下），自己现在不是很热衷于去了解和掌握一些框架的使用，反而对一些的算法的研究比较感兴趣了，虽然看的云里雾里的。自己在极客上买了<code>数据结构与算法之美</code>这个课程，觉得作者的理解很棒，并不是理论层面的，而是结合了真正的实际开发中的各个情况，希望自己有朝一日能有如此见解</li>
 <li><strong>生活上</strong><br>有时候选择比努力更重要<br>没有什么所谓的happily ever after</li>
 </ul>
@@ -338,6 +339,7 @@
 
 
 
+
 </article>
 
 
@@ -357,18 +359,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -377,6 +395,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -425,7 +444,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -481,6 +500,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

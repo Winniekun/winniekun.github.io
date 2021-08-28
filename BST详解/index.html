@@ -42,6 +42,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -56,10 +57,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -206,10 +207,10 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><a id="more"></a>
-
 <p>BST有很多的名字，如二叉排序树、二叉搜索树、Binary Sort Tree、Binary Search Tree、BST<br><strong>其具有如下性质：</strong></p>
 <ol>
 <li>定义空树是一个BST</li>
@@ -239,7 +240,6 @@
                 </div>
                 <div class="image-caption">bst_删除_情况1.png</div>
             </figure>
-
 <h3 id="P只有左子树或右子树"><a href="#P只有左子树或右子树" class="headerlink" title="P只有左子树或右子树"></a>P只有左子树或右子树</h3><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -247,7 +247,6 @@
                 </div>
                 <div class="image-caption">bst_删除_情况2.png</div>
             </figure>
-
 <h3 id="P既有左子树又有右子树"><a href="#P既有左子树又有右子树" class="headerlink" title="P既有左子树又有右子树"></a>P既有左子树又有右子树</h3><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -255,12 +254,20 @@
                 </div>
                 <div class="image-caption">bst_删除_情况3.png</div>
             </figure>
-
-
-
-<h2 id="面试汇总"><a href="#面试汇总" class="headerlink" title="面试汇总"></a>面试汇总</h2><h3 id="给定一个BST的节点，寻找以当前节点为根节点的最值"><a href="#给定一个BST的节点，寻找以当前节点为根节点的最值" class="headerlink" title="给定一个BST的节点，寻找以当前节点为根节点的最值"></a>给定一个BST的节点，寻找以当前节点为根节点的最值</h3><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> TreeNode <span class="title">getLastEntry</span><span class="params">(TreeNode node)</span> </span>{</span><br><span class="line">    <span class="keyword">while</span> (node.right != <span class="keyword">null</span>) {</span><br><span class="line">        node = node.right;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> TreeNode <span class="title">getFirstEntry</span><span class="params">(TreeNode node)</span> </span>{</span><br><span class="line">    <span class="keyword">while</span> (node.left != <span class="keyword">null</span>) {</span><br><span class="line">        node = node.left;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<h3 id="给定节点t，后继-前驱-节点"><a href="#给定节点t，后继-前驱-节点" class="headerlink" title="给定节点t，后继(前驱)节点"></a>给定节点t，后继(前驱)节点</h3><ol start="0">
+<h2 id="面试汇总"><a href="#面试汇总" class="headerlink" title="面试汇总"></a>面试汇总</h2><h3 id="给定一个BST的节点，寻找以当前节点为根节点的最值"><a href="#给定一个BST的节点，寻找以当前节点为根节点的最值" class="headerlink" title="给定一个BST的节点，寻找以当前节点为根节点的最值"></a>给定一个BST的节点，寻找以当前节点为根节点的最值</h3><pre><code class="lang-java">private static TreeNode getLastEntry(TreeNode node) {
+    while (node.right != null) {
+        node = node.right;
+    }
+    return node;
+}
+private static TreeNode getFirstEntry(TreeNode node) {
+    while (node.left != null) {
+        node = node.left;
+    }
+    return node;
+}
+</code></pre>
+<h3 id="给定节点t，后继-前驱-节点"><a href="#给定节点t，后继-前驱-节点" class="headerlink" title="给定节点t，后继(前驱)节点"></a>给定节点t，后继(前驱)节点</h3><ol>
 <li><p>t为最值节点</p>
 <ul>
 <li>无前驱或后继</li>
@@ -271,8 +278,7 @@
 <li>直接寻找其右子树最小节点（左子树最大节点）即可</li>
 </ul>
 </li>
-<li><p>t无右子树</p>
-<ol>
+<li>t无右子树<ol>
 <li>向上回溯，找到第一个孩子是<strong>左子树孩子</strong>（右子树孩子）的父亲p</li>
 <li>向上回溯，找到第一个关键字比孩子大（小）的父亲p（利用BST特性）</li>
 </ol>
@@ -280,8 +286,47 @@
 </ol>
 <h4 id="LintCode448-Inorder-Successor-in-BST"><a href="#LintCode448-Inorder-Successor-in-BST" class="headerlink" title="LintCode448. Inorder Successor in BST"></a>LintCode448. Inorder Successor in BST</h4><p>使用指针代替路径栈，将空间复杂度降到<code>O(1)</code></p>
 <p>栈是自底向上寻找结果，指针为自顶向下寻找结果</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> TreeNode <span class="title">inorderSuccessor</span><span class="params">(TreeNode root, TreeNode p)</span> </span>{</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 情况0: 本身就是最值</span></span><br><span class="line">    <span class="keyword">if</span> (getLastEntry(root) == p) {</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 情况1: 有右子树</span></span><br><span class="line">    <span class="keyword">if</span> (p.right != <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">return</span> getFirstEntry(p.right);</span><br><span class="line">    }</span><br><span class="line">    <span class="comment">// 情况2: 没有右子树</span></span><br><span class="line">    TreeNode parent = root;</span><br><span class="line">    <span class="comment">// temp指针代替栈</span></span><br><span class="line">    TreeNode temp = root;</span><br><span class="line">    <span class="keyword">while</span> (parent != <span class="keyword">null</span>) {</span><br><span class="line">        <span class="keyword">if</span> (parent == p) {</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        } <span class="keyword">else</span> <span class="keyword">if</span> (parent.val &gt; p.val) {</span><br><span class="line">            temp = parent;</span><br><span class="line">            parent = parent.left;</span><br><span class="line">        } <span class="keyword">else</span> {</span><br><span class="line">            parent = parent.right;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> temp;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> TreeNode <span class="title">getLastEntry</span><span class="params">(TreeNode node)</span> </span>{</span><br><span class="line">    <span class="keyword">while</span> (node.right != <span class="keyword">null</span>) {</span><br><span class="line">        node = node.right;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">}</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> TreeNode <span class="title">getFirstEntry</span><span class="params">(TreeNode node)</span> </span>{</span><br><span class="line">    <span class="keyword">while</span> (node.left != <span class="keyword">null</span>) {</span><br><span class="line">        node = node.left;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-java">public static TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+    if (root == null) {
+        return null;
+    }
+    // 情况0: 本身就是最值
+    if (getLastEntry(root) == p) {
+        return null;
+    }
+    // 情况1: 有右子树
+    if (p.right != null) {
+        return getFirstEntry(p.right);
+    }
+    // 情况2: 没有右子树
+    TreeNode parent = root;
+    // temp指针代替栈
+    TreeNode temp = root;
+    while (parent != null) {
+        if (parent == p) {
+            break;
+        } else if (parent.val &gt; p.val) {
+            temp = parent;
+            parent = parent.left;
+        } else {
+            parent = parent.right;
+        }
+    }
+    return temp;
+}
+private static TreeNode getLastEntry(TreeNode node) {
+    while (node.right != null) {
+        node = node.right;
+    }
+    return node;
+}
+private static TreeNode getFirstEntry(TreeNode node) {
+    while (node.left != null) {
+        node = node.left;
+    }
+    return node;
+}
+</code></pre>
 <p><strong>相关题目会持续添加</strong></p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
 <li><a href="https://github.com/kosoraYintai/TreeMapSourceAnalysis" target="_blank" rel="noopener">TreeMapSourceAnalysis</a></li>
@@ -412,6 +457,7 @@
 
 
 
+
 </article>
 
 
@@ -431,18 +477,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -451,6 +513,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -499,7 +562,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -555,6 +618,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>

@@ -48,6 +48,7 @@
     
     <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -62,10 +63,10 @@
 <body>
     <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
+    <aside id="menu"  >
   <div class="inner flex-row-vertical">
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+        <i class="icon icon-lg icon-list-ul"></i>
     </a>
     <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
       <div class="brand">
@@ -212,6 +213,7 @@
 </span>
 
 
+            
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><h2 id="IoC"><a href="#IoC" class="headerlink" title="IoC"></a>IoC</h2><p>IoC控制反转，意思就是将创建对象的控制权从我们自己硬编码来new一个对象反转到了第三方身上。IoC的主要实现方式是依赖注入，Spring中的依赖注入方式有：<code>构造方法注入</code>、<code>settter注入</code>、<code>接口注入</code>。</p>
@@ -241,7 +243,6 @@
                 </div>
                 <div class="image-caption">image-20210520140010820</div>
             </figure>
-
 <p>Spring的IoC容器就是一个IoC Provider，但是其相比于IoC Provider的功能更加的丰富，除了业务对象的构建、依赖关系的绑定这种IoC Provider的基本功能，还新增了业务对象声明周期的管理，AOP支持等。同时Spring提供了两种容器类型:BeanFactory和ApplicationContext。</p>
 <ul>
 <li><p>BeanFactory</p>
@@ -255,18 +256,53 @@
 <h4 id="FactoryBean"><a href="#FactoryBean" class="headerlink" title="FactoryBean"></a>FactoryBean</h4><p>BeanFactory和FactoryBean傻傻分不清？虽然两者类似，但是功能不同。FactoryBean是一种工厂Bean，和普通的Bean不一样，FactoryBean是可以生产Bean的Bean。</p>
 <h4 id="depends-on"><a href="#depends-on" class="headerlink" title="depends-on"></a>depends-on</h4><p>当一个 bean 直接依赖另一个 bean，可以使用 <code>&lt;ref/&gt;</code> 标签进行配置。不过如某个 bean 并不直接依赖于其他 bean，但又需要其他 bean 先实例化好，这个时候就需要使用 depends-on 特性了。depends-on 特性比较简单，就不演示了。仅贴一下配置文件的内容，如下：</p>
 <p>这里有两个简单的类，其中 Hello 需要 World 在其之前完成实例化。相关配置如下：</p>
-<figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"xyz.coolblog.depnedson.Hello"</span> <span class="attr">depends-on</span>=<span class="string">"world"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"world"</span> <span class="attr">class</span>=<span class="string">"xyz.coolblog.depnedson.World"</span> /&gt;</span></span><br></pre></td></tr></tbody></table></figure>
-
+<pre><code class="lang-xml">&lt;bean id="hello" class="xyz.coolblog.depnedson.Hello" depends-on="world"/&gt;
+&lt;bean id="world" class="xyz.coolblog.depnedson.World" /&gt;
+</code></pre>
 <h4 id="BeanPostProcessor"><a href="#BeanPostProcessor" class="headerlink" title="BeanPostProcessor"></a>BeanPostProcessor</h4><p>BeanPostProcessor 是 bean 实例化时的后置处理器，包含两个方法，其源码如下：</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BeanPostProcessor</span> </span>{</span><br><span class="line">    <span class="comment">// bean 初始化前的回调方法</span></span><br><span class="line">    <span class="function">Object <span class="title">postProcessBeforeInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// bean 初始化后的回调方法    </span></span><br><span class="line">    <span class="function">Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException</span>;</span><br><span class="line"></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<pre><code class="lang-java">public interface BeanPostProcessor {
+    // bean 初始化前的回调方法
+    Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException;
 
+    // bean 初始化后的回调方法    
+    Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException;
+
+}
+</code></pre>
 <p>BeanPostProcessor是Spring框架的一个扩展点，可以通过BeanPostProcessor接口，我们能够插手Bean的实例化过程，比如AOP就是在bean实例将切面逻辑织入bean实例中，AOP也是正是通过BeanPostProcessor和IoC容器建立了联系</p>
-<h5 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h5><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoggerBeanPostProcessor</span> <span class="keyword">implements</span> <span class="title">BeanPostProcessor</span> </span>{</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">postProcessBeforeInitialization</span><span class="params">(Object bean, String beanName)</span> </span>{</span><br><span class="line">        log.info(<span class="string">"Before  "</span> + beanName + <span class="string">" Initialization"</span>);</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> </span>{</span><br><span class="line">        log.info(<span class="string">"After  "</span> + beanName + <span class="string">" Initialization"</span>);</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h5 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h5><pre><code class="lang-java">@Slf4j
+public class LoggerBeanPostProcessor implements BeanPostProcessor {
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) {
+        log.info("Before  " + beanName + " Initialization");
+        return bean;
+    }
 
-<h5 id="配置如下"><a href="#配置如下" class="headerlink" title="配置如下"></a><strong>配置如下</strong></h5><figure class="highlight xml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"com.titizz.simulation.toyspring.learninng.LoggerBeanPostProcessor"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"car"</span> <span class="attr">class</span>=<span class="string">"com.titizz.simulation.toyspring.Car"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></tbody></table></figure>
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) {
+        log.info("After  " + beanName + " Initialization");
+        return bean;
+    }
+}
+</code></pre>
+<h5 id="配置如下"><a href="#配置如下" class="headerlink" title="配置如下"></a><strong>配置如下</strong></h5><pre><code class="lang-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"&gt;
+    &lt;bean class="com.titizz.simulation.toyspring.learninng.LoggerBeanPostProcessor"/&gt;
 
-<h5 id="测试如下"><a href="#测试如下" class="headerlink" title="测试如下"></a><strong>测试如下</strong></h5><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testBeanPostProcessor</span><span class="params">()</span> </span>{</span><br><span class="line">    String xmlPath = <span class="string">"test-spring.xml"</span>;</span><br><span class="line">    ApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(xmlPath);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+    &lt;bean id="car" class="com.titizz.simulation.toyspring.Car"&gt;
 
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre>
+<h5 id="测试如下"><a href="#测试如下" class="headerlink" title="测试如下"></a><strong>测试如下</strong></h5><pre><code class="lang-java">@Test
+public void testBeanPostProcessor() {
+    String xmlPath = "test-spring.xml";
+    ApplicationContext applicationContext = new ClassPathXmlApplicationContext(xmlPath);
+}
+</code></pre>
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -274,103 +310,115 @@
                 </div>
                 <div class="image-caption">image-20210502181644978</div>
             </figure>
-
 <h3 id="核心接口"><a href="#核心接口" class="headerlink" title="核心接口"></a>核心接口</h3><h4 id="Resource"><a href="#Resource" class="headerlink" title="Resource"></a>Resource</h4><p>以 <code>Resource</code> 接口为核心发散出的几个类，都是用于解决 IoC 容器中的内容从哪里来的问题，也就是 <strong>配置文件从哪里读取、配置文件如何读取</strong> 的问题。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th align="left">类名</th>
-<th align="left">说明</th>
+<th style="text-align:left">类名</th>
+<th style="text-align:left">说明</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left"><code>Resource</code></td>
-<td align="left">接口，标识一个外部资源。通过 <code>getInputStream()</code> 方法 <strong>获取资源的输入流</strong> 。</td>
+<tbody>
+<tr>
+<td style="text-align:left"><code>Resource</code></td>
+<td style="text-align:left">接口，标识一个外部资源。通过 <code>getInputStream()</code> 方法 <strong>获取资源的输入流</strong> 。</td>
 </tr>
 <tr>
-<td align="left"><code>UrlResource</code></td>
-<td align="left">实现 <code>Resource</code> 接口的资源类，通过 URL 获取资源。</td>
+<td style="text-align:left"><code>UrlResource</code></td>
+<td style="text-align:left">实现 <code>Resource</code> 接口的资源类，通过 URL 获取资源。</td>
 </tr>
 <tr>
-<td align="left"><code>ResourceLoader</code></td>
-<td align="left">资源加载类。通过 <code>getResource(String)</code> 方法获取一个 <code>Resouce</code> 对象，是 <strong>获取 <code>Resouce</code> 的主要途径</strong> 。</td>
+<td style="text-align:left"><code>ResourceLoader</code></td>
+<td style="text-align:left">资源加载类。通过 <code>getResource(String)</code> 方法获取一个 <code>Resouce</code> 对象，是 <strong>获取 <code>Resouce</code> 的主要途径</strong> 。</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h4 id="BeanDefinition"><a href="#BeanDefinition" class="headerlink" title="BeanDefinition"></a>BeanDefinition</h4><p><strong>功能：</strong>用于解决Bean的定义问题，包括Bean的名字，类型以及它的属性赋予了什么值或者引用。说白了也就是<strong>解决了在IoC容器中定义一个Bean，使得IoC容器可以根据这个定义来生成实例。</strong></p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th align="left">类名</th>
-<th align="left">说明</th>
+<th style="text-align:left">类名</th>
+<th style="text-align:left">说明</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left"><code>BeanDefinition</code></td>
-<td align="left">该类保存了 <code>Bean</code> 定义。包括 <code>Bean</code> 的 <strong>名字</strong> <code>String beanClassName</code>、<strong>类型</strong> <code>Class beanClass</code>、<strong>属性</strong> <code>PropertyValues propertyValues</code>。根据其 <strong>类型</strong> 可以生成一个类实例，然后可以把 <strong>属性</strong> 注入进去。<code>propertyValues</code> 里面包含了一个个 <code>PropertyValue</code> 条目，每个条目都是键值对 <code>String</code> - <code>Object</code>，分别对应要生成实例的属性的名字与类型。在 Spring 的 XML 中的 <code>property</code> 中，键是 <code>key</code> ，值是 <code>value</code> 或者 <code>ref</code>。对于 <code>value</code> 只要直接注入属性就行了，但是 <code>ref</code> 要先进行解析。<code>Object</code> 如果是 <code>BeanReference</code> 类型，则说明其是一个引用，其中保存了引用的名字，需要用先进行解析，转化为对应的实际 <code>Object</code>。</td>
+<tbody>
+<tr>
+<td style="text-align:left"><code>BeanDefinition</code></td>
+<td style="text-align:left">该类保存了 <code>Bean</code> 定义。包括 <code>Bean</code> 的 <strong>名字</strong> <code>String beanClassName</code>、<strong>类型</strong> <code>Class beanClass</code>、<strong>属性</strong> <code>PropertyValues propertyValues</code>。根据其 <strong>类型</strong> 可以生成一个类实例，然后可以把 <strong>属性</strong> 注入进去。<code>propertyValues</code> 里面包含了一个个 <code>PropertyValue</code> 条目，每个条目都是键值对 <code>String</code> - <code>Object</code>，分别对应要生成实例的属性的名字与类型。在 Spring 的 XML 中的 <code>property</code> 中，键是 <code>key</code> ，值是 <code>value</code> 或者 <code>ref</code>。对于 <code>value</code> 只要直接注入属性就行了，但是 <code>ref</code> 要先进行解析。<code>Object</code> 如果是 <code>BeanReference</code> 类型，则说明其是一个引用，其中保存了引用的名字，需要用先进行解析，转化为对应的实际 <code>Object</code>。</td>
 </tr>
 <tr>
-<td align="left"><code>BeanDefinitionReader</code></td>
-<td align="left">解析 <code>BeanDefinition</code> 的接口。通过 <code>loadBeanDefinitions(String)</code> 来从一个地址加载类定义。</td>
+<td style="text-align:left"><code>BeanDefinitionReader</code></td>
+<td style="text-align:left">解析 <code>BeanDefinition</code> 的接口。通过 <code>loadBeanDefinitions(String)</code> 来从一个地址加载类定义。</td>
 </tr>
 <tr>
-<td align="left"><code>AbstractBeanDefinitionReader</code></td>
-<td align="left">实现 <code>BeanDefinitionReader</code> 接口的抽象类（未具体实现 <code>loadBeanDefinitions</code>，而是规范了 <code>BeanDefinitionReader</code> 的基本结构）。内置一个 <code>HashMap rigistry</code>，用于保存 <code>String</code> - <code>beanDefinition</code> 的键值对。内置一个 <code>ResourceLoader resourceLoader</code>，用于保存类加载器。用意在于，使用时，只需要向其 <code>loadBeanDefinitions()</code> 传入一个资源地址，就可以自动调用其类加载器，并把解析到的 <code>BeanDefinition</code> 保存到 <code>registry</code> 中去。</td>
+<td style="text-align:left"><code>AbstractBeanDefinitionReader</code></td>
+<td style="text-align:left">实现 <code>BeanDefinitionReader</code> 接口的抽象类（未具体实现 <code>loadBeanDefinitions</code>，而是规范了 <code>BeanDefinitionReader</code> 的基本结构）。内置一个 <code>HashMap rigistry</code>，用于保存 <code>String</code> - <code>beanDefinition</code> 的键值对。内置一个 <code>ResourceLoader resourceLoader</code>，用于保存类加载器。用意在于，使用时，只需要向其 <code>loadBeanDefinitions()</code> 传入一个资源地址，就可以自动调用其类加载器，并把解析到的 <code>BeanDefinition</code> 保存到 <code>registry</code> 中去。</td>
 </tr>
 <tr>
-<td align="left"><code>XmlBeanDefinitionReader</code></td>
-<td align="left">具体实现了 <code>loadBeanDefinitions()</code> 方法，从 XML 文件中读取类定义。</td>
+<td style="text-align:left"><code>XmlBeanDefinitionReader</code></td>
+<td style="text-align:left">具体实现了 <code>loadBeanDefinitions()</code> 方法，从 XML 文件中读取类定义。</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h4 id="BeanFactory-question"><a href="#BeanFactory-question" class="headerlink" title="BeanFactory :question:"></a>BeanFactory <span class="github-emoji"><span>❓</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/2753.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span></h4><p>以 <code>BeanFactory</code> 接口为核心发散出的几个类，都是用于解决 IoC 容器在 <strong>已经获取 <code>Bean</code> 的定义的情况下，如何装配、获取 <code>Bean</code> 实例</strong> </p>
 <p>的问题。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th align="left">类名</th>
-<th align="left">说明</th>
+<th style="text-align:left">类名</th>
+<th style="text-align:left">说明</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left"><code>BeanFactory</code></td>
-<td align="left">接口，标识一个 IoC 容器。通过 <code>getBean(String)</code> 方法来 <strong>获取一个对象</strong></td>
+<tbody>
+<tr>
+<td style="text-align:left"><code>BeanFactory</code></td>
+<td style="text-align:left">接口，标识一个 IoC 容器。通过 <code>getBean(String)</code> 方法来 <strong>获取一个对象</strong></td>
 </tr>
 <tr>
-<td align="left"><code>AbstractBeanFactory</code></td>
-<td align="left"><code>BeanFactory</code> 的一种抽象类实现，规范了 IoC 容器的基本结构，但是把生成 <code>Bean</code> 的具体实现方式留给子类实现。IoC 容器的结构：<code>AbstractBeanFactory</code> 维护一个 <code>beanDefinitionMap</code> 哈希表用于保存类的定义信息（<code>BeanDefinition</code>）。获取 <code>Bean</code> 时，如果 <code>Bean</code> 已经存在于容器中，则返回之，否则则调用 <code>doCreateBean</code> 方法装配一个 <code>Bean</code>。（所谓存在于容器中，是指容器可以通过 <code>beanDefinitionMap</code> 获取 <code>BeanDefinition</code> 进而通过其 <code>getBean()</code> 方法获取 <code>Bean</code>。）</td>
+<td style="text-align:left"><code>AbstractBeanFactory</code></td>
+<td style="text-align:left"><code>BeanFactory</code> 的一种抽象类实现，规范了 IoC 容器的基本结构，但是把生成 <code>Bean</code> 的具体实现方式留给子类实现。IoC 容器的结构：<code>AbstractBeanFactory</code> 维护一个 <code>beanDefinitionMap</code> 哈希表用于保存类的定义信息（<code>BeanDefinition</code>）。获取 <code>Bean</code> 时，如果 <code>Bean</code> 已经存在于容器中，则返回之，否则则调用 <code>doCreateBean</code> 方法装配一个 <code>Bean</code>。（所谓存在于容器中，是指容器可以通过 <code>beanDefinitionMap</code> 获取 <code>BeanDefinition</code> 进而通过其 <code>getBean()</code> 方法获取 <code>Bean</code>。）</td>
 </tr>
 <tr>
-<td align="left"><code>AutowireCapableBeanFactory</code></td>
-<td align="left">可以实现自动装配的 <code>BeanFactory</code>。在这个工厂中，实现了 <code>doCreateBean</code> 方法，该方法分三步：1，通过 <code>BeanDefinition</code> 中保存的类信息实例化一个对象；2，把对象保存在 <code>BeanDefinition</code> 中，以备下次获取；3，为其装配属性。装配属性时，通过 <code>BeanDefinition</code> 中维护的 <code>PropertyValues</code> 集合类，把 <code>String</code> - <code>Value</code> 键值对注入到 <code>Bean</code> 的属性中去。如果 <code>Value</code> 的类型是 <code>BeanReference</code> 则说明其是一个引用（对应于 XML 中的 <code>ref</code>），通过 <code>getBean</code> 对其进行获取，然后注入到属性中。</td>
+<td style="text-align:left"><code>AutowireCapableBeanFactory</code></td>
+<td style="text-align:left">可以实现自动装配的 <code>BeanFactory</code>。在这个工厂中，实现了 <code>doCreateBean</code> 方法，该方法分三步：1，通过 <code>BeanDefinition</code> 中保存的类信息实例化一个对象；2，把对象保存在 <code>BeanDefinition</code> 中，以备下次获取；3，为其装配属性。装配属性时，通过 <code>BeanDefinition</code> 中维护的 <code>PropertyValues</code> 集合类，把 <code>String</code> - <code>Value</code> 键值对注入到 <code>Bean</code> 的属性中去。如果 <code>Value</code> 的类型是 <code>BeanReference</code> 则说明其是一个引用（对应于 XML 中的 <code>ref</code>），通过 <code>getBean</code> 对其进行获取，然后注入到属性中。</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h4 id="ApplicationContext"><a href="#ApplicationContext" class="headerlink" title="ApplicationContext"></a>ApplicationContext</h4><p>以 <code>ApplicationContext</code> 接口为核心发散出的几个类，主要是对前面 <code>Resouce</code> 、 <code>BeanFactory</code>、<code>BeanDefinition</code> 进行了功能的封装，解决 <strong>根据地址获取 IoC 容器并使用</strong> 的问题。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
-<th align="left">类名</th>
-<th align="left">说明</th>
+<th style="text-align:left">类名</th>
+<th style="text-align:left">说明</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left"><code>ApplicationContext</code></td>
-<td align="left">标记接口，继承了 <code>BeanFactory</code>。通常，要实现一个 IoC 容器时，需要先通过 <code>ResourceLoader</code> 获取一个 <code>Resource</code>，其中包括了容器的配置、<code>Bean</code> 的定义信息。接着，使用 <code>BeanDefinitionReader</code> 读取该 <code>Resource</code> 中的 <code>BeanDefinition</code> 信息。最后，把 <code>BeanDefinition</code> 保存在 <code>BeanFactory</code> 中，容器配置完毕可以使用。注意到 <code>BeanFactory</code> 只实现了 <code>Bean</code> 的 <strong>装配、获取</strong>，并未说明 <code>Bean</code> 的 <strong>来源</strong> 也就是 <code>BeanDefinition</code> 是如何 <strong>加载</strong> 的。该接口把 <code>BeanFactory</code> 和 <code>BeanDefinitionReader</code> 结合在了一起。</td>
+<tbody>
+<tr>
+<td style="text-align:left"><code>ApplicationContext</code></td>
+<td style="text-align:left">标记接口，继承了 <code>BeanFactory</code>。通常，要实现一个 IoC 容器时，需要先通过 <code>ResourceLoader</code> 获取一个 <code>Resource</code>，其中包括了容器的配置、<code>Bean</code> 的定义信息。接着，使用 <code>BeanDefinitionReader</code> 读取该 <code>Resource</code> 中的 <code>BeanDefinition</code> 信息。最后，把 <code>BeanDefinition</code> 保存在 <code>BeanFactory</code> 中，容器配置完毕可以使用。注意到 <code>BeanFactory</code> 只实现了 <code>Bean</code> 的 <strong>装配、获取</strong>，并未说明 <code>Bean</code> 的 <strong>来源</strong> 也就是 <code>BeanDefinition</code> 是如何 <strong>加载</strong> 的。该接口把 <code>BeanFactory</code> 和 <code>BeanDefinitionReader</code> 结合在了一起。</td>
 </tr>
 <tr>
-<td align="left"><code>AbstractApplicationContext</code></td>
-<td align="left"><code>ApplicationContext</code> 的抽象实现，内部包含一个 <code>BeanFactory</code> 类。主要方法有 <code>getBean()</code> 和 <code>refresh()</code> 方法。<code>getBean()</code> 直接调用了内置 <code>BeanFactory</code> 的 <code>getBean()</code> 方法，<code>refresh()</code> 则用于实现 <code>BeanFactory</code> 的刷新，也就是告诉 <code>BeanFactory</code> 该使用哪个资源（<code>Resource</code>）加载类定义（<code>BeanDefinition</code>）信息，该方法留给子类实现，用以实现 <strong>从不同来源的不同类型的资源加载类定义</strong> 的效果。</td>
+<td style="text-align:left"><code>AbstractApplicationContext</code></td>
+<td style="text-align:left"><code>ApplicationContext</code> 的抽象实现，内部包含一个 <code>BeanFactory</code> 类。主要方法有 <code>getBean()</code> 和 <code>refresh()</code> 方法。<code>getBean()</code> 直接调用了内置 <code>BeanFactory</code> 的 <code>getBean()</code> 方法，<code>refresh()</code> 则用于实现 <code>BeanFactory</code> 的刷新，也就是告诉 <code>BeanFactory</code> 该使用哪个资源（<code>Resource</code>）加载类定义（<code>BeanDefinition</code>）信息，该方法留给子类实现，用以实现 <strong>从不同来源的不同类型的资源加载类定义</strong> 的效果。</td>
 </tr>
 <tr>
-<td align="left">ClassPathXmlApplicationContext</td>
-<td align="left">从类路径加载资源的具体实现类。内部通过 <code>XmlBeanDefinitionReader</code> 解析 <code>UrlResourceLoader</code> 读取到的 <code>Resource</code>，获取 <code>BeanDefinition</code> 信息，然后将其保存到内置的 <code>BeanFactory</code> 中。</td>
+<td style="text-align:left">ClassPathXmlApplicationContext</td>
+<td style="text-align:left">从类路径加载资源的具体实现类。内部通过 <code>XmlBeanDefinitionReader</code> 解析 <code>UrlResourceLoader</code> 读取到的 <code>Resource</code>，获取 <code>BeanDefinition</code> 信息，然后将其保存到内置的 <code>BeanFactory</code> 中。</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <blockquote>
 <p>对 <code>ApplicatinoContext</code> 的分层更为细致。<code>AbstractApplicationContext</code> 中为了实现 <strong>不同来源</strong> 的 <strong>不同类型</strong> 的资源加载类定义，把这两步分层实现。以“从类路径读取 XML 定义”为例，首先使用 <code>AbstractXmlApplicationContext</code> 来实现 <strong>不同类型</strong> 的资源解析，接着，通过 <code>ClassPathXmlApplicationContext</code> 来实现 <strong>不同来源</strong> 的资源解析。</p>
 </blockquote>
-<h1 id="战略观望"><a href="#战略观望" class="headerlink" title="战略观望"></a>战略观望</h1><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520110056368.png" alt="官网示例" style="zoom:50%;">
-
-
-
+<h1 id="战略观望"><a href="#战略观望" class="headerlink" title="战略观望"></a>战略观望</h1><p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520110056368.png" alt="官网示例" style="zoom:50%;"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210520105808650.png" alt="Spring容器功能实现的各个阶段"></p>
 <h2 id="容器启动阶段"><a href="#容器启动阶段" class="headerlink" title="容器启动阶段"></a>容器启动阶段</h2><p>使用Resource相关接口标识我们配置文件从哪里获取，然后使用BeanDefinitionReader对标识的文件进行解析，将分析后的信息编组为相应的BeanDefinition。最后将保存了每个Bean定义信息的BeanDefinition，注册到相应的BeanDefinitionRegistry，这样容器的启动就完成了。</p>
 <figure class="image-bubble">
@@ -380,7 +428,6 @@
                 </div>
                 <div class="image-caption">启动阶段任务</div>
             </figure>
-
 <h2 id="Bean实例化阶段"><a href="#Bean实例化阶段" class="headerlink" title="Bean实例化阶段"></a>Bean实例化阶段</h2><p>通过容器的启动阶段，现在所有的Bean定义的信息，都通过BeanDefiniton的方式注册到了BeanDefinitionRegistry中，当某个请求方通过容器的getBean方法明确的调用某个对象的时候，或者因为依赖关系容器需要隐式的调用getBean方法，就会出发第二阶段的活动。</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
@@ -389,10 +436,38 @@
                 </div>
                 <div class="image-caption">bean的实例化过程</div>
             </figure>
-
 <p>Spring容器将对其所管理的对象全部给予统一的生命周期管理，这些被管理的对象完全摆脱了原 来那种“new完后被使用，脱离作用域后即被回收”的命运</p>
-<h1 id="详细阐述"><a href="#详细阐述" class="headerlink" title="详细阐述"></a>详细阐述</h1><h2 id="最简单的IoC容器"><a href="#最简单的IoC容器" class="headerlink" title="最简单的IoC容器"></a>最简单的IoC容器</h2><figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BeanFactory</span> </span>{</span><br><span class="line">  <span class="comment">// 说白了就是一个map</span></span><br><span class="line">	<span class="keyword">private</span> Map&lt;String, Object&gt; beanMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerBean</span><span class="params">(String name, Object bean)</span> </span>{</span><br><span class="line">		beanMap.put(name, bean);</span><br><span class="line">	}</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Object <span class="title">getBean</span><span class="params">(String name)</span> </span>{</span><br><span class="line">		<span class="keyword">return</span> beanMap.get(name);</span><br><span class="line">	}</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleBeanContainerTest</span> </span>{</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testGetBean</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>{</span><br><span class="line">    <span class="comment">// 需要我们去手动new依赖对象，然后放入</span></span><br><span class="line">		BeanFactory beanFactory = <span class="keyword">new</span> BeanFactory();</span><br><span class="line">		beanFactory.registerBean(<span class="string">"helloService"</span>, <span class="keyword">new</span> HelloService());</span><br><span class="line">		HelloService helloService = (HelloService) beanFactory.getBean(<span class="string">"helloService"</span>);</span><br><span class="line">		assertThat(helloService).isNotNull();</span><br><span class="line">		assertThat(helloService.sayHello()).isEqualTo(<span class="string">"hello"</span>);</span><br><span class="line">	}</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">HelloService</span> </span>{</span><br><span class="line">		<span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">()</span> </span>{</span><br><span class="line">			System.out.println(<span class="string">"hello"</span>);</span><br><span class="line">			<span class="keyword">return</span> <span class="string">"hello"</span>;</span><br><span class="line">		}</span><br><span class="line">	}</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<h1 id="详细阐述"><a href="#详细阐述" class="headerlink" title="详细阐述"></a>详细阐述</h1><h2 id="最简单的IoC容器"><a href="#最简单的IoC容器" class="headerlink" title="最简单的IoC容器"></a>最简单的IoC容器</h2><pre><code class="lang-java">public class BeanFactory {
+  // 说白了就是一个map
+    private Map&lt;String, Object&gt; beanMap = new HashMap&lt;&gt;();
 
+    public void registerBean(String name, Object bean) {
+        beanMap.put(name, bean);
+    }
+
+    public Object getBean(String name) {
+        return beanMap.get(name);
+    }
+}
+
+public class SimpleBeanContainerTest {
+    @Test
+    public void testGetBean() throws Exception {
+    // 需要我们去手动new依赖对象，然后放入
+        BeanFactory beanFactory = new BeanFactory();
+        beanFactory.registerBean("helloService", new HelloService());
+        HelloService helloService = (HelloService) beanFactory.getBean("helloService");
+        assertThat(helloService).isNotNull();
+        assertThat(helloService.sayHello()).isEqualTo("hello");
+    }
+    class HelloService {
+        public String sayHello() {
+            System.out.println("hello");
+            return "hello";
+        }
+    }
+}
+</code></pre>
 <h2 id="BeanFactoryPostProcess和BeanPostProcessor"><a href="#BeanFactoryPostProcess和BeanPostProcessor" class="headerlink" title="BeanFactoryPostProcess和BeanPostProcessor"></a>BeanFactoryPostProcess和BeanPostProcessor</h2><p>BeanFactoryPostProcess和BeanPostProcessor是spring框架中具有重量级地位的两个接口，理解了这两个接口的作用，基本就理解spring的核心原理了</p>
 <ol>
 <li>BeanFactoryPostProcessor是spring提供的容器拓展机制，允许我们在<strong>bean实例化之前修改bean的定义信息（BeanDedinition）</strong>，其重要的实现类PropertyPlaceholderConfigurer和CustomEditorConfigurer<ul>
@@ -410,7 +485,6 @@
                 </div>
                 <div class="image-caption">整体流程图</div>
             </figure>
-
 <ol>
 <li>BeanDefinitionReader读取Bean的相关配置信息，并将读取到的信息使用BeanDefinition表示，同时注册到BeanDefinitionRegistry中。</li>
 <li>通过实现了BeanFactoryPostProcessor的类，自定义修改BeanDefinition中的信息</li>
@@ -565,6 +639,7 @@
 
 
 
+
 </article>
 
 
@@ -584,18 +659,34 @@
 </p>
 
 
-        <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
-            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
-        </p>
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
     </div>
     <div class="bottom">
-        <p><span>weikunkun &copy; 2015 - 2021</span>
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
             <span>
                 
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
             </span>
         </p>
     </div>
@@ -604,6 +695,7 @@
     </main>
     <div class="mask" id="mask"></div>
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
 
 
 
@@ -652,7 +744,7 @@
 
 
 
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
 <script>
 var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
@@ -708,6 +800,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </script>
 
 
-
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
 </body>
 </html>
