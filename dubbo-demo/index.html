@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Dubbo和Spring、SpringBoot的结合简单Demo | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="rpc">
+    <meta name="description" content="序dubbo和Spring、SpringBoot的集合 环境 Spring （说白了就是两个进程的通信，然后将dubbo交由spring来管理，我们需要做的就是进行配置，然后按照文档硬编码） &lt;properties&gt;     &lt;java.version&gt;1.8&lt;&#x2F;java.version&gt;     &lt;spring.version&gt;5.3.4&lt;&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dubbo和Spring、SpringBoot的结合简单Demo">
+<meta property="og:url" content="https://winniekun.github.io/dubbo-demo/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="序dubbo和Spring、SpringBoot的集合 环境 Spring （说白了就是两个进程的通信，然后将dubbo交由spring来管理，我们需要做的就是进行配置，然后按照文档硬编码） &lt;properties&gt;     &lt;java.version&gt;1.8&lt;&#x2F;java.version&gt;     &lt;spring.version&gt;5.3.4&lt;&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210905192815964.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210905233104405.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210905193330955.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210905194145303.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210905194341579.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210907165838854.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210907165745246.png">
+<meta property="article:published_time" content="2021-09-05T11:45:28.000Z">
+<meta property="article:modified_time" content="2021-09-07T16:50:20.349Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="rpc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210905192815964.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu"  >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-list-ul"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://winniekun.github.io/acsaber/#/" target="_blank" >
+                <i class="icon icon-lg icon-trello"></i>
+                LeetCode
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Dubbo和Spring、SpringBoot的结合简单Demo</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Dubbo和Spring、SpringBoot的结合简单Demo</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-09-05T11:45:28.000Z" itemprop="datePublished" class="page-time">
+  2021-09-05
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/dubbo/">dubbo</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#序"><span class="post-toc-number">1.</span> <span class="post-toc-text">序</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#环境"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">环境</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#和Spring的结合-未配置ZK"><span class="post-toc-number">2.</span> <span class="post-toc-text">和Spring的结合(未配置ZK)</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#API"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">API</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PROVIDER"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">PROVIDER</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#配置"><span class="post-toc-number">2.2.1.</span> <span class="post-toc-text">配置</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#依赖"><span class="post-toc-number">2.2.2.</span> <span class="post-toc-text">依赖</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#相关实现："><span class="post-toc-number">2.2.3.</span> <span class="post-toc-text">相关实现：</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#CONSUMER"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">CONSUMER</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#配置-1"><span class="post-toc-number">2.3.1.</span> <span class="post-toc-text">配置</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#依赖-1"><span class="post-toc-number">2.3.2.</span> <span class="post-toc-text">依赖</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#相关实现"><span class="post-toc-number">2.3.3.</span> <span class="post-toc-text">相关实现</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#最终结果"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">最终结果</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#和SpringBoot的结合-未配置ZK"><span class="post-toc-number">3.</span> <span class="post-toc-text">和SpringBoot的结合(未配置ZK)</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#API-1"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">API</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PROVIDER-1"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">PROVIDER</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#配置-2"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">配置</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#依赖-2"><span class="post-toc-number">3.2.2.</span> <span class="post-toc-text">依赖</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#相关实现-1"><span class="post-toc-number">3.2.3.</span> <span class="post-toc-text">相关实现</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#CONSUMER-1"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">CONSUMER</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#配置-3"><span class="post-toc-number">3.3.1.</span> <span class="post-toc-text">配置</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#依赖-3"><span class="post-toc-number">3.3.2.</span> <span class="post-toc-text">依赖</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#相关实现-2"><span class="post-toc-number">3.3.3.</span> <span class="post-toc-text">相关实现</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#最终结果-1"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">最终结果</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#源码链接"><span class="post-toc-number">4.</span> <span class="post-toc-text">源码链接</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-rpc/dubbo-demo"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Dubbo和Spring、SpringBoot的结合简单Demo</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-09-05 19:45:28" datetime="2021-09-05T11:45:28.000Z"  itemprop="datePublished">2021-09-05</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/dubbo/">dubbo</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p><code>dubbo</code>和<code>Spring</code>、<code>SpringBoot</code>的集合</p>
+<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><ol>
+<li><p>Spring （说白了就是两个进程的通信，然后将dubbo交由spring来管理，我们需要做的就是进行配置，然后按照文档硬编码）</p>
+<pre><code class="lang-xml">&lt;properties&gt;
+    &lt;java.version&gt;1.8&lt;/java.version&gt;
+    &lt;spring.version&gt;5.3.4&lt;/spring.version&gt;
+    &lt;dubbo.version&gt;2.7.8&lt;/dubbo.version&gt;
+    &lt;curator.version&gt;4.2.0&lt;/curator.version&gt;
+    &lt;zk.version&gt;3.5.8&lt;/zk.version&gt;
+&lt;/properties&gt;
+</code></pre>
+</li>
+<li><p>SpringBoot</p>
+<pre><code class="lang-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.5.4&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;groupId&gt;com.wkk.dubbo&lt;/groupId&gt;
+    &lt;artifactId&gt;provider&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;provider&lt;/name&gt;
+    &lt;description&gt;Demo project for Spring Boot&lt;/description&gt;
+    &lt;properties&gt;
+        &lt;java.version&gt;11&lt;/java.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;!-- https://mvnrepository.com/artifact/org.apache.dubbo/dubbo-spring-boot-starter --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.dubbo&lt;/groupId&gt;
+            &lt;artifactId&gt;dubbo-spring-boot-starter&lt;/artifactId&gt;
+            &lt;version&gt;2.7.13&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.wkk.dubbo&lt;/groupId&gt;
+            &lt;artifactId&gt;api&lt;/artifactId&gt;
+            &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+</code></pre>
+</li>
+</ol>
+<h2 id="和Spring的结合-未配置ZK"><a href="#和Spring的结合-未配置ZK" class="headerlink" title="和Spring的结合(未配置ZK)"></a>和Spring的结合(未配置ZK)</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210905192815964.png" alt="dubbo和spring的结合" title="">
+                </div>
+                <div class="image-caption">dubbo和spring的结合</div>
+            </figure>
+<p><strong>pom.xml:</strong></p>
+<pre><code class="lang-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;com.wkk&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-dubbo-demo&lt;/artifactId&gt;
+    &lt;packaging&gt;pom&lt;/packaging&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;modules&gt;
+        &lt;module&gt;dubbo-provider&lt;/module&gt;
+        &lt;module&gt;dubbo-consumer&lt;/module&gt;
+        &lt;module&gt;dubbo-api&lt;/module&gt;
+    &lt;/modules&gt;
+
+    &lt;properties&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+        &lt;spring.version&gt;5.3.4&lt;/spring.version&gt;
+        &lt;dubbo.version&gt;2.7.8&lt;/dubbo.version&gt;
+        &lt;curator.version&gt;4.2.0&lt;/curator.version&gt;
+        &lt;zk.version&gt;3.5.8&lt;/zk.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-beans&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.dubbo&lt;/groupId&gt;
+            &lt;artifactId&gt;dubbo&lt;/artifactId&gt;
+            &lt;version&gt;${dubbo.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.zookeeper&lt;/groupId&gt;
+            &lt;artifactId&gt;zookeeper&lt;/artifactId&gt;
+            &lt;version&gt;${zk.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.curator&lt;/groupId&gt;
+            &lt;artifactId&gt;curator-framework&lt;/artifactId&gt;
+            &lt;version&gt;${curator.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.curator&lt;/groupId&gt;
+            &lt;artifactId&gt;curator-recipes&lt;/artifactId&gt;
+            &lt;version&gt;${curator.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+&lt;/project&gt;
+</code></pre>
+<h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><blockquote>
+<p> 公共接口，然后<code>provider</code>提供对该接口的实现，<code>consume</code>r对其发起调用</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210905233104405.png" alt="image-20210905233104405" title="">
+                </div>
+                <div class="image-caption">image-20210905233104405</div>
+            </figure>
+<pre><code class="lang-java">package com.wkk.api;
+
+/**
+ * @author weikunkun
+ * @since 2021/9/5
+ */
+public interface HelloApi {
+    String hello(String name);
+}
+</code></pre>
+<h3 id="PROVIDER"><a href="#PROVIDER" class="headerlink" title="PROVIDER"></a>PROVIDER</h3><blockquote>
+<p> 负责对<code>api</code>的实现</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210905193330955.png" alt="dubbo-provider" title="">
+                </div>
+                <div class="image-caption">dubbo-provider</div>
+            </figure>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><pre><code class="lang-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+      http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  --&gt;
+&lt;beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd"&gt;
+
+    &lt;dubbo:application name="demo-provider"/&gt;
+
+    &lt;dubbo:protocol name="dubbo" port="20880"/&gt;
+
+    &lt;!--  声明对外暴露的接口 --&gt;
+    &lt;dubbo:service
+            registry="N/A"
+            interface="com.wkk.api.HelloApi"
+            ref="quickStartServiceApi"/&gt;
+    &lt;!--配置bean实例--&gt;
+    &lt;bean id="quickStartServiceApi" class="com.wkk.provider.api.HelloApiImpl"/&gt;
+&lt;/beans&gt;
+</code></pre>
+<h4 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h4><pre><code class="lang-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;parent&gt;
+        &lt;artifactId&gt;spring-dubbo-demo&lt;/artifactId&gt;
+        &lt;groupId&gt;com.wkk&lt;/groupId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;/parent&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;artifactId&gt;dubbo-provider&lt;/artifactId&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.wkk&lt;/groupId&gt;
+            &lt;artifactId&gt;dubbo-api&lt;/artifactId&gt;
+            &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+&lt;/project&gt;
+</code></pre>
+<h4 id="相关实现："><a href="#相关实现：" class="headerlink" title="相关实现："></a><strong>相关实现：</strong></h4><p><strong>API实现：</strong></p>
+<pre><code class="lang-java">package com.wkk.provider.api;
+
+import com.wkk.api.HelloApi;
+
+/**
+ * @author weikunkun
+ * @since 2021/9/5
+ */
+public class HelloApiImpl implements HelloApi {
+    public String hello(String name) {
+        return "this is dubbot quick starter, name = " + name;
+    }
+}
+</code></pre>
+<p><strong>启动类：</strong></p>
+<pre><code class="lang-java">package com.wkk.provider;
+
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.io.IOException;
+
+/**
+ * @author weikunkun
+ * @since 2021/9/5
+ */
+public class ProviderClient {
+    public static void main(String[] args) throws IOException {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("dubbo-provider.xml");
+        context.start();
+        System.in.read();
+
+    }
+}
+</code></pre>
+<h3 id="CONSUMER"><a href="#CONSUMER" class="headerlink" title="CONSUMER"></a>CONSUMER</h3><blockquote>
+<p> 负责调用对应的接口，为了方便起见，具体的调用直接在<code>consumer</code>中的启动类进行操作</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210905194145303.png" alt="dubbo-consumer" title="">
+                </div>
+                <div class="image-caption">dubbo-consumer</div>
+            </figure>
+<h4 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a><strong>配置</strong></h4><pre><code class="lang-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+      http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  --&gt;
+&lt;beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd"&gt;
+    &lt;!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 --&gt;
+    &lt;dubbo:application name="consumer-of-helloworld-app"  /&gt;
+
+
+    &lt;!-- 生成远程服务代理，可以和本地bean一样使用demoService --&gt;
+    &lt;dubbo:reference id="demoService"
+                     interface="com.wkk.api.HelloApi"
+                     url="dubbo://xxxx:20880"/&gt;
+&lt;/beans&gt;
+</code></pre>
+<h4 id="依赖-1"><a href="#依赖-1" class="headerlink" title="依赖"></a><strong>依赖</strong></h4><pre><code class="lang-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;parent&gt;
+        &lt;artifactId&gt;spring-dubbo-demo&lt;/artifactId&gt;
+        &lt;groupId&gt;com.wkk&lt;/groupId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;/parent&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;artifactId&gt;dubbo-consumer&lt;/artifactId&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.wkk&lt;/groupId&gt;
+            &lt;artifactId&gt;dubbo-api&lt;/artifactId&gt;
+            &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;
+</code></pre>
+<h4 id="相关实现"><a href="#相关实现" class="headerlink" title="相关实现"></a><strong>相关实现</strong></h4><p><strong>启动类</strong></p>
+<pre><code class="lang-java">package com.wkk.consumer;
+
+import com.wkk.api.HelloApi;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.Scanner;
+
+/**
+ * @author weikunkun
+ * @since 2021/9/5
+ */
+public class ConsumerClient {
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("dubbo-consumer.xml");
+        HelloApi demoService = (HelloApi) context.getBean("demoService");
+        while (true) {
+            Scanner sc = new Scanner(System.in);
+            String str = sc.nextLine();
+            System.out.println(demoService.hello(str));
+        }
+    }
+}
+</code></pre>
+<h3 id="最终结果"><a href="#最终结果" class="headerlink" title="最终结果"></a>最终结果</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210905194341579.png" alt="成果展示" title="">
+                </div>
+                <div class="image-caption">成果展示</div>
+            </figure>
+<h2 id="和SpringBoot的结合-未配置ZK"><a href="#和SpringBoot的结合-未配置ZK" class="headerlink" title="和SpringBoot的结合(未配置ZK)"></a>和SpringBoot的结合(未配置ZK)</h2><blockquote>
+<p>整体和Spring结合一致</p>
+</blockquote>
+<h3 id="API-1"><a href="#API-1" class="headerlink" title="API"></a>API</h3><blockquote>
+<p>公共接口，然后<code>provider</code>提供对该接口的实现，<code>consume</code>r对其发起调用</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210907165838854.png" alt="api" title="">
+                </div>
+                <div class="image-caption">api</div>
+            </figure>
+<p><strong>接口的设计</strong></p>
+<pre><code class="lang-java">package com.wkk.dubbo.api;
+
+/**
+ * @author weikunkun
+ * @since 2021/9/6
+ */
+public interface HelloApi {
+    String hello(String name);
+}
+</code></pre>
+<h3 id="PROVIDER-1"><a href="#PROVIDER-1" class="headerlink" title="PROVIDER"></a>PROVIDER</h3><h4 id="配置-2"><a href="#配置-2" class="headerlink" title="配置"></a>配置</h4><pre><code class="lang-properties">dubbo:
+  application:
+    name: demo-provider
+
+  registry:
+    address: N/A
+
+  protocol:
+    name: dubbo
+    port: 20880
+</code></pre>
+<h4 id="依赖-2"><a href="#依赖-2" class="headerlink" title="依赖"></a>依赖</h4><pre><code class="lang-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.5.4&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;groupId&gt;com.wkk.dubbo&lt;/groupId&gt;
+    &lt;artifactId&gt;provider&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;provider&lt;/name&gt;
+    &lt;description&gt;Demo project for Spring Boot&lt;/description&gt;
+    &lt;properties&gt;
+        &lt;java.version&gt;11&lt;/java.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;!-- https://mvnrepository.com/artifact/org.apache.dubbo/dubbo-spring-boot-starter --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.dubbo&lt;/groupId&gt;
+            &lt;artifactId&gt;dubbo-spring-boot-starter&lt;/artifactId&gt;
+            &lt;version&gt;2.7.13&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.wkk.dubbo&lt;/groupId&gt;
+            &lt;artifactId&gt;api&lt;/artifactId&gt;
+            &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+</code></pre>
+<h4 id="相关实现-1"><a href="#相关实现-1" class="headerlink" title="相关实现"></a>相关实现</h4><pre><code class="lang-java">package com.wkk.dubbo.provider.impl;
+
+import com.wkk.dubbo.api.HelloApi;
+import org.apache.dubbo.config.annotation.DubboService;
+import org.apache.dubbo.rpc.RpcContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+/**
+ * @author weikunkun
+ * @since 2021/9/6
+ */
+@Component
+@DubboService(version = "1.0.0")
+public class HelloApiImpl implements HelloApi {
+    private static final Logger logger = LoggerFactory.getLogger(HelloApiImpl.class);
+    @Override
+    public String hello(String name) {
+        try {
+            Thread.sleep(200); //
+            logger.info("Hello " + name + ", request from consumer: " + RpcContext.getServerContext().getRemoteAddress());
+            return "Hello " + name + ", response from provider: " + RpcContext.getServerContext().getLocalAddress();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}
+</code></pre>
+<h3 id="CONSUMER-1"><a href="#CONSUMER-1" class="headerlink" title="CONSUMER"></a>CONSUMER</h3><h4 id="配置-3"><a href="#配置-3" class="headerlink" title="配置"></a>配置</h4><pre><code class="lang-properties">spring:
+  application:
+    name: dubbo-consumer
+</code></pre>
+<h4 id="依赖-3"><a href="#依赖-3" class="headerlink" title="依赖"></a>依赖</h4><pre><code class="lang-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.5.4&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;groupId&gt;com.wkk.consumer&lt;/groupId&gt;
+    &lt;artifactId&gt;consumer&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;consumer&lt;/name&gt;
+    &lt;description&gt;Demo project for Spring Boot&lt;/description&gt;
+    &lt;properties&gt;
+        &lt;java.version&gt;11&lt;/java.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;!-- https://mvnrepository.com/artifact/org.apache.dubbo/dubbo-spring-boot-starter --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.dubbo&lt;/groupId&gt;
+            &lt;artifactId&gt;dubbo-spring-boot-starter&lt;/artifactId&gt;
+            &lt;version&gt;2.7.13&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.wkk.dubbo&lt;/groupId&gt;
+            &lt;artifactId&gt;api&lt;/artifactId&gt;
+            &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+</code></pre>
+<h4 id="相关实现-2"><a href="#相关实现-2" class="headerlink" title="相关实现"></a>相关实现</h4><p><strong>DemoServiceComponent：</strong></p>
+<blockquote>
+<p>用于调用provider中对应的实现方法</p>
+</blockquote>
+<pre><code class="lang-java">package com.wkk.consumer.consumer.comp;
+
+import com.wkk.dubbo.api.HelloApi;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.stereotype.Component;
+
+/**
+ * @author weikunkun
+ * @since 2021/9/7
+ */
+@Component
+public class DemoServiceComponent implements HelloApi {
+    @DubboReference(version = "1.0.0", url = "dubbo://xxxx:20880")
+    private HelloApi helloApi;
+
+    @Override
+    public String hello(String name) {
+        return helloApi.hello(name);
+    }
+}
+</code></pre>
+<p><strong>ConsumerApplication：</strong></p>
+<blockquote>
+<p>启动类，通过Scanner做了交互</p>
+</blockquote>
+<pre><code class="lang-java">package com.wkk.consumer.consumer;
+
+import com.wkk.dubbo.api.HelloApi;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import java.util.Scanner;
+
+@SpringBootApplication
+public class ConsumerApplication {
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(ConsumerApplication.class, args);
+        HelloApi demoService = (HelloApi) context.getBean("demoServiceComponent");
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            String s = sc.nextLine();
+            System.out.println(demoService.hello(s));
+        }
+    }
+
+}
+</code></pre>
+<h3 id="最终结果-1"><a href="#最终结果-1" class="headerlink" title="最终结果"></a>最终结果</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210907165745246.png" alt="成果展示" title="">
+                </div>
+                <div class="image-caption">成果展示</div>
+            </figure>
+<h2 id="源码链接"><a href="#源码链接" class="headerlink" title="源码链接"></a>源码链接</h2><p><a href="https://github.com/Winniekun/dubbo-demo" target="_blank" rel="noopener">源码</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2021-09-07T16:50:20.349Z" itemprop="dateUpdated">2021-09-08 00:50:20</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rpc/" rel="tag">rpc</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/dubbo-demo/&title=《Dubbo和Spring、SpringBoot的结合简单Demo》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/dubbo-demo/&title=《Dubbo和Spring、SpringBoot的结合简单Demo》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/dubbo-demo/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Dubbo和Spring、SpringBoot的结合简单Demo》 — Wkkの笔记&url=https://winniekun.github.io/dubbo-demo/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/dubbo-demo/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/kafka-config/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Kafka在Linux上的配置</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
+            <span>
+                
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/dubbo-demo/&title=《Dubbo和Spring、SpringBoot的结合简单Demo》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/dubbo-demo/&title=《Dubbo和Spring、SpringBoot的结合简单Demo》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/dubbo-demo/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Dubbo和Spring、SpringBoot的结合简单Demo》 — Wkkの笔记&url=https://winniekun.github.io/dubbo-demo/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/dubbo-demo/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByUlEQVR42u3aQY7CMAwFUO5/6Y40K0ZDy7fdpiC9rFCB8MLCsh0/HvHaftfxk+fnz+/+f3K8wwkLFxd3zN0OV7713nf3iHtHerMPLi7uQm6ydS+c7X0r+TtwcXE/nztJjI4Pj4uL+73cSRmDi4v7jdyk+DmGHv98wj25VsPFxR1w58nK/PWF/V1cXNwidyuu3r1G77de7IaLi7uEe+4FarVA6pVDuLi4V3OrBUle5EyyrSiE4eLiXsydjF9UL1CrIxp/nuDi4i7hTjoP1fGLvCFSaJji4uJewK22L6tBqvrJN2ERFxd3CTcpV3pJSVI+VVMfXFzcldxqwKqOXiWI0y5fcXFxx9y8vMmDTrJDs0WLi4u7nJskPWelMvmeuLi493Lza9TeFWzvMLi4uOu55UvNVspSbXy8SY9wcXEv5lbLnl6oyhusuLi4n8PtjUb1Dlnt3eLi4t7FnQ9jTZodhWPg4uIu4VYDSrXZkQ9t5IkULi7uGm4veOW43sgXLi7uJ3CrfdZq6pOnMuX+Li4u7q3cSa40CZGPPC7i4uLexM0bo/Ngh4uLey+3d+HauzTNxzVGtRouLu6AW22Y5uEsP0xvbBQXF/cC7g+7DS7ldLpiTQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
+</body>
+</html>
