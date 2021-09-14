@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>零拷贝技术的理解 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="基础">
+    <meta name="description" content="零拷贝的好处  减少或避免不必要的CPU数据拷贝，从而释放CPU去执行其他任务 零拷贝机制能减少用户空间和操作系统内核空间的上下文切换 减少内存的占用   DMA技术                                                                                             DMA              在没有DMA技">
+<meta property="og:type" content="article">
+<meta property="og:title" content="零拷贝技术的理解">
+<meta property="og:url" content="https://winniekun.github.io/zero-copy/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="零拷贝的好处  减少或避免不必要的CPU数据拷贝，从而释放CPU去执行其他任务 零拷贝机制能减少用户空间和操作系统内核空间的上下文切换 减少内存的占用   DMA技术                                                                                             DMA              在没有DMA技">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913110850194.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913112417717.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913110511570.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913114731106.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913121323890.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913123946592.png">
+<meta property="article:published_time" content="2021-09-14T07:41:13.000Z">
+<meta property="article:modified_time" content="2021-09-14T11:32:28.465Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913110850194.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu"  >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-list-ul"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://winniekun.github.io/acsaber/#/" target="_blank" >
+                <i class="icon icon-lg icon-trello"></i>
+                LeetCode
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">零拷贝技术的理解</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">零拷贝技术的理解</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-09-14T07:41:13.000Z" itemprop="datePublished" class="page-time">
+  2021-09-14
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#零拷贝的好处"><span class="post-toc-number">1.</span> <span class="post-toc-text">零拷贝的好处</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DMA技术"><span class="post-toc-number">2.</span> <span class="post-toc-text">DMA技术</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#传统的文件传输"><span class="post-toc-number">3.</span> <span class="post-toc-text">传统的文件传输</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优化思路"><span class="post-toc-number">4.</span> <span class="post-toc-text">优化思路</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#减少上下文的切换"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">减少上下文的切换</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#减少拷贝的次数"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">减少拷贝的次数</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#零拷贝"><span class="post-toc-number">5.</span> <span class="post-toc-text">零拷贝</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#mmap-write"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">mmap + write</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#sendfile"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">sendfile</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#总结"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用零拷贝技术的项目"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">使用零拷贝技术的项目</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#kafka"><span class="post-toc-number">5.4.1.</span> <span class="post-toc-text">kafka</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Java-transferTo"><span class="post-toc-number">5.4.2.</span> <span class="post-toc-text">Java transferTo</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#references"><span class="post-toc-number">6.</span> <span class="post-toc-text">references</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-操作系统/zero-copy"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">零拷贝技术的理解</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-09-14 15:41:13" datetime="2021-09-14T07:41:13.000Z"  itemprop="datePublished">2021-09-14</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="零拷贝的好处"><a href="#零拷贝的好处" class="headerlink" title="零拷贝的好处"></a>零拷贝的好处</h2><blockquote>
+<ul>
+<li>减少或避免不必要的CPU数据拷贝，从而释放CPU去执行其他任务</li>
+<li>零拷贝机制能减少用户空间和操作系统内核空间的上下文切换</li>
+<li>减少内存的占用</li>
+</ul>
+</blockquote>
+<h2 id="DMA技术"><a href="#DMA技术" class="headerlink" title="DMA技术"></a>DMA技术</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913110850194.png" alt="DMA" title="">
+                </div>
+                <div class="image-caption">DMA</div>
+            </figure>
+<p>在没有<code>DMA技术</code>之前，<code>I/O</code>的过程如上图所示：</p>
+<ol>
+<li>CPU 发出对应的指令给磁盘控制器，然后返回；</li>
+<li>磁盘控制器收到指令后，于是就开始准备数据，会把数据放入到磁盘控制器的内部缓冲区中，然后产生一个<strong>中断</strong>；</li>
+<li>CPU 收到中断信号后，停下手头的工作，接着把磁盘控制器的缓冲区的数据一次一个字节地读进自己的寄存器，然后再把寄存器里的数据写入到内存，而在数据传输的期间 CPU 是无法执行其他任务的。</li>
+</ol>
+<blockquote>
+<p>可以看到，整个数据的传输过程，都要需要 CPU 亲自参与搬运数据的过程，而且这个过程，CPU 是不能做其他事情的。</p>
+</blockquote>
+<p>为了解决这一问题，中间层的思路就又出来了。后期引入DMA技术，在进行<code>I/O</code>处理的时候（设备和内存进行数据传输的时候），<strong>数据搬运的工作全部交给 DMA 控制器，而 CPU 不再参与任何与数据搬运相关的事情，这样 CPU 就可以去处理别的事务</strong>。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913112417717.png" alt="DMA" title="">
+                </div>
+                <div class="image-caption">DMA</div>
+            </figure>
+<blockquote>
+<p>具体过程：</p>
+<ol>
+<li>用户进程调用 read 方法，向操作系统发出 I/O 请求，请求读取数据到自己的内存缓冲区中，进程进入阻塞状态；</li>
+<li>操作系统收到请求后，进一步将 I/O 请求发送 DMA，然后让 CPU 执行其他任务；</li>
+<li>DMA 进一步将 I/O 请求发送给磁盘；</li>
+<li>磁盘收到 DMA 的 I/O 请求，把数据从磁盘读取到磁盘控制器的缓冲区中，当磁盘控制器的缓冲区被读满后，向 DMA 发起中断信号，告知自己缓冲区已满；</li>
+<li><strong>DMA 收到磁盘的信号，将磁盘控制器缓冲区中的数据拷贝到内核缓冲区中，此时不占用 CPU，CPU 可以执行其他任务</strong>；</li>
+<li>当 DMA 读取了足够多的数据，就会发送中断信号给 CPU；</li>
+<li>CPU 收到 DMA 的信号，知道数据已经准备好，于是将数据从内核拷贝到用户空间，系统调用返回；</li>
+</ol>
+</blockquote>
+<h2 id="传统的文件传输"><a href="#传统的文件传输" class="headerlink" title="传统的文件传输"></a>传统的文件传输</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913110511570.png" alt="文件传输" title="">
+                </div>
+                <div class="image-caption">文件传输</div>
+            </figure>
+<p>首先，期间共<strong>发生了 4 次用户态与内核态的上下文切换</strong>，因为发生了两次系统调用，一次是 <code>read()</code> ，一次是 <code>write()</code>，每次系统调用都得先从用户态切换到内核态，等内核完成任务后，再从内核态切换回用户态。</p>
+<p>上下文切换到成本并不小，一次切换需要耗时几十纳秒到几微秒，虽然时间看上去很短，但是在高并发的场景下，这类时间容易被累积和放大，从而影响系统的性能。</p>
+<p>其次，还<strong>发生了 4 次数据拷贝</strong>，其中两次是 DMA 的拷贝，另外两次则是通过 CPU 拷贝的，下面说一下这个过程：</p>
+<ul>
+<li><em>第一次拷贝</em>，把磁盘上的数据拷贝到操作系统内核的缓冲区里，这个拷贝的过程是通过 DMA 搬运的。</li>
+<li><em>第二次拷贝</em>，把内核缓冲区的数据拷贝到用户的缓冲区里，于是我们应用程序就可以使用这部分数据了，这个拷贝到过程是由 CPU 完成的。</li>
+<li><em>第三次拷贝</em>，把刚才拷贝到用户的缓冲区里的数据，再拷贝到内核的 socket 的缓冲区里，这个过程依然还是由 CPU 搬运的。</li>
+<li><em>第四次拷贝</em>，把内核的 socket 缓冲区里的数据，拷贝到网卡的缓冲区里，这个过程又是由 DMA 搬运的。</li>
+</ul>
+<h2 id="优化思路"><a href="#优化思路" class="headerlink" title="优化思路"></a>优化思路</h2><h3 id="减少上下文的切换"><a href="#减少上下文的切换" class="headerlink" title="减少上下文的切换"></a>减少上下文的切换</h3><p>首先， 对于<code>I/O</code>的处理，用户态是无权限的，只能切换到内核态进行处理，所以减少上下文的切换的一个思路就是：<code>减少系统调用</code></p>
+<h3 id="减少拷贝的次数"><a href="#减少拷贝的次数" class="headerlink" title="减少拷贝的次数"></a>减少拷贝的次数</h3><p>通过对上述的分析，我们知道传统的文件传输，涉及到了四次的<code>copy</code>过程。在一些场景中，我们知道其实数据是完全不必copy到用户空间的，因为应用程序一般不会对数据进行加工。</p>
+<h2 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h2><h3 id="mmap-write"><a href="#mmap-write" class="headerlink" title="mmap + write"></a>mmap + write</h3><p>在前面我们知道，<code>read()</code> 系统调用的过程中会把内核缓冲区的数据拷贝到用户的缓冲区里，于是为了减少这一步开销，我们可以用 <code>mmap()</code> 替换 <code>read()</code> 系统调用函数。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913114731106.png" alt="mmap + write 示意图" title="">
+                </div>
+                <div class="image-caption">mmap + write 示意图</div>
+            </figure>
+<p>流程：</p>
+<ol>
+<li>应用进程通过<code>mmap</code>后，<code>DMA</code>将磁盘文件放入内核缓冲区，然后用户程序和内核共享该缓冲区</li>
+<li>然后用户程序调用<code>write</code>，将数据写入<code>socket缓冲区</code>，（内部而言，是cpu内核缓冲区的内容copy到socket缓冲区）</li>
+<li>然后DMA将<code>socket缓冲区</code>放入到网卡缓冲区中</li>
+</ol>
+<blockquote>
+<p>拷贝次数 从 4  -&gt; 3 上下文切换还是发生了4次</p>
+</blockquote>
+<h3 id="sendfile"><a href="#sendfile" class="headerlink" title="sendfile"></a>sendfile</h3><blockquote>
+<p>通过减少系统调用，实现零copy技术</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913121323890.png" alt="sendfile" title="">
+                </div>
+                <div class="image-caption">sendfile</div>
+            </figure>
+<p><code>sendfile</code>可以替代<code>read</code>和<code>write</code>两个系统调用，这样就可以减少一次系统调用，避免两次上下文切换。其次，该系统调用，可以直接把内核缓冲区里的数据拷贝到 socket 缓冲区里，不再拷贝到用户态，这样就只有 2 次上下文切换，和 3 次数据拷贝。如上图所示。</p>
+<p>但是这还不是真正的零拷贝技术，如果网卡支持 <code>SG-DMA（The Scatter-Gather Direct Memory Access）</code>技术（和普通的 DMA 有所不同），我们可以进一步减少通过 CPU 把内核缓冲区里的数据拷贝到 socket 缓冲区的过程（只进行了 2 次数据拷贝）。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210913123946592.png" alt="网卡DMA" title="">
+                </div>
+                <div class="image-caption">网卡DMA</div>
+            </figure>
+<ul>
+<li>第一步，通过 DMA 将磁盘上的数据拷贝到内核缓冲区里；</li>
+<li>第二步，缓冲区描述符和数据长度传到 socket 缓冲区，这样网卡的 SG-DMA 控制器就可以直接将内核缓存中的数据拷贝到网卡的缓冲区里，此过程不需要将数据从操作系统内核缓冲区拷贝到 socket 缓冲区中，这样就减少了一次数据拷贝；</li>
+</ul>
+<p>这就是所谓的<strong>零拷贝（*Zero-copy*）技术，因为我们没有在内存层面去拷贝数据，也就是说全程没有通过 CPU 来搬运数据，所有的数据都是通过 DMA 来进行传输的</strong></p>
+<p>零拷贝技术的文件传输方式相比传统文件传输的方式，减少了 2 次上下文切换和数据拷贝次数，<strong>只需要 2 次上下文切换和数据拷贝次数，就可以完成文件的传输，而且 2 次的数据拷贝过程，都不需要通过 CPU，2 次都是由 DMA 来搬运。</strong></p>
+<p>所以，总体来看，<strong>零拷贝技术可以把文件传输的性能提高至少一倍以上</strong>。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>使用mmap + write （4次上下文切换，上次文件拷贝）<ul>
+<li>减少一次文件copy</li>
+</ul>
+</li>
+<li>使用sendfile（2吃上下文切换，三次文件拷贝）<ul>
+<li>减少了2次上下文切换</li>
+<li>减少一次文件copy</li>
+</ul>
+</li>
+<li>网卡支持SG-DMA（2次上下文切换， 两次文件拷贝（不需要CPU进行操作））<ul>
+<li>减少了2次上下文切换</li>
+<li>减少了2次文件拷贝</li>
+</ul>
+</li>
+</ol>
+<h3 id="使用零拷贝技术的项目"><a href="#使用零拷贝技术的项目" class="headerlink" title="使用零拷贝技术的项目"></a>使用零拷贝技术的项目</h3><h4 id="kafka"><a href="#kafka" class="headerlink" title="kafka"></a>kafka</h4><p>使用零拷贝技术，<code>消费者（consumer）</code>从Kafka消费数据，Kafka从磁盘读数据然后发送到网络上去，数据一共发生了四次传输的过程。其中两次是 DMA 的传输，另外两次，则是通过 CPU 控制的传输。通过<code>零拷贝</code>技术，避免了文件的多余的copy次数，以及CPU的参与，进而能够更好的提升整体的性能，优化CPU的使用。</p>
+<h4 id="Java-transferTo"><a href="#Java-transferTo" class="headerlink" title="Java transferTo"></a>Java transferTo</h4><pre><code class="lang-java">public static void copyFileByChannel(File source, File dest) throws
+        IOException {
+    try (FileChannel sourceChannel = new FileInputStream(source)
+            .getChannel();
+         FileChannel targetChannel = new FileOutputStream(dest).getChannel()) {
+        for (long count = sourceChannel.size(); count &gt; 0; ) {
+            long transferred = sourceChannel.transferTo(
+                    sourceChannel.position(), count, targetChannel);
+            sourceChannel.position(sourceChannel.position() + transferred);
+            count -= transferred;
+        }
+    }
+}
+</code></pre>
+<h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ol>
+<li><a href="https://www.cnblogs.com/xiaolincoding/p/13719610.html" target="_blank" rel="noopener">原来 8 张图，就可以搞懂「零拷贝」了</a></li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2021-09-14T11:32:28.465Z" itemprop="dateUpdated">2021-09-14 19:32:28</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/zero-copy/&title=《零拷贝技术的理解》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/zero-copy/&title=《零拷贝技术的理解》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/zero-copy/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《零拷贝技术的理解》 — Wkkの笔记&url=https://winniekun.github.io/zero-copy/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/zero-copy/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/dubbo-demo/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Dubbo和Spring、SpringBoot的结合简单Demo</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
+            <span>
+                
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/zero-copy/&title=《零拷贝技术的理解》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/zero-copy/&title=《零拷贝技术的理解》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/zero-copy/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《零拷贝技术的理解》 — Wkkの笔记&url=https://winniekun.github.io/zero-copy/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/zero-copy/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABxUlEQVR42u3ay04DMQwF0Pn/nx4kVkjQ4msnaUEnq6rQ6XEXlh+5rvK5P8/z9+8v5/v/PDrXjoOLizvmVh73/P36Myuh/hISLi7uQW6apHqJqRc2Li7uO3N3FD24uLj/g5s2M/NSCRcX91XcSvOTti71UcuWXg0XF3eaba700Wtfb5zv4uLihtw7PL0yKB2sPPx2XFzcI9xVDUnQupRTWFCR4eLibuOuSkC9Vcqo2sLFxd3AXTU8rSSjShIMQsLFxd3ATZcl6V8rM42gbMLFxT3OTa9c1EPthfHD83FxcY9z0yFIbykyan5wcXGPcHtNTr1dqYxXenMPXFzcM9x0JFovXyY/TTzlxcXFHXPn1zR7Y9ZR84OLi7uZ20srlRHqfKuzoBbDxcVtcSvNTH2XUV+yposZXFzcV3HrA9M6KP1s3Pzg4uJu4FbGIunqNL5UEQaDi4u7m3uHZ+26tH7xCxcX9yR31T2H3kKld/kDFxf3DLe+zJgUN/UrHfFwBBcXdxs3TTRpk5NmUFxc3L/CrRQxafBp04WLi/ue3PrCIx2slJIdLi7uQW6v+eklrNHSBRcX9wh3PjDtBfwcWvlpcHFxN3A/ACDCCwncK+QVAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
+</body>
+</html>
