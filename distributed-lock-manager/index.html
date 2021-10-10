@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>分布式锁的阐述以及实现 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="锁">
+    <meta name="description" content="分布式锁阐述在搞明白分布式锁之前，先明白其由来。 谈到分布式锁自然也就能联想到分布式应用。  在将应用拆分为分布式应用之前，是单机系统，在单机系统中的并发场景为单进程多线程模式  采用加锁或者非阻塞同步或者无锁同步可以简单的实现同步操作   将应用拆分为分布式应用之后，并发场景变成了多进程+多线程的模式 业界常用的解决方案通常是借助于一个第三方组件并&#x3D;&#x3D;利用它自身的排他性来达到多进程的互斥&#x3D;&#x3D;。如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式锁的阐述以及实现">
+<meta property="og:url" content="https://winniekun.github.io/distributed-lock-manager/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="分布式锁阐述在搞明白分布式锁之前，先明白其由来。 谈到分布式锁自然也就能联想到分布式应用。  在将应用拆分为分布式应用之前，是单机系统，在单机系统中的并发场景为单进程多线程模式  采用加锁或者非阻塞同步或者无锁同步可以简单的实现同步操作   将应用拆分为分布式应用之后，并发场景变成了多进程+多线程的模式 业界常用的解决方案通常是借助于一个第三方组件并&#x3D;&#x3D;利用它自身的排他性来达到多进程的互斥&#x3D;&#x3D;。如">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-22T08:10:46.000Z">
+<meta property="article:modified_time" content="2021-09-22T14:46:23.802Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="锁">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu"  >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-list-ul"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://winniekun.github.io/acsaber/#/" target="_blank" >
+                <i class="icon icon-lg icon-trello"></i>
+                LeetCode
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">分布式锁的阐述以及实现</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">分布式锁的阐述以及实现</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-09-22T08:10:46.000Z" itemprop="datePublished" class="page-time">
+  2021-09-22
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分布式锁阐述"><span class="post-toc-number">1.</span> <span class="post-toc-text">分布式锁阐述</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#MySQL实现分布式锁"><span class="post-toc-number">2.</span> <span class="post-toc-text">MySQL实现分布式锁</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#基于表记录"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">基于表记录</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#基于乐观锁"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">基于乐观锁</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#基于悲观锁"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">基于悲观锁</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Redis实现分布式锁"><span class="post-toc-number">3.</span> <span class="post-toc-text">Redis实现分布式锁</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#单机Redis实现分布式锁"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">单机Redis实现分布式锁</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#分布式锁RedLock"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">分布式锁RedLock</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#failover引起的问题"><span class="post-toc-number">3.2.1.</span> <span class="post-toc-text">failover引起的问题</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ZooKeeper实现分布式锁"><span class="post-toc-number">4.</span> <span class="post-toc-text">ZooKeeper实现分布式锁</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">5.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#References"><span class="post-toc-number">6.</span> <span class="post-toc-text">References</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-分布式/distributed-lock-manager"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">分布式锁的阐述以及实现</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-09-22 16:10:46" datetime="2021-09-22T08:10:46.000Z"  itemprop="datePublished">2021-09-22</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="分布式锁阐述"><a href="#分布式锁阐述" class="headerlink" title="分布式锁阐述"></a>分布式锁阐述</h2><p>在搞明白分布式锁之前，先明白其由来。</p>
+<p>谈到分布式锁自然也就能联想到分布式应用。</p>
+<ol>
+<li><p>在将应用拆分为分布式应用之前，是单机系统，在单机系统中的并发场景为单进程多线程模式</p>
+<ul>
+<li>采用加锁或者非阻塞同步或者无锁同步可以简单的实现同步操作</li>
+</ul>
+</li>
+<li><p>将应用拆分为分布式应用之后，并发场景变成了多进程+多线程的模式</p>
+<p>业界常用的解决方案通常是借助于一个第三方组件并==利用它自身的排他性来达到多进程的互斥==。如：</p>
+<ul>
+<li><p>基于DB的唯一索引</p>
+</li>
+<li><p>基于ZK的临时节点</p>
+</li>
+<li><p>基于Redis的NX EX参数</p>
+<ul>
+<li><code>EX second</code> ：设置键的过期时间为 <code>second</code> 秒。 <code>SET key value EX second</code> 效果等同于 <code>SETEX key second value</code> 。</li>
+<li><code>PX millisecond</code> ：设置键的过期时间为 <code>millisecond</code> 毫秒。 <code>SET key value PX millisecond</code> 效果等同于 <code>PSETEX key millisecond value</code> 。</li>
+<li><code>NX</code> ：只在键不存在时，才对键进行设置操作。 <code>SET key value NX</code> 效果等同于 <code>SETNX key value</code> 。</li>
+<li><code>XX</code> ：只在键已经存在时，才对键进行设置操作。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>一个良好的分布式锁，要解决如下的几个核心的问题：</p>
+<ol>
+<li><strong>可用问题：</strong> 无论何时都要保证锁服务的可用性（这是系统正常执行锁操作的基础）。</li>
+<li><strong>死锁问题：</strong> 客户端一定可以获取锁，即使其他客户端获取锁之后，在释放锁之前宕机了。</li>
+<li><strong>脑裂问题：</strong> 集群同步时产生的数据不一致或者故障转移时，导致新的进程有可能拿到锁，但之前的进程以为自己还有锁，那么就出现两个进程拿到了同一个锁的问题。 </li>
+<li><strong>可重入：</strong> 一个节点获取了锁之后，还可以再次获取整个锁资源。</li>
+</ol>
+<h2 id="MySQL实现分布式锁"><a href="#MySQL实现分布式锁" class="headerlink" title="MySQL实现分布式锁"></a>MySQL实现分布式锁</h2><p>基于MySQL的方案，一般分为3类：基于<code>表记录</code>、<code>乐观锁</code>和<code>悲观锁</code></p>
+<h3 id="基于表记录"><a href="#基于表记录" class="headerlink" title="基于表记录"></a>基于表记录</h3><p>最直观的形式就是创建一张表，然后在表里面执行操作，<code>获取锁</code>时在记录中新增一条记录，<code>释放锁</code>的时候再把该记录删除即可。</p>
+<p><strong>DDL：</strong></p>
+<pre><code class="lang-sql">CREATE TABLE `database_lock` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `resource` int NOT NULL COMMENT '锁定的资源',
+    `description` varchar(1024) NOT NULL DEFAULT "" COMMENT '描述',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uiq_idx_resource` (`resource`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据库分布式锁表';
+</code></pre>
+<p>因为添加了唯一索引，所以能够保证排他性，同一时间只有一个客户端获取到共享资源（<strong>报错：ERROR 1062 (23000): Duplicate entry ‘1’ for key ‘uiq_idx_resource’</strong>）。</p>
+<p><strong>获取锁：</strong></p>
+<pre><code class="lang-sql">INSERT INTO database_lock(resource, description) VALUES (1, 'lock');
+</code></pre>
+<p><strong>释放锁：</strong></p>
+<pre><code class="lang-sql">DELETE FROM database_lock WHERE resource = 1;
+</code></pre>
+<p><strong>注意事项：</strong></p>
+<ul>
+<li>没有时效时间，如果客户端获取锁之后，宕机之后，或者其他<code>释放锁</code>操作失败，就会导致其他客户端无法获取锁<ul>
+<li>可以做一个定时任务去定时清理。</li>
+</ul>
+</li>
+<li>这种锁的可靠性依赖于数据库。建议设置备库，避免单点，进一步提高可靠性</li>
+<li>这种锁是非阻塞的，因为插入数据失败之后会直接报错，想要获得锁就需要再次操作。如果需要阻塞式的，可以弄个for循环、while循环之类的，直至INSERT成功再返回</li>
+<li>这种锁也是非可重入的，因为同一个线程在没有释放锁之前无法再次获得锁，因为数据库中已经存在同一份记录了。想要实现可重入锁，可以在数据库中添加一些字段，比如获得锁的主机信息、线程信息等，那么在再次获得锁的时候可以先查询数据，如果当前的主机信息和线程信息等能被查到的话，可以直接把锁分配给它。</li>
+</ul>
+<h3 id="基于乐观锁"><a href="#基于乐观锁" class="headerlink" title="基于乐观锁"></a>基于乐观锁</h3><p><strong>DDL：</strong></p>
+<pre><code class="lang-sql">CREATE TABLE `optimistic_lock` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `resource` int NOT NULL COMMENT '锁定的资源',
+    `version` int NOT NULL COMMENT '版本信息',
+    `created_at` datetime COMMENT '创建时间',
+    `updated_at` datetime COMMENT '更新时间',
+    `deleted_at` datetime COMMENT '删除时间', 
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uiq_idx_resource` (`resource`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据库分布式锁表';
+</code></pre>
+<p>在使用乐观锁之前要确保表中有相应的数据，比如：</p>
+<pre><code class="lang-sql">INSERT INTO optimistic_lock(resource, version, created_at, updated_at) VALUES(20, 1, CURTIME(), CURTIME());
+</code></pre>
+<p>在单线程的情况中，流程如下：</p>
+<ol>
+<li>获取资源： <code>select resource from  optimistic_lock where id = 1;</code></li>
+<li>执行业务逻辑</li>
+<li>更新资源：<code>update  optimistic_lock set resource = resource - 1 where id = 1</code></li>
+</ol>
+<p>不过在多线程的情况下，可能会出现超减的问题。所以我们可以通过一个<code>version</code>或者<code>时间戳</code>来进行控制，类似CAS</p>
+<ol>
+<li>获取资源：<code>SELECT resource, version FROM optimistic_lock WHERE id = 1</code></li>
+<li>执行业务逻辑</li>
+<li>更新资源：<code>UPDATE optimistic_lock SET resource = resource -1, version = version + 1 WHERE id = 1 AND version = oldVersion</code></li>
+</ol>
+<p>虽然本身并没有利用到数据库自身的锁机制，不影响请求性能，但是，并发量大的时候，会导致大量的请求失败。同时因为都是作用在同一条记录上，在一些特殊场景，如大促、秒杀等活动开展的时候，大量的请求同时请求同一条记录的行锁，会对数据库产生很大的写压力。所以综合数据库乐观锁的优缺点，乐观锁比较适合并发量不高，并且写操作不频繁的场景</p>
+<h3 id="基于悲观锁"><a href="#基于悲观锁" class="headerlink" title="基于悲观锁"></a>基于悲观锁</h3><p>除了可以通过增删操作数据库表中的记录以外，我们还可以借助数据库中自带的锁来实现分布式锁。在查询语句后面增加FOR UPDATE，数据库会在查询过程中给数据库表增加悲观锁，也称排他锁。当某条记录被加上悲观锁之后，其它线程也就无法再改行上增加悲观锁。</p>
+<p>步骤如下：</p>
+<ol>
+<li>获取资源 <code>SELECT * FROM database_lock WHERE id = 1 FOR UPDATE</code> </li>
+<li>执行业务逻辑</li>
+<li>释放锁 <code>COMMIT</code></li>
+</ol>
+<p><strong>注意事项：</strong></p>
+<blockquote>
+<p>避免锁升级到表锁。所以需要明确能够走到索引。</p>
+</blockquote>
+<p>在悲观锁中，每一次行数据的访问都是独占的，只有当正在访问该行数据的请求事务提交以后，其他请求才能依次访问该数据，否则将阻塞等待锁的获取。悲观锁可以严格保证数据访问的安全。但是缺点也明显，即每次请求都会额外产生加锁的开销且未获取到锁的请求将会阻塞等待锁的获取，在高并发环境下，容易造成大量请求阻塞，影响系统可用性。另外，悲观锁使用不当还可能产生死锁的情况。</p>
+<h2 id="Redis实现分布式锁"><a href="#Redis实现分布式锁" class="headerlink" title="Redis实现分布式锁"></a>Redis实现分布式锁</h2><h3 id="单机Redis实现分布式锁"><a href="#单机Redis实现分布式锁" class="headerlink" title="单机Redis实现分布式锁"></a>单机Redis实现分布式锁</h3><p><strong>获取锁：</strong></p>
+<pre><code class="lang-shell">SET resource_name my_random_value NX PX 30000
+</code></pre>
+<p>上面的命令如果执行成功，则客户端成功获取到了锁，接下来就可以<strong>访问共享资源</strong>了；而如果上面的命令执行失败，则说明获取锁失败。</p>
+<p><strong><code>SET</code>命令阐述：</strong></p>
+<ul>
+<li>resource_name 可以视为一个共享资源</li>
+<li>my_random_value 通过客户端自己生成一个随机符号，作为唯一标志符，避免错误解锁问题</li>
+<li>NX 若当前key已经存在，则不执行任何操作，若当前key不存在，执行命令，也就是set操作。这保证了只有第一个请求的客户端才能获得锁，而其它客户端在锁被释放之前都无法获得锁（很好的排他性）。</li>
+<li>PX 3000 表示这个锁有一个30秒的自动过期时间。当然，这里30秒只是一个例子，客户端可以选择合适的过期时间。</li>
+</ul>
+<p><strong>释放锁：</strong></p>
+<pre><code class="lang-lua">if redis.call("get",KEYS[1]) == ARGV[1] then
+    return redis.call("del",KEYS[1])
+else
+    return 0
+end
+</code></pre>
+<p><strong><code>LUA</code>命令阐述：</strong></p>
+<ul>
+<li>前面的<code>my_random_value</code>作为<code>ARGV[1]</code>传入，然后把<code>resource_name</code>作为<code>KEY[1]</code>传进来</li>
+</ul>
+<p><strong>单机Redis实例实现分布式锁的一些核心点：</strong></p>
+<ul>
+<li><p>锁必须要设置一个过期时间（锁的有效时间），避免客户端获取锁之后崩溃或者出现网络分割等问题导致的其无法和Redis实例继续通信，最后导致其他客户端都无法获取锁</p>
+</li>
+<li><p>获取锁操作要保证原子性</p>
+<ul>
+<li><p>上述获取锁的语义分为两步骤： set 、设置过期时间</p>
+<pre><code class="lang-shell">SETNX resource_name my_random_value
+EXPIRE resource_name 30
+</code></pre>
+<p>但分为两个命令的话，无法保证原子性操作（set之后，客户端宕机了，则会一直持有锁），上述的获取锁操作就是一个命令，也就具有原子性了。</p>
+</li>
+</ul>
+</li>
+<li><p><code>my_random_value</code>是必须的</p>
+<ul>
+<li>通过<code>my_random_value</code>作为每个客户端的唯一标识符，可以有效的解决错误解锁的问题<ul>
+<li>客户端A获取锁，然后执行操作</li>
+<li>客户端A在某个操作上阻塞了很久，锁的有效时间超过了，自动释放锁</li>
+<li>客户端B成功获取锁，执行自己的业务</li>
+<li>客户端A从阻塞中恢复，然后释放了客户端B的锁</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>释放锁要保证原子性</p>
+<ul>
+<li><p>对于释放锁来说，共有三个步骤：<code>查询</code>、<code>判断</code>、<code>删除</code>，和<code>获取锁</code>同理，也要保证原子性。为了实现原子性操作，可以通过<code>LUA</code>脚本来做</p>
+<pre><code class="lang-lua">if redis.call("get", KEY[1]) == ARGV[1] then
+      return redis.call("del", KEY[1])
+else 
+      return 0;
+end
+</code></pre>
+<ul>
+<li>如果无法保证原子性的话，会出现如下的情况<ol>
+<li>客户端A成功获取到了锁</li>
+<li>客户端A对共享资源进行操作</li>
+<li>客户端A执行结束，开始释放锁，先执行<code>GET</code>操作获取锁，然后进行比较客户端自身的随机值比较，符合预期</li>
+<li>客户端A因为某些原因，发生了阻塞</li>
+<li>超过了锁的使用时间，客户端B在锁被超时释放后，成功获取锁</li>
+<li>客户端A从阻塞中恢复过来，执行最后一步，也就是<code>DEL</code>操作，结果错误释放了客户端B获取的锁。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="分布式锁RedLock"><a href="#分布式锁RedLock" class="headerlink" title="分布式锁RedLock"></a>分布式锁RedLock</h3><p>以上问题，在实现分布式锁时，稍加注意就能够很好的的解决，但是有一种情况很难解决，其是由<code>failover</code>问题导致的，具体如下：</p>
+<h4 id="failover引起的问题"><a href="#failover引起的问题" class="headerlink" title="failover引起的问题"></a>failover引起的问题</h4><blockquote>
+<ol>
+<li>客户端1从Master中获取锁</li>
+<li>Master宕机了，并且Master的数据还同步到Slave上</li>
+<li>Slave升级为Master</li>
+<li>客户端2从新的Master中获取到了对应同一个资源的锁</li>
+</ol>
+</blockquote>
+<p>这样就导致了客户端A和客户端B同时获取了同一个资源的锁，这样就违背了分布式锁的语义了，锁的安全性被打破了。针对这个问题，antirez设计了Redlock算法。</p>
+<p><strong>获取锁步骤：</strong></p>
+<blockquote>
+<ol>
+<li>获取系统当前的时间（毫秒级别）</li>
+<li>按照顺序依次向N个Redis实例执行获取锁操作<ul>
+<li>整体流程和基于单个Redis实例获取锁相同，包含有random_value和过期时间（PX 3000 也称为有效时间）</li>
+<li>同时为了保证某个Redis实例宕机时，RedLock能够正常工作，对于每次获取锁操作，还要有一个超时时间，并且要远小于整个锁的<code>有效时间</code>。客户端在当前Redis实例获取锁失败（可能是宕机、可能时网络超时）的话，需要立即尝试在后续的Redis的实例上获取锁。</li>
+<li>计算客户端获取锁的过程中，共消耗了多少时间。计算方式为：访问N个Redis实例之后的时间 - 第一步开始时的时间。同时保证 成功获取了 $N/2 + 1$个Redis实例上获取到了锁。那么认为获取锁成功， 否则视为失败。</li>
+<li>获取锁成功，对应的锁的有效时间要重新计算。它等于最开始设置的有效时间减去获取锁消耗的时间。</li>
+<li>获取锁失败，要求客户端要对所有的Redis实例进行释放锁操作（Lua脚本保证原子性）。</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<p><strong>释放锁的步骤</strong></p>
+<blockquote>
+<p>客户端要对所有的Redis实例进行释放锁操作（Lua脚本保证原子性），不管这些节点当时在获取锁的时候成功与否。</p>
+</blockquote>
+<h2 id="ZooKeeper实现分布式锁"><a href="#ZooKeeper实现分布式锁" class="headerlink" title="ZooKeeper实现分布式锁"></a>ZooKeeper实现分布式锁</h2><ol>
+<li>客户端创建一个<code>znode</code>节点，比如<code>/lock</code>，那么就意味着客户端获取锁成功了。其他客户端获取锁失败（<code>znode</code>已经存在）</li>
+<li>持有锁的客户端业务逻辑执行完成之后，会删除<code>znode</code>，这样其他的客户端就接下来就能获取锁了</li>
+<li><code>znode</code>应该被创建成<code>ephemeral</code>（临时的）的。这是znode的一个特性，它保证如果创建znode的那个客户端崩溃了，那么相应的znode会被自动删除。这保证了锁一定会被释放。</li>
+</ol>
+<p>那么问题来了，<code>ZooKeeper</code>是如何检测到客户端是否崩溃呢？实际上每个客户端和<code>ZooKeeper</code>的某个服务器都维护一个 <code>Session</code>，这个<code>Session</code>通过心跳检测来维持，如果<code>ZooKeeper</code>长时间获取不到客户端的心跳（Session的过期时间），那么就认为<code>Session</code>过期了，同时会该<code>Session</code>对应的<code>ephemeral</code>的<code>znode</code>都会自动删除。</p>
+<p>设想如下的执行序列：</p>
+<ol>
+<li>客户端1创建了znode节点<code>/lock</code>，获得了锁。</li>
+<li>客户端1进入了长时间的GC pause。</li>
+<li>客户端1连接到ZooKeeper的Session过期了。znode节点<code>/lock</code>被自动删除。</li>
+<li>客户端2创建了znode节点<code>/lock</code>，从而获得了锁。</li>
+<li>客户端1从GC pause中恢复过来，它仍然认为自己持有锁。</li>
+</ol>
+<p>最后，客户端1和客户端2都认为自己持有了锁，冲突了。这与Martin在文章中描述的由于GC pause导致的分布式锁失效的情况类似。</p>
+<p>看起来，用ZooKeeper实现的分布式锁也不一定就是安全的，该有的问题它还是有。但是，ZooKeeper作为一个专门为分布式应用提供方案的框架，它提供了一些非常好的特性，是Redis之类的方案所没有的。像前面提到的ephemeral类型的znode自动删除的功能就是一个例子。</p>
+<p>还有一个很有用的特性是<code>ZooKeeper</code>的<code>watch机制</code>。这个机制可以这样来使用，比如当客户端试图创建<code>/lock</code>的时候，发现它已经存在了，这时候创建失败，但客户端不一定就此对外宣告获取锁失败。<strong>客户端可以进入一种等待状态</strong>，等待当<code>/lock</code>节点被删除的时候，ZooKeeper通过watch机制通知它，这样它就可以继续完成创建操作（获取锁）。这可以让分布式锁在客户端用起来就像一个本地的锁一样：加锁失败就阻塞住，直到获取到锁为止。这样的特性Redlock就无法实现。</p>
+<p>基于ZooKeeper的锁和基于Redis的锁相比在实现特性上有两个不同：</p>
+<ul>
+<li>在正常情况下，客户端可以持有锁任意长的时间，这可以确保它做完所有需要的资源访问操作之后再释放锁。这避免了基于Redis的锁对于有效时间(lock validity time)到底设置多长的两难问题。实际上，基于ZooKeeper的锁是依靠Session（心跳）来维持锁的持有状态的，而Redis不支持Sesion。</li>
+<li>基于ZooKeeper的锁支持在获取锁失败之后等待锁重新释放的事件。这让客户端对锁的使用更加灵活。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>摘自张铁蕾的博客</p>
+<blockquote>
+<p>按照锁的两种用途，如果仅是为了效率(efficiency)，那么你可以自己选择你喜欢的一种分布式锁的实现。当然，你需要清楚地知道它在安全性上有哪些不足，以及它会带来什么后果。而如果你是为了正确性(correctness)，那么请慎之又慎。我们在分布式锁的正确性上走得最远的地方，要数对于ZooKeeper分布式锁、单调递增的epoch number以及对分布式资源进行标记的分析了。请仔细审查相关的论证。</p>
+</blockquote>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
+<li><a href="https://blog.csdn.net/u013256816/article/details/92854794" target="_blank" rel="noopener">基于数据库实现的分布式锁</a></li>
+<li><a href="http://zhangtielei.com/posts/blog-redlock-reasoning.html" target="_blank" rel="noopener">基于Redis的分布式锁到底安全吗</a></li>
+<li><a href="http://learn.lianglianglee.com/%E4%B8%93%E6%A0%8F/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E9%9D%A2%E8%AF%95%E7%B2%BE%E8%AE%B2/06%20%20%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E4%B8%AD%EF%BC%8C%E5%A6%82%E4%BD%95%E5%9B%9E%E7%AD%94%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%EF%BC%9F.md" target="_blank" rel="noopener">分布式系统中，如何回答锁的实现原理</a></li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2021-09-22T14:46:23.802Z" itemprop="dateUpdated">2021-09-22 22:46:23</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%94%81/" rel="tag">锁</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/distributed-lock-manager/&title=《分布式锁的阐述以及实现》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/distributed-lock-manager/&title=《分布式锁的阐述以及实现》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/distributed-lock-manager/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《分布式锁的阐述以及实现》 — Wkkの笔记&url=https://winniekun.github.io/distributed-lock-manager/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/distributed-lock-manager/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/zero-copy/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">零拷贝技术的理解</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2021
+            </span>
+            <span>
+                
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/distributed-lock-manager/&title=《分布式锁的阐述以及实现》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/distributed-lock-manager/&title=《分布式锁的阐述以及实现》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/distributed-lock-manager/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《分布式锁的阐述以及实现》 — Wkkの笔记&url=https://winniekun.github.io/distributed-lock-manager/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/distributed-lock-manager/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKUlEQVR42u3aS46jUBAEwL7/pT3bnoWZzFd4JBfBykK0IbBUXb+fn/h4/TqSM7/PT77z5gMDA+NrGa/LI7nm+q8S5Nl9MTAwnsZ4F8HeXZMHyiQQX+Ovr8fAwMBIPifhck7CwMDAaBltyToJ5RgYGBhtOdp2upIk8r/W4hgYGF/ImITIT3/+yHwDAwPjqxh3tfvbx5qH77+eCgMDYzUjD3CTVO/6TFSgBosaGBgYWxntgkXebsvP5C/l7RkMDIzVjHlKlze/8rFlHqDf/t/AwMBYx2gbbXetiOXl61n6iIGBsYORF5l3rY7lSx45FQMDYzdjkvblDbW7viFKQzEwMJYyzpr4+Ruat+2KBBEDA2M1Yz4qmBSlbZPuH5NYDAyMdYy20T9ZIMtfxCTEY2BgbGLkt2zHBmdB9nCagYGBsZoxScjOHm6+rlH/ShgYGCsYScnajh7z8UAOjmpxDAyM1Yy2EZ839OdJZ0TFwMBYzZiEznY8kL+as1EEBgbGVsZZs/6sNG1XxIonxMDAeACjHSXmjzsZDIzWwjAwMJYy2klCu7Y1WREranEMDIxFjFd5HLbsB6VydF8MDIzVjDbMJbfMB5xt67/eGcHAwFjEaINsG3wnhWvxvjEwMB7AaANf2+LPR6FnoR8DAwPjrHCdlLsfD7gYGBiPYcwDcZIORoMHDAyMBzCSIrZYfThKE0ejUwwMjNWMs7yrbaUlLysPzaP5BgYGxjcx/gAzGOTzAWES/QAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
+</body>
+</html>
