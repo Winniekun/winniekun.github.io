@@ -31,14 +31,23 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521144232642.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521144940926.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521215733187.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521174931648.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521181226105.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014171621621.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014162146281.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014172022509.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014190126497.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521182242937.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521182508161.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521185850059.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014192430587.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014201734968.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014202412297.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014203024482.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014204120183.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014205542753.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014210540633.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014211015099.png">
 <meta property="og:image" content="https://winniekun.github.io/Users/weikunkun/Library/Application">
 <meta property="article:published_time" content="2021-05-21T14:32:09.000Z">
-<meta property="article:modified_time" content="2021-06-21T16:37:07.607Z">
+<meta property="article:modified_time" content="2021-10-14T13:12:47.807Z">
 <meta property="article:author" content="weikunkun">
 <meta property="article:tag" content="应用层">
 <meta name="twitter:card" content="summary">
@@ -295,26 +304,115 @@
                 </div>
                 <div class="image-caption">image-20210521215733187</div>
             </figure>
-<h3 id="使用wireshark实战证明"><a href="#使用wireshark实战证明" class="headerlink" title="使用wireshark实战证明"></a>使用wireshark实战证明</h3><p>本地地址和LeetCode-CN的交互</p>
+<h3 id="使用wireshark实战证明"><a href="#使用wireshark实战证明" class="headerlink" title="使用wireshark实战证明"></a>使用wireshark实战证明</h3><p>本地地址和<strong>LeetCode-CN</strong>的交互</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
-                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521174931648.png" alt="wireshark抓包展示" title="">
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014171621621.png" alt="wireshark抓包显示" title="">
                 </div>
-                <div class="image-caption">wireshark抓包展示</div>
+                <div class="image-caption">wireshark抓包显示</div>
             </figure>
+<p>具体的流程如TLS 1.2 的官方文档，<strong>RFC-5246</strong>，其中的section-7.3所示</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014162146281.png" alt="image-20211014162146281" title="">
+                </div>
+                <div class="image-caption">image-20211014162146281</div>
+            </figure>
+<p>接下来，根据<strong>wireshark</strong>进行实际的验证</p>
 <ol>
-<li><p>客户端想服务端发送https请求链接，同时将自身支持的密码套件（非对称加密算法、对称加密算法、摘要算法）发送个服务端</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521181226105.png" alt="客户端say hello阶段"></p>
+<li><p><strong>ClientHello阶段</strong></p>
+<blockquote>
+<p>客户端想服务端发送https请求链接，同时将自身支持的TLS版本，一个随机串Random，密码套件（非对称加密算法、对称加密算法、摘要算法）发送给服务端，同时返回的内容还有一些其他的信息，如compression_methods（压缩的算法）、extensions（扩展字段）</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014172022509.png" alt="Client Hello"></p>
 </li>
-<li><p>服务端根据客户端获发送的数据，选择一套密码套件，以及自身的证书发送给客户端</p>
+</ol>
+<ol>
+<li><p><strong>ServerHello阶段</strong></p>
+<blockquote>
+<p>服务端根据客户端获发送的数据，选择一套密码套件，以及自身的证书发送给客户端</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014190126497.png" alt="ServerHello阶段"></p>
+<p>选择的密码套件阐述：</p>
+<p>TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</p>
+<ol>
+<li>ECDHE_RSA： 密钥交换时采用的RSA非对称加密算法</li>
+<li>AES_128_GCM：握手通讯后使用AES对称算法，密钥长度为128</li>
+<li>SHA256：摘要算法使用的是SHA256</li>
+</ol>
 <p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521182242937.png" alt="服务端选择的密码套件--服务端say hello阶段"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521182508161.png" alt="服务端将自身的证书发送给客户端--- 服务端Say hello 阶段"></p>
 </li>
-<li><p>客户端进行验证，验证正常自后，随机生成一串数组作为后续通信的对称加密密钥，然后使用服务端证书的公钥进行加密，同时使用摘要算法对本次的会话信息进行加密，然后一并发送给服务端。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521185850059.png" alt="image-20210521185850059"></p>
+</ol>
+<p>   <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20210521182508161.png" alt="服务端将自身的证书发送给客户端--- 服务端Say hello 阶段"></p>
+<ol>
+<li><p><strong>Server Certificate</strong>阶段</p>
+<blockquote>
+<p>服务端发完上面的 ServerHello 后立即发这个包</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014192430587.png" alt="Server Certificate阶段 I"></p>
+<p>整个证书内容展开来看如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014201734968.png" alt="证书的内容"></p>
+<p>其中<strong>subject</strong>展开整理如下：</p>
+<pre><code>CountryName: CN
+printableString: Shanghai
+printableString: IT
+uTF8String: 领扣网络（上海）有限公司
+printableString: leetcode-cn.com
+</code></pre><p>还有一个很重要的内容 <strong>subjectPublicKeyInfo（证书的公钥信息）：</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014202412297.png" alt="证书的公钥信息"></p>
+<p>整体来看，证书共分为如下的内容：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014203024482.png" alt="证书整体内容"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014204120183.png" alt="证书内容" style="zoom: 50%;"></p>
+<p>执行了<strong>客户端 + 服务端</strong>的两个<strong>hello阶段</strong>，然后在发送一个<code>Certificate</code>包，用于传递证书，待客户端校验</p>
 </li>
-<li><p>服务端验证，正常之后，剩下的忘截图了，后面补上</p>
+<li><p><strong>Server Hello Done</strong> 阶段</p>
+<blockquote>
+<p>标识着 serverHello 这个握手过程结束了</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014205542753.png" alt="Server Hello Done"></p>
+</li>
+<li><p><strong>Client ClientKeyExchange</strong> 阶段</p>
+<blockquote>
+<p>紧接着 ServerHelloDone 发送，用于协商出 premaster_secret，同之前的 ServerKeyExchange 配合使用的。</p>
+</blockquote>
+</li>
+<li><p><strong>生成最终通信的对称加密秘钥master_secret</strong></p>
+<blockquote>
+<p>这一步不是抓包的信息，而是客户端和服务端此时都在自己端内所做的事情，非常关键。</p>
+<p>就是<strong>计算出最终对称加密用的秘钥 master_secret</strong>，这也是整个花里胡哨的过程，最终且唯一的一个目的，并且两端算出来的结果肯定是一样的。</p>
+<p>HTTPS 的目的，不就是双方协商出一个共同的对称加密秘钥么，怕被中间人拦截到，所以做的证书呀，非对称加密算法呀，秘钥协商算法等复杂的规定。</p>
+<p>那 master_secret 是怎么计算出来的呢？</p>
+<p>还记不记得之前我们得到了三个随机数：</p>
+<p><strong>随机数 1（客户端随机数）</strong>：在 ClientHello 消息里，由客户端生成的随机数，是： f52870c0be8c82f46f6ae0c5ad1be08a550bda92416bafebe54b9923b0795150</p>
+<p><strong>随机数 2（服务端随机数）</strong>：在 ServerHello 消息里，由服务端生成的随机数，是：</p>
+<p>d763c799e2dea5f59fb9dc12a476598d9fc486e0f43d57148bd15f137793f77a</p>
+<p><strong>随机数 3（pre_master)</strong>：通过秘钥交换算法 ECDHE 计算出的，我们叫它 pre_master。</p>
+<p>最终的对称加密秘钥 master_secret，就是根据这三个随机数共同计算出来的。</p>
+<p>一旦双方协商出来了这个相同的对称秘钥，那就可以开始愉快地安全通信了，TLS 层的工作也就圆满完成。</p>
+<p>所以可想而知，接下来的工作，就都是收尾工作了，因为秘钥已经协商好了。就可以开心的用协商的密钥进行加密通讯了，啦啦啦</p>
+</blockquote>
+</li>
+<li><p><strong>Client ChangeCipherSpec</strong>阶段</p>
+<blockquote>
+<p>秘钥改变通知，此时客户端已经生成了 <strong>master_secret</strong>，之后的消息将都通过 master secret 来加密</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014210540633.png" alt="Client ChangeCipherSpec"></p>
+</li>
+<li><p><strong>Encrypted Handshake Message</strong> 阶段</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211014211015099.png" alt="Encrypted Handshake Message"></p>
+<p>用于数据验证</p>
+</li>
+<li><p><strong>Server ChangeCipherSpec</strong>阶段</p>
+<blockquote>
+<p>也是秘钥改变通知，此时服务端也已经生成了 master_secret 了，后面的通信都用此值加密。</p>
+</blockquote>
+</li>
+<li><p><strong>Server Finish</strong>阶段</p>
+<blockquote>
+<p>同 Client Finish，服务器端发送握手结束通知，同时会带上前面所发内容的签名到客户端，保证前面通信数据的正确性。</p>
+</blockquote>
 </li>
 </ol>
 <h2 id="HTTPS的认证—-数字证书"><a href="#HTTPS的认证—-数字证书" class="headerlink" title="HTTPS的认证—-数字证书"></a>HTTPS的认证—-数字证书</h2><p>了解了HTTPS加密通信的流程后，对于数据裸奔的疑虑应该基本打消了。然而，还有一个问题：如何确保证书时可信的？</p>
@@ -354,7 +452,10 @@
 <li>根据证书内容使用摘要算法得到证书摘要B</li>
 <li>对比摘要A和摘要B是否相同</li>
 </ol>
-<h2 id="HTTPS的完整性保护—-摘要算法"><a href="#HTTPS的完整性保护—-摘要算法" class="headerlink" title="HTTPS的完整性保护—-摘要算法"></a>HTTPS的完整性保护—-摘要算法</h2><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ul>
+<h2 id="HTTPS的完整性保护—-摘要算法"><a href="#HTTPS的完整性保护—-摘要算法" class="headerlink" title="HTTPS的完整性保护—-摘要算法"></a>HTTPS的完整性保护—-摘要算法</h2><ul>
+<li>[ ] TODO</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ul>
 <li>图解HTTP</li>
 <li>趣谈协议—-极客时间</li>
 <li><a href="https://security.stackexchange.com/questions/89383/why-does-the-ssl-tls-handshake-have-a-client-and-server-random" target="_blank" rel="noopener">Why does the SSL/TLS handshake have a client and server random</a></li>
@@ -367,7 +468,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2021-06-21T16:37:07.607Z" itemprop="dateUpdated">2021-06-22 00:37:07</time>
+    最后更新时间：<time datetime="2021-10-14T13:12:47.807Z" itemprop="dateUpdated">2021-10-14 21:12:47</time>
 </span><br>
 
 
