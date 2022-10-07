@@ -1,0 +1,4145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>效率工具/shell-programming | Wkkの笔记 | 好记性不如烂键盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="效率工具">
+    <meta name="description" content="Shell学习记录Shell 这个单词的原意是外壳，跟 kernel（内核）相对应，比喻内核外面的一层，即用户跟内核交互的对话界面。 ch02学习记录ln 用于链接文件，相比于cp避免了创建副本，相当于引用，多个文件使用同一个文件   一些通配符通配符的含义和正则类似，正则表达式30分钟入门教程 * 符号 和正则里的*一样， 用于匹配0个或以上的字符  ？符号 和正则里的?类似， 不过在shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="效率工具&#x2F;shell-programming">
+<meta property="og:url" content="https://winniekun.github.io/shell-programming/index.html">
+<meta property="og:site_name" content="Wkkの笔记">
+<meta property="og:description" content="Shell学习记录Shell 这个单词的原意是外壳，跟 kernel（内核）相对应，比喻内核外面的一层，即用户跟内核交互的对话界面。 ch02学习记录ln 用于链接文件，相比于cp避免了创建副本，相当于引用，多个文件使用同一个文件   一些通配符通配符的含义和正则类似，正则表达式30分钟入门教程 * 符号 和正则里的*一样， 用于匹配0个或以上的字符  ？符号 和正则里的?类似， 不过在shell">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211106163238086.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211108161710871.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211108161927155.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211118220446157.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211122203802732.png">
+<meta property="article:published_time" content="2021-11-06T07:18:42.000Z">
+<meta property="article:modified_time" content="2021-11-27T09:00:20.839Z">
+<meta property="article:author" content="weikunkun">
+<meta property="article:tag" content="效率工具">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211106163238086.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <link rel="stylesheet" href="/css/prism/prism-tomorrow-night.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu"  >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-list-ul"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/people.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://avatars.githubusercontent.com/u/19886738?v=4">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">weikunkun</h5>
+          <a href="mailto:kongwiki5@gmail.com" title="kongwiki5@gmail.com" class="mail">kongwiki5@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user-md"></i>
+                About
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://winniekun.github.io/acsaber/#/" target="_blank" >
+                <i class="icon icon-lg icon-trello"></i>
+                LeetCode
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Winniekun" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">效率工具/shell-programming</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">效率工具/shell-programming</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-11-06T07:18:42.000Z" itemprop="datePublished" class="page-time">
+  2021-11-06
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/shell/">shell</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Shell学习记录"><span class="post-toc-number">1.</span> <span class="post-toc-text">Shell学习记录</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ch02学习记录"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">ch02学习记录</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ln"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">ln</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#一些通配符"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">一些通配符</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#符号"><span class="post-toc-number">1.1.2.1.</span> <span class="post-toc-text">* 符号</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#？符号"><span class="post-toc-number">1.1.2.2.</span> <span class="post-toc-text">？符号</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#符号-1"><span class="post-toc-number">1.1.2.3.</span> <span class="post-toc-text">[] 符号</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#STDIN-STDOUT"><span class="post-toc-number">1.1.3.</span> <span class="post-toc-text">STDIN&#x2F;STDOUT</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#输出重定向"><span class="post-toc-number">1.1.3.1.</span> <span class="post-toc-text">输出重定向</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#输入重定向"><span class="post-toc-number">1.1.3.2.</span> <span class="post-toc-text">输入重定向</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ch02练习题"><span class="post-toc-number">1.1.4.</span> <span class="post-toc-text">ch02练习题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#第一题"><span class="post-toc-number">1.1.4.1.</span> <span class="post-toc-text">第一题</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#第二题"><span class="post-toc-number">1.1.4.2.</span> <span class="post-toc-text">第二题</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ch03学习记录"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">ch03学习记录</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#正则再补充"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">正则再补充</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#cut命令"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">cut命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一些实用的例子"><span class="post-toc-number">1.2.2.1.</span> <span class="post-toc-text">一些实用的例子</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#总结"><span class="post-toc-number">1.2.2.2.</span> <span class="post-toc-text">总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#paste命令"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">paste命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#sed命令"><span class="post-toc-number">1.2.4.</span> <span class="post-toc-text">sed命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#替换操作：s命令"><span class="post-toc-number">1.2.4.1.</span> <span class="post-toc-text">替换操作：s命令</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#删除操作：d命令"><span class="post-toc-number">1.2.4.2.</span> <span class="post-toc-text">删除操作：d命令</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#tr命令"><span class="post-toc-number">1.2.5.</span> <span class="post-toc-text">tr命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#简单使用"><span class="post-toc-number">1.2.5.1.</span> <span class="post-toc-text">简单使用</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用-s进行压缩"><span class="post-toc-number">1.2.5.2.</span> <span class="post-toc-text">使用 -s进行压缩</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用-d进行删除"><span class="post-toc-number">1.2.5.3.</span> <span class="post-toc-text">使用-d进行删除</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#grep"><span class="post-toc-number">1.2.6.</span> <span class="post-toc-text">grep</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#常见用法"><span class="post-toc-number">1.2.6.1.</span> <span class="post-toc-text">常见用法</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#sort"><span class="post-toc-number">1.2.7.</span> <span class="post-toc-text">sort</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#uniq"><span class="post-toc-number">1.2.8.</span> <span class="post-toc-text">uniq</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ch04学习记录"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">ch04学习记录</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#变量"><span class="post-toc-number">1.3.0.1.</span> <span class="post-toc-text">变量</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ch05学习记录"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">ch05学习记录</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#单引号和双引号"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">单引号和双引号</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#反斜线"><span class="post-toc-number">1.4.2.</span> <span class="post-toc-text">反斜线</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#命令替换"><span class="post-toc-number">1.4.3.</span> <span class="post-toc-text">命令替换</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#expr命令"><span class="post-toc-number">1.4.4.</span> <span class="post-toc-text">expr命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#书本练习"><span class="post-toc-number">1.4.5.</span> <span class="post-toc-text">书本练习</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ch06-传递参数"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">ch06 传递参数</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#特殊的参数表示"><span class="post-toc-number">1.5.1.</span> <span class="post-toc-text">特殊的参数表示</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#传递参数"><span class="post-toc-number">1.5.2.</span> <span class="post-toc-text">传递参数</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#电话簿中查找联系人"><span class="post-toc-number">1.5.2.1.</span> <span class="post-toc-text">电话簿中查找联系人</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#电话簿中添加联系人"><span class="post-toc-number">1.5.2.2.</span> <span class="post-toc-text">电话簿中添加联系人</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#电话簿中删除联系人"><span class="post-toc-number">1.5.2.3.</span> <span class="post-toc-text">电话簿中删除联系人</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#更多参数"><span class="post-toc-number">1.5.2.4.</span> <span class="post-toc-text">更多参数</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ch07条件语句"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">ch07条件语句</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#退出状态"><span class="post-toc-number">1.6.1.</span> <span class="post-toc-text">退出状态</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#test和-命令"><span class="post-toc-number">1.6.2.</span> <span class="post-toc-text">test和[]命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#文件类型判断"><span class="post-toc-number">1.6.2.1.</span> <span class="post-toc-text">文件类型判断</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#文件权限判断"><span class="post-toc-number">1.6.2.2.</span> <span class="post-toc-text">文件权限判断</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#整数间的比较"><span class="post-toc-number">1.6.2.3.</span> <span class="post-toc-text">整数间的比较</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#字符串比较"><span class="post-toc-number">1.6.2.4.</span> <span class="post-toc-text">字符串比较</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#多重条件判定"><span class="post-toc-number">1.6.2.5.</span> <span class="post-toc-text">多重条件判定</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#exit命令"><span class="post-toc-number">1.6.3.</span> <span class="post-toc-text">exit命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#if…then形式"><span class="post-toc-number">1.6.4.</span> <span class="post-toc-text">if…then形式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#多层if-elif-elif-else"><span class="post-toc-number">1.6.4.1.</span> <span class="post-toc-text">多层if-elif-elif-else</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#case…esac形式"><span class="post-toc-number">1.6.5.</span> <span class="post-toc-text">case…esac形式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#调试"><span class="post-toc-number">1.6.6.</span> <span class="post-toc-text">调试</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ch08循环"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">ch08循环</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#for…in…do…done"><span class="post-toc-number">1.7.1.</span> <span class="post-toc-text">for…in…do…done</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#for-…-…-…-do…done"><span class="post-toc-number">1.7.2.</span> <span class="post-toc-text">for ((…;…;…)) do…done</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#while…do…done循环"><span class="post-toc-number">1.7.3.</span> <span class="post-toc-text">while…do…done循环</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#until…do…done循环"><span class="post-toc-number">1.7.4.</span> <span class="post-toc-text">until…do…done循环</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ch09-数据的读取和打印"><span class="post-toc-number">1.8.</span> <span class="post-toc-text">ch09 数据的读取和打印</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#read-命令"><span class="post-toc-number">1.8.1.</span> <span class="post-toc-text">read 命令</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Copy-a-file"><span class="post-toc-number">2.</span> <span class="post-toc-text">Copy a file</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#check-to-is-a-directory"><span class="post-toc-number">3.</span> <span class="post-toc-text">check to is a directory</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#see-if-the-destination-file-already-exits"><span class="post-toc-number">4.</span> <span class="post-toc-text">see if the destination file already exits</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#either-desitination-doesn’t-exist-or-“yes”-was-typed"><span class="post-toc-number">5.</span> <span class="post-toc-text">either desitination doesn’t exist or “yes” was typed</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#printf命令"><span class="post-toc-number">5.0.1.</span> <span class="post-toc-text">printf命令</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ch10环境"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">ch10环境</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Shell中变量的作用域"><span class="post-toc-number">5.1.1.</span> <span class="post-toc-text">Shell中变量的作用域</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#局部变量"><span class="post-toc-number">5.1.1.1.</span> <span class="post-toc-text">局部变量</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#全局变量"><span class="post-toc-number">5.1.1.2.</span> <span class="post-toc-text">全局变量</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#环境变量"><span class="post-toc-number">5.1.1.3.</span> <span class="post-toc-text">环境变量</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#PS1、PS2"><span class="post-toc-number">5.1.1.4.</span> <span class="post-toc-text">PS1、PS2</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#HOME、PATH"><span class="post-toc-number">5.1.1.5.</span> <span class="post-toc-text">HOME、PATH</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#rolo再优化"><span class="post-toc-number">5.1.1.6.</span> <span class="post-toc-text">rolo再优化</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ch11参数"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">ch11参数</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#paramter"><span class="post-toc-number">5.2.1.</span> <span class="post-toc-text">${paramter}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#paramter-value"><span class="post-toc-number">5.2.2.</span> <span class="post-toc-text">${paramter:-value}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#paramter-value-1"><span class="post-toc-number">5.2.3.</span> <span class="post-toc-text">${paramter:&#x3D;value}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#paramter-value-2"><span class="post-toc-number">5.2.4.</span> <span class="post-toc-text">${paramter:?value}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#paramter-value-3"><span class="post-toc-number">5.2.5.</span> <span class="post-toc-text">${paramter:+value}</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#set"><span class="post-toc-number">5.2.6.</span> <span class="post-toc-text">set</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#IFS"><span class="post-toc-number">5.2.7.</span> <span class="post-toc-text">IFS</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ch12拓展内容"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">ch12拓展内容</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#wait命令"><span class="post-toc-number">5.3.1.</span> <span class="post-toc-text">wait命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#trap命令"><span class="post-toc-number">5.3.2.</span> <span class="post-toc-text">trap命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#I-O内容"><span class="post-toc-number">5.3.3.</span> <span class="post-toc-text">I&#x2F;O内容</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ch13-rolo终极进化版"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">ch13 rolo终极进化版</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#rolo"><span class="post-toc-number">5.4.1.</span> <span class="post-toc-text">rolo</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#add"><span class="post-toc-number">5.4.2.</span> <span class="post-toc-text">add</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#rem"><span class="post-toc-number">5.4.3.</span> <span class="post-toc-text">rem</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#lu"><span class="post-toc-number">5.4.4.</span> <span class="post-toc-text">lu</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#change"><span class="post-toc-number">5.4.5.</span> <span class="post-toc-text">change</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#listall"><span class="post-toc-number">5.4.6.</span> <span class="post-toc-text">listall</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#display"><span class="post-toc-number">5.4.7.</span> <span class="post-toc-text">display</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实战小项目—-一键配置助手"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">实战小项目—-一键配置助手</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TODO"><span class="post-toc-number">5.5.1.</span> <span class="post-toc-text">TODO</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#开发中的遇到的问题"><span class="post-toc-number">5.5.2.</span> <span class="post-toc-text">开发中的遇到的问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#空值问题："><span class="post-toc-number">5.5.2.1.</span> <span class="post-toc-text">空值问题：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#tee"><span class="post-toc-number">5.5.2.2.</span> <span class="post-toc-text">tee</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#shuf"><span class="post-toc-number">5.5.2.3.</span> <span class="post-toc-text">shuf</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#判断文件是否存在"><span class="post-toc-number">5.5.2.4.</span> <span class="post-toc-text">判断文件是否存在</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#references"><span class="post-toc-number">6.</span> <span class="post-toc-text">references</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-效率工具/shell-programming"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">效率工具/shell-programming</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-11-06 15:18:42" datetime="2021-11-06T07:18:42.000Z"  itemprop="datePublished">2021-11-06</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/shell/">shell</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+            
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="Shell学习记录"><a href="#Shell学习记录" class="headerlink" title="Shell学习记录"></a>Shell学习记录</h1><p>Shell 这个单词的原意是<strong>外壳</strong>，跟 <strong>kernel（内核）</strong>相对应，比喻内核外面的一层，即用户跟内核交互的对话界面。</p>
+<h2 id="ch02学习记录"><a href="#ch02学习记录" class="headerlink" title="ch02学习记录"></a>ch02学习记录</h2><h3 id="ln"><a href="#ln" class="headerlink" title="ln"></a>ln</h3><blockquote>
+<p>用于链接文件，相比于cp避免了创建副本，相当于引用，多个文件使用同一个文件</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211106163238086.png" alt="image-20211106163238086" style="zoom:50%;"></p>
+<h3 id="一些通配符"><a href="#一些通配符" class="headerlink" title="一些通配符"></a>一些通配符</h3><p>通配符的含义和正则类似，<a href="https://deerchao.cn/tutorials/regex/regex.htm" target="_blank" rel="noopener">正则表达式30分钟入门教程</a></p>
+<h4 id="符号"><a href="#符号" class="headerlink" title="* 符号"></a>* 符号</h4><blockquote>
+<p>和正则里的<code>*</code>一样， 用于匹配0个或以上的字符</p>
+</blockquote>
+<h4 id="？符号"><a href="#？符号" class="headerlink" title="？符号"></a>？符号</h4><blockquote>
+<p>和正则里的<code>?</code>类似， 不过在<code>shell</code>中用于匹配1个字符。正则中<code>?</code>用于匹配0个或一个字符</p>
+</blockquote>
+<h4 id="符号-1"><a href="#符号-1" class="headerlink" title="[] 符号"></a>[] 符号</h4><blockquote>
+<p> 任选括号中元素中的一个，相比于<code>?</code>范围更明确</p>
+</blockquote>
+<h3 id="STDIN-STDOUT"><a href="#STDIN-STDOUT" class="headerlink" title="STDIN/STDOUT"></a>STDIN/STDOUT</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211108161710871.png" alt="image-20211108161710871" title="">
+                </div>
+                <div class="image-caption">image-20211108161710871</div>
+            </figure>
+<p>以<code>who</code>为例，<code>who</code>的输出用于表示所有当前登录进系统的用户</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211108161927155.png" alt="who示例" title="">
+                </div>
+                <div class="image-caption">who示例</div>
+            </figure>
+<h4 id="输出重定向"><a href="#输出重定向" class="headerlink" title="输出重定向"></a>输出重定向</h4><blockquote>
+<p>命令的输出通常是提交到标准输出设备，同时我们也可以进行重定向，将输出重定向到文件中。可类比为Go的管道操作</p>
+</blockquote>
+<h4 id="输入重定向"><a href="#输入重定向" class="headerlink" title="输入重定向"></a>输入重定向</h4><blockquote>
+<p>既然有输出重定向，必然有输入重定向，也可类比为Go的管道操作</p>
+</blockquote>
+<h3 id="ch02练习题"><a href="#ch02练习题" class="headerlink" title="ch02练习题"></a>ch02练习题</h3><h4 id="第一题"><a href="#第一题" class="headerlink" title="第一题"></a>第一题</h4><blockquote>
+<p>指定目录文件有以下内容</p>
+<pre><code>➜  ch02 ./print.sh
+feb96
+jan12.02
+jan19.02
+jan26.02
+jan5.02
+jan95
+jan96
+jan97
+jan98
+mar98
+memo1
+memo10
+memo2
+memo2.sv
+</code></pre></blockquote>
+<ul>
+<li><p>echo *      </p>
+<blockquote>
+<p>输出所有结果                     </p>
+</blockquote>
+</li>
+<li><p>echo *[!0-9]</p>
+<blockquote>
+<p>输出所有不已数字结尾的文件</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch02 echo *[\!0-9]
+memo2.sv
+</code></pre>
+</li>
+<li><p>echo m[a-df-z]*    </p>
+<blockquote>
+<p>输出所有 m开头，后跟除e以外的所有字符</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch02 echo m[a-df-z]*
+mar98
+</code></pre>
+</li>
+<li><p>echo [A-Z]*</p>
+<blockquote>
+<p>输出文件名仅包含大些字符的元素</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch02 echo [A-Z]*
+zsh: no matches found: [A-Z]*
+</code></pre>
+</li>
+<li><p>echo jan*                   </p>
+<blockquote>
+<p>输出jan开头的所有文件名</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch02 echo jan*
+jan12.02 jan19.02 jan26.02 jan5.02 jan95 jan96 jan97 jan98
+</code></pre>
+</li>
+<li><p>echo *.*</p>
+<blockquote>
+<p>输出中间以.的文件</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch02 echo *.*
+jan12.02 jan19.02 jan26.02 jan5.02 memo2.sv
+</code></pre>
+</li>
+<li><p>echo ?????        </p>
+<blockquote>
+<p>输出文件名长度为5的文件</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch02 echo ?????
+feb96 jan95 jan96 jan97 jan98 mar98 memo1 memo2
+</code></pre>
+</li>
+<li><p>echo *02</p>
+<blockquote>
+<p>输出以02结尾的文件</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch02 echo *02
+jan12.02 jan19.02 jan26.02 jan5.02
+</code></pre>
+</li>
+<li><p>echo jan?? feb?? mar??   </p>
+<blockquote>
+<p>输出以jan开头长度5、feb开头长度为5，mar开头长度为5的文件</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch02 echo jan?? feb?? mar??
+jan95 jan96 jan97 jan98 feb96 mar98
+</code></pre>
+</li>
+<li><p>echo [fjm][ae][bnr]*</p>
+<blockquote>
+<p>输出第一个字符[fjm]，第二个字符[ae]、第三个字符[bnr]的所有文件</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch02 echo \[fjm]\[ae][bnr]*
+zsh: no matches found: [fjm][ae][bnr]*
+</code></pre>
+</li>
+</ul>
+<h4 id="第二题"><a href="#第二题" class="headerlink" title="第二题"></a>第二题</h4><blockquote>
+<p>下列命名序列的结果是什么</p>
+</blockquote>
+<ul>
+<li><p>ls | wc -l</p>
+<blockquote>
+<p>统计当前文件夹内文件的数量</p>
+</blockquote>
+</li>
+<li><p>rm ???</p>
+<blockquote>
+<p>删除文件名长度为3的文件</p>
+</blockquote>
+</li>
+<li><p>who | wc -l</p>
+<blockquote>
+<p>统计登录用户</p>
+</blockquote>
+</li>
+<li><p>mv progs/* /users/Steve/backup</p>
+<blockquote>
+<p>移动文件</p>
+</blockquote>
+</li>
+<li><p>ls *.c | wc -l</p>
+<blockquote>
+<p>统计所有C文件数量</p>
+</blockquote>
+</li>
+<li><p>rm *.o</p>
+<blockquote>
+<p>删除所有.o后缀的文件</p>
+</blockquote>
+</li>
+<li><p>who | sort</p>
+<blockquote>
+<p>排序之后 输出登录用户</p>
+</blockquote>
+</li>
+<li><p>cp memo1 ..</p>
+<blockquote>
+<p>复制 memo1 到上一级目录</p>
+</blockquote>
+</li>
+<li><p>plotdata 2 &gt; errors &amp;</p>
+<blockquote>
+<p>后台运行</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="ch03学习记录"><a href="#ch03学习记录" class="headerlink" title="ch03学习记录"></a>ch03学习记录</h2><blockquote>
+<p>cut、paste、sed、tr、grep、sort、uniq的操作</p>
+</blockquote>
+<h3 id="正则再补充"><a href="#正则再补充" class="headerlink" title="正则再补充"></a>正则再补充</h3><p>在开始学习上述命令时，首先需要再梳理下正则。因为很多命令都可以通过正则进行高效的匹配我们需要的内容</p>
+<p>在第2章中，通过<code>shell</code>了解到了几个常用的通配符：<code>*</code>、<code>[]</code>、<code>?</code>。不过上述的命令能够识别出的正则表达式要比<code>shell</code>所能够识别的要复杂的多。并且这些操作中有些符号的还以和<code>shell</code>的有一些区别</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">代码</th>
+<th style="text-align:center">说明</th>
+<th style="text-align:center">例子</th>
+<th style="text-align:center">匹配结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">.</td>
+<td style="text-align:center">匹配除换行符以外的任意字符（1个）</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">^</td>
+<td style="text-align:center">匹配行首</td>
+<td style="text-align:center">^word</td>
+<td style="text-align:center">仅出现在行首的word</td>
+</tr>
+<tr>
+<td style="text-align:center">$</td>
+<td style="text-align:center">匹配行尾</td>
+<td style="text-align:center">x$</td>
+<td style="text-align:center">仅出现在行尾的x</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">^INSERT$</td>
+<td style="text-align:center">仅包含INSERT的行</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">^$</td>
+<td style="text-align:center">空行</td>
+</tr>
+<tr>
+<td style="text-align:center">*</td>
+<td style="text-align:center">匹配除了换行符以外的任意字符（0 —- ∞个）</td>
+<td style="text-align:center">x*</td>
+<td style="text-align:center">零个或多个连续的x</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">xx*</td>
+<td style="text-align:center">一个或多个连续的x</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">.*</td>
+<td style="text-align:center">零个或多个字符</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">w.*s</td>
+<td style="text-align:center">w及紧随其后的零个或多个字符，再加上s</td>
+</tr>
+<tr>
+<td style="text-align:center">+</td>
+<td style="text-align:center">匹配除了换行符以外的任意字符（1—- ∞个）</td>
+<td style="text-align:center">x+</td>
+<td style="text-align:center">一个或多个连续的x</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">xx+</td>
+<td style="text-align:center">两个或多个连续的x</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">.+</td>
+<td style="text-align:center">一个或多个字符</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">w.+s</td>
+<td style="text-align:center">w及紧随其后的一个或多个字符，再加上s</td>
+</tr>
+<tr>
+<td style="text-align:center">？</td>
+<td style="text-align:center">匹配除了换行符以外的任意字符（0、1个）</td>
+<td style="text-align:center">x?</td>
+<td style="text-align:center">1个或者2个x</td>
+</tr>
+<tr>
+<td style="text-align:center">[chars]</td>
+<td style="text-align:center">匹配chars中的任意字符</td>
+<td style="text-align:center">[tT]</td>
+<td style="text-align:center">小写或大些T</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">[a-z]</td>
+<td style="text-align:center">小写字母</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">[a-zA-Z]</td>
+<td style="text-align:center">小写或大写字母</td>
+</tr>
+<tr>
+<td style="text-align:center"><sup><a href="#fn_chars" id="reffn_chars">chars</a></sup></td>
+<td style="text-align:center">匹配不包含chars中的字符</td>
+<td style="text-align:center"><sup><a href="#fn_0-9" id="reffn_0-9">0-9</a></sup></td>
+<td style="text-align:center">非数字字符</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"><sup><a href="#fn_a-zA-Z" id="reffn_a-zA-Z">a-zA-Z</a></sup></td>
+<td style="text-align:center">非字母字符</td>
+</tr>
+<tr>
+<td style="text-align:center">\{…\}</td>
+<td style="text-align:center">匹配字符串精确的数目</td>
+<td style="text-align:center">x\{1,5\}</td>
+<td style="text-align:center">至少1个最多5个x</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">[0-9]\{3,9\}</td>
+<td style="text-align:center">连续的3~9个数字</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">[0-9]\{3\}</td>
+<td style="text-align:center">3位数字</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">[0-9]\{3,\}</td>
+<td style="text-align:center">至少3位数字</td>
+</tr>
+<tr>
+<td style="text-align:center">\(…\)</td>
+<td style="text-align:center">保存匹配的字符</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">\w</td>
+<td style="text-align:center">匹配字母或数字或下划线或汉字</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">\s</td>
+<td style="text-align:center">匹配任意的空白符</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">\d</td>
+<td style="text-align:center">匹配数字</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">\b</td>
+<td style="text-align:center">匹配单词的开始或结束</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="cut命令"><a href="#cut命令" class="headerlink" title="cut命令"></a>cut命令</h3><blockquote>
+<p>cut命令在从数据文件或命令输出中提取各种字段，格式如下：</p>
+<pre><code class="lang-shell">cut OPTION... [FILE]...
+</code></pre>
+<p>常用选项如下：</p>
+<blockquote>
+<pre><code class="lang-shell">-f : 提取指定的字段，cut 命令使用 Tab 作为默认的分隔符。
+
+-d : Tab 是默认的分隔符，使用这一选项可以指定自己的分隔符。
+
+-b : 提取指定的字节，也可以指定一个范围。
+
+-c : 提取指定的字符，可以是以逗号分隔的数字的列表，也可以是以连字符分隔的数字的范围。
+
+–complement : 补充选中的部分，即反选。
+
+–output-delimiter : 修改输出时使用的分隔符。
+
+--only-delimited : 不输出不包含分隔符的列。
+</code></pre>
+</blockquote>
+<p>上述的命令中<code>-c</code>指定了我们想从<code>file</code>中的每行内提取哪些字符（根据位置）。</p>
+<ul>
+<li>单个数字，譬如<code>-c5</code>就指名在每行提取第5个字符，</li>
+<li>数字列表，使用<code>,</code>分割数字列表，这样我们匹配多个字符，<code>-c1,5,6,25</code>表示每行提取第1、5、6、25个字符。</li>
+<li>数字范围，使用<code>-</code>作为数字的范围，这样我们可以匹配一段的字符，<code>-c20-50</code>表示提取第20~50的字符，若是匹配到结尾，则使用<code>-c20-</code></li>
+</ul>
+</blockquote>
+<p>以当前登录的用户记录为例子</p>
+<pre><code class="lang-shell">➜  ~ who
+root     pts/0        2021-11-12 13:43 (113.200.78.120)
+root     pts/1        2021-11-04 13:36 (tmux(17718).%0)
+root     pts/2        2021-11-04 13:37 (tmux(17718).%1)
+kwk      pts/3        2021-11-12 13:44 (113.200.78.120)
+wkk      pts/4        2021-11-12 13:44 (113.200.78.120)
+</code></pre>
+<ul>
+<li><p>匹配出哪些用户已经登录了系统，同时并不关心其所在的终端以及登录时间</p>
+<pre><code class="lang-shell">➜  ~ who | cut -c 1-8
+root
+root
+root
+kwk
+wkk
+</code></pre>
+</li>
+<li><p>匹配出哪些用户已经登录了系统，并排序，同时并不关心其所在的终端以及登录时间</p>
+<pre><code>➜  ~ who | cut -c 1-8 | sort
+kwk
+root
+root
+root
+wkk
+</code></pre></li>
+</ul>
+<p>cut命令的<code>-c</code>选项适合从拥有固定格式的文件或命令中获取我们需要的字符，正如上述操作，因为我们知道前8个字符就是表示用户名，第10~16个字符表示终端类型，第18~29个字符表示登录时间，但是并不是所有的文件都是很好的格式的，譬如<code>/etc/passwd</code>，其包含了用户ID、主目录、以及特定用户登录后自动运行的程序等</p>
+<pre><code class="lang-shell">➜  ~ cat /etc/passwd
+root:x:0:0:root:/root:/usr/bin/zsh
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-network:x:100:102:systemd Network Management,,,:/run/systemd/netif:/usr/sbin/nologin
+systemd-resolve:x:101:103:systemd Resolver,,,:/run/systemd/resolve:/usr/sbin/nologin
+syslog:x:102:106::/home/syslog:/usr/sbin/nologin
+messagebus:x:103:107::/nonexistent:/usr/sbin/nologin
+_apt:x:104:65534::/nonexistent:/usr/sbin/nologin
+uuidd:x:105:109::/run/uuidd:/usr/sbin/nologin
+sshd:x:107:65534::/run/sshd:/usr/sbin/nologin
+_chrony:x:108:117:Chrony daemon,,,:/var/lib/chrony:/usr/sbin/nologin
+admin:x:1000:1000::/home/admin:/bin/bash
+www:x:1001:1001::/home/www:/sbin/nologin
+mysql:x:1002:1002::/home/mysql:/sbin/nologin
+redis:x:1003:1003::/home/redis:/sbin/nologin
+mongo:x:1004:1004::/home/mongo:/sbin/nologin
+wkk:x:1005:1005::/home/wkk:/bin/sh
+hhh:x:1006:1009::/home/hhh:/bin/sh
+kwk:x:1007:1010::/home/kwk/:/bin/sh
+</code></pre>
+<p>经过观察，发现内部是通过<code>:</code>进行分割，所以我们可以通过<code>:</code>对每行的内容进行分割，然后再截取我们需要的内容</p>
+<ul>
+<li><p>从<code>/etc/passwd</code>中提取所有的用户名</p>
+<pre><code class="lang-shell">➜  ~ cut -d: -f1 /etc/passwd
+root
+daemon
+...
+www
+mysql
+redis
+mongo
+wkk
+hhh
+kwk
+</code></pre>
+</li>
+<li><p>从<code>/etc/passwd</code>中提取所有的用户名以及对应的主目录</p>
+<pre><code class="lang-shell">➜  ~ cut -d: /etc/passwd -f1,6
+root:/root
+daemon:/usr/sbin
+...
+www:/home/www
+mysql:/home/mysql
+redis:/home/redis
+mongo:/home/mongo
+wkk:/home/wkk
+hhh:/home/hhh
+kwk:/home/kwk/
+</code></pre>
+</li>
+</ul>
+<h4 id="一些实用的例子"><a href="#一些实用的例子" class="headerlink" title="一些实用的例子"></a>一些实用的例子</h4><ol>
+<li><p>提取 ps 命令中的 USER，PID和COMMAND：    </p>
+<pre><code class="lang-shell">➜  shell ps -L u n | tr -s " " | cut -d " " -f 2,3,14-
+USER PID COMMAND
+0 760 /sbin/agetty -o -p -- \u --noclear tty1 linux
+0 1022 /sbin/agetty -o -p -- \u --keep-baud 115200,38400,9600 ttyS0 vt220
+0 4518 -zsh
+0 12155 ps -L u n
+0 12156 tr -s
+0 12157 cut -d -f 2,3,14-
+0 17719 -zsh
+0 20660 -zsh
+</code></pre>
+</li>
+<li><p>提取内存的 total，used和free值，并保存到一个文件中</p>
+<pre><code class="lang-shell">$ free -m | tr -s ' ' | sed '/^Mem/!d' | cut -d" " -f2-4 &gt;&gt; memory.txt
+$ cat memory.txt
+985 86 234
+</code></pre>
+</li>
+</ol>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li><p><strong>cut</strong> 命令可以和很多其他Linux或Unix命令通过管道连接。可以通过管道传递一个或多个过滤器进行额外的文本处理。</p>
+</li>
+<li><p><strong>cut</strong> 命令的局限性之一是它不支持指定多个字符作为分隔符。多个空格会被计算为多个字段分隔符，因此必须在 <strong>cut</strong> 命令前使用 <strong>tr</strong> 命令才能获得需要的输出。</p>
+</li>
+</ul>
+<h3 id="paste命令"><a href="#paste命令" class="headerlink" title="paste命令"></a>paste命令</h3><blockquote>
+<p>和cut想法，cut用于拆分，paste用于合并，格式如下：</p>
+<pre><code class="lang-shell"> paste [-s][-d ][--help][--version][文件...]
+</code></pre>
+<p>常用参数如下：</p>
+<pre><code class="lang-shell">-d或–delimiters= 　用指定的间隔字符取代跳格字符。
+
+-s或–serial 　串列进行而非平行处理。
+</code></pre>
+</blockquote>
+<p>假设有一个名为<code>names</code>的文件，内容为一系列姓名：</p>
+<pre><code class="lang-shell">➜  ch03 cat names
+Tony
+Emanuel
+Lucy
+Ralph
+Fred
+</code></pre>
+<p>另一个名为<code>numbers</code>的文件，其中包含了<code>names</code>文件中姓名所对应的电话</p>
+<pre><code class="lang-shell">➜  ch03 cat numbers
+(307)   555-5456
+(212)   555-3456
+(212)   555-9959
+(212)   555-7741
+(212)   555-0040
+</code></pre>
+<p>另一个名为<code>addresses</code>的文件，其中包含<code>names</code>文件中姓名所对应好的地址</p>
+<pre><code class="lang-shell">➜  ch03 cat addresses
+55-23 Vine Street, Miami
+39 University Place, New York
+17 E. 25th Street, New York
+38 Chauncey St., Bensonhurst
+17 E. 25th Street, New York
+</code></pre>
+<p>将上述三者进行合并：</p>
+<pre><code class="lang-shell">➜  ch03 paste names numbers addresses
+Tony    (307)   555-5456    55-23 Vine Street, Miami
+Emanuel    (212)   555-3456    39 University Place, New York
+Lucy    (212)   555-9959    17 E. 25th Street, New York
+Ralph    (212)   555-7741    38 Chauncey St., Bensonhurst
+Fred    (212)   555-0040    17 E. 25th Street, New York
+</code></pre>
+<ul>
+<li><p>使用<code>-d</code>自定义分隔符</p>
+<pre><code class="lang-shell">➜  ch03 paste -d '+' names numbers addresses
+Tony+(307)   555-5456+55-23 Vine Street, Miami
+Emanuel+(212)   555-3456+39 University Place, New York
+Lucy+(212)   555-9959+17 E. 25th Street, New York
+Ralph+(212)   555-7741+38 Chauncey St., Bensonhurst
+Fred+(212)   555-0040+17 E. 25th Street, New York
+</code></pre>
+</li>
+<li><p>使用<code>-s</code>将文件串列处理</p>
+<pre><code class="lang-shell">➜  ch03 paste -s names
+Tony    Emanuel    Lucy    Ralph    Fred
+</code></pre>
+</li>
+</ul>
+<h3 id="sed命令"><a href="#sed命令" class="headerlink" title="sed命令"></a>sed命令</h3><blockquote>
+<p>sed 是一种在线编辑器，它一次处理一行内容。处理时，把当前处理的行存储在临时缓冲区中，称为“模式空间”（pattern space），接着用sed命令处理缓冲区中的内容，处理完成后，把缓冲区的内容送往屏幕。接着处理下一行，这样不断重复，直到文件末尾。文件内容并没有 改变，除非你使用重定向存储输出。Sed主要用来自动编辑一个或多个文件；简化对文件的反复操作；编写转换程序等，用法如下：</p>
+<pre><code>sed [options] 'command' file(s)
+sed [options] -f scriptfile file(s)
+</code></pre><p>command中的选项如下：</p>
+<pre><code class="lang-shell">a\ # 在当前行下面插入文本。
+i\ # 在当前行上面插入文本。
+c\ # 把选定的行改为新的文本。
+d # 删除，删除选择的行。
+D # 删除模板块的第一行。
+s # 替换指定字符
+h # 拷贝模板块的内容到内存中的缓冲区。
+H # 追加模板块的内容到内存中的缓冲区。
+g # 获得内存缓冲区的内容，并替代当前模板块中的文本。
+G # 获得内存缓冲区的内容，并追加到当前模板块文本的后面。
+l # 列表不能打印字符的清单。
+n # 读取下一个输入行，用下一个命令处理新的行而不是用第一个命令。
+N # 追加下一个输入行到模板块后面并在二者间嵌入一个新行，改变当前行号码。
+p # 打印模板块的行。
+P # (大写) 打印模板块的第一行。
+q # 退出Sed。
+b lable # 分支到脚本中带有标记的地方，如果分支不存在则分支到脚本的末尾。
+r file # 从file中读行。
+t label # if分支，从最后一行开始，条件一旦满足或者T，t命令，将导致分支到带有标号的命令处，或者到脚本的末尾。
+T label # 错误分支，从最后一行开始，一旦发生错误或者T，t命令，将导致分支到带有标号的命令处，或者到脚本的末尾。
+w file # 写并追加模板块到file末尾。  
+W file # 写并追加模板块的第一行到file末尾。  
+! # 表示后面的命令对所有没有被选定的行发生作用。  
+= # 打印当前行号码。  
+# # 把注释扩展到下一个换行符以前。
+</code></pre>
+<p>选项如下：</p>
+<pre><code class="lang-shell">-n ：使用安静(silent)模式。在一般 sed 的用法中，所有来自 STDIN 的数据一般都会被列出到终端上。但如果加上 -n 参数后，则只有经过sed 特殊处理的那一行(或者动作)才会被列出来。
+-e ：直接在命令列模式上进行 sed 的动作编辑；
+-f ：直接将 sed 的动作写在一个文件内， -f filename 则可以运行 filename 内的 sed 动作；
+-r ：sed 的动作支持的是延伸型正规表示法的语法。(默认是基础正规表示法语法)
+-i ：直接修改读取的文件内容，而不是输出到终端。
+</code></pre>
+</blockquote>
+<p>有一个<code>intro</code>文件，具体内容如下：</p>
+<pre><code class="lang-shell">➜  ch03 cat intro
+The Unix operating system was pioneered by Ken
+Theopson and Dennis Ritchie at Bell Laboratories
+in the late 1960s. One of the primary goals in
+the esign of the Unix system was to crate an
+environment that promoted efficient program
+development.
+</code></pre>
+<h4 id="替换操作：s命令"><a href="#替换操作：s命令" class="headerlink" title="替换操作：s命令"></a>替换操作：s命令</h4><ul>
+<li><p>将所有的Unix替换为UNIX</p>
+<pre><code class="lang-shell">➜  ch03 sed 's/Unix/UNIX/' intro
+The UNIX operating system was pioneered by Ken
+Theopson and Dennis Ritchie at Bell Laboratories
+in the late 1960s. One of the primary goals in
+the esign of the UNIX system was to crate an
+environment that promoted efficient program
+development.
+</code></pre>
+</li>
+<li><p>只输出那些发生替换的行</p>
+<pre><code class="lang-shell">➜  ch03 sed -n 's/Unix/UNIX/p' intro
+The UNIX operating system was pioneered by Ken
+the esign of the UNIX system was to crate an
+</code></pre>
+</li>
+</ul>
+<ul>
+<li><p>切换<code>oh-my-zsh</code>中的主题，从默认主题切换为<code>awesomepanda</code></p>
+<pre><code class="lang-shell">sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="awesomepanda"/g' ~/.zshrc
+</code></pre>
+</li>
+</ul>
+<h4 id="删除操作：d命令"><a href="#删除操作：d命令" class="headerlink" title="删除操作：d命令"></a>删除操作：d命令</h4><ul>
+<li><p>使用sed删除文件的前两行</p>
+<pre><code class="lang-shell">➜  ch03 sed '1,2d' intro
+in the late 1960s. One of the primary goals in
+the esign of the Unix system was to crate an
+environment that promoted efficient program
+development.
+</code></pre>
+</li>
+</ul>
+<h3 id="tr命令"><a href="#tr命令" class="headerlink" title="tr命令"></a>tr命令</h3><blockquote>
+<p><strong>tr命令</strong> 可以对来自标准输入的字符进行替换、压缩和删除。它可以将一组字符变成另一组字符，经常用来编写优美的单行命令，作用很强大。用法如下：</p>
+<pre><code class="lang-shell">tr(选项)(from to)
+</code></pre>
+<p>选项：</p>
+<pre><code>-c或——complerment：取代所有不属于第一字符集的字符；
+-d或——delete：删除所有属于第一字符集的字符；
+-s或--squeeze-repeats：把连续重复的字符以单独一个字符表示；
+-t或--truncate-set1：先删除第一字符集较第二字符集多出的字符。
+</code></pre><p>参数 ：</p>
+<ul>
+<li>from：指定要转换或删除的原字符集。当执行转换操作时，必须使用参数“字符集2”指定转换的目标字符集。但执行删除操作时，不需要参数“字符集2”；</li>
+<li>to：指定要转换成的目标字符集。</li>
+</ul>
+</blockquote>
+<h4 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h4><ul>
+<li><p>将输入字符进行大小写转换：</p>
+<pre><code class="lang-shell">➜  ch03 echo "HELLO world" | tr '[a-zA-Z]' '[A-Za-z]'
+hello WORLD
+</code></pre>
+</li>
+<li><p>将<code>intro</code>中的所有的字符<code>e</code>替换为<code>x</code></p>
+<pre><code class="lang-shell">➜  ch03 tr e x &lt; intro
+Thx Unix opxrating systxm was pionxxrxd by Kxn
+Thxopson and Dxnnis Ritchix at Bxll Laboratorixs
+in thx latx 1960s. Onx of thx primary goals in
+thx xsign of thx Unix systxm was to cratx an
+xnvironmxnt that promotxd xfficixnt program
+dxvxlopmxnt.
+</code></pre>
+</li>
+<li><p>提取<code>/etc/passwd</code>中的用户和主目录，同时将分隔符<code>:</code>替换为<code>'   '</code></p>
+<pre><code class="lang-shell">➜  ch03 cut -d : -f 1,6 /etc/passwd | tr : '    '
+root /root
+daemon /usr/sbin
+bin /bin
+sys /dev
+sync /bin
+</code></pre>
+</li>
+</ul>
+<h4 id="使用-s进行压缩"><a href="#使用-s进行压缩" class="headerlink" title="使用 -s进行压缩"></a>使用 -s进行压缩</h4><p>譬如我们想将下述文件中连续的<code>a</code>替换一个<code>b</code>，如果按照上述的直白命令会导致如下问题：</p>
+<pre><code class="lang-shell">➜  ch03 cat test | tr a b
+this is bbbbbbbbbbbbbbbb file
+</code></pre>
+<p>所以我们可以使用<code>-s</code>将多个重复的元素使用一个单独的字符进行替换</p>
+<pre><code class="lang-shell">➜  ch03 cat test | tr -s a b
+this is b file
+</code></pre>
+<h4 id="使用-d进行删除"><a href="#使用-d进行删除" class="headerlink" title="使用-d进行删除"></a>使用-d进行删除</h4><p>可以使用<code>-d</code>操作删除输入流中的一些字符</p>
+<pre><code class="lang-shell">➜  ch03 cat intro | tr -d ' '
+TheUnixoperatingsystemwaspioneeredbyKen
+TheopsonandDennisRitchieatBellLaboratories
+inthelate1960s.Oneoftheprimarygoalsin
+theesignoftheUnixsystemwastocratean
+environmentthatpromotedefficientprogram
+development.
+</code></pre>
+<h3 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h3><blockquote>
+<p>（global search regular expression(RE) and print out the line，全面搜索正则表达式并把行打印出来）是一种强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹配的行打印出来。用于过滤/搜索的特定字符。可使用正则表达式能配合多种命令使用，使用上十分灵活。常见用法如下：</p>
+<blockquote>
+<pre><code class="lang-shell">grep match_pattern file_name
+grep "match_pattern" file_name
+</code></pre>
+</blockquote>
+<p>选项：</p>
+<pre><code class="lang-shell">-a --text  # 不要忽略二进制数据。
+-A &lt;显示行数&gt;   --after-context=&lt;显示行数&gt;   # 除了显示符合范本样式的那一行之外，并显示该行之后的内容。
+-b --byte-offset                           # 在显示符合范本样式的那一行之外，并显示该行之前的内容。
+-B&lt;显示行数&gt;   --before-context=&lt;显示行数&gt;   # 除了显示符合样式的那一行之外，并显示该行之前的内容。
+-c --count    # 计算符合范本样式的列数。
+-C&lt;显示行数&gt; --context=&lt;显示行数&gt;或-&lt;显示行数&gt; # 除了显示符合范本样式的那一列之外，并显示该列之前后的内容。
+-d&lt;进行动作&gt; --directories=&lt;动作&gt;  # 当指定要查找的是目录而非文件时，必须使用这项参数，否则grep命令将回报信息并停止动作。
+-e&lt;范本样式&gt; --regexp=&lt;范本样式&gt;   # 指定字符串作为查找文件内容的范本样式。
+-E --extended-regexp             # 将范本样式为延伸的普通表示法来使用，意味着使用能使用扩展正则表达式。
+-f&lt;范本文件&gt; --file=&lt;规则文件&gt;     # 指定范本文件，其内容有一个或多个范本样式，让grep查找符合范本条件的文件内容，格式为每一列的范本样式。
+-F --fixed-regexp   # 将范本样式视为固定字符串的列表。
+-G --basic-regexp   # 将范本样式视为普通的表示法来使用。
+-h --no-filename    # 在显示符合范本样式的那一列之前，不标示该列所属的文件名称。
+-H --with-filename  # 在显示符合范本样式的那一列之前，标示该列的文件名称。
+-i --ignore-case    # 忽略字符大小写的差别。
+-l --file-with-matches   # 列出文件内容符合指定的范本样式的文件名称。
+-L --files-without-match # 列出文件内容不符合指定的范本样式的文件名称。
+-n --line-number         # 在显示符合范本样式的那一列之前，标示出该列的编号。
+-P --perl-regexp         # PATTERN 是一个 Perl 正则表达式
+-q --quiet或--silent     # 不显示任何信息。
+-R/-r  --recursive       # 此参数的效果和指定“-d recurse”参数相同。
+-s --no-messages  # 不显示错误信息。
+-v --revert-match # 反转查找。
+-V --version      # 显示版本信息。   
+-w --word-regexp  # 只显示全字符合的列。
+-x --line-regexp  # 只显示全列符合的列。
+-y # 此参数效果跟“-i”相同。
+-o # 只输出文件中匹配到的部分。
+-m &lt;num&gt; --max-count=&lt;num&gt; # 找到num行结果后停止查找，用来限制匹配行数
+</code></pre>
+<p>正则使用详见上述<strong>正则再补充</strong>内容</p>
+</blockquote>
+<h4 id="常见用法"><a href="#常见用法" class="headerlink" title="常见用法"></a>常见用法</h4><ul>
+<li><p>在文件中搜索某个字符，返回对应字符所在行</p>
+<pre><code class="lang-shell">➜  ch03 cat intro | grep 'Unix'
+The Unix operating system was pioneered by Ken
+the esign of the Unix system was to crate an
+</code></pre>
+</li>
+<li><p>多个文件中查找（注意一些shell中具有特殊含义的字符，建议将需要匹配的内容放入<code>''</code>之中）</p>
+<pre><code class="lang-shell">➜  ch03 grep 'The' *
+ed.cmd:There were a sensitivity and a beauty to her that have nothing to do with looks. She was one to be listened to, whose words were so easy to take to heart.
+ed.cmd:It is said that the true nature of being is veiled. The labor of words, the expression of art, the seemingly ceaseless buzz that is human thought all have in common the need to get at what really is so. The hope to draw close to and possess the truth of being can be a feverish one. In some cases it can even be fatal, if pleasure is one's truth and its attainment more important than life itself. In other lives, though, the search for what is truthful gives life.
+ed.cmd:I used to find notes left in the collection basket, beautiful notes about my homilies and about the writer's thoughts on the daily scriptural readings. The person who penned the notes would add reflections to my thoughts and would always include some quotes from poets and mystics he or she had read and remembered and loved. The notes fascinated me. Here was someone immersed in a search for truth and beauty. Words had been treasured, words that were beautiful. And I felt as if the words somehow delighted in being discovered, for they were obviously very generous to the as yet anonymous writer of the notes. And now this person was in turn learning the secret of sharing them. Beauty so shines when given away. The only truth that exists is, in that sense, free.
+ed.cmd:One Sunday morning, I was told that someone was waiting for me in the office. The young person who answered the rectory door said that it was "the woman who said she left all the notes." When I saw her I was shocked, since I immediately recognized her from church but had no idea that it was she who wrote the notes. She was sitting in a chair in the office with her hands folded in her lap. Her head was bowed and when she raised it to look at me, she could barely smile without pain. Her face was disfigured, and the skin so tight from surgical procedures that smiling or laughing was very difficult for her. She had suffered terribly from treatment to remove the growths that had so marred her face.
+intro:The Unix operating system was pioneered by Ken
+intro:Theopson and Dennis Ritchie at Bell Laboratories
+</code></pre>
+</li>
+<li><p>搜索多个文件并查找匹配文本在哪些文件中</p>
+<pre><code class="lang-shell">➜  ch03 grep -l 'The' *
+ed.cmd
+intro
+</code></pre>
+</li>
+<li><p>输出除之外的所有行 <strong>-v</strong> 选项</p>
+<pre><code class="lang-shell">➜  ch03 grep -v 'Unix' intro
+Theopson and Dennis Ritchie at Bell Laboratories
+in the late 1960s. One of the primary goals in
+environment that promoted efficient program
+development.
+</code></pre>
+</li>
+<li><p>只输出文件中匹配到的部分 <strong>-o</strong> 选项</p>
+<pre><code class="lang-shell">➜  ch03 grep -o 'Unix' intro
+Unix
+Unix
+</code></pre>
+</li>
+<li><p>标记匹配颜色 <strong>—color=auto</strong> 选项</p>
+</li>
+<li><p>统计文件或者文本中包含匹配字符串的行数 <strong>-c</strong> 选项</p>
+<pre><code class="lang-shell">➜  ch03 grep -c 'Unix' intro
+2
+</code></pre>
+</li>
+</ul>
+<h3 id="sort"><a href="#sort" class="headerlink" title="sort"></a>sort</h3><blockquote>
+<p>按照字典序排序，用法如下：</p>
+<pre><code class="lang-shell">sort [OPTION]... [FILE]...
+sort [OPTION]... --files0-from=F
+</code></pre>
+<p>选项：</p>
+<pre><code>-b, --ignore-leading-blanks    忽略开头的空白。
+-d, --dictionary-order         仅考虑空白、字母、数字。
+-f, --ignore-case              将小写字母作为大写字母考虑。
+-g, --general-numeric-sort     根据数字排序。
+-i, --ignore-nonprinting       排除不可打印字符。
+-M, --month-sort               按照非月份、一月、十二月的顺序排序。
+-h, --human-numeric-sort       根据存储容量排序(注意使用大写字母，例如：2K 1G)。
+-n, --numeric-sort             根据数字排序。
+-R, --random-sort              随机排序，但分组相同的行。
+--random-source=FILE           从FILE中获取随机长度的字节。
+-r, --reverse                  将结果倒序排列。
+--sort=WORD                    根据WORD排序，其中: general-numeric 等价于 -g，human-numeric 等价于 -h，month 等价于 -M，numeric 等价于 -n，random 等价于 -R，version 等价于 -V。
+-V, --version-sort             文本中(版本)数字的自然排序。
+</code></pre></blockquote>
+<p>现有<code>names</code>文件，具体内容如下：</p>
+<pre><code class="lang-shell">Charlie
+Emanuel
+Fred
+Lucy
+Ralph
+Tony
+Tony
+</code></pre>
+<ul>
+<li><p>按照字典序排序</p>
+<pre><code class="lang-shell">➜  ch03 sort names
+a:01:1.0
+aaa:10:1.1
+b:02:2.0
+bbb:20:2.2
+c:03:3.0
+ccc:30:3.3
+ddd:40:4.4
+eee:50:5.5
+eee:50:5.5
+</code></pre>
+</li>
+<li><p>忽略相同行使用<code>-u</code>选项或者<code>uniq</code>：</p>
+<pre><code class="lang-shell">➜  ch03 sort names
+Charlie
+Emanuel
+Fred
+Lucy
+Ralph
+Tony
+Tony
+</code></pre>
+</li>
+<li><p>按照字典序的逆序输出</p>
+<pre><code class="lang-shell">➜  ch03 sort -r names
+Tony
+Tony
+Ralph
+Lucy
+Fred
+Emanuel
+Charlie
+</code></pre>
+</li>
+<li><p>使用<code>-n</code>按照数字大小进行排序（按照第一个字段进行排序）</p>
+<blockquote>
+<p>可以使用-k number 跳过number-1个字段，从第number个字段开始排序</p>
+<p>可以使用-t指定分隔符</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch03 sort -n data
+-5      11
+2       12
+3       33
+5       27
+14      -9
+15      6
+
+➜  ch03 sort -k2n data  ## 以第二个字段开始排序
+14      -9
+23      2
+15      6
+-5      11
+2       12
+5       27
+3       33
+
+➜  ch03 sort -k3 -n -t : /etc/passwd | cut -d : -f1,3 # 按照 : 进行分割，并且以第三个字段进行排序，截取第一个字段第三个字段进行输出
+root:0
+daemon:1
+bin:2
+sys:3
+sync:4
+games:5
+</code></pre>
+</li>
+</ul>
+<h3 id="uniq"><a href="#uniq" class="headerlink" title="uniq"></a>uniq</h3><blockquote>
+<p>主要用途</p>
+<ul>
+<li>将输入文件（或标准输入）中邻近的重复行写入到输出文件（或标准输出）中。</li>
+<li>当没有选项时，邻近的重复行将合并为一个。</li>
+</ul>
+<p>用法如下：</p>
+<pre><code class="lang-shell">uniq [OPTION]... [INPUT [OUTPUT]]
+</code></pre>
+<p>选项：</p>
+<pre><code class="lang-shell">-c, --count                在每行开头增加重复次数。
+-d, --repeated             所有邻近的重复行只被打印一次。
+-D                         所有邻近的重复行将全部打印。
+--all-repeated[=METHOD]    类似于 -D，但允许每组之间以空行分割。METHOD取值范围{none(默认)，prepend，separate}。
+-f, --skip-fields=N        跳过对前N个列的比较。
+--group[=METHOD]           显示所有行，允许每组之间以空行分割。METHOD取值范围：{separate(默认)，prepend，append，both}。
+-i, --ignore-case          忽略大小写的差异。
+-s, --skip-chars=N         跳过对前N个字符的比较。
+-u, --unique               只打印非邻近的重复行。
+-z, --zero-terminated      设置行终止符为NUL（空），而不是换行符。
+-w, --check-chars=N        只对每行前N个字符进行比较。
+--help                     显示帮助信息并退出。
+--version                  显示版本信息并退出。
+</code></pre>
+<p>参数：</p>
+<pre><code>INPUT（可选）：输入文件，不提供时为标准输入。
+
+OUTPUT（可选）：输出文件，不提供时为标准输出。
+</code></pre></blockquote>
+<p>还是按照sort中引用的<code>names</code>为例。以下是其内容：</p>
+<pre><code>Charlie
+Emanuel
+Tony
+Fred
+Lucy
+Ralph
+Tony
+</code></pre><ul>
+<li><p>输出<code>names</code>中的姓名，重复元素只输出一次即可</p>
+<pre><code class="lang-shell">➜  ch03 uniq names  ## 因为两个Tony不是连续的，所以直接使用uniq无法去除重复元素
+Charlie
+Emanuel
+Tony
+Fred
+Lucy
+Ralph
+Tony
+
+➜  ch03 sort names | uniq # 先通过sort排序，之后再使用uniq，将重复的元素放在一起
+Charlie
+Emanuel
+Fred
+Lucy
+Ralph
+Tony
+</code></pre>
+</li>
+<li><p>输出出现重复的内容</p>
+<pre><code class="lang-shell">➜  ch03 sort names | uniq -d
+Tony
+</code></pre>
+</li>
+<li><p>词频统计</p>
+<pre><code class="lang-shell">➜  ch03 sort names | uniq -c
+      1 Charlie
+      1 Emanuel
+      1 Fred
+      1 Lucy
+      1 Ralph
+      2 Tony
+</code></pre>
+<blockquote>
+<p>找出文件中频率最高的元素</p>
+<pre><code>tr '[A-Z]' '[a-z]' file | sort | uniq -c | head
+</code></pre></blockquote>
+</li>
+</ul>
+<h2 id="ch04学习记录"><a href="#ch04学习记录" class="headerlink" title="ch04学习记录"></a>ch04学习记录</h2><p>为了简化一些操作，我们可以将一些命令统一放置在一个文件中，然后将该文件赋予可执行权限，这样，就避免了大量的重复操作，譬如当前有一个stats文件内容如下：</p>
+<pre><code class="lang-shell">➜  ch04 cat stats
+echo '现在的日期是: '  `date`
+echo '现在共有: ' `who | wc -l` '个用户登录'
+echo '当前的位置为: ' `pwd`
+➜  ch04 chmod u+x stats
+➜  ch04 ./stats
+现在的日期是:  Sun Nov 14 20:08:38 CST 2021
+现在共有:  14 个用户登录
+当前的位置为:  /root/exper/shell/ch04
+</code></pre>
+<h4 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h4><blockquote>
+<p>和正常的编程语言一样，Shell中也可以使用变量，命名要求为以字母或<code>_</code>开头，后面跟上零个或多个字母及数字或下划线，赋值格式如下：</p>
+<pre><code class="lang-shell">variable=value
+</code></pre>
+<p>一些注意事项：</p>
+<ul>
+<li>=号两边不需要和类似Java的编码规范一样， 使用空格隔开，Shell中不能有空格</li>
+<li>Shell中并无各种明确的数据类型，无论分配什么样的值，在Shell中都将其视为字符串</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>变量的显示</p>
+<pre><code class="lang-shell">echo $variable
+# 显示 系统环境变量
+➜  ch04 echo $PATH
+/root/.oh-my-zsh/custom/plugins/git-open:/opt/jdk-11.0.13/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+# 显示多个变量
+➜  ch04 echo $count $name
+1 孔维坤
+# 变量出现在任何其他命令中
+➜  ch04 $my_pos=/root/expr/shell/ch04
+zsh: /root/expr/shell/ch04 not found
+➜  ch04 ls $my_pos
+nu  stats
+</code></pre>
+</li>
+<li><p>变量的默认值</p>
+<pre><code class="lang-shell">➜  ch04 echo :$null:
+::
+# 未赋值的变量为空， 并且不会影响其他的命令
+➜  ch04 who $null | wc $null -l
+2
+# 更好的声明空值变量， 关于""和''的区别，后续会阐述
+➜  ch04 $null=""
+➜  ch04 $null=''
+</code></pre>
+</li>
+<li><p>${variable}结构</p>
+<blockquote>
+<p>假设将$name 重命名为$nameX</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch04 name=/Users/weikunkun/ShellProjects/ch04/aaa             
+➜  ch04 $name     
+➜  ch04 mv $name ${name}X
+</code></pre>
+</li>
+<li><p>内建的整数算术操作</p>
+<blockquote>
+<p>算术扩展的格式为：$((expression))</p>
+<blockquote>
+<p>运算符号包括：+、-、<em>、/、%和*</em></p>
+<p>复合操作：+=、-=、*、=、/=</p>
+<p>自增自减：variable++、variable—</p>
+</blockquote>
+</blockquote>
+<pre><code class="lang-shell">➜  ch04 echo $a 
+
+➜  ch04 echo $((a = a + 1))
+1
+</code></pre>
+</li>
+</ul>
+<h2 id="ch05学习记录"><a href="#ch05学习记录" class="headerlink" title="ch05学习记录"></a>ch05学习记录</h2><p>本章节主要用于阐述字符引用，Shell中能够识别4种不同的引用字符</p>
+<h3 id="单引号和双引号"><a href="#单引号和双引号" class="headerlink" title="单引号和双引号"></a>单引号和双引号</h3><blockquote>
+<p>双引号和单引号的区别：</p>
+<blockquote>
+<p>两者的功能类似，但是对于内容的保护，双引号要弱于单引号：单引号告诉Shell忽略引用的所有特殊字符，而双引号则忽略引用的大部分字符，但是如下的字符不能忽略</p>
+<ul>
+<li>$</li>
+<li>`</li>
+<li>\</li>
+</ul>
+</blockquote>
+</blockquote>
+<pre><code class="lang-shell">➜  ch04 echo one         two    three                           
+one two three
+➜  ch04 echo 'one        two            three'
+one        two            three
+➜  ch04 cur_path=$(pwd)                                          
+➜  ch04 echo $cur_path                                           
+/Users/weikunkun/ShellProjects/ch04
+➜  ch04 echo '$cur_path'
+$cur_path 
+➜  ch04 echo "$cur_path" 
+/Users/weikunkun/ShellProjects/ch04
+➜  ch05 address="成都市 锦江区"
+➜  ch05 echo $address 
+成都市 锦江区
+➜  ch05 echo '$adress'  
+$adress
+➜  ch05 echo "$address" 
+成都市 锦江区
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211118220446157.png" alt="图示" title="">
+                </div>
+                <div class="image-caption">图示</div>
+            </figure>
+<h3 id="反斜线"><a href="#反斜线" class="headerlink" title="反斜线"></a>反斜线</h3><blockquote>
+<p>用于转义</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch05 echo $x   
+*
+➜  ch05 echo \$x  
+$x
+➜  ch05 line=one' 
+quote&gt; 'two
+➜  ch05 echo $line
+one
+two
+➜  ch05 line=one\ 
+&gt; two       
+➜  ch05 echo $line
+onetwo
+</code></pre>
+<h3 id="命令替换"><a href="#命令替换" class="headerlink" title="命令替换"></a>命令替换</h3><p>和Java中的<code>printf</code>类似，可以输出命令或者变量中的结果替换命令内部其他命令。</p>
+<p>命令替换有两种形式</p>
+<pre><code class="lang-shell">➜  ch05 `command`
+➜  ch05 $(...)
+
+# demo
+➜  ch05 echo The date and time is: `date`
+The date and time is: 2021年11月19日 星期五 15时17分39秒 CST
+➜  ch05 echo The date and time is: $(date)
+The date and time is: 2021年11月19日 星期五 15时17分43秒 CST
+</code></pre>
+<p>虽然两种写法都可以进行命令的替换，但是<code>$()</code>的写法要比第一种好</p>
+<ol>
+<li>方便阅读</li>
+<li>$()易于嵌套，能够在命令中在进行命令的嵌套，同时括号内部可以支持多个命令，多命令之间使用<code>;</code>隔开，同时还可以使用<code>|</code>进行传递</li>
+</ol>
+<p>譬如：</p>
+<pre><code class="lang-shell">➜  ch05 vim nu
+echo '################`command`################'
+echo 现在有 `who | wc -l `用户登录
+echo '现在有 `who | wc -l`用户登录'
+echo "现在有 `who | wc -l`用户登录"
+echo '################$(...)################'
+echo 现在有 $(who | wc -l) 用户登录
+echo '现在有 $(who | wc -l) 用户登录'
+echo "现在有 $(who | wc -l) 用户登录"
+➜  ch05 ./nu      
+################`command`################
+现在有 2用户登录
+现在有 `who | wc -l`用户登录
+现在有        2用户登录
+################$(...)################
+现在有 2 用户登录
+现在有 $(who | wc -l) 用户登录
+现在有        2 用户登录
+</code></pre>
+<h3 id="expr命令"><a href="#expr命令" class="headerlink" title="expr命令"></a>expr命令</h3><blockquote>
+<p>用于数学计算，优先级和正常算术运算同步</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch05 expr 1 + 1                            
+2
+➜  ch05 expr 10 + 10 / 2
+15
+➜  ch05 expr 10 / 3     
+3
+➜  ch05 expr 10 / 3.0
+expr: not a decimal number: '3.0'
+➜  ch05 expr 10 * 3  
+expr: syntax error
+➜  ch05 expr 10 \* 3
+30
+➜  ch05 expr '10 * 3'
+10 * 3
+➜  ch05 expr "10 * 3"
+10 * 3
+➜  ch05 i=1     
+➜  ch05 i=$(expr $i + 1)
+➜  ch05 echo $i                           
+2
+➜  ch05 i=`expr $i + 100`
+➜  ch05 echo $i
+102
+</code></pre>
+<h3 id="书本练习"><a href="#书本练习" class="headerlink" title="书本练习"></a>书本练习</h3><pre><code class="lang-shell">text=" 123 456 "
+name=
+Tony
+Ralph
+Tony
+Lucy
+Fred
+Emanuel
+Charlie
+</code></pre>
+<ol>
+<li><p>写出一个命令，用来去掉shell变量text值中所有的空格字符。要保证把结果重新赋值给text。（分别使用tr和sed实现）</p>
+<pre><code class="lang-shell">➜  ch05 text=" 123 456 "              
+➜  ch05 text=$(echo $text | sed -e 's/[ ]*//g') 
+➜  ch05 echo $text
+123456
+➜  ch05 text=" 123 456 "           
+➜  ch05 text=$(echo $text | tr -d ' ')          
+➜  ch05 echo $text         
+123456
+</code></pre>
+</li>
+<li><p>写出一个命令，用来计数shell变量text值中包含字符的个数。然后再写一个命令，统计其中字母的个数（使用sed、wc）</p>
+<pre><code class="lang-shell">➜  ch05 cat names | wc -cw
+       7      42
+</code></pre>
+</li>
+</ol>
+<ol>
+<li><p>写出一个命令，吧文件names中各不相同的行存到变量namelist中</p>
+<pre><code class="lang-shell">➜  ch05 sort names | uniq &gt; namelist
+➜  ch05 cat namelist                             
+───────┬────────────────────────────────────────────────────────────────────────
+       │ File: namelist
+───────┼────────────────────────────────────────────────────────────────────────
+   1   │ Charlie
+   2   │ Emanuel
+   3   │ Fred
+   4   │ Lucy
+   5   │ Ralph
+   6   │ Tony
+───────┴────────────────────────────────────────────────────────────────────────
+</code></pre>
+</li>
+</ol>
+<h2 id="ch06-传递参数"><a href="#ch06-传递参数" class="headerlink" title="ch06 传递参数"></a>ch06 传递参数</h2><blockquote>
+<p>本章用于学习参数的处理</p>
+</blockquote>
+<h3 id="特殊的参数表示"><a href="#特殊的参数表示" class="headerlink" title="特殊的参数表示"></a>特殊的参数表示</h3><blockquote>
+<ul>
+<li><p>$# 表示命令行中输入的参数个数</p>
+</li>
+<li><p>$* 表示所有的参数</p>
+</li>
+<li>$0 表示文件名</li>
+<li>$? 表示运行结束后的状态码</li>
+</ul>
+</blockquote>
+<pre><code class="lang-shell"># exampole for some specific args
+echo "文件名： $0"
+echo "所有参数：$*"
+echo "输出的参数： $#"
+for i in $(seq 1 5)
+do
+    echo "第i个参数：$i"
+done
+</code></pre>
+<pre><code class="lang-shell">➜  ch06 ./args 1 2 3 4 5
+文件名： ./args
+所有参数：1 2 3 4 5
+输出的参数： 5
+第i个参数：1
+第i个参数：2
+第i个参数：3
+第i个参数：4
+第i个参数：5
+➜  ch06 echo $?   
+0
+</code></pre>
+<h3 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h3><h4 id="电话簿中查找联系人"><a href="#电话簿中查找联系人" class="headerlink" title="电话簿中查找联系人"></a>电话簿中查找联系人</h4><p>如果我们在<code>phonebook</code>中寻找用户的话，通过<code>grep name phonebook</code>即可，但是为了使得该功能更加灵活，可以将<code>name</code>抽出来作为参数，然后编写一个专门用于在<code>phonebook</code>中查找人名的脚本。</p>
+<pre><code class="lang-shell">➜  ch06 vim lu 
+# Look someone up in the phone book
+grep $1 phonebook
+➜  ch06 ./lu Alice
+Alice Chebba    973-555-2015
+</code></pre>
+<p>但是有一个小问题，具体如下：</p>
+<pre><code class="lang-shell">➜  ch06 ./lu "Susan T"
+grep: T: No such file or directory
+phonebook:Susan Goldberg  201-555-7776
+phonebook:Susan Topple    212-555-4932
+</code></pre>
+<p>虽然我们只传递了一个参数，但实际执行时变成了两个参数。</p>
+<pre><code class="lang-shell"># 代入到我们编写的脚本
+# Look someone up in the phone book
+grep Susan T phonebook
+# 通过脚本就能明显的看到，我们是在T、phonebook两个文件中，匹配Susan这个名字，所以会爆 no such file问题
+</code></pre>
+<p>所以我们可以将脚本优化为：</p>
+<pre><code class="lang-shell">➜  ch06 vim lu
+# Look someone up in the phone book
+grep "$1" phonebook
+➜  ch06 ./lu "Susan T"
+Susan Topple    212-555-4932
+</code></pre>
+<h4 id="电话簿中添加联系人"><a href="#电话簿中添加联系人" class="headerlink" title="电话簿中添加联系人"></a>电话簿中添加联系人</h4><pre><code class="lang-shell">➜  ch06 vim add      
+# Add someone to the phone book
+echo "$1    $2" &gt;&gt; phonebook
+sort -o phonebook phonebook
+➜  ch06 ./add 'Stromboli Pizza' 973-555-9478
+➜  ch06 cat phonebook 
+───────┬────────────────────────────────────────────────────────────────────────
+       │ File: phonebook
+───────┼────────────────────────────────────────────────────────────────────────
+   1   │ Alice Chebba    973-555-2015
+   2   │ Barbara Swingle 201-555-9257
+   3   │ Liz Stachiw     212-555-2298
+   4   │ Stromboli Pizza 973-555-9478
+   5   │ Susan Goldberg  201-555-7776
+   6   │ Susan Topple    212-555-4932
+   7   │ Tony Iannino    973-555-1295
+───────┴────────────────────────────────────────────
+</code></pre>
+<h4 id="电话簿中删除联系人"><a href="#电话簿中删除联系人" class="headerlink" title="电话簿中删除联系人"></a>电话簿中删除联系人</h4><pre><code class="lang-shell">➜  ch06 vim rem   
+# remove someone fromm the phone book
+grep -v "$1" phonebook &gt; /tmp/phonebook
+mv /tmp/phonebook phonebook
+➜  ch06 cat phonebook              
+───────┬────────────────────────────────────────────────────────────────────────
+       │ File: phonebook
+───────┼────────────────────────────────────────────────────────────────────────
+   1   │ Alice Chebba    973-555-2015
+   2   │ Barbara Swingle 201-555-9257
+   3   │ Liz Stachiw     212-555-2298
+   4   │ Susan Goldberg  201-555-7776
+   5   │ Susan Topple    212-555-4932
+   6   │ Tony Iannino    973-555-1295
+───────┴────────────────────────────────────────────────────────────────────────
+</code></pre>
+<h4 id="更多参数"><a href="#更多参数" class="headerlink" title="更多参数"></a>更多参数</h4><p>如果参数的数量超过9个，那么我们无法使用$10进行表示第10个参数，其会覆盖第一个参数（$1）的值，所以要想正确接受到10个以上的参数，从第10个开始，我们需要使用<code>\${n}</code>的形式</p>
+<h2 id="ch07条件语句"><a href="#ch07条件语句" class="headerlink" title="ch07条件语句"></a>ch07条件语句</h2><h3 id="退出状态"><a href="#退出状态" class="headerlink" title="退出状态"></a>退出状态</h3><p>在条件测试中，退出状态很重要。只要程序执行完成，都会向Shell返回一个退出状态码，这个状态码类似HTTP的响应码，是一个数字，表示程序是否运行成功。0表示运行成功，非0状态表示运行失败，状态码对应于不同的失败原因。其中<code>$?</code>可以作为程序运行结束后的返回结果。</p>
+<h3 id="test和-命令"><a href="#test和-命令" class="headerlink" title="test和[]命令"></a>test和[]命令</h3><p>test的一般格式为</p>
+<pre><code class="lang-shell">test expression
+</code></pre>
+<p>在命令行中输入man test，可以查看test命令的用法。</p>
+<ol>
+<li>test命令用于判断文件类型，以及对变量做比较。</li>
+<li>test命令用exit code返回结果，而不是使用stdout。0表示真，非0表示假。</li>
+</ol>
+<pre><code class="lang-shell">test 2 -lt 3  # 为真，返回值为0
+echo $?  # 输出上个命令的返回值，输出0
+</code></pre>
+<p>同时我们也可以使用另一种形式来表示：</p>
+<pre><code class="lang-shell">[ expression ]
+# 在 ] 之前和 [ 之后要保证有空格 
+
+if [ "$name" = kwk ]
+then
+        // do something
+done
+</code></pre>
+<h4 id="文件类型判断"><a href="#文件类型判断" class="headerlink" title="文件类型判断"></a>文件类型判断</h4><p><strong>格式：</strong></p>
+<pre><code class="lang-bash">test -e filename  # 判断文件是否存在
+</code></pre>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th><strong>测试参数</strong></th>
+<th><strong>代表意义</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-e</td>
+<td>文件是否存在</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>是否为文件</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>是否为目录</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="文件权限判断"><a href="#文件权限判断" class="headerlink" title="文件权限判断"></a>文件权限判断</h4><p><strong>格式：</strong></p>
+<pre><code class="lang-bash">test -r filename  # 判断文件是否可读
+</code></pre>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th><strong>测试参数</strong></th>
+<th><strong>代表意义</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-r</td>
+<td>文件是否可读</td>
+</tr>
+<tr>
+<td>-w</td>
+<td>文件是否可写</td>
+</tr>
+<tr>
+<td>-x</td>
+<td>文件是否可执行</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>是否为非空文件</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="整数间的比较"><a href="#整数间的比较" class="headerlink" title="整数间的比较"></a>整数间的比较</h4><p><strong>格式：</strong></p>
+<pre><code class="lang-bash">test $a -eq $b  # a是否等于b
+</code></pre>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th><strong>测试参数</strong></th>
+<th><strong>代表意义</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-eq</td>
+<td>a是否等于b</td>
+</tr>
+<tr>
+<td>-ne</td>
+<td>a是否不等于b</td>
+</tr>
+<tr>
+<td>-gt</td>
+<td>a是否大于b</td>
+</tr>
+<tr>
+<td>-lt</td>
+<td>a是否小于b</td>
+</tr>
+<tr>
+<td>-ge</td>
+<td>a是否大于等于b</td>
+</tr>
+<tr>
+<td>-le</td>
+<td>a是否小于等于b</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="字符串比较"><a href="#字符串比较" class="headerlink" title="字符串比较"></a>字符串比较</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th><strong>测试参数</strong></th>
+<th><strong>代表意义</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test -z STRING</td>
+<td>判断STRING是否为空，如果为空，则返回true</td>
+</tr>
+<tr>
+<td>test -n STRING</td>
+<td>判断STRING是否非空，如果非空，则返回true（-n可以省略）</td>
+</tr>
+<tr>
+<td>test str1 == str2</td>
+<td>判断str1是否等于str2</td>
+</tr>
+<tr>
+<td>test str1 != str2</td>
+<td>判断str1是否不等于str2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="多重条件判定"><a href="#多重条件判定" class="headerlink" title="多重条件判定"></a>多重条件判定</h4><p><strong>格式：</strong></p>
+<pre><code class="lang-bash">test -r filename -a -x filename
+</code></pre>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th><strong>测试参数</strong></th>
+<th><strong>代表意义</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-a</td>
+<td>两条件是否同时成立（与）</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>两条件是否至少一个成立（或）</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>取反。如 test ! -x file，当file不可执行时，返回true（非）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>根据以上的各种类型判断，可以编写一个更为完整的用户登录脚本</p>
+<pre><code class="lang-shell">#! /bin/bash 
+user="$1"
+
+if who | grep "^$user" &gt; /dev/null # 避免 grep的输出结果
+then   
+    echo "$user is logged on"
+else
+    echo "$user is not logged on"
+fi
+</code></pre>
+<p>同时，为了成为一个长期可用的程序，我们应该添加对该程序的阐述，并且校验参数数量上的正确性。如果哪个参数不对，还需要进行指出</p>
+<pre><code class="lang-shell">#! /bin/bash 
+# determine if someone is logged on V1
+# judge correct number of arguments were supplied
+if [ "$#" -ne 1 ] 
+then
+    echo "Incorrect number of arguments"
+    echo "Usage: ./on user"
+else 
+    user="$1"
+
+    if who | grep "^$user" &gt; /dev/null 
+    then   
+        echo "$user is logged on"
+    else
+        echo "$user is not logged on"
+    fi
+fi
+</code></pre>
+<p>输出：</p>
+<pre><code class="lang-shell">➜  ch07 ./on hanhuanhuan
+hanhuanhuan is not logged on
+➜  ch07 ./on            
+Incorrect number of arguments
+Usage: ./on user
+➜  ch07 ./on weikunkun  
+weikunkun is logged on
+➜  ch07 ./on aa bb cc 
+Incorrect number of arguments
+Usage: ./on user
+</code></pre>
+<h3 id="exit命令"><a href="#exit命令" class="headerlink" title="exit命令"></a>exit命令</h3><ul>
+<li>exit命令用来退出当前shell进程，并返回一个退出状态；使用$?可以接收这个退出状态。</li>
+<li>exit命令可以接受一个整数值作为参数，代表退出状态。如果不指定，默认状态值是 0。</li>
+<li>exit退出状态只能是一个介于 0~255 之间的整数，其中只有 0 表示成功，其它值都表示失败。</li>
+</ul>
+<p>8</p>
+<p>编写删除<code>phone book</code>中的任意一个用户的脚本，同时为了保证系统安全，使用对参数进行校验，仅支持传入一个参数</p>
+<pre><code class="lang-shell"># rem v2.0
+# remove someone from phone book
+#
+if [ "$#" -ne 1 ] 
+then 
+    echo "Incorrect number of arguments."
+    echo "Usage: ./rem name"
+    exit 1 # 指定错误码
+fi
+grep -v "$1" phonebook &gt; /tmp/phonebook
+mv /tmp/phonebook phonebook
+</code></pre>
+<h3 id="if…then形式"><a href="#if…then形式" class="headerlink" title="if…then形式"></a>if…then形式</h3><p><strong>格式：</strong></p>
+<pre><code class="lang-bash">if condition
+then
+    语句1
+    语句2
+    ...
+else
+    语句1
+    语句2
+    ...
+fi
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="lang-bash">a=3
+b=4
+
+if ! [ "$a" -lt "$b" ]
+then
+    echo ${a}不小于${b}
+else
+    echo ${a}小于${b}
+fi
+</code></pre>
+<p><strong>输出结果：</strong></p>
+<pre><code class="lang-bash">3小于4
+</code></pre>
+<h4 id="多层if-elif-elif-else"><a href="#多层if-elif-elif-else" class="headerlink" title="多层if-elif-elif-else"></a>多层if-elif-elif-else</h4><p><strong>格式：</strong></p>
+<pre><code class="lang-bash">if condition
+then
+    语句1
+    语句2
+    ...
+elif condition
+then
+    语句1
+    语句2
+    ...
+elif condition
+then
+    语句1
+    语句2
+else
+    语句1
+    语句2
+    ...
+fi
+</code></pre>
+<p><strong>示例：</strong></p>
+<p>还是以删除<code>phone book</code>为例，之前的写法，虽然检验了参数的合法性，但还不能很好明白用户的意图，对于其他的行为并没有做过多的检测。有时候会误删非用户目标的内容。所以仍需要优化</p>
+<pre><code class="lang-bash">➜  ch07 vim rem 
+#! /bin/bash
+# rem v3.0
+# remove someone from phone book
+#
+if [ "$#" -ne 1 ] 
+then 
+    echo "Incorrect number of arguments."
+    echo "Usage: ./rem name"
+    exit 1 # 指定错误码
+fi
+
+# 获取入参
+name=$1
+
+# 先匹配出根据参数 删除的条目数量
+matches=$(grep $name phonebook | wc -l)
+
+if [ "$matches" -gt 1 ]
+then
+    echo "More than one match; please qualify further"
+elif [ "$matches" -eq 1 ]
+then 
+    grep -v "$name" phonebook &gt; /tmp/phonebook
+    mv /tmp/phonebook phonebook
+else 
+    echo "I could not find $name in the phone book"
+fi
+
+➜  ch07 ./rem aaaa     
+I could not find aaaa in the phone book
+
+➜  ch07 cat phonebook                 
+───────┬────────────────────────────────────────────────────────────────────────
+       │ File: phonebook
+───────┼────────────────────────────────────────────────────────────────────────
+   1   │ Alice Chebba    973-555-2015
+   2   │ Barbara Swingle 201-555-9257
+   3   │ Liz Stachiw     212-555-2298
+   4   │ Susan Goldberg  201-555-7776
+   5   │ Susan Topple    212-555-4932
+   6   │ Tony Iannino    973-555-1295
+───────┴────────────────────────────────────────────────────────────────────────
+➜  ch07 ./rem Susan
+More than one match; please qualify further
+➜  ch07 ./rem Tony 
+➜  ch07 cat phonebook
+───────┬────────────────────────────────────────────────────────────────────────
+       │ File: phonebook
+───────┼────────────────────────────────────────────────────────────────────────
+   1   │ Alice Chebba    973-555-2015
+   2   │ Barbara Swingle 201-555-9257
+   3   │ Liz Stachiw     212-555-2298
+   4   │ Susan Goldberg  201-555-7776
+   5   │ Susan Topple    212-555-4932
+───────┴────────────────────────────────────────────────────────────────────────
+</code></pre>
+<h3 id="case…esac形式"><a href="#case…esac形式" class="headerlink" title="case…esac形式"></a>case…esac形式</h3><p><strong>格式：</strong></p>
+<pre><code class="lang-bash">case $变量名称 in
+    值1)
+        语句1
+        语句2
+        ...
+        ;;  # 类似于C/C++中的break
+    值2)
+        语句1
+        语句2
+        ...
+        ;;
+    *)  # 类似于C/C++中的default
+        语句1
+        语句2
+        ...
+        ;;
+esac
+</code></pre>
+<p><strong>示例：</strong></p>
+<p>输入一个数字，然后转化为对应的英语单词</p>
+<pre><code class="lang-shell">➜  ch07 vim number
+#! /bin/bash 
+#
+# Translate a didgit to English
+# 
+
+if [ "$#" -ne 1 ]
+then 
+    echo "Usage: number digit"
+    exit 1
+fi
+
+number=$1
+
+case $number in
+    0)
+        echo zero
+        ;;
+    1) 
+        echo one
+        ;;
+    2) 
+        echo two
+        ;;
+    3)
+        echo three
+        ;;
+    4)
+        echo four
+        ;;
+    5)
+        echo five
+        ;;
+    6)
+        echo six
+        ;;
+    7)
+        echo seven
+        ;;
+    8)
+        echo eight
+        ;;
+    9)
+        echo nine
+        ;;
+    *)
+        echo "Bad argumnet; please specify a single digit"
+        ;;
+esac
+</code></pre>
+<p><strong>输出结果：</strong></p>
+<pre><code class="lang-shell">➜  ch07 ./number 1
+one
+➜  ch07 ./number 100
+Bad argumnet; please specify a single digit
+➜  ch07 ./number   
+Usage: number digit
+</code></pre>
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>一个用于识别<code>数字、大小写字符、特殊字符</code>的程序</p>
+<pre><code class="lang-shell"># !/bin/bash
+# 
+# Ensure that only one character was types
+
+# verify arguments
+if [ "$#" -ne 1 ]
+then 
+    echo "Please type a single character"
+exit 1
+fi
+
+
+char="$1"
+numberchar=$(echo "$char" | wc -c)
+
+if [ "$numberchar" -ne 1 ]
+then
+    echo "Please type a single character"
+exit 1
+fi
+
+# classify it
+case "$char" in
+    [0-9])
+        echo "digit"
+        ;;
+    [a-z])
+        echo "lowercase letter"
+        ;;
+    [A-Z])
+        echo "uppercase letter"
+        ;;
+        *)
+        echo "special character"
+        ;;
+esac
+</code></pre>
+<p>但是，当我们执行之后，却发现不符合我们的预期</p>
+<pre><code class="lang-shell">➜  ch07 ./ctype a                  
+Please type a single character
+➜  ch07 ./ctype 1
+Please type a single character
+➜  ch07 ./ctype '*'
+Please type a single character
+</code></pre>
+<p>我们可以通过<code>-x</code>进行调试</p>
+<pre><code class="lang-shell">➜  ch07 sh -x ./ctype a
++ '[' 1 -ne 1 ']'
++ char=a
+++ echo a
+++ wc -c
++ numberchar='       2' # echo "$name" | wc -c 输出为2？？？
++ '[' '       2' -ne 1 ']'
++ echo 'Please type a single character'
+Please type a single character
++ exit 1
+</code></pre>
+<p>通过输出调试，我们发现一个特性：</p>
+<pre><code class="lang-shell">echo "$name" | wc -c
+</code></pre>
+<p>统计的结果出了我们需要的统计字符外，还有一个是<code>echo</code>在行尾自带的不可见字符<code>换行符</code>,所以需要重新修改判断逻辑，最后执行结果符合预期：</p>
+<pre><code class="lang-shell">➜  ch07 ./ctype '*'
+special character
+➜  ch07 ./ctype a  
+lowercase letter
+➜  ch07 ./ctype 1
+digit
+</code></pre>
+<h2 id="ch08循环"><a href="#ch08循环" class="headerlink" title="ch08循环"></a>ch08循环</h2><h3 id="for…in…do…done"><a href="#for…in…do…done" class="headerlink" title="for…in…do…done"></a>for…in…do…done</h3><p><strong>格式：</strong></p>
+<pre><code class="lang-bash">for var in val1 val2 val3
+do
+    语句1
+    语句2
+    ...
+done
+</code></pre>
+<h3 id="for-…-…-…-do…done"><a href="#for-…-…-…-do…done" class="headerlink" title="for ((…;…;…)) do…done"></a>for ((…;…;…)) do…done</h3><p><strong>格式：</strong></p>
+<pre><code class="lang-bash">for ((expression; condition; expression))
+do
+    语句1
+    语句2
+done
+</code></pre>
+<h3 id="while…do…done循环"><a href="#while…do…done循环" class="headerlink" title="while…do…done循环"></a>while…do…done循环</h3><p><strong>格式：</strong></p>
+<pre><code class="lang-bash">while condition
+do
+    语句1
+    语句2
+    ...
+done
+</code></pre>
+<h3 id="until…do…done循环"><a href="#until…do…done循环" class="headerlink" title="until…do…done循环"></a>until…do…done循环</h3><p><strong>格式：</strong></p>
+<pre><code class="lang-bash">until condition
+do
+    语句1
+    语句2
+    ...
+done
+</code></pre>
+<h2 id="ch09-数据的读取和打印"><a href="#ch09-数据的读取和打印" class="headerlink" title="ch09 数据的读取和打印"></a>ch09 数据的读取和打印</h2><blockquote>
+<p>主要介绍如何使用read命令从终端或文件中读取数据，以及如何使用printf将数据格式化并输出</p>
+</blockquote>
+<h3 id="read-命令"><a href="#read-命令" class="headerlink" title="read 命令"></a>read 命令</h3><p><strong>格式：</strong></p>
+<pre><code class="lang-shell">read variables
+</code></pre>
+<p><strong>例子：</strong></p>
+<p>编写一个具有复制功能的脚本，同时要求根据用户的自己的意愿判断是否需要覆盖文件</p>
+<pre><code class="lang-shell"># Copy a file
+if [ "$#" -ne 2 ]
+then
+    echo "Usage: mycp from to"
+    exit 1
+fi
+
+from="$1"
+to="$2"
+
+# see if the destination file already exits
+
+if [ -e "$to" ]
+then
+    echo "$to already exit; overwrite（yes/no）?" 
+    read anwser
+
+    if [ "$anwser" != yes ]
+    then
+        echo "Copy not performed"
+        exit 0
+    fi
+fi
+
+# either desitination doesn't exist or "yes" was typed
+
+cp $from $to
+</code></pre>
+<p>==小技巧==</p>
+<pre><code class="lang-shell"># 我们可以使用 \c 将echo中最后自带的换行符替换
+echo "$to already exit; overwrite (yes/no)? \c"
+</code></pre>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">字符</th>
+<th style="text-align:center">输出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">\b</td>
+<td style="text-align:center">Backspace</td>
+</tr>
+<tr>
+<td style="text-align:center">\c</td>
+<td style="text-align:center">忽略输出最后的换行符</td>
+</tr>
+<tr>
+<td style="text-align:center">\f</td>
+<td style="text-align:center">换页</td>
+</tr>
+<tr>
+<td style="text-align:center">\n</td>
+<td style="text-align:center">回车换行</td>
+</tr>
+<tr>
+<td style="text-align:center">\r</td>
+<td style="text-align:center">回车</td>
+</tr>
+<tr>
+<td style="text-align:center">\t</td>
+<td style="text-align:center">Tab</td>
+</tr>
+<tr>
+<td style="text-align:center">\\</td>
+<td style="text-align:center">反斜线</td>
+</tr>
+<tr>
+<td style="text-align:center">\0nnn</td>
+<td style="text-align:center">ASCII值为nnn的字符，其中nnn是1~3份的八进制数</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>输出结果：</strong></p>
+<pre><code class="lang-shell">➜  ch09 git:(master) ✗ mycp.sh names numbers
+numbers already exit; overwrite（yes/no）? no
+Copy not performed
+</code></pre>
+<p><strong>mycp的系列优化</strong></p>
+<ol>
+<li><p>当前的复制，没有检测to是否为一个目录，可能会导致我们的目标文件被移动到to目录中，所以需要有效的通知用户，同时将移动的文件名保持为愿文件名</p>
+<p>```shell</p>
+<h1 id="Copy-a-file"><a href="#Copy-a-file" class="headerlink" title="Copy a file"></a>Copy a file</h1><p>if [ “$#” -ne 2 ]<br>then</p>
+<pre><code>echo "Usage: mycp from to"
+exit 1
+</code></pre><p>fi</p>
+<p>from=”$1”<br>to=”$2”</p>
+<h1 id="check-to-is-a-directory"><a href="#check-to-is-a-directory" class="headerlink" title="check to is a directory"></a>check to is a directory</h1><p>if [ -d “$to” ]; then  # if better expression</p>
+<pre><code>to="$to/$(basename $from)"
+</code></pre><p>fi</p>
+</li>
+</ol>
+<h1 id="see-if-the-destination-file-already-exits"><a href="#see-if-the-destination-file-already-exits" class="headerlink" title="see if the destination file already exits"></a>see if the destination file already exits</h1><p>   if [ -e “$to” ]<br>   then<br>       echo “$to already exit; overwrite（yes/no）?\c “<br>       read anwser</p>
+<pre><code>   if [ "$anwser" != yes ]
+   then
+       echo "Copy not performed"
+       exit 0
+   fi
+</code></pre><p>   fi</p>
+<h1 id="either-desitination-doesn’t-exist-or-“yes”-was-typed"><a href="#either-desitination-doesn’t-exist-or-“yes”-was-typed" class="headerlink" title="either desitination doesn’t exist or “yes” was typed"></a>either desitination doesn’t exist or “yes” was typed</h1><p>   cp $from $to</p>
+<pre><code>
+2. mycp支持可变参数。使其和`cp`更加接近
+
+   ```shell
+   # Copy a file
+   # mycp final version 5
+   numargs=$#
+   filelist=
+   copylist=
+
+   while [ "$#" -gt 1 ]; do
+       filelist="$filelist $1"
+       shift
+   done
+
+   to="$1"
+
+   # if less than two args, or if more than two ags and last args
+   # is not a directory then issue an error message
+   if [ "$numargs" -lt 2 -o "$numargs" -gt 2 -a ! -d "$to" ]; then
+       echo "Usage: mycp file1 file2"
+       echo "       mycp file(s) dir"
+       exit 1
+   fi
+
+   for form in $filelist; do
+       # judege $to is a directory
+       if [ -d "$to" ]; then
+           toFile="$to/$(basename $from)"
+       else
+           toFile="$to"
+       fi
+
+       # add file
+       if [  -e "$toFile" ]; then
+           echo "$toFile already exits; overwrite (yes/no)? \c"
+           read anwser
+
+           if [ "$anwser" = yes ]; then
+               copylist="$copylist $from"
+           fi
+       else
+           copylist="$copylist $from"
+       fi
+   done
+
+   if [ -n "$copylist" ]; then
+       cp $copylist $to
+   fi
+</code></pre><p><strong>一个具有交互功能的电话簿脚本</strong></p>
+<pre><code class="lang-shell">#########################################################################
+# File Name:    rolo.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: 日 11/21 21:21:35 2021
+#########################################################################
+#!/bin/bash
+# role - rolodex program to look up, add, and remove people form the phone book
+
+
+# display menu
+echo "
+     Would you like to: 
+
+        1. Look someone up
+        2. Add someone to the phone book
+        3. Remove someone from the phone book
+        Please select one of the above (1 - 3): \c "
+
+# read input and process selection
+
+read choice
+echo ""
+case "$choice" in
+    1) 
+        echo "Enter name to look up: \c"
+        read name
+        lu "$name"
+        ;;
+    2)
+        echo "Enter name to added: \c"
+        read name
+        add "$name"
+        ;;
+    3)
+        echo "Enter name to be removed: \c"
+        read name
+        rem "$name"
+        ;;
+    *)
+        echo "Bad choice"
+        ;;
+esac
+</code></pre>
+<p><strong>输出：</strong></p>
+<pre><code class="lang-shell">➜  ch09 git:(master) ✗ rolo.sh 
+
+     Would you like to: 
+
+        1. Look someone up
+        2. Add someone to the phone book
+        3. Remove someone from the phone book
+        Please select one of the above (1 - 3): 1
+
+Enter name to look up: wkk
+➜  ch09 git:(master) ✗ cat lu         
+───────┬────────────────────────────────────────────────────────────────────────
+       │ File: lu
+───────┼────────────────────────────────────────────────────────────────────────
+   1   │ # Look someone up in the phone book
+   2   │ grep "$1" phonebook
+───────┴────────────────────────────────────────────────────────────────────────
+➜  ch09 git:(master) ✗ lu Alice  
+➜  ch09 git:(master) ✗ rolo.sh   
+
+     Would you like to: 
+
+        1. Look someone up
+        2. Add someone to the phone book
+        3. Remove someone from the phone book
+        Please select one of the above (1 - 3): 2
+
+Enter name to added: kwk
+➜  ch09 git:(master) ✗ rolo.sh 
+
+     Would you like to: 
+
+        1. Look someone up
+        2. Add someone to the phone book
+        3. Remove someone from the phone book
+        Please select one of the above (1 - 3): 1
+
+Enter name to look up: kwk
+kwk
+</code></pre>
+<p><strong>优化：</strong></p>
+<p>rolo大多数功能还是查找，当误参数的时候，默认使用lu进行查找，然后退出。同时使用<code>util</code>命令，进行优化，保证用户肯定有操作，避免选错其他字符导致程序结束</p>
+<pre><code class="lang-shell">#########################################################################
+# File Name:    rolo2.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: 日 11/21 21:38:40 2021
+#########################################################################
+#!/bin/bash
+# role - rolodex program to look up, add, and remove people form the phone book
+
+if [ "$#" -ne 0 ]; then
+    lu "$@"
+    exit
+fi
+
+validchoice=""
+
+until [ -n "$validchoice" ]; do
+    # display menu
+    echo "
+    Would you like to: 
+
+    1. Look someone up
+    2. Add someone to the phone book
+    3. Remove someone from the phone book
+    Please select one of the above (1 - 3): \c "
+
+    # read input and process selection
+
+    read choice
+    echo ""
+    case "$choice" in
+        1) 
+            echo "Enter name to look up: \c"
+            read name
+            lu "$name"
+            validchoice=TRUE
+            ;;
+        2)
+            echo "Enter name to added: \c"
+            read name
+            echo "Enter number: \c"
+            read number
+            add "$name" "$number"
+            validchoice=TRUE
+            ;;
+        3)
+            echo "Enter name to be removed: \c"
+            read name
+            rem "$name"
+            validchoice=TRUE
+            ;;
+        *)
+            echo "Bad choice"
+            ;;
+    esac
+done
+</code></pre>
+<p><strong>输出：</strong></p>
+<pre><code class="lang-shell">➜  ch09 git:(master) ✗ cat phonebook 
+───────┬─────────────────────────────────────────────────────────────────────────────────
+       │ File: phonebook
+───────┼─────────────────────────────────────────────────────────────────────────────────
+   1   │ Alice Chebba    973-555-2015
+   2   │ Barbara Swingle 201-555-9257
+   3   │ Liz Stachiw     212-555-2298
+   4   │ Susan Goldberg  201-555-7776
+   5   │ Susan Topple    212-555-4932
+   6   │ Tony Iannino    973-555-1295
+───────┴─────────────────────────────────────────────────────────────────────────────────
+➜  ch09 git:(master) ✗ rolo2.sh  Tony
+Tony Iannino    973-555-1295
+➜  ch09 git:(master) ✗ rolo2.sh      
+
+    Would you like to: 
+
+    1. Look someone up
+    2. Add someone to the phone book
+    3. Remove someone from the phone book
+    Please select one of the above (1 - 3): 2
+
+Enter name to added: Tong Du
+Enter number: 999=-^H^H2332-332
+➜  ch09 git:(master) ✗ rolo2.sh Tony 
+Tony Iannino    973-555-1295
+➜  ch09 git:(master) ✗ cat phonebook 
+───────┬─────────────────────────────────────────────────────────────────────────────────
+       │ File: phonebook
+───────┼─────────────────────────────────────────────────────────────────────────────────
+   1   │ Alice Chebba    973-555-2015
+   2   │ Barbara Swingle 201-555-9257
+   3   │ Liz Stachiw     212-555-2298
+   4   │ Susan Goldberg  201-555-7776
+   5   │ Susan Topple    212-555-4932
+   6   │ Tong Du    9992332-332
+   7   │ Tony Iannino    973-555-1295
+───────┴─────────────────────────────────────────────────────────────────────────────────
+</code></pre>
+<h3 id="printf命令"><a href="#printf命令" class="headerlink" title="printf命令"></a>printf命令</h3><blockquote>
+<p>格式化输出</p>
+</blockquote>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>格式规范</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>%d</td>
+<td>整数</td>
+</tr>
+<tr>
+<td>%u</td>
+<td>无符号整数</td>
+</tr>
+<tr>
+<td>%o</td>
+<td>八进制数字</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>十六进制数字，使用a~f</td>
+</tr>
+<tr>
+<td>%X</td>
+<td>十六进制数字，使用A~F</td>
+</tr>
+<tr>
+<td>%c</td>
+<td>单个字符</td>
+</tr>
+<tr>
+<td>%s</td>
+<td>字符串字面量</td>
+</tr>
+<tr>
+<td>%b</td>
+<td>包含转义字符的字符串</td>
+</tr>
+<tr>
+<td>%%</td>
+<td>百分号</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>编写一个格式化数组的程序：</strong></p>
+<pre><code class="lang-shell">#########################################################################
+# File Name:    align.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: 日 11/21 22:00:55 2021
+#########################################################################
+#!/bin/bash
+cat $* | 
+while read number1 number2
+do
+    printf "%20d %20d \n" $number1 $number2
+done
+</code></pre>
+<p><strong>输出：</strong></p>
+<pre><code class="lang-shell">➜  ch09 git:(master) ✗ cat data    
+───────┬────────────────────────────────────────────────────────────────────────
+       │ File: data
+───────┼────────────────────────────────────────────────────────────────────────
+   1   │ 95436928923 54398857123
+   2   │ 96327974 978968345823
+   3   │ 96324623375324 9745738523
+   4   │ 962372735 96243642523
+   5   │ 9764236246452352 952352234
+   6   │ 91414124 545235
+   7   │ 79861236 9461246213
+   8   │ 9412376413264 23461275
+   9   │ 52161273521 94612746123
+  10   │ 9412341234674 941267451254162
+───────┴────────────────────────────────────────────────────────────────────────
+➜  ch09 git:(master) ✗ align.sh data     
+         95436928923          54398857123 
+            96327974         978968345823 
+      96324623375324           9745738523 
+           962372735          96243642523 
+    9764236246452352            952352234 
+            91414124               545235 
+            79861236           9461246213 
+       9412376413264             23461275 
+         52161273521          94612746123 
+       9412341234674      941267451254162
+</code></pre>
+<p>通过printf命令，其实我们可以优化下<code>add</code>程序，因为我们之前在<code>phonebook</code>中新增联系人，都要按照格式输入，这样才能保持格式的一致，现在可通过<code>printf</code>进行优化。</p>
+<pre><code class="lang-shell"># Add someone to the phone book
+# echo "$1    $2" &gt;&gt; phonebook
+printf "%10s %20s" $1 $2 &gt;&gt; phonebook
+sort -o phonebook phonebook
+</code></pre>
+<p><strong>输出：</strong></p>
+<pre><code class="lang-shell">➜  ch09 git:(master) ✗ cat phonebook
+➜  ch09 git:(master) ✗ add 孔维坤 999-999-9999
+➜  ch09 git:(master) ✗ add 维坤坤 888-888-8888    
+➜  ch09 git:(master) ✗ cat phonebook
+───────┬────────────────────────────────────────────────────────────────────────
+       │ File: phonebook
+───────┼────────────────────────────────────────────────────────────────────────
+   1   │  维坤坤         888-888-8888
+   2   │  孔维坤         999-999-9999
+   3   │ Alice Chebba    973-555-2015
+   4   │ Barbara Swingle 201-555-9257
+   5   │ Liz Stachiw     212-555-2298
+   6   │ Susan Goldberg  201-555-7776
+   7   │ Susan Topple    212-555-4932
+   8   │ Tony Iannino    973-555-1295
+───────┴────────────────────────────────────────────────────────────────────────
+</code></pre>
+<h2 id="ch10环境"><a href="#ch10环境" class="headerlink" title="ch10环境"></a>ch10环境</h2><blockquote>
+<p>当我们登录到系统中，我们其实使用的都是一个全新的shell副本。登录之后，shell提供的就是属于我们自己的环境，该环境从登录一直持续到退出系统。</p>
+</blockquote>
+<h3 id="Shell中变量的作用域"><a href="#Shell中变量的作用域" class="headerlink" title="Shell中变量的作用域"></a>Shell中变量的作用域</h3><p>变量的作用域顾名思义就是说变量的有效范围。在不同的范围中，同名的变量不会互相干涉，但是在相同的作用域中，同名的变量就会互相干扰，这也就是我们需要了解作用域的原因，避免变量之间的互相干扰。</p>
+<p>shell中作用域共分为三种：</p>
+<ul>
+<li>变量仅在<strong>函数内部</strong>可以使用，称为<code>局部变量</code></li>
+<li>变量可以在<strong>当前的Shell</strong>中使用， 称为<code>全局变量</code></li>
+<li>变量除了在当前Shell进程中使用，还可以在其子进程中使用，称为<code>环境变量</code></li>
+</ul>
+<h4 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h4><p>正常编程中，函数内部的变量称之为<code>局部变量</code>。在Shell中略微不同的是，我们通过<code>local</code>声明的变量才能称之为局部变量。</p>
+<p><strong>例子：</strong></p>
+<pre><code class="lang-shell">➜  ch10 git:(master) ✗ cat func.sh            
+───────┬─────────────────────────────────────────────────────────────────────────────────
+       │ File: func.sh
+───────┼─────────────────────────────────────────────────────────────────────────────────
+   1   │ #########################################################################
+   2   │ # File Name:    func.sh
+   3   │ # Author:       weikunkun
+   4   │ # mail:         kongwiki@163.com
+   5   │ # Created Time: 一 11/22 19:15:39 2021
+   6   │ #########################################################################
+   7   │ #!/bin/bash
+   8   │ 
+   9   │ function func() {
+  10   │     a=99
+  11   │ }
+  12   │ 
+───────┴─────────────────────────────────────────────────────────────────────────────────
+➜  ch10 git:(master) ✗ func.sh
+➜  ch10 git:(master) ✗ echo $x
+100
+➜  ch10 git:(master) ✗ cat func.sh 
+───────┬─────────────────────────────────────────────────────────────────────────────────
+       │ File: func.sh
+───────┼─────────────────────────────────────────────────────────────────────────────────
+   1   │ #########################################################################
+   2   │ # File Name:    func.sh
+   3   │ # Author:       weikunkun
+   4   │ # mail:         kongwiki@163.com
+   5   │ # Created Time: 一 11/22 19:15:39 2021
+   6   │ #########################################################################
+   7   │ #!/bin/bash
+   8   │ 
+   9   │ function func() {
+  10   │     local a=99
+  11   │ }
+  12   │ 
+───────┴─────────────────────────────────────────────────────────────────────────────────
+➜  ch10 git:(master) ✗ func.sh
+➜  ch10 git:(master) ✗ echo $x
+</code></pre>
+<h4 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h4><p>所谓的全局变量，就是在<strong>当前的Shell进程</strong>中都有效，每个进程都有自己的作用域，彼此之间互不影响。在当前Shell中定义的变量，默认为全局变量。</p>
+<p>需要注意的是，全局变量的作用域当前的<strong>Shell进程</strong>，不是当前的<strong>Shell脚本文件</strong>，这也就解释了，上述的例子中，最开始未加<code>local</code>关键字的示例中，<code>func.sh</code>中定义的变量<code>x</code>，在<strong>该Shell脚本外</strong>，仍能被正确调用，因为变量<code>x</code>是一个全局变量</p>
+<p>当我们打开多个Shell窗口时，就创建了多个Shell进程。每个Shell进程都是独立的。同时我们通过<code>source</code>命令可以引入多个脚本，然后全局变量对这些脚本都有效。</p>
+<pre><code class="lang-shell">b = 200
+➜  ch10 git:(master) ✗ cat a.sh
+───────┬─────────────────────────────────────────────────────────────────────────────────
+       │ File: a.sh
+───────┼─────────────────────────────────────────────────────────────────────────────────
+   1   │ #########################################################################
+   2   │ # File Name:    a.sh
+   3   │ # Author:       weikunkun
+   4   │ # mail:         kongwiki@163.com
+   5   │ # Created Time: 一 11/22 19:54:12 2021
+   6   │ #########################################################################
+   7   │ #!/bin/bash
+   8   │ echo "a = $a"
+   9   │ b=200
+───────┴─────────────────────────────────────────────────────────────────────────────────
+➜  ch10 git:(master) ✗ cat b.sh
+───────┬─────────────────────────────────────────────────────────────────────────────────
+       │ File: b.sh
+───────┼─────────────────────────────────────────────────────────────────────────────────
+   1   │ #########################################################################
+   2   │ # File Name:    b.sh
+   3   │ # Author:       weikunkun
+   4   │ # mail:         kongwiki@163.com
+   5   │ # Created Time: 一 11/22 19:54:25 2021
+   6   │ #########################################################################
+   7   │ #!/bin/bash
+   8   │ echo "b = $b"
+───────┴───────────────────────────────────────────────────────────────────────────────
+➜  ch10 git:(master) ✗ a=99   
+➜  ch10 git:(master) ✗ source a.sh 
+a = 99
+➜  ch10 git:(master) ✗ source b.sh 
+b = 200
+</code></pre>
+<p>这三条命令都是在<strong>一个进程</strong>中执行的，从输出结果可以发现，在 <code>Shell</code> 窗口中以命令行的形式定义的变量 <code>a</code>，在 <code>a.sh</code> 中有效；在 <code>a.sh</code>中定义的变量 <code>b</code>，在 <code>b.sh</code> 中也有效，变量 <code>b</code> 的作用范围已经超越了 <code>a.sh</code>。</p>
+<blockquote>
+<p>注意：这里是使用<code>source</code>的方式执行的脚本，效果是<strong>在当前进程下执行</strong>，而如果使用<code>bash a.sh</code>这种方式执行脚本就不会有上述结果，因为这种方式执行脚本是<strong>在子进程下执行的</strong>，具体执行方式的区别参考<a href="http://showteeth.tech/posts/16586.html" target="_blank" rel="noopener">这篇文章</a>。</p>
+</blockquote>
+<p><strong>全局变量冲突：</strong></p>
+<p>虽然通过source可以打通所有脚本，共用多个全局变量，但是有些问题需要我们注意：</p>
+<ul>
+<li>写了一个函数脚本，名为<code>qc.sh</code></li>
+<li>在另一个脚本<code>run.sh</code>中对<code>qc.sh</code>进行了<code>source</code>执行</li>
+</ul>
+<p><code>qc.sh</code>截取：</p>
+<pre><code>复制# func one
+func_1(){
+  for i in $(ls ${local_variable}/*_test.zip)
+  do 
+    mv ${i} something
+  done
+}
+
+# func two
+func_2(){
+  for i in $(ls ${local_variable_2}/*_test.zip)
+  do 
+    mv ${i} something_2
+  done
+}
+</code></pre><p><code>run.sh</code>截取：</p>
+<pre><code>复制for i in "190915_data"
+do
+  func_1  ${results_folder}/${i}/${j}/qc
+  func_2  ${results_folder}/${i}/${j}/trim ${results_folder}/${i}/${j}/trim
+done
+</code></pre><p>最后程序在执行<code>func_2</code>时报错，而<code>func_1</code>正常执行，检查日志发现<code>func_2</code>传递的参数有误，其中的<code>${i}</code>部分变成了<code>func_1</code>中<code>for循环</code>最终停止的<code>i</code>，已经不是目标的<code>190915_data</code>，<code>source</code>方式执行脚本会打通全局变量，所以<code>func_1</code>执行之后由于其中的<code>i</code>变量<strong>不是局部变量，所以其作用域是整个脚本，并且会对之前的变量i的值进行覆盖</strong>，从而导致其值变为了<code>func_1</code>中<code>for循环</code>最终停止的<code>i</code>，并将其传递给了第二个函数<code>func_2</code>，最终导致出错。</p>
+<h4 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h4><p>全局变量只能在<strong>当前的Shell进程</strong>中有效，若是还想在子进程中仍然有效，就需要使用到<strong>环境变量</strong>，其中环境变量又称为<strong>临时环境变量</strong>和<strong>永久环境变量</strong></p>
+<ul>
+<li>如果是使用<code>export</code>修饰的变量，则改变量在所有的子进程也都有效了，称为<code>临时环境变量</code></li>
+<li>如果是将变量写在配置文件中，譬如<code>/etc/profile、~/.profile、/etc/zsh/zprofile</code>中，在所有的Shell进程中都有效了，称为<code>永久环境变量</code></li>
+</ul>
+<p><strong>临时环境变量：</strong></p>
+<blockquote>
+<p>创建Shell子进程最简单的方法就是<code>zsh</code>命令，退出Shell子进程的方法是<code>exit</code>命令(采用的是zsh)：</p>
+</blockquote>
+<pre><code class="lang-shell">➜  ch10 git:(master) ✗ echo $$
+29625
+➜  ch10 git:(master) ✗ echo $$
+36389
+➜  ch10 git:(master) ✗ exit   
+➜  ch10 git:(master) ✗ echo $$
+29625
+</code></pre>
+<pre><code class="lang-shell">➜  ch10 git:(master) ✗ a=22            
+➜  ch10 git:(master) ✗ echo $a         
+22
+➜  ch10 git:(master) ✗ zsh   
+➜  ch10 git:(master) ✗ echo $a
+
+➜  ch10 git:(master) ✗ exit   
+➜  ch10 git:(master) ✗ export a
+➜  ch10 git:(master) ✗ zsh      
+➜  ch10 git:(master) ✗ echo $a
+22
+</code></pre>
+<p><strong>永久环境变量：</strong></p>
+<pre><code class="lang-shell">export TERM=xterm-256color
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=208'
+clear
+export PATH="/usr/local/opt/redis@3.2/bin:$PATH"
+export PATH="/usr/local/opt/tcl-tk/bin:$PATH"
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-11.0.12.jdk/Contents/Home"
+export PATH=$JAVA_HOME/bin:$PATH
+
+# Go PATH
+export GOROOT=/usr/local/go
+export PATH=$GOROOT/bin:$PATH
+
+# 添加当前位置到环境变量
+export PATH=.:$PATH
+
+# Aliases
+alias cat="/usr/local/bin/bat"
+alias grep="grep --color"
+</code></pre>
+<p>对于<strong>永久环境变量</strong>， 其加载顺序如下（以bash为例）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20211122203802732.png" alt="加载顺序" style="zoom:50%;"></p>
+<h4 id="PS1、PS2"><a href="#PS1、PS2" class="headerlink" title="PS1、PS2"></a>PS1、PS2</h4><p>PS1用于终端的提示符，PS2用于命令中输入的长度多于一行后的辅助提示符。</p>
+<h4 id="HOME、PATH"><a href="#HOME、PATH" class="headerlink" title="HOME、PATH"></a>HOME、PATH</h4><p>HOME用于表示当前用户登录所处的位置。</p>
+<pre><code class="lang-shell">➜  ch10 git:(master) ✗ echo $HOME
+/Users/weikunkun
+</code></pre>
+<p>PATH用于记录当前系统的环境变量。</p>
+<pre><code class="lang-shell">➜  ch10 git:(master) ✗ echo $PATH 
+.:/usr/local/go/bin:/Library/Java/JavaVirtualMachines/jdk-11.0.12.jdk/Contents/Home/bin:/usr/local/opt/tcl-tk/bin:/usr/local/opt/redis@3.2/bin:/Users/weikunkun/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/opt/apache-maven-3.6.3/bin:/usr/local/mysql/bin
+</code></pre>
+<p>在命令中，输入的命令，Shell会搜索PATH列出的目录，知道找到可以匹配的可执行文件。所以想要最先搜索当前目录，可以将<code>.</code>放到当前<code>$PATH</code>的最开始（注意取舍安全性）</p>
+<h4 id="rolo再优化"><a href="#rolo再优化" class="headerlink" title="rolo再优化"></a>rolo再优化</h4><p>通过上述的学习，我们会发现<code>rolo</code>还能继续优化</p>
+<ol>
+<li>无法在任意位置执行<code>rolo</code></li>
+<li>所有用户都可以执行<code>rolo</code>之后，可能当前用户想操作的是自己的<code>phonebook</code>而不是其他人的，所以我们需要创建一个能够面向多用户的<code>phonebook</code></li>
+</ol>
+<pre><code class="lang-shell">#########################################################################
+# File Name:    rolo.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: 一 11/22 21:09:23 2021
+#########################################################################
+#!/bin/bash
+PHONEBOOK=$HOME/phonebook 
+export PHONEBOOK
+
+if [ ! -f "$PHONEBOOK" ]; then
+    echo "No phone book file in $HOME"
+    exit 1
+fi
+
+# 如果提供了参数，则执行查询操作
+if [ "$#" -ne 0 ]; then
+    lu "$@"
+    exit
+fi
+
+validchoice=""
+
+# 循环 直到用户已经做出有效选择
+until [ -n "$validchoice" ]; do
+    # 显示菜单
+    echo "
+    Would you like to:
+
+        1. Look someone up
+        2. Add someone to the phone book
+        3. Remove someone fomr the phone book
+    Please select one of the above (1-3): \c
+    "
+
+    # 查找
+    read choice
+    echo
+
+    case "$choice" in
+        1) 
+            echo "Enter name to look up: \c"
+            read name
+            lu "$name"
+            validchoice=TRUE
+            ;;
+        2)
+            echo "Enter name to be added: \c"
+            read name
+            echo "Enter number: \c"
+            read number
+            add $name $number
+            validchoice=TRUE
+            ;;
+        3)
+            echo "Enter name to be removed: \c"
+            read name
+            read number
+            rem "$name"
+            validchoice=TRUE
+            ;;
+        *)
+            echo "Bad choic"
+            ;;
+    esac
+done
+</code></pre>
+<p><strong>执行结果：</strong></p>
+<pre><code class="lang-shell">➜  ch10 git:(master) ✗ rolo 孔维坤     
+           孔维坤         111-111-1111
+➜  ch10 git:(master) ✗ rolo       
+
+    Would you like to:
+
+        1. Look someone up
+        2. Add someone to the phone book
+        3. Remove someone fomr the phone book
+    Please select one of the above (1-3): 1
+
+Enter name to look up: 孔维坤
+           孔维坤         111-111-1111
+➜  ch10 git:(master) ✗ rolo       
+
+    Would you like to:
+
+        1. Look someone up
+        2. Add someone to the phone book
+        3. Remove someone fomr the phone book
+    Please select one of the above (1-3): 2
+
+Enter name to be added: 小坤坤
+Enter number: 999-999-9999
+➜  ch10 git:(master) ✗ cat $HOME/phonebook
+───────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+       │ File: /Users/weikunkun/phonebook
+───────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1   │            孔维坤         111-111-1111
+   2   │            维坤坤         222-222-2222
+   3   │            韩欢欢         333-333-3333
+   4   │            小坤坤         999-999-9999
+───────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+</code></pre>
+<h2 id="ch11参数"><a href="#ch11参数" class="headerlink" title="ch11参数"></a>ch11参数</h2><blockquote>
+<p>该章节主要详细阐述了各种参数的操作</p>
+<ol>
+<li>位置参数（行参）</li>
+<li>特殊参数（$#、$?）</li>
+<li>关键字参数（普通变量）</li>
+</ol>
+</blockquote>
+<h3 id="paramter"><a href="#paramter" class="headerlink" title="${paramter}"></a>${paramter}</h3><p>这种形式的内容主要用于当前应用包含过多的参数（10个及以上）</p>
+<pre><code class="lang-shell">${10}
+${11}
+</code></pre>
+<p>进行替换：</p>
+<pre><code class="lang-shell">mv ${file} ${file}x
+</code></pre>
+<h3 id="paramter-value"><a href="#paramter-value" class="headerlink" title="${paramter:-value}"></a>${paramter:-value}</h3><p>类似于getOrdeDefault的功能，如果当前paramter不为空，则使用它的值，否则就是用value。</p>
+<p><strong>示例：</strong></p>
+<pre><code class="lang-shell">➜  book git:(master) echo Using editor ${EDITOR:-$(which vim)}
+Using editor /usr/local/bin/vim
+</code></pre>
+<p>其并不会对当前的<code>paramter</code>进行覆盖操作，如果不存在则会赋值我们指定的默认值，否则不进行任何操作，类似如下的<code>if-else</code>判断</p>
+<pre><code class="lang-shell">#########################################################################
+# File Name:    usevim.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: 二 11/23 16:21:22 2021
+#########################################################################
+#!/bin/bash
+if [ -n "$EDITOR" ]; then
+    echo "Using editor $EDITOR"
+else
+    echo "Using editor $(which vim)"
+fi
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="lang-shell">➜  book git:(master) ✗ EDITOR=$(which ed)
+➜  book git:(master) ✗ echo ${EDITOR:-$(which vim)}             
+/bin/ed
+➜  book git:(master) ✗ EDITOR=           
+➜  book git:(master) ✗ echo ${EDITOR:-$(which vim)}
+/usr/local/bin/vim
+➜  book git:(master) ✗
+</code></pre>
+<h3 id="paramter-value-1"><a href="#paramter-value-1" class="headerlink" title="${paramter:=value}"></a>${paramter:=value}</h3><p>该操作类似直接对变量进行赋值。当然我们无法使用这种形式，对位置参数进行赋值（paramter不能是数字）。如果想要将其作为一个命令，需要做如下操作</p>
+<pre><code class="lang-shell">: ${paramter:=value}
+</code></pre>
+<pre><code class="lang-shell">➜  ch10 : ${PHONEBOOK:=$HOME/phonebook}
+➜  ch10 echo $PHONEBOOK
+/root/phonebook
+➜  ch10 : ${PHONEBOOK:=aaa}
+➜  ch10 echo $PHONEBOOK
+/root/phonebook
+</code></pre>
+<p>这种形式的用法一般在条件语句或者echo语句中第一次使用变量的时候会使用</p>
+<h3 id="paramter-value-2"><a href="#paramter-value-2" class="headerlink" title="${paramter:?value}"></a>${paramter:?value}</h3><p>如果<code>paramter</code>不为空，Shell会进行替换，否则写入到标准错误中。和三目运算类似</p>
+<h3 id="paramter-value-3"><a href="#paramter-value-3" class="headerlink" title="${paramter:+value}"></a>${paramter:+value}</h3><p>和-value相反，如果<code>paramter</code>不为空，则替换成<code>value</code>，否则不进行任何操作</p>
+<pre><code class="lang-shell">➜  ch10 traceopt=T
+➜  ch10 echo options: ${traceopt:+"Trae mode"}
+options: Trae mode
+➜  ch10 traceopt=
+➜  ch10 echo options: ${traceopt:+"Trae mode"}
+options:
+</code></pre>
+<h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p><strong>作用：</strong></p>
+<ol>
+<li>设置各种Shell选项</li>
+<li>重新为$1、$2、$3等位置参数赋值</li>
+</ol>
+<p><strong>示例：</strong></p>
+<pre><code class="lang-shell">➜  ch11 git:(master) ✗ set one two three four          
+➜  ch11 git:(master) ✗ echo $1 $2 $3 $4
+one two three four
+➜  ch11 git:(master) ✗ echo $#                         
+4
+➜  ch11 git:(master) ✗ echo $@                         
+one two three fou
+</code></pre>
+<p>编写一个word程序，用于统计一行中的单词个数</p>
+<pre><code class="lang-shell">➜  ch11 git:(master) ✗ cat word.sh          
+───────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────
+       │ File: word.sh
+───────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1   │ #########################################################################
+   2   │ # File Name:    word.sh
+   3   │ # Author:       weikunkun
+   4   │ # mail:         kongwiki@163.com
+   5   │ # Created Time: 六 11/27 15:45:22 2021
+   6   │ #########################################################################
+   7   │ #!/bin/bash
+   8   │ read line
+   9   │ set $line
+  10   │ echo $# # 输出参数个数
+───────┴─────────────────────────────────────────────────────────────────────────────────────────────────────────
+</code></pre>
+<p><strong>执行结果：</strong></p>
+<pre><code class="lang-shell">➜  ch11 git:(master) ✗ word.sh
+Hello world my name is kwk
+6
+</code></pre>
+<p><strong>一些以外结果：</strong></p>
+<ol>
+<li><p>当我们不做任何输入时</p>
+<pre><code class="lang-shell">➜  ch11 git:(master) ✗ word.sh
+
+AUTOJUMP_ERROR_PATH=/Users/weikunkun/Library/autojump/errors.log
+AUTOJUMP_SOURCED=1
+BASH=/bin/sh
+BASH_ARGC=()
+BASH_ARGV=()
+BASH_LINENO=([0]="0")
+BASH_SOURCE=([0]="word.sh")
+BASH_VERSINFO=([0]="3" [1]="2" [2]="57" [3]="1" [4]="release" [5]="x86_64-apple-darwin21")
+BASH_VERSION='3.2.57(1)-release'
+DIRSTACK=()
+EUID=501
+GOROOT=/usr/local/go
+GROUPS=()
+HOME=/Users/weikunkun
+...
+# 不做任何输入时，set就会执行无参数的执行，也就是输出所有的环境变量
+</code></pre>
+</li>
+<li><p>输入以<code>-</code>开头的内容</p>
+<pre><code class="lang-shell">➜  ch11 git:(master) ✗ word.sh
+-11111+423
+word.sh: line 9: set: -1: invalid option
+set: usage: set [--abefhkmnptuvxBCHP] [-o option] [arg ...]
+# 将-1视为了一个选项， 然后因为并未有任何设置，所以报错
+</code></pre>
+</li>
+</ol>
+<p><strong>解决方式：</strong></p>
+<ul>
+<li>使用<code>--</code>解决无参数输入时，打印当前所有的参数</li>
+<li>使用while，实现正常统计单词数量</li>
+</ul>
+<pre><code class="lang-shell">➜  ch11 git:(master) ✗ vim word.sh 
+count=0
+while read line
+do
+    set -- $line
+    count=$((count + $#))
+done
+echo $count
+➜  ch11 git:(master) ✗ word.sh &lt; /etc/passwd 
+329
+</code></pre>
+<h3 id="IFS"><a href="#IFS" class="headerlink" title="IFS"></a>IFS</h3><p><strong>作用：</strong></p>
+<p>指定分隔符，在Shell解析输入、命令替换、输出以及执行变量替换时，就会使用IFS指定的分隔符</p>
+<p><strong>示例：</strong></p>
+<pre><code class="lang-shell">➜  ch11 git:(master) ✗ IFS=:           
+➜  ch11 git:(master) ✗ read x y z      
+123:456:789
+➜  ch11 git:(master) ✗ echo $x $y $z   
+123 456 789
+➜  ch11 git:(master) ✗ list="one:two:three"            
+➜  ch11 git:(master) ✗ for x in $list; do echo $x; done
+one
+two
+three
+
+## set和IFS的搭配示例
+</code></pre>
+<h2 id="ch12拓展内容"><a href="#ch12拓展内容" class="headerlink" title="ch12拓展内容"></a>ch12拓展内容</h2><h3 id="wait命令"><a href="#wait命令" class="headerlink" title="wait命令"></a>wait命令</h3><blockquote>
+<p>和父进程调用waitpid类似，在Shell中通过wait，当前Shell等待子Shell完成后，后续操作</p>
+</blockquote>
+<p><strong>使用：</strong></p>
+<pre><code class="lang-shell">wait process=id
+</code></pre>
+<p><strong>例子：</strong></p>
+<pre><code class="lang-shell">➜  ch11 git:(master) ✗ sort big-data &gt; sorted_data &amp;
+[1]  29625
+➜  ch11 git:(master) ✗ echo $$         
+➜  ch11 git:(master) ✗ wait 29625
+</code></pre>
+<h3 id="trap命令"><a href="#trap命令" class="headerlink" title="trap命令"></a>trap命令</h3><p>我们在编写Shell程序时，当发现运行不符合预期时，会直接中断执行，一般来说没啥问题，但是期间运行的一些临时文件就会特别多，所以我们可以使用trap进行操作</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">信号</th>
+<th style="text-align:center">助记名</th>
+<th style="text-align:center">产生原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">EXIT</td>
+<td style="text-align:center">退出SHELL</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">HUP</td>
+<td style="text-align:center">挂起</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">INT</td>
+<td style="text-align:center">中断（Ctrl + c）</td>
+</tr>
+<tr>
+<td style="text-align:center">15</td>
+<td style="text-align:center">TERM</td>
+<td style="text-align:center">软终端信号（默认kill）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>实例：</strong></p>
+<pre><code class="lang-shell">trap "rm $WORKDIR/work1$$ $WORKDIR/dataout$$; eixt" INT
+</code></pre>
+<h3 id="I-O内容"><a href="#I-O内容" class="headerlink" title="I/O内容"></a>I/O内容</h3><p>我们已经知道</p>
+<ol>
+<li>&lt; 输出重定向</li>
+<li>&gt; 输出重定向</li>
+<li>&gt;&gt; 追加输出重定向</li>
+</ol>
+<p>同时我们也可以使用<code>2&gt;</code>来实现标准错误的重定向</p>
+<pre><code class="lang-shell">command 2&gt; file
+</code></pre>
+<p>有时我们也可以这样</p>
+<pre><code class="lang-shell">command &gt;&amp;2
+</code></pre>
+<p><code>&gt;&amp;</code>指名将输出重定向到和指定文件描述符相关联的文件中。</p>
+<ol>
+<li>文件描述符<code>0</code>表示标准输入</li>
+<li>文件描述符<code>1</code>对应标准输出</li>
+<li>文件描述符<code>2</code>对应标准错误</li>
+</ol>
+<p><strong>示例：</strong></p>
+<pre><code class="lang-shell">echo "Invalid number of arguments" &gt;&amp;2
+command &gt; foo 2 &gt;&gt; foo #将标准输出和标准错误输出到同一个文件
+command &gt; foo 2&gt;&amp;1 # 和上述同理
+</code></pre>
+<h2 id="ch13-rolo终极进化版"><a href="#ch13-rolo终极进化版" class="headerlink" title="ch13 rolo终极进化版"></a>ch13 rolo终极进化版</h2><ol>
+<li>不再强行要求一开始用户的主目录下有<code>phone book</code>，同时会检测<code>PHONEBOOK</code>变量是否被设置，如果设置，则不再进行设置，如果没有设置，则将其设置为<code>$HOME/phonebook</code></li>
+<li>检测<code>phonebook</code>文件是否存在，不存在进行交互，是否创建</li>
+<li>新增选项：<code>display</code>功能</li>
+<li>做了撤销判断</li>
+<li>抽出add脚本，做更好的交互</li>
+<li>对于查找、删除、修改选项，做了判空判断</li>
+</ol>
+<h3 id="rolo"><a href="#rolo" class="headerlink" title="rolo"></a><strong>rolo</strong></h3><blockquote>
+<p>使用export设置临时环境环境变量，同时PHONEBOOK使用${paramter:=variable}的形式进行设置（变量已设置不做任何操作，未设置，通过交互判断是新建文件）</p>
+</blockquote>
+<pre><code class="lang-shell">#########################################################################
+# File Name:    rolo.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: 一 11/22 21:09:23 2021
+#########################################################################
+#!/bin/bash
+# 如果PHONEBOOK已经设置，不做任何变动
+: ${PHONEBOOK:=$HOME/phonebook} 
+export PHONEBOOK
+
+if [ ! -e "$PHONEBOOK" ]; then
+    echo "$PHONEBOOK does not exit"
+    echo "Should I create it for you （y/n）? \c"
+    read anwser
+    if [ "$anwser" != y ]; then
+        exit 1
+    fi
+
+    &gt;&gt; $PHONEBOOK || exit 1 # 创建失败 退出
+fi
+
+# 如果提供了参数，则执行查询操作
+if [ "$#" -ne 0 ]; then
+    lu "$@"
+    exit
+fi
+
+
+# 设置中断信号
+trap "continue" SIGINT
+
+# 循环 直到用户已经做出有效选择
+while true; do
+    # 显示菜单
+    echo "
+    Would you like to:
+
+        1. Look someone up
+        2. Add someone to the phone book
+        3. Remove someone fomr the phone book
+        4. Change an entry in the phone book
+        5. List all names and numbers in the phone
+        6. Exit this program
+    Please select one of the above (1-6): \c
+
+    "
+
+    # 查找
+    read choice
+    echo
+
+    case "$choice" in
+        1) 
+            echo "Enter name to look up: \c"
+            read name
+            # 判断是否为空
+            if [ -z "$name" ]; then
+                echo "Lookup ingnored"
+            else
+                lu "$name"
+            fi
+            ;;
+        2)
+            add            
+            ;;
+        3)
+            echo "Enter name to be removed: \c"
+            read name
+            if [ -z "$name" ]; then
+                echo "Remove all ignored"
+            else
+                rem "$name"
+            fi
+            ;;
+        4)
+            echo "Enter name to change: \c"
+            read name
+            if [ -z "$name" ]; then
+                echo "Change ignored"
+            else
+                change "$name"
+            fi
+            ;;
+        5)
+            listall
+            ;;
+        6)
+            exit 0
+            ;;
+        *) 
+            echo "Bad choice"
+            ;;
+    esac
+done
+</code></pre>
+<h3 id="add"><a href="#add" class="headerlink" title="add"></a><strong>add</strong></h3><blockquote>
+</blockquote>
+<pre><code class="lang-shell">#########################################################################
+# File Name:    add.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: 一 11/22 21:19:22 2021
+#########################################################################
+#!/bin/bash
+echo "Type in you new entry"
+echo "When you are done, type just a single Enter on the line"
+
+first=
+entriy=
+
+while true; do
+    echo "&gt;&gt; \c"
+    read line
+
+    if [ -n "$line" ]; then
+        entry="$entry$line^"
+
+        if [ -z "$first" ]; then
+            first=$line
+        fi
+    else
+        break
+    fi
+done
+
+echo "$entry" &gt;&gt; $PHONEBOOK
+sort -o $PHONEBOOK $PHONEBOOK
+echo 
+echo "$first has been added to the phone book"
+</code></pre>
+<h3 id="rem"><a href="#rem" class="headerlink" title="rem"></a><strong>rem</strong></h3><pre><code class="lang-shell">#########################################################################
+# File Name:    rem.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: 一 11/22 21:23:32 2021
+#########################################################################
+#!/bin/bash
+# 删
+name=$1
+
+grep -i "$name" $PHONEBOOK &gt; /tmp/matches$$
+
+if [ ! -s /tmp/matches$$ ]; then
+    echo "I can not find $name int the phone book"
+    exit 1
+fi
+
+while read line
+do
+    display "$line"
+    echo "Remove this entry (y/n) ? \c"
+    read anwser &lt; /dev/tty 
+
+    if [ "$anwser" = y ]; then
+        break
+    fi
+
+done &lt; /tmp/matches$$
+
+rm /tmp/matches$$
+
+if [ "$anwser" = y ]; then
+    if grep -i -v "^$line$" $PHONEBOOK &gt; /tmp/phonebook$$
+    then
+        mv /tmp/phonebook$$ $PHONEBOOK
+        echo "Selected entry has been removed"
+    elif [ ! -s $PHONEBOOK ]; then
+        echo "Note: You now have an empty phone book"
+    else
+        echo "Entry not removed"
+    fi
+fi
+</code></pre>
+<h3 id="lu"><a href="#lu" class="headerlink" title="lu"></a>lu</h3><pre><code class="lang-shell">#########################################################################
+# File Name:    lu.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: 一 11/22 21:21:17 2021
+#########################################################################
+#!/bin/bash
+# 查
+
+name="$1"
+grep "$name" $PHONEBOOK &gt; /tmp/matches$$
+
+if [ ! -s /tmp/matches$$ ]; then
+    echo "I can not fine $name in the phone book"
+else
+    while read line; do
+        display "$line"
+    done &lt; /tmp/matches$$
+fi
+
+rm /tmp/matches$$
+</code></pre>
+<h3 id="change"><a href="#change" class="headerlink" title="change"></a>change</h3><pre><code class="lang-shell">#########################################################################
+# File Name:    change.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: 二 11/23 22:00:55 2021
+#########################################################################
+#!/bin/bash
+
+name=$1
+
+grep -i "$name" $PHONEBOOK &gt; /tmp/mathches$$
+if [ ! -s /tmp/mathches$$ ]; then
+    echo "I can not find $name in the phone book"
+    exit 1
+fi
+
+# 显示匹配出联系人的信息并确认是否要修改
+while read line
+do
+    display "$line"
+    echo "Change this entry (y/n) ? \c"
+    read anwser &lt; /dev/tty 
+
+    if [ "$anwser" = y ]; then
+        break
+    fi
+
+done &lt; /tmp/mathches$$
+
+rm /tmp/mathches$$
+
+if [ "$anwser" != y ]; then
+    exit
+fi
+
+
+# 针对已经确定修改的联系人 启动编辑器
+echo "$line\c" | tr '^' '\012' &gt; /tmp/ed$$
+
+echo "Enter changes whith ${EDITOR:=$(which vim)}"
+trap "" 2 # 撤销也不终止
+$EDITOR /tmp/ed$$
+
+# 删除旧信息，插入新信息
+grep -i -v "^$line$" $PHONEBOOK &gt; /tmp/phonebook$$
+{ tr '\012' '^' &lt; /tmp/ed$$; echo; } &gt;&gt; /tmp/phonebook$$
+
+# 最后的echo被回收到tr转换后的结尾换行符
+sort /tmp/phonebook$$ -o $PHONEBOOK
+rm /tmp/ed$$ /tmp/phonebook$$
+</code></pre>
+<h3 id="listall"><a href="#listall" class="headerlink" title="listall"></a>listall</h3><pre><code class="lang-shell">#########################################################################
+# File Name:    listall.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: 二 11/23 22:09:11 2021
+#########################################################################
+#!/bin/bash
+IFS='^'
+echo "-----------------------------------------------------"
+while read line
+do
+    # 获取第一个和最后一个字段
+    set $line
+
+    # 显示第一个和最后一个字段（相反的顺序）
+    eval printf "\"%-40.40s %s\\n\"" "\"$1\"" "\"\${$#}\""
+done &lt; $PHONEBOOK
+echo "-----------------------------------------------------"
+</code></pre>
+<h3 id="display"><a href="#display" class="headerlink" title="display"></a>display</h3><pre><code class="lang-shell">#########################################################################
+# File Name:    display.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: 二 11/23 21:50:53 2021
+#########################################################################
+#!/bin/bash
+echo
+
+echo "--------------------------------------"
+entry=$1
+IFS="^"
+set $entry
+
+
+for line in "$1" "$2" "$3" "$4" "$5" "$6"
+do
+    printf "| %-34.34s |\n" $line
+done
+echo "|    o                           o   |"
+echo "--------------------------------------"
+echo
+</code></pre>
+<h2 id="实战小项目—-一键配置助手"><a href="#实战小项目—-一键配置助手" class="headerlink" title="实战小项目—-一键配置助手"></a>实战小项目—-一键配置助手</h2><blockquote>
+<p>有时候，我们在切换不同设备时，对于同类型的环境，经常需要我们进行重复的配置，由此，个人计划编写一个配置助手，用于一键配置自己所需要的环境</p>
+</blockquote>
+<p>详见<a href="https://github.com/Winniekun/my-config-files" target="_blank" rel="noopener">我的配置中心</a></p>
+<pre><code class="lang-shell">#########################################################################
+# File Name:    configs.sh
+# Author:       weikunkun
+# mail:         kongwiki@163.com
+# Created Time: Tue 16 Nov 2021 04:20:09 PM CST
+#########################################################################
+#!/bin/bash
+
+echo ""
+echo " ========================================================= "
+echo " |            Linux init.sh 环境部署脚本 V 1.1           | "
+echo " ========================================================= "
+echo "                      author：weikunkun                    "
+echo "                 https://github.com/Winniekun              "
+echo -e "\n"
+
+# 由于学艺不精，经常把自己的服务器搞崩，并且定位不到root case
+# 所以经常会重装系统，痛定思痛，决定写一个一劳永逸的初始化安装配置脚本
+# LEVEL=base/dev/hacker/full
+#       base: 基础配置（zsh、vim、git、wget、curl等）
+#       dev: 开发环境配置（Java、Go、Kafka、MySQL、Redis等）
+#       hacker: 常见的网络安全工具（sqlmap、nmap、httpx、xray等）
+#       full: 一把梭哈
+
+LEVEL='full'
+CUR_PATH=$(pwd)
+
+# zsh &amp; oh-my-zsh安装
+config_zsh() {
+    if command -v zsh &gt;/dev/null 2&gt;&amp;1
+    then
+        echo -e "检测到zsh 已安装"
+    else 
+        apt install -y zsh &gt;/dev/null 2&gt;&amp;1
+    fi    
+    # install_ohmyzsh
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    # sh -c "$(wget -O- https://pastebin.com/raw/FAFw08G6)"  
+    echo -e "shell切换为zsh"
+    chsh -s $(which zsh)
+    # 设置主题，新增插件
+    sed -i 's@ZSH_THEME="robbyrussell"@ZSH_THEME="awesomepanda"@g' ~/.zshrc 
+    sed -i 's@plugins=(.*)@plugins=(git extract zsh-syntax-highlighting autojump zsh-autosuggestions)@g' ~/.zshrc
+    {
+        # 使用bat替代cat 
+        echo 'alias cat="/usr/bin/batcat"'
+        echo 'alias myip="curl ifconfig.io/ip"'
+        echo 'alias c=clear'
+    } &gt;&gt; ~/.zshrc
+
+    if [ -d "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]
+    then
+        echo -e "zsh-highlighting 已经安装"
+    else
+        echo -e "下载安装zsh-highlighting"
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    fi
+
+    if [ -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]
+    then
+        echo -e "zsh-autosuggestions 已经安装"
+    else
+        echo -e "下载安装zsh-autosuggestions"
+        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    fi
+
+    # 声明终端类型
+    echo "export TERM=xterm-256color" &gt;&gt; ~/.zshrc    
+    # 设置建议命令的颜色
+    echo ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=10'" &gt;&gt; ~/.zshrc     
+    # 重载配置
+    source ~/.zshrc 
+}
+# oh-my-zsh安装
+install_ohmyzsh() {
+    echo -e "开始配置oh-my-zsh"
+    if [ -d "$HOME/.oh-my-zsh/" ]
+    then
+        test
+    fi
+    if [ -e "install.sh" ] 
+    then
+        rm install.sh
+    fi    
+
+     wget -O install.sh https://pastebin.com/raw/FAFw08G6           
+    sed -i 's@REPO=${REPO:-ohmyzsh/ohmyzsh}@REPO=${REPO:-mirrors/oh-my-zsh}@g' install.sh
+    sed -i 's@REMOTE=${REMOTE:-https://github.com/${REPO}.git}@REMOTE=${REMOTE:-https://gitee.com/${REPO}.git}@g' install.sh
+
+    sh install.sh
+}
+# Vim 安装 &amp; 配置
+install_vim() {
+    if [ ! -d "$CUR_PATH/PowerVim" ] 
+    then        
+        git clone https://github.com/youngyangyang04/PowerVim.git
+    else
+        VIM_PATH=$CUR_PATH/PowerVim
+        cd $VIM_PATH &amp;&amp; sh install.sh
+        # 一些问题修复 （语言问题、ctag等）
+        fix_powervim
+    fi
+    cd $CUR_PATH
+}
+# PowerVim的一些小问题修复
+fix_powervim() {
+    # 系统中添加中文包
+    echo -e "修复PowerVim一些小问题ing"
+    LOCAL_FILE=/var/lib/locales/supported.d/local
+    if [ ! -e "$LOCAL_FILE" ]
+    then
+        echo -e "创建 $LOCAL_FILE"
+        touch $LOCAL_FILE    
+    else 
+        rm $LOCAL_FILE
+    fi
+    {
+        echo "en_US.UTF-8 UTF-8"
+        echo "zh_CN.UTF-8 UTF-8"
+        echo "zh_CN.GBK GBK"
+        echo "zh_CN GB2312"
+    } &gt;&gt; $LOCAL_FILE
+sudo locale-gen
+{
+    echo 'let Tlist_Show_One_File=1 "不同时显示多个文件的tag，只显示当前文件的'
+    echo 'let Tlist_Exit_OnlyWindow=1 "如果taglist窗口是最后一个窗口，则退出vim'
+    echo 'let Tlist_Ctags_Cmd="/usr/bin/ctags" "将taglist与ctags关联'
+} &gt;&gt; ~/.vimrc
+echo -e "修复成功"
+}
+# Git 安装 &amp; 配置
+intall_git() {
+    if command -v git &gt;/dev/null 2&gt;&amp;1
+    then 
+        # 配置
+        echo -e "检测到已经安装Git，开始Git配置"
+        config_git
+    else
+        # 安装 
+        apt install -y git &gt;/dev/null 2&gt;&amp;1
+        # 配置
+        echo -e "开始Git配置"
+        config_git
+    fi
+}
+# git相关的配置
+config_git() {
+    # 用户信息
+    git config --global user.name "weikunkun"
+    git config --global user.email "kongwiki@163.com"
+    # core
+    git config --global core.editor vim   
+    # color
+    git config --global color.ui true
+    git config --global color.status "auto"
+    git config --global color.branch "auto"
+    # merge
+    git config --global merge.tool "vimdiff"
+    # alias
+    git config --global alias.co "checkout"
+    git config --global alias.br "branch"  
+    git config --global alias.ci "commit"
+    git config --global alias.st "status"
+    git config --global alias.last "log -1 HEAD"
+}
+# python3 配置
+install_python3() {
+    if [ -d "$HOME/.pip" ]
+    then
+        echo -e "$HOME/.pip 已经创建"
+    else
+        mkdir ~/.pip/
+    fi
+    echo -e "[global]\n" &gt;~/.pip/pip.conf
+    # 替换PIP源 速度更快
+    echo -e "index-url = https://pypi.tuna.tsinghua.edu.cn/simple" &gt;&gt;~/.pip/pip.conf
+    echo -e "开始安装Python常见库"
+    pip3 install lxml &gt;/dev/null 2&gt;&amp;1
+    pip3 install ipaddress &gt;/dev/null 2&gt;&amp;1
+    pip3 install python-dateutil &gt;/dev/null 2&gt;&amp;1
+    pip3 install apscheduler &gt;/dev/null 2&gt;&amp;1
+    pip3 install mycli &gt;/dev/null 2&gt;&amp;1
+    pip3 install aiohttp &gt;/dev/null 2&gt;&amp;1
+    pip3 install datetime &gt;/dev/null 2&gt;&amp;1
+    pip3 install timeit &gt;/dev/null 2&gt;&amp;1
+    pip3 install docker-compose &gt;/dev/null 2&gt;&amp;1
+    pip3 install chardet &gt;/dev/null 2&gt;&amp;1
+    pip3 install supervisor &gt;/dev/null 2&gt;&amp;1
+    pip3 install python-dateutil &gt;/dev/null 2&gt;&amp;1
+    pip3 install requests &gt;/dev/null 2&gt;&amp;1
+}
+# Java 配置
+install_java() {
+    echo -e "开始配置Java环境"
+    if command -v java &gt;/dev/null 2&gt;&amp;1 
+    then
+        # 已经配置，不做操作
+        echo -e "Java环境已经配置，即将跳过"
+        test 
+    else 
+        echo -e "手动配置Java环境"
+        if [ ! -e "jdk-11_linux-x64_bin.tar.gz" ]
+        then
+            wget https://repo.huaweicloud.com/java/jdk/11+28/jdk-11_linux-x64_bin.tar.gz
+        fi
+        tar -xzvf jdk-11_linux-x64_bin.tar.gz -C /opt &gt;/dev/null 2&gt;&amp;1
+        echo "export JAVA_HOME=/opt/jdk-11" &gt;&gt; /etc/zsh/zprofile 
+        echo "export PATH=${JAVA_HOME}/bin:$PATH" &gt;&gt; /etc/zsh/zprofile 
+        source /etc/zsh/zprofile
+        echo -e "Java环境配置完成"
+    fi
+}
+# 系统配置
+base_config() {
+    echo -e "apt install ag ..."
+    apt install -y silversearcher-ag &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt install zh-hans 语言库"
+    apt install -y language-pack-zh-hans &gt;/dev/null 2&gt;&amp;1     
+    sudo apt-get install fonts-droid-fallback ttf-wqy-zenhei ttf-wqy-microhei fonts-arphic-ukai fonts-arphic-uming &gt;/dev/null 2&gt;&amp;1
+    ulimit -n 10240
+    echo -e "开始配置随机SSH 端口"
+    SSH_PORT=$(cat /etc/ssh/sshd_config | ag -o '(?&lt;=Port )\d+')
+    if [ $SSH_PORT -eq 22 ] 
+    then
+        SSH_NEW_PORT=$(shuf -i 10000-30000 -n1)
+        echo -e "SSHD Port: ${SSH_NEW_PORT}" | tee -a ssh_port.txt
+        sed -E -i "s/(Port|#\sPort|#Port)\s.{1,5}$/Port ${SSH_NEW_PORT}/g" /etc/ssh/sshd_config
+    fi
+    # apt更新
+    echo -e "apt update ..."
+    apt update &gt;/dev/null 2&gt;&amp;1
+    # 常用软件安装
+    cmdline=(
+        "which lsof"
+        "which man"
+        "which tmux"
+        "which htop"
+        "which autojump"
+        "which iotop"
+        "which ncdu"
+        "which jq"
+        "which telnet"
+        "which p7zip"
+        "which axel"
+        "which rename"
+        "which vim"
+        "which sqlite3"
+        "which lrzsz"
+        "which git"
+        "which curl"
+        "which wget"
+        "which bat"
+        "which autojump"
+    )
+    for prog in "${cmdline[@]}"; do
+        soft=$($prog)
+        if [ "$soft" ] &gt;/dev/null 2&gt;&amp;1; then
+            echo -e "$soft 已安装！"
+        else
+            name=$(echo -e "$prog" | ag -o '[\w-]+$')
+            apt install -y ${name} &gt;/dev/null 2&gt;&amp;1
+            echo -e "${name} 安装中......"
+        fi
+    done
+    # git/vim/zsh/cur/wget配置
+    echo -e "正在配置git"
+    config_git
+    echo -e "正在配置vim"
+    install_vim
+    echo -e "正在配置zsh"
+    cd $CUR_PATH
+    config_zsh
+    echo -e "正在配置curl"
+    #curl https://raw.githubusercontent.com/al0ne/vim-for-server/master/.curlrc &gt;~/.curlrc &gt;/dev/null 2&gt;&amp;1
+    echo -e "正在配置wget"
+    #curl https://raw.githubusercontent.com/al0ne/vim-for-server/master/.wgetrc &gt;~/.wgetrc &gt;/dev/null 2&gt;&amp;1
+}
+#  开发环境配置
+dev_config() {
+    # 常见库配置
+    echo -e "apt-get install -y libgeoip1"
+    apt-get install -y libgeoip1 &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y libgeoip-dev"
+    apt-get install -y libgeoip-dev &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y openssl"
+    apt-get install -y openssl &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y libcurl3-dev"
+    apt-get install -y libcurl3-dev &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y libssl-dev"
+    apt-get install -y libssl-dev &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y php"
+    apt-get install -y php &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y net-tools"
+    apt-get install -y net-tools &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y ifupdown"
+    apt-get install -y ifupdown &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y tree"
+    apt-get install -y tree &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y cloc"
+    apt-get install -y cloc &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y python3-pip"
+    apt-get install -y python3-pip &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y gcc"
+    apt-get install -y gcc &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y gdb"
+    apt-get install -y gdb &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y g++"
+    apt-get install -y g++ &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y locate"
+    apt-get install -y locate &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y shellcheck"
+    apt-get install -y shellcheck &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y redis-cli"
+    apt-get install -y redis-cli &gt;/dev/null 2&gt;&amp;1
+    echo -e "apt-get install -y redis-server"
+    apt-get install -y redis-server &gt;/dev/null 2&gt;&amp;1
+    install_java
+    install_python3
+    if command -v docker &gt;/dev/null 2&gt;&amp;1
+    then
+        echo "检测到已经安装docker 将跳过Docker的安装"
+    else 
+        echo -e "开始安装Docker"
+        curl -fsSL https://get.docker.com -o get-docker.sh
+    fi
+    # Go 安装和配置
+    if command -v go &gt;/dev/null 2&gt;&amp;1
+    then
+        echo -e "检测到已经安装Go 将跳过Go的安装"
+    else 
+        echo -e "开始安装Go"
+        sh -c "$(wget -O- https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh)"
+    fi
+    # Nodejs 配置
+    if command -v node &gt;/dev/null 2&gt;&amp;1; then
+        echo -e "检测到已安装Nodejs 将跳过！"
+    else
+        echo -e "开始安装Nodejs"
+        curl -fsSL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh
+        apt install -y nodejs &gt;/dev/null 2&gt;&amp;1
+    fi 
+    # TODO Redis、MySQL
+}
+# 网安配置
+hacker_config() {
+    echo -e "正在安装 nmap ..."
+    apt install -y nmap &gt;/dev/null 2&gt;&amp;1
+    echo -e "正在安装 netcat ..."
+    apt install -y netcat &gt;/dev/null 2&gt;&amp;1
+    echo -e "正在安装 masscan ..."
+    apt install -y masscan &gt;/dev/null 2&gt;&amp;1
+    echo -e "正在安装 zmap ..."
+    apt install -y zmap &gt;/dev/null 2&gt;&amp;1
+    echo -e "正在安装 dnsutils ..."
+    apt install -y dnsutils &gt;/dev/null 2&gt;&amp;1
+    echo -e "正在安装 wfuzz ..."
+    pip install wfuzz &gt;/dev/null 2&gt;&amp;1
+    # 安装 weevely3
+    if [ -d "/opt/weevely3" ]; then
+        echo -e "检测到weevely3已安装将跳过"
+    else
+        echo -e "正在克隆 weevely3 ..."
+        cd /opt &amp;&amp; git clone https://github.com/epinna/weevely3.git &gt;/dev/null 2&gt;&amp;1
+        echo 'alias weevely=/opt/weevely3/weevely.py' &gt;&gt;~/.zshrc
+    fi
+    # 安装 whatweb
+    if [ -d "/opt/whatweb" ]; then
+        echo -e "检测到whatweb已安装将跳过"
+    else
+        echo -e "正在克隆 whatweb ..."
+        cd /opt &amp;&amp; git clone https://github.com/urbanadventurer/WhatWeb.git &gt;/dev/null 2&gt;&amp;1
+        echo 'alias whatweb=/opt/WhatWeb/whatweb' &gt;&gt;~/.zshrc
+    fi
+    # 安装 OneForAll
+    if [ -d "/opt/OneForAll" ]; then
+        echo -e "检测到OneForAll已安装将跳过"
+    else
+        echo -e "正在克隆 OneForAll ..."
+        cd /opt &amp;&amp; git clone https://github.com/shmilylty/OneForAll.git &gt;/dev/null 2&gt;&amp;1
+    fi
+    # 安装 dirsearch
+    if [ -d "/opt/dirsearch" ]; then
+        echo -e "检测到dirsearch已安装将跳过"
+    else
+        echo -e "正在克隆 dirsearch ..."
+        cd /opt &amp;&amp; git clone https://github.com/shmilylty/OneForAll.git &gt;/dev/null 2&gt;&amp;1
+    fi
+    # 安装 httpx
+    if command -v httpx &gt;/dev/null 2&gt;&amp;1; then
+        echo -e "检测到已安装httpx 将跳过！"
+    else
+        echo -e "开始安装Httpx"
+        GO111MODULE=on go get -u -v github.com/projectdiscovery/httpx/cmd/httpx &gt;/dev/null 2&gt;&amp;1
+    fi
+    # 安装 subfinder
+    if command -v subfinder &gt;/dev/null 2&gt;&amp;1; then
+        echo -e "检测到已安装subfinder 将跳过！"
+    else
+        echo -e "开始安装subfinder"
+        GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder &gt;/dev/null 2&gt;&amp;1
+    fi
+    # 安装 nuclei
+    if command -v nuclei &gt;/dev/null 2&gt;&amp;1; then
+        echo -e "检测到已安装nuclei 将跳过！"
+    else
+        echo -e "开始安装nuclei"
+        GO111MODULE=on go get -u -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei &gt;/dev/null 2&gt;&amp;1
+    fi
+    # 安装 naabu
+    if command -v naabu &gt;/dev/null 2&gt;&amp;1; then
+        echo -e "检测到已安装 naabu 将跳过！"
+    else
+        echo -e "开始安装 naabu"
+        GO111MODULE=on go get -u -v github.com/projectdiscovery/naabu/v2/cmd/naabu &gt;/dev/null 2&gt;&amp;1
+    fi
+    # 安装 dnsx
+    if command -v dnsx &gt;/dev/null 2&gt;&amp;1; then
+        echo -e "检测到已安装 dnsx 将跳过！"
+    else
+        echo -e "开始安装 dnsx"
+        GO111MODULE=on go get -u -v github.com/projectdiscovery/dnsx/cmd/dnsx &gt;/dev/null 2&gt;&amp;1
+    fi
+    # 安装 subjack
+    if command -v subjack &gt;/dev/null 2&gt;&amp;1; then
+        echo -e "检测到已安装 subjack 将跳过！"
+    else
+        echo -e "开始安装 subjack"
+        go get github.com/haccer/subjack &gt;/dev/null 2&gt;&amp;1
+    fi
+    # 安装 ffuf
+    if command -v ffuf &gt;/dev/null 2&gt;&amp;1; then
+        echo -e "检测到已安装 ffuf 将跳过！"
+    else
+        echo -e "开始安装 ffuf"
+        go get -u github.com/ffuf/ffuf &gt;/dev/null 2&gt;&amp;1
+    fi
+}
+CUR_USER=$(whoami)
+if [ $CUR_USER != 'root' ]
+then
+    echo "请切换到root用户再执行该脚本"
+fi
+if [ $LEVEL = 'base' ] 
+then
+    base_config
+    chsh -s /bin/zsh 
+fi
+if [ $LEVEL = 'dev' ]
+then
+    base_config
+    dev_config
+    chsh -s /bin/zsh
+fi
+if [ $LEVEL = 'hacker' ] 
+then
+    hacker_config
+fi
+if [ $LEVEL = 'full'  ]
+then
+    base_config
+    dev_config
+    hacker_config
+    chsh -s /bin/zsh
+fi
+echo -e "环境全部配置完成，开始玩儿吧"
+</code></pre>
+<h3 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h3><ul>
+<li><p>[ ] zsh</p>
+<p>一直没有成功配置</p>
+</li>
+<li><p>[x] vim</p>
+</li>
+<li><p>[x] git</p>
+</li>
+<li><p>[x] Java</p>
+</li>
+<li><p>[ ] MySQL</p>
+</li>
+<li><p>[x] Redis</p>
+</li>
+<li><p>[ ] Kafka</p>
+</li>
+</ul>
+<h3 id="开发中的遇到的问题"><a href="#开发中的遇到的问题" class="headerlink" title="开发中的遇到的问题"></a>开发中的遇到的问题</h3><p><strong>$@和$*在没有双引号括起来的时候行为是一样的，而当使用双引号括起来的时候是不一样的。</strong></p>
+<h4 id="空值问题："><a href="#空值问题：" class="headerlink" title="空值问题："></a>空值问题：</h4><pre><code>shell中可能经常能看到：&gt;/dev/null 2&gt;&amp;1 
+
+命令的结果可以通过%&gt;的形式来定义输出
+
+分解这个组合：“&gt;/dev/null 2&gt;&amp;1” 为五部分。
+
+1：&gt; 代表重定向到哪里，例如：echo "123" &gt; /home/123.txt
+2：/dev/null 代表空设备文件
+3：2&gt; 表示stderr标准错误
+4：&amp; 表示等同于的意思，2&gt;&amp;1，表示2的输出重定向等同于1
+5：1 表示stdout标准输出，系统默认值是1，所以"&gt;/dev/null"等同于 "1&gt;/dev/null"
+
+因此，&gt;/dev/null 2&gt;&amp;1 也可以写成“1&gt; /dev/null 2&gt; &amp;1”
+
+那么本文标题的语句执行过程为：
+1&gt;/dev/null ：首先表示标准输出重定向到空设备文件，也就是不输出任何信息到终端，说白了就是不显示任何信息。
+2&gt;&amp;1 ：接着，标准错误输出重定向 到 标准输出，因为之前标准输出已经重定向到了空设备文件，所以标准错误输出也重定向到空设备文件。
+</code></pre><h4 id="tee"><a href="#tee" class="headerlink" title="tee"></a>tee</h4><blockquote>
+<p>从标准输入读取数据并重定向到标准输出和文件。</p>
+</blockquote>
+<pre><code> tee -a ssh_port.txt
+</code></pre><h4 id="shuf"><a href="#shuf" class="headerlink" title="shuf"></a>shuf</h4><blockquote>
+<p><a href="https://wangchujiang.com/linux-command/c/shuf.html" target="_blank" rel="noopener"> 产生随机的排列。</a></p>
+</blockquote>
+<pre><code class="lang-shell"># 随机输出10000~30000内的一个数字
+shuf -i 10000-30000 -n 1
+</code></pre>
+<h4 id="判断文件是否存在"><a href="#判断文件是否存在" class="headerlink" title="判断文件是否存在"></a>判断文件是否存在</h4><pre><code class="lang-shell">if [ -d "/filenam" ]
+then 
+    自己逻辑
+if
+</code></pre>
+<h1 id="references"><a href="#references" class="headerlink" title="references"></a>references</h1><ul>
+<li><a href="https://book.douban.com/subject/1157259/" target="_blank" rel="noopener">Unix Shell编程（第三版）</a></li>
+<li><a href="https://www.ruanyifeng.com/blog/2020/04/bash-tutorial.html" target="_blank" rel="noopener">Bash 脚本教程</a></li>
+<li><a href="https://medium.com/@leedowthwaite/why-most-people-only-think-they-understand-wildcards-63bb9c2024ab" target="_blank" rel="noopener">Think You Understand Wildcards? Think Again</a></li>
+<li><a href="https://appcodelabs.com/advanced-wildcard-patterns-most-people-dont-know" target="_blank" rel="noopener">Advanced Wildcard Patterns Most People Don’t Know</a> </li>
+<li><a href="http://c.biancheng.net/view/773.html" target="_blank" rel="noopener">Shell变量的作用域：Shell全局变量、环境变量和局部变量</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2021-11-27T09:00:20.839Z" itemprop="dateUpdated">2021-11-27 17:00:20</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="https://winniekun.github.io">
+            <img src="https://avatars.githubusercontent.com/u/19886738?v=4" alt="weikunkun">
+            weikunkun
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" rel="tag">效率工具</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/shell-programming/&title=《效率工具/shell-programming》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/shell-programming/&title=《效率工具/shell-programming》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/shell-programming/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《效率工具/shell-programming》 — Wkkの笔记&url=https://winniekun.github.io/shell-programming/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/shell-programming/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/vim-programming/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">vim使用</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/better-programmer/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">程序员进阶攻略</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+            <p>
+                
+                    <span>
+                        <a href="/atom.xml" target="_blank" class="rss" title="rss">
+                            <i class="icon icon-lg icon-rss"></i>
+                        </a>
+                    </span>
+                    
+                        <span>
+                            博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a>
+                        </span>
+            </p>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>
+                weikunkun &copy;
+                    
+                        2015 -
+                            
+                                2022
+            </span>
+            <span>
+                
+                        Power by
+                        <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+                        <a href="https://github.com/abelsu7/hexo-theme-indigo-plus" target="_blank">indigo plus</a>
+                        <p>Hosted by <a href="https://pages.github.com" target="_blank" style="font-weight: bold">Github Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+<a href="javascript:;" id="gobottom" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-comments"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/shell-programming/&title=《效率工具/shell-programming》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/shell-programming/&title=《效率工具/shell-programming》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/shell-programming/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《效率工具/shell-programming》 — Wkkの笔记&url=https://winniekun.github.io/shell-programming/&via=https://winniekun.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/shell-programming/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJ0lEQVR42u3aS27DMAwFwNz/0u6miwJtnEcyDmpptAoCx9JkQYifxyNex4/1+/vkyfM3935bXhgYGLdlHKfr2QbPnqzucv625GwYGBj7MJJQmITF8816e50/j4GBgXH+TP6eJIhjYGBgvJcx+VUeyjEwMDCqSWw1Ne0F0MtzcQwMjBsyeuX7z3y+pL+BgYFxK8ZRXMmFL28nzM/z/R4MDIylGdVS2mQwYpSgJsMfGBgYizLy8JeTqg2Aaqvgj28wMDC2YUxCYa/clpfYXrQQMDAwlma86zLXK+7Pr48YGBg7MKpNwaTQ9t6mZjTkgYGBsQGjOgYxH8jIk9hoFwwMjKUZSRjtjWLkBbg8NL84OQYGxmaM/IhJISz5U+bNCQwMjFUZvbLXvHD2ZhgGBsbSjGqqWR3Yqh40b51iYGDsw8jT16vbk6PhMAwMjKUZecDNy/S90Jw3Kl7sgoGBsRwjr8klIXiS9FaT2GZpEQMD44aM65LY3vBEvvuHcnEMDIx/w6hezqol/l65vxr0MTAwdmBMMNWj9Mp85XsuBgbG0oxemaxajMt3LPdgMTAwFmIcxZUzJp2KvEWBgYGxA6Ma5hJkrwDXq5uVMRgYGLdl5EE2D6Dz5mX1D8LAwNiBkRyod7GrDmpUW6QYGBgYyec8OM6T22jYAgMDA6M1hNEb/8ovrxgYGDswqs2A6shFL2XNr6QYGBhrM0apYwuTXCh7wxwYGBjLMb4ATGgsuuYw8DAAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/node-waves@0.7.6/src/js/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+<script src="/js/prism.min.js?v=1.7.2"></script>
+<script src="/js/prism-vim.min.js?v=1.7.2"></script>
+</body>
+</html>

@@ -14,27 +14,27 @@
     
     
     
-    <title>2021年书单【年汇总】 | Wkkの笔记 | 好记性不如烂键盘</title>
+    <title>Linux常见命令汇总 | Wkkの笔记 | 好记性不如烂键盘</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="书单">
-    <meta name="description" content="我的能力就这么多，我若全心工作，则必然忽略生活；我若用心生活，则必然一事无成；我若两者兼顾，又难免平庸 摘自鶸道场  趁我还能写得动代码看进书的年纪，努力一回，看看这平庸的资质能发挥几分。">
+    <meta name="keywords" content="Linux">
+    <meta name="description" content="前言 最近在折腾自己的服务器，干些有趣的事情，记录下，一些重复性高，但是又记不住的内容  Root免密登陆 腾讯云默认给的是 ubuntu 账号，无法直接登陆 root 账号，导致没办法统一管理几个服务器，所以需要重新配置下  步骤 首先用 ubuntu 或者其他的账号登录主机。 然后按照提示输入即可 sudo passwd root   其次修改 &#x2F;etc&#x2F;ssh&#x2F;sshd_config，wq">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2021年书单【年汇总】">
-<meta property="og:url" content="https://winniekun.github.io/2021%E5%B9%B4%E4%B9%A6%E5%8D%95%E3%80%90%E5%B9%B4%E6%B1%87%E6%80%BB%E3%80%91/index.html">
+<meta property="og:title" content="Linux常见命令汇总">
+<meta property="og:url" content="https://winniekun.github.io/Linux-command/index.html">
 <meta property="og:site_name" content="Wkkの笔记">
-<meta property="og:description" content="我的能力就这么多，我若全心工作，则必然忽略生活；我若用心生活，则必然一事无成；我若两者兼顾，又难免平庸 摘自鶸道场  趁我还能写得动代码看进书的年纪，努力一回，看看这平庸的资质能发挥几分。">
+<meta property="og:description" content="前言 最近在折腾自己的服务器，干些有趣的事情，记录下，一些重复性高，但是又记不住的内容  Root免密登陆 腾讯云默认给的是 ubuntu 账号，无法直接登陆 root 账号，导致没办法统一管理几个服务器，所以需要重新配置下  步骤 首先用 ubuntu 或者其他的账号登录主机。 然后按照提示输入即可 sudo passwd root   其次修改 &#x2F;etc&#x2F;ssh&#x2F;sshd_config，wq">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://github.githubassets.com/images/icons/emoji/unicode/2b50.png?v8">
-<meta property="article:published_time" content="2021-01-01T07:01:10.000Z">
-<meta property="article:modified_time" content="2021-10-14T06:34:49.619Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20221007213028636.png">
+<meta property="article:published_time" content="2022-10-07T13:24:10.000Z">
+<meta property="article:modified_time" content="2022-10-07T13:35:30.360Z">
 <meta property="article:author" content="weikunkun">
-<meta property="article:tag" content="书单">
+<meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://github.githubassets.com/images/icons/emoji/unicode/2b50.png?v8">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20221007213028636.png">
     
         <link rel="alternate" type="application/atom+xml" title="Wkkの笔记" href="/atom.xml">
     
@@ -134,7 +134,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">2021年书单【年汇总】</div>
+        <div class="flex-col header-title ellipsis">Linux常见命令汇总</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -156,15 +156,15 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">2021年书单【年汇总】</h1>
+        <h1 class="title">Linux常见命令汇总</h1>
         <h5 class="subtitle">
             
-                <time datetime="2021-01-01T07:01:10.000Z" itemprop="datePublished" class="page-time">
-  2021-01-01
+                <time datetime="2022-10-07T13:24:10.000Z" itemprop="datePublished" class="page-time">
+  2022-10-07
 </time>
 
 
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E7%A2%8E%E7%A2%8E%E5%BF%B5/">碎碎念</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux/">Linux</a></li></ul>
 
             
         </h5>
@@ -181,21 +181,21 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#书籍相关"><span class="post-toc-number">1.</span> <span class="post-toc-text">书籍相关</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#论文"><span class="post-toc-number">2.</span> <span class="post-toc-text">论文</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#电影、电视剧、综艺、纪录片"><span class="post-toc-number">3.</span> <span class="post-toc-text">电影、电视剧、综艺、纪录片</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Root免密登陆"><span class="post-toc-number">2.</span> <span class="post-toc-text">Root免密登陆</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#步骤"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">步骤</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#免密登陆"><span class="post-toc-number">3.</span> <span class="post-toc-text">免密登陆</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#步骤-1"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">步骤</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
 
-<article id="post-碎碎念/2021年书单【年汇总】"
+<article id="post-Linux-command"
   class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">2021年书单【年汇总】</h1>
+        <h1 class="post-card-title">Linux常见命令汇总</h1>
         <div class="post-meta">
-            <time class="post-time" title="2021-01-01 15:01:10" datetime="2021-01-01T07:01:10.000Z"  itemprop="datePublished">2021-01-01</time>
+            <time class="post-time" title="2022-10-07 21:24:10" datetime="2022-10-07T13:24:10.000Z"  itemprop="datePublished">2022-10-07</time>
 
             
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E7%A2%8E%E7%A2%8E%E5%BF%B5/">碎碎念</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux/">Linux</a></li></ul>
 
 
 
@@ -208,104 +208,61 @@
             
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <blockquote>
-<p>我的能力就这么多，我若全心工作，则必然忽略生活；我若用心生活，则必然一事无成；我若两者兼顾，又难免平庸 <a href="https://blog.jamespan.me/" target="_blank" rel="noopener">摘自鶸道场</a></p>
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>最近在折腾自己的服务器，干些有趣的事情，记录下，一些重复性高，但是又记不住的内容</p>
 </blockquote>
-<p>趁我还能写得动代码看进书的年纪，努力一回，看看这平庸的资质能发挥几分。</p>
-<a id="more"></a>
-<h2 id="书籍相关"><a href="#书籍相关" class="headerlink" title="书籍相关"></a>书籍相关</h2><ul>
-<li>程序员代码面试指南- IT名企算法与数据结构题目最优解<ul>
-<li>计划的是去年年底开始刷，然后计划赶不上变化</li>
-<li>公司安排的1230的任务挺复杂的，还挺多，就没有开始搞</li>
-<li>不过终于在31号，下定决心先把书买了，然后1号正式开刷</li>
-</ul>
+<h2 id="Root免密登陆"><a href="#Root免密登陆" class="headerlink" title="Root免密登陆"></a>Root免密登陆</h2><blockquote>
+<p>腾讯云默认给的是 ubuntu 账号，无法直接登陆 root 账号，导致没办法统一管理几个服务器，所以需要重新配置下</p>
+</blockquote>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li><p>首先用 ubuntu 或者其他的账号登录主机。 然后按照提示输入即可</p>
+<pre><code class="lang-shell">sudo passwd root
+</code></pre>
 </li>
-<li><del>Linux/Unix系统编程手册</del></li>
-<li><del>Redis的设计与实现</del></li>
-<li>C++ Primer<ul>
-<li>转C++和Go了要</li>
-</ul>
+<li><p>其次修改 /etc/ssh/sshd_config，wq 保存 接下来你就可以使用 root 登录。</p>
+<pre><code>sudo vim /etc/ssh/sshd_config
+</code></pre></li>
+</ol>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://cdn.jsdelivr.net/gh/Winniekun/cloudImg@master/uPic/image-20221007213028636.png" alt="image-20221007213028636" title="">
+                </div>
+                <div class="image-caption">image-20221007213028636</div>
+            </figure>
+<h2 id="免密登陆"><a href="#免密登陆" class="headerlink" title="免密登陆"></a>免密登陆</h2><h3 id="步骤-1"><a href="#步骤-1" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li><p>配置文件</p>
+<p>创建文件 ~/.ssh/config，然后在文件中输入如下内容，之后再使用服务器时，可以直接使用别名myserver1、myserver2。</p>
+<pre><code>Host myserver1
+    HostName IP地址或域名
+    User 用户名
+
+Host myserver2
+    HostName IP地址或域名
+    User 用户名
+</code></pre></li>
+<li><p>密钥登录</p>
+<p>创建密钥：</p>
+<pre><code class="lang-shell">ssh-keygen
+</code></pre>
+<p>执行结束后，~/.ssh/目录下会多两个文件：</p>
+<ol>
+<li>id_rsa：私钥</li>
+<li>id_rsa.pub：公钥</li>
+</ol>
 </li>
-<li>Go 程序涉及语言</li>
-<li>设计模式的艺术<ul>
-<li>感觉代码写的怪怪的，不符合正常编码习惯</li>
-</ul>
+</ol>
+<p>​        之后想免密码登录哪个服务器，就将公钥传给哪个服务器即可。例如，想免密登录myserver服务器。则将公钥中的内容，复制到myserver中的<code>~/.ssh/authorized_keys</code>文件里即可。</p>
+<ol>
+<li><p>也可以使用如下命令一键添加公钥：</p>
+<pre><code class="lang-shell">ssh-copy-id myserver
+</code></pre>
 </li>
-<li>操作系统导论<ul>
-<li>我这渣渣英语能力</li>
-</ul>
+<li><p>使用</p>
+<pre><code class="lang-shell">ssh myserver
+</code></pre>
 </li>
-<li>深入理解Java虚拟机：JVM高级特性与最佳实践<ul>
-<li>看来是成长了，研一上看的时候，完全看不懂</li>
-<li>现在也是常看常新</li>
-</ul>
-</li>
-<li><del>CSAPP</del><ul>
-<li>YYDS</li>
-</ul>
-</li>
-<li>深入理解Kafka：核心设计与实践原理<ul>
-<li>基础 + 经验总结类型，挺好</li>
-</ul>
-</li>
-<li>UNIX网络编程卷1</li>
-<li>Spring揭秘<ul>
-<li>写的真的好</li>
-<li>不愧是国内技术书里面少有的上9<span class="github-emoji"><span>⭐</span><img src="https://github.githubassets.com/images/icons/emoji/unicode/2b50.png?v8" aria-hidden="true" onerror="this.parent.classList.add('github-emoji-fallback')"></span>的图书</li>
-</ul>
-</li>
-<li><del>MySQL技术内幕(InnoDB存储引擎)</del><ul>
-<li>精进MySQL必备</li>
-</ul>
-</li>
-<li>Java 编程的逻辑<ul>
-<li>很有条理，但是有些知识点自己有些先入为主的坏习惯，所以有些地方不太能赞同</li>
-</ul>
-</li>
-<li>TCP&amp;IP网络编程<ul>
-<li>我的第二本C入门书籍~</li>
-</ul>
-</li>
-</ul>
-<h2 id="论文"><a href="#论文" class="headerlink" title="论文"></a>论文</h2><h2 id="电影、电视剧、综艺、纪录片"><a href="#电影、电视剧、综艺、纪录片" class="headerlink" title="电影、电视剧、综艺、纪录片"></a>电影、电视剧、综艺、纪录片</h2><ul>
-<li>一点就通<ul>
-<li>合伙人2 ？？？</li>
-</ul>
-</li>
-<li>温暖的抱抱</li>
-<li>拆弹专家2</li>
-<li>送你一朵小红花</li>
-<li>赘婿<ul>
-<li>上头看的</li>
-</ul>
-</li>
-<li>哪吒重生<ul>
-<li>够朋克</li>
-</ul>
-</li>
-<li>你好李焕英<ul>
-<li>好看的</li>
-</ul>
-</li>
-<li>因为是男高所以很幸福<ul>
-<li>憨批一家人哇</li>
-</ul>
-</li>
-<li>罗小黑战绩<ul>
-<li>更新了，泪目</li>
-</ul>
-</li>
-<li>灵笼<ul>
-<li>剧情很有趣，批量生产刀子ing</li>
-</ul>
-</li>
-<li>荣耀乒乓</li>
-<li>你是我的城池营垒<ul>
-<li>白敬亭真的是逗</li>
-<li>然后B站上还关注了他的账号</li>
-</ul>
-</li>
-</ul>
+</ol>
 
         </div>
 
@@ -314,7 +271,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2021-10-14T06:34:49.619Z" itemprop="dateUpdated">2021-10-14 14:34:49</time>
+    最后更新时间：<time datetime="2022-10-07T13:35:30.360Z" itemprop="dateUpdated">2022-10-07 21:35:30</time>
 </span><br>
 
 
@@ -334,7 +291,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B9%A6%E5%8D%95/" rel="tag">书单</a></li></ul>
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
 
 
             
@@ -344,7 +301,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/2021%E5%B9%B4%E4%B9%A6%E5%8D%95%E3%80%90%E5%B9%B4%E6%B1%87%E6%80%BB%E3%80%91/&title=《2021年书单【年汇总】》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/Linux-command/&title=《Linux常见命令汇总》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -354,25 +311,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/2021%E5%B9%B4%E4%B9%A6%E5%8D%95%E3%80%90%E5%B9%B4%E6%B1%87%E6%80%BB%E3%80%91/&title=《2021年书单【年汇总】》 — Wkkの笔记&source=
-我的能力就这么多，我若全心工作，则必然忽略生活；我若用心生活，则必然一事无成；我若两者兼顾，又难免平庸 摘自鶸道场
-
-趁我还能写得动代码看进书的年纪，努..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/Linux-command/&title=《Linux常见命令汇总》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/2021%E5%B9%B4%E4%B9%A6%E5%8D%95%E3%80%90%E5%B9%B4%E6%B1%87%E6%80%BB%E3%80%91/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/Linux-command/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《2021年书单【年汇总】》 — Wkkの笔记&url=https://winniekun.github.io/2021%E5%B9%B4%E4%B9%A6%E5%8D%95%E3%80%90%E5%B9%B4%E6%B1%87%E6%80%BB%E3%80%91/&via=https://winniekun.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Linux常见命令汇总》 — Wkkの笔记&url=https://winniekun.github.io/Linux-command/&via=https://winniekun.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/2021%E5%B9%B4%E4%B9%A6%E5%8D%95%E3%80%90%E5%B9%B4%E6%B1%87%E6%80%BB%E3%80%91/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/Linux-command/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -392,21 +346,14 @@
     </div>
 
     
-<nav class="post-nav flex-row flex-justify-between">
-  
-    <div class="waves-block waves-effect prev">
-      <a href="/2020%E5%B9%B4%E6%80%BB%E7%BB%93/" id="post-prev" class="post-nav-link">
-        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">2020年总结</h4>
-      </a>
-    </div>
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
   
 
   
     <div class="waves-block waves-effect next">
-      <a href="/if-else-code-optimization/" id="post-next" class="post-nav-link">
+      <a href="/spring-security-01/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">if-else代码优化的几种方案</h4>
+        <h4 class="title">Spring Security 学习系列I</h4>
       </a>
     </div>
   
@@ -475,7 +422,7 @@
                     
                         2015 -
                             
-                                2021
+                                2022
             </span>
             <span>
                 
@@ -498,7 +445,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/2021%E5%B9%B4%E4%B9%A6%E5%8D%95%E3%80%90%E5%B9%B4%E6%B1%87%E6%80%BB%E3%80%91/&title=《2021年书单【年汇总】》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://winniekun.github.io/Linux-command/&title=《Linux常见命令汇总》 — Wkkの笔记&pic=https://avatars.githubusercontent.com/u/19886738?v=4" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -508,25 +455,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/2021%E5%B9%B4%E4%B9%A6%E5%8D%95%E3%80%90%E5%B9%B4%E6%B1%87%E6%80%BB%E3%80%91/&title=《2021年书单【年汇总】》 — Wkkの笔记&source=
-我的能力就这么多，我若全心工作，则必然忽略生活；我若用心生活，则必然一事无成；我若两者兼顾，又难免平庸 摘自鶸道场
-
-趁我还能写得动代码看进书的年纪，努..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://winniekun.github.io/Linux-command/&title=《Linux常见命令汇总》 — Wkkの笔记&source=Anything in life worth doing is worth overdoing. Moderation is for cowards. " data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/2021%E5%B9%B4%E4%B9%A6%E5%8D%95%E3%80%90%E5%B9%B4%E6%B1%87%E6%80%BB%E3%80%91/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://winniekun.github.io/Linux-command/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《2021年书单【年汇总】》 — Wkkの笔记&url=https://winniekun.github.io/2021%E5%B9%B4%E4%B9%A6%E5%8D%95%E3%80%90%E5%B9%B4%E6%B1%87%E6%80%BB%E3%80%91/&via=https://winniekun.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Linux常见命令汇总》 — Wkkの笔记&url=https://winniekun.github.io/Linux-command/&via=https://winniekun.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/2021%E5%B9%B4%E4%B9%A6%E5%8D%95%E3%80%90%E5%B9%B4%E6%B1%87%E6%80%BB%E3%80%91/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://winniekun.github.io/Linux-command/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -537,7 +481,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADNUlEQVR42u3aQW7jQAwEwP3/p73AnhYILHeTDmCNS6fAUCLV+MCwyT9/4uvx73r2yeO/6+c9+e/+vP/Z59d//20XNjY29k3Yj8tr9qLXT7m+8/qAro8jsWBjY2Ofyk4eeV1C2gLT/m779bwwYmNjY38lO29UrhuYtljmR4aNjY2NnUc/+T1JLNUGWO3Xg42Njf0N7Dam30dCebvSPuXNWRo2Njb2x7PbQe8n//yL821sbGzsj2Q/yiuPimbDhnwk/Fhc2NjY2Cex93FP/rrvXQDKD/TpX8DGxsY+iN1G8/kAoB0S79dx8kECNjY29vew29h9tlLZDiHyMQY2Njb22ezZiDT/138zxN00Ni+ejo2NjX0Q+/oBbQvRDg/aEtWOH66N2NjY2CexZ+F7fiibuKroouIjwMbGxj6PnZeWvDBshrWzgKktq9jY2NhnsPMSkheVNqhqj7INm57unGJjY2MfwZ41GMmh7EtOe4h1KcXGxsY+jt2OWpOjaWOj2RGspiLY2NjYN2dv4qT2881xJKWxaKKwsbGxj2NvBrqbFZnNaKEtYEUnhI2NjX0r9mw0uy8tSQPTDpuHLmxsbOybszfhez4kyEtX2+S0wdMbZg7Y2NjYt2LPDmizRpOXqyScKkIlbGxs7Nuy89K1AeSvmI+N35AUYWNjYx/KzmOaIoJfB/qb1Z/hC2FjY2PfhN1GP5uwvl3HaZeBik+wsbGxj2O3/9y3ZWy2KDkb60ZDAmxsbOyvYW8WaPYRUt5g1ANjbGxs7KPZyQJlPkh417pPcvT5iBobGxv7PHYbG80C/TzGmrVJ+ReAjY2NfRK7DfSTIGlWYPJ79kMIbGxs7JPY+yZhNnBtFy7biOpFW4KNjY19HDt5rfbnVUVdD3pf3ImNjY19HLuN/ttYf7aUkxSwdjyAjY2NfR47v9q2IcHPYqZZcR0eATY2NvZN2O2rt0s5ySebEcWwgGFjY2Mfx24f2bYH+7anrcAv7sHGxsb+SvbsUH4jwNqMNLCxsbGxV0PWxfrOZq3nbQUMGxsb+4PZ+1D+xWNG4dSs1UneGRsbG/skdluQ2jYjL2zJseblEBsbG/sL2H8BwrtPAiYuqTAAAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABvklEQVR42u3aMW7DMAwF0Nz/0i7QqUOjfpKyYhRPk2EHxFMGQiT1esXr+l7v3v/8mrxZx9ywcHFxx9xrud6FXrPW23v3vDbg4uKe5yahk22st7TeapRAcXFxH8ZdP+cgXFzc/8StonvRcHFxn8NNip9qy6OayDbXari4uANutWF6x/ON/V1cXNwi9yquSdPkGi9cXNwz3PWYpNfsyGP2yiFcXNyT3F1jj1HRksTBxcU9wu2hJwkuv6JRaJvi4uJu5a5xkwtY80sb0eQHFxd3K7eaUJJ2anWUUkiguLi4x7nVdDYpY3rJERcX91PcKr1a8FSHuLi4uOe51WTUu4w1/31hA7i4uGNuUpD0BrF5kkri4OLifpabH2vmB53q+BYXF/cMNx+C5g3Q0aWKJDIuLu7N3PwoM0ln1SENLi7uE7h5p6S3mTzZ/dGUwcXFPcidlzc5qzxYvaMaw8XF3bR6h5IqfdvYFRcXd8ztFTP5kWjNzS984OLinueW+6zjo1IvaeLi4j6Nuyth5YPVX77i4uI+krs+jiTD2jxd4uLifpabD0Ki61OtSxvRH4SLi3uEO2+Y9kqmPOXh4uIe5H4BOBVN1EUJzyQAAAAASUVORK5CYII=" alt="微信分享二维码">
 </div>
 
 
