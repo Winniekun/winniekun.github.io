@@ -43,40 +43,6 @@
   </entry>
   
   <entry>
-    <title>Spring Security 学习系列I</title>
-    <link href="https://winniekun.github.io/spring-security-01/"/>
-    <id>https://winniekun.github.io/spring-security-01/</id>
-    <published>2022-05-23T07:13:07.000Z</published>
-    <updated>2022-05-23T07:14:23.430Z</updated>
-    
-    
-    
-    
-    <category term="spring" scheme="https://winniekun.github.io/categories/spring/"/>
-    
-    
-    <category term="security" scheme="https://winniekun.github.io/tags/security/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>2021年总结</title>
-    <link href="https://winniekun.github.io/2021-conclusion/"/>
-    <id>https://winniekun.github.io/2021-conclusion/</id>
-    <published>2022-01-22T04:31:24.000Z</published>
-    <updated>2022-01-22T04:32:04.132Z</updated>
-    
-    
-    
-    
-    <category term="碎碎念" scheme="https://winniekun.github.io/categories/%E7%A2%8E%E7%A2%8E%E5%BF%B5/"/>
-    
-    
-    <category term="杂谈" scheme="https://winniekun.github.io/tags/%E6%9D%82%E8%B0%88/"/>
-    
-  </entry>
-  
-  <entry>
     <title>2022年书单【年汇总】</title>
     <link href="https://winniekun.github.io/2022-book-list/"/>
     <id>https://winniekun.github.io/2022-book-list/</id>
@@ -496,6 +462,53 @@
     
     
     <category term="归并排序" scheme="https://winniekun.github.io/tags/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>死磕数学基础</title>
+    <link href="https://winniekun.github.io/stick-to-math/"/>
+    <id>https://winniekun.github.io/stick-to-math/</id>
+    <published>2021-04-20T11:56:11.000Z</published>
+    <updated>2021-05-16T16:42:07.999Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>LeetCode死磕系列十二： 数学基础</p><p>说实话，其实都是刷题都是数学的实现，不过感觉有些题目更加偏向数学应用，譬如蓄水池，等概率抽样…。</p><a id="more"></a><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><h3 id="470-用rand7-实现Rand10"><a href="#470-用rand7-实现Rand10" class="headerlink" title="470 用rand7()实现Rand10()"></a>470 用rand7()实现Rand10()</h3><p><a href="https://leetcode-cn.com/problems/implement-rand10-using-rand7/solution/cong-zui-ji-chu-de-jiang-qi-ru-he-zuo-dao-jun-yun-/" target="_blank" rel="noopener">从最基础的讲起如何做到均匀的生成随机数</a></p><p>从上述的文章可以得出：</p><blockquote><p><strong>已知:</strong>  <em>$randN()$可以==等概率==生成$[1, N]$范围的数字</em><br><strong>那么:</strong>  $(randN()-1) \times Y  + randY()$可以==等概率==生成$[1, Y \times N]$ 范围的数字</p><p><strong>即：</strong>实现了$randNY()$</p></blockquote><p>以$[(rand9() - 1) \times 7 + rand7()]$为例子</p><div class="table-container"><table><thead><tr><th>rand9()-1\rand7</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr></thead><tbody><tr><td><strong>0</strong></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr><tr><td><strong>1</strong></td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td></tr><tr><td><strong>2</strong></td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td></tr><tr><td><strong>3</strong></td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td></tr><tr><td><strong>4</strong></td><td>29</td><td>30</td><td>31</td><td>32</td><td>33</td><td>34</td><td>35</td></tr><tr><td><strong>5</strong></td><td>36</td><td>37</td><td>38</td><td>39</td><td>40</td><td>41</td><td>42</td></tr><tr><td><strong>6</strong></td><td>43</td><td>44</td><td>45</td><td>46</td><td>47</td><td>48</td><td>49</td></tr><tr><td><strong>7</strong></td><td>50</td><td>51</td><td>52</td><td>53</td><td>54</td><td>55</td><td>56</td></tr><tr><td><strong>8</strong></td><td>57</td><td>58</td><td>59</td><td>60</td><td>61</td><td>62</td><td>63</td></tr></tbody></table></div><p><strong>是不是很神奇，数学证明不会</strong></p><p>那么想到通过rand4()来实现rand2()呢？这个就很简单了，已知rand4()会均匀产生[1,4]的随机数，通过取余，再加1就可以了。如下所示，结果也是等概率的。</p><pre><code>rand4() % 2 + 1 = ?   1 % 2    + 1 = 2   2 % 2    + 1 = 1   3 % 2    + 1 = 2   4 % 2    + 1 = 1</code></pre><p>事实上，只要rand_N()中N是2的倍数，就都可以用来实现rand2()，反之，若N不是2的倍数，则产生的结果不是等概率的。比如：</p><pre><code>rand6() % 2 + 1 = ?   1 % 2    + 1 = 2   2 % 2    + 1 = 1   3 % 2    + 1 = 2   4 % 2    + 1 = 1   5 % 2    + 1 = 2   6 % 2    + 1 = 1rand5() % 2 + 1 = ?   1 % 2    + 1 = 2   2 % 2    + 1 = 1   3 % 2    + 1 = 2   4 % 2    + 1 = 1   5 % 2    + 1 = 2</code></pre><p><strong>通用一些的</strong></p><blockquote><p>如果需要实现$randX()$</p><ol><li>先实现$randN()$<ol><li>$N$为$X$的倍数（$N&gt;X$）</li></ol></li><li>再通过 $randN() \% X + 1$即可</li></ol></blockquote><pre><code class="lang-java">public int rand10() {        // rand 49        while (true) {            int num = (rand7() - 1) * 7 + rand7();  // rand49            if (num &lt;= 40) { // 使用拒绝采样，得到rand40                return num % 10 + 1;  // rand10            }        }    }</code></pre><p><strong>优化</strong></p><pre><code class="lang-java">class Solution extends SolBase {      // 上述拒绝了9个数字，    // 优化之后，减少丢弃值，提高命中率    public int rand10() {        while(true) {            int a = rand7();            int b = rand7();            int num = (a-1)*7 + b; // rand 49            if(num &lt;= 40) return num % 10 + 1; // 拒绝采样            a = num - 40; // rand 9            b = rand7();            num = (a-1)*7 + b; // rand 63            if(num &lt;= 60) return num % 10 + 1;            a = num - 60; // rand 3            b = rand7();            num = (a-1)*7 + b; // rand 21            if(num &lt;= 20) return num % 10 + 1;        }    }}</code></pre>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;LeetCode死磕系列十二： 数学基础&lt;/p&gt;
+&lt;p&gt;说实话，其实都是刷题都是数学的实现，不过感觉有些题目更加偏向数学应用，譬如蓄水池，等概率抽样…。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="LeetCode" scheme="https://winniekun.github.io/categories/LeetCode/"/>
+    
+    
+    <category term="死磕系列" scheme="https://winniekun.github.io/tags/%E6%AD%BB%E7%A3%95%E7%B3%BB%E5%88%97/"/>
+    
+    <category term="数学基础" scheme="https://winniekun.github.io/tags/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>死磕SQL</title>
+    <link href="https://winniekun.github.io/stick-to-sql/"/>
+    <id>https://winniekun.github.io/stick-to-sql/</id>
+    <published>2021-04-20T11:56:11.000Z</published>
+    <updated>2021-05-16T16:39:43.618Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>LeetCode死磕系列十： SQL</p><a id="more"></a><p>作为一个后端开发程序员，SQL功底还是很重要的！！！</p><p>所以还是要练习。</p><blockquote><p>还记得去年被字节面试的时候，连SQL都写不出来。。。</p></blockquote><h2 id="LeetCode-SQL题目整理"><a href="#LeetCode-SQL题目整理" class="headerlink" title="LeetCode SQL题目整理"></a>LeetCode SQL题目整理</h2><p>刷了LC上的top70之后，感觉考察最多的还是多表的联合查找，毕竟实际中也不会仅仅是单表的查询。</p><p><strong>主要题型：</strong></p><ol><li>TOP N 问题</li><li>排名问题<ol><li>滑动窗口</li></ol></li><li>自链接问题</li></ol><h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><h3 id="TOP-N问题"><a href="#TOP-N问题" class="headerlink" title="TOP N问题"></a>TOP N问题</h3><h4 id="176-第二高的薪水"><a href="#176-第二高的薪水" class="headerlink" title="176. 第二高的薪水"></a><a href="https://leetcode-cn.com/problems/second-highest-salary/" target="_blank" rel="noopener">176. 第二高的薪水</a></h4><p><strong>思路：</strong></p><ol><li><p>使用limit</p><p>注意判空、去重</p><pre><code class="lang-sql">select ifnull ((select     distinct Salary from    Employeeorder by Salary desclimit 1, 1) , null) as SecondHighestSalary;</code></pre></li></ol><ol><li>先使用max查询最高的薪水 max，之后再通过自查询，查询小于max的max</li></ol><h4 id="184-部门工资最高的员工"><a href="#184-部门工资最高的员工" class="headerlink" title="184. 部门工资最高的员工"></a><a href="https://leetcode-cn.com/problems/department-highest-salary/" target="_blank" rel="noopener">184. 部门工资最高的员工</a></h4><pre><code class="lang-sql">-- 思路： 寻找最大薪资的数据-- join-- 1. 直接join group by  选取最大的即可 但是 无法保证最大的薪资不重复 失败-- 2. 先通过员工信息 寻找最大的薪资+id 的数据A，然后再join 两张表，将A中对应的数据返回-- 1. select     d.Name as Department,    e.Name as Employee,    e.Salary as Salaryfrom     Employee e inner join Department d on e.DepartmentId = d.Idwhere     (e.DepartmentId, e.Salary) in    (select         DepartmentId,        max(Salary)    from         Employee    group by         DepartmentId);</code></pre><h4 id="177-第N高的薪水"><a href="#177-第N高的薪水" class="headerlink" title="177. 第N高的薪水"></a><a href="https://leetcode-cn.com/problems/nth-highest-salary/" target="_blank" rel="noopener">177. 第N高的薪水</a></h4><p>LIMIT PAGE, OFFSET</p><p>跳过 PAGE * OFFSET条数据，接下来的offset条数据， 因为题目中未说明薪资是否不重复，所以还需要使用distinct去重</p><pre><code class="lang-sql">CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INTBEGIN  set N:= N-1;  RETURN (        # Write your MySQL query statement below.    select         distinct Salary    from         Employee    order by         Salary desc    limit N,1  );END</code></pre><h4 id="185-部门工资前三高的所有员工"><a href="#185-部门工资前三高的所有员工" class="headerlink" title="185. 部门工资前三高的所有员工"></a><a href="https://leetcode-cn.com/problems/department-top-three-salaries/" target="_blank" rel="noopener">185. 部门工资前三高的所有员工</a></h4><pre><code class="lang-sql">select d.Name as Department, e2.Name as Employee, e2.Salary from Department d inner join (    select e.*,     dense_rank() over(partition by DepartmentID     Order by Salary DESC) as 'rank'    from Employee e ) e2 on d.Id= e2.DepartmentIDwhere e2.rank&lt;=3order by Department AND Salary</code></pre><h3 id="排名问题"><a href="#排名问题" class="headerlink" title="排名问题"></a>排名问题</h3><h4 id="178-分数排名"><a href="#178-分数排名" class="headerlink" title="178.分数排名"></a><a href="https://leetcode-cn.com/problems/rank-scores/" target="_blank" rel="noopener">178.分数排名</a></h4><pre><code class="lang-sql">select     Score, dense_rank() over(order by Score desc) as `Rank`from Scores;</code></pre><h3 id="自链接问题"><a href="#自链接问题" class="headerlink" title="自链接问题"></a>自链接问题</h3><h4 id="603-连续空余座位"><a href="#603-连续空余座位" class="headerlink" title="603. 连续空余座位"></a><a href="https://leetcode-cn.com/problems/consecutive-available-seats/" target="_blank" rel="noopener">603. 连续空余座位</a></h4><pre><code class="lang-sql">-- 几个朋友来到电影院的售票处，准备预约连续空余座位。-- 你能利用表 cinema ，帮他们写一个查询语句，获取所有空余座位，并将它们按照 seat_id 排序后返回吗？select distinct a.seat_idfrom cinema a join cinema b  on abs(a.seat_id - b.seat_id) = 1  and a.free = true and b.free = trueorder by a.seat_id</code></pre>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;LeetCode死磕系列十： SQL&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="LeetCode" scheme="https://winniekun.github.io/categories/LeetCode/"/>
+    
+    
+    <category term="死磕系列" scheme="https://winniekun.github.io/tags/%E6%AD%BB%E7%A3%95%E7%B3%BB%E5%88%97/"/>
+    
+    <category term="SQL" scheme="https://winniekun.github.io/tags/SQL/"/>
     
   </entry>
   
